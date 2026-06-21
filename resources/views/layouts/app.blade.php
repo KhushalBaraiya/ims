@@ -266,27 +266,43 @@
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform duration-200"></i>
                     </button>
                     <ul class="sidebar-group-items mt-1 pl-8 space-y-0.5 hidden">
-                        <li>
-                            <a href="{{ route('main-categories.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('main-categories.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
-                                Main Categories
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('brands.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('brands.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
-                                Brands
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 text-slate-600 cursor-not-allowed">
-                                Products <span class="ml-auto text-[9px] bg-slate-850 text-slate-500 py-0.2 px-1.5 rounded-full font-medium">Soon</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 text-slate-400 hover:text-white hover:bg-slate-800/30 transition-all">
-                                Stocks
-                            </a>
-                        </li>
-                    </ul>
+          <li>
+              <a href="{{ route('main-categories.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('main-categories.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                  Main Categories
+              </a>
+          </li>
+          @can('sub_categories.view')
+          <li>
+              <a href="{{ route('sub-categories.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('sub-categories.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                  Sub Categories
+              </a>
+          </li>
+          @endcan
+          <li>
+              <a href="{{ route('brands.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('brands.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                  Brands
+              </a>
+          </li>
+          @can('units.view')
+          <li>
+              <a href="{{ route('units.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('units.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                  Units
+              </a>
+          </li>
+          @endcan
+          @can('products.view')
+          <li>
+              <a href="{{ route('products.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('products.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                  Products
+              </a>
+          </li>
+          @endcan
+          <li>
+              <a href="#" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 text-slate-400 hover:text-white hover:bg-slate-800/30 transition-all">
+                  Stocks
+              </a>
+          </li>
+      </ul>
                 </li>
 
                 <!-- Transactions collapsible group -->
@@ -340,6 +356,13 @@
                         <li>
                             <a href="{{ route('users.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('users.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
                                 User Accounts
+                            </a>
+                        </li>
+                        @endcan
+                        @can('currencies.view')
+                        <li>
+                            <a href="{{ route('currencies.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('currencies.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                                Currencies
                             </a>
                         </li>
                         @endcan

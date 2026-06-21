@@ -15,20 +15,9 @@ class Unit extends Model
     protected $fillable = [
         'name',
         'short_name',
-        'base_unit',
-        'operator',
-        'operation_value',
+        'description',
+        'status',
     ];
-
-    public function parentUnit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class, 'base_unit');
-    }
-
-    public function childUnits(): HasMany
-    {
-        return $this->hasMany(Unit::class, 'base_unit');
-    }
 
     public function products(): HasMany
     {

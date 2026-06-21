@@ -17,17 +17,38 @@ class Product extends Model
         'name',
         'slug',
         'code',
+        'barcode',
         'brand_id',
         'main_category_id',
         'sub_category_id',
         'unit_id',
+        'supplier_id',
+        'currency_id',
         'purchase_price',
-        'sale_price',
-        'tax_rate',
-        'tax_type',
-        'stock_alert_qty',
-        'description',
+        'selling_price',
+        'mrp',
+        'tax_percentage',
+        'discount_percentage',
+        'opening_stock',
+        'minimum_stock_alert',
+        'image',
+        'gallery',
+        'short_description',
+        'full_description',
         'status',
+        'is_featured',
+        'manufacturer',
+        'model_number',
+        'part_number',
+        'warranty',
+        'color',
+        'weight',
+        'country_of_origin',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
+        'is_featured' => 'boolean',
     ];
 
     public function brand(): BelongsTo
@@ -48,6 +69,16 @@ class Product extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 
     public function stock(): HasOne

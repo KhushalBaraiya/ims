@@ -12,6 +12,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ProductController;
 
 // Root redirect
 Route::get('/', function () {
@@ -45,8 +49,17 @@ Route::middleware('auth')->group(function () {
     // Inventory CRUD Resource Routes
     Route::resource('brands', BrandController::class);
     Route::resource('main-categories', MainCategoryController::class);
+    Route::resource('sub-categories', SubCategoryController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('customers', CustomerController::class);
+    Route::resource('units', UnitController::class);
+    
+    // Currencies Routes (with status toggle)
+    Route::post('/currencies/{currency}/toggle-status', [CurrencyController::class, 'toggleStatus'])->name('currencies.toggle-status');
+    Route::resource('currencies', CurrencyController::class);
+    
+    // Products Routes
+    Route::resource('products', ProductController::class);
 });
 
 

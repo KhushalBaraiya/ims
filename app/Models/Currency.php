@@ -16,5 +16,10 @@ class Currency extends Model
         'symbol',
         'exchange_rate',
         'status',
+        'is_default',
+    ];
+
+    protected $casts = [
+        'is_default' => 'boolean',
     ];
 }

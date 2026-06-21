@@ -10,11 +10,10 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('short_name');
-            $table->foreignId('base_unit')->nullable()->constrained('units')->onDelete('cascade');
-            $table->string('operator')->nullable();
-            $table->decimal('operation_value', 15, 4)->nullable();
+            $table->string('name')->unique();
+            $table->string('short_name')->unique();
+            $table->text('description')->nullable();
+            $table->string('status')->default('active');
             $table->softDeletes();
             $table->timestamps();
         });

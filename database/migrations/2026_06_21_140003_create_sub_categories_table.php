@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('main_category_id')->constrained('main_categories')->onDelete('cascade');
             $table->string('name');
-            $table->string('slug')->nullable();
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('status')->default('active');
             $table->softDeletes();
