@@ -12,11 +12,20 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('company_name')->nullable();
+            $table->string('contact_person')->nullable();
+            $table->string('phone'); // required
+            $table->string('alt_phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('gst_number')->nullable();
+            $table->string('pan_number')->nullable();
             $table->text('address')->nullable();
-            $table->string('tax_number')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('pincode')->nullable();
+            $table->decimal('opening_balance', 12, 2)->default(0.00);
             $table->string('status')->default('active');
+            $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

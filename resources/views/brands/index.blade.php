@@ -4,14 +4,14 @@
 
 @section('content')
     <!-- Header Section -->
-    <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="md:flex md:items-center md:justify-between mb-6">
         <div class="min-w-0 flex-1">
-            <h2 class="text-2xl font-bold leading-7 text-slate-900 tracking-tight">Brands</h2>
-            <p class="mt-1 text-sm text-slate-500">Manage manufacturers and product brands in the system.</p>
+            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Brands</h2>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Manage manufacturers and product brands in the system.</p>
         </div>
         <div class="mt-4 flex md:ml-4 md:mt-0">
             @can('brands.create')
-                <a href="{{ route('brands.create') }}" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98]">
+                <a href="{{ route('brands.create') }}" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98]">
                     <i class="fa-solid fa-plus"></i>
                     Add Brand
                 </a>
@@ -20,43 +20,43 @@
     </div>
 
     <!-- DataTables Card -->
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
-        <table id="brandsTable" class="w-full text-slate-800 display responsive nowrap" style="width:100%">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 transition-colors duration-150">
+        <table id="brandsTable" class="w-full text-slate-800 dark:text-slate-200 display responsive nowrap" style="width:100%">
             <thead>
-                <tr class="bg-slate-50 text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
-                    <th class="text-left py-3.5 px-4">#</th>
-                    <th class="text-left py-3.5 px-4">Brand Name</th>
-                    <th class="text-left py-3.5 px-4">Brand Code</th>
-                    <th class="text-left py-3.5 px-4">Status</th>
-                    <th class="text-left py-3.5 px-4">Created Date</th>
-                    <th class="text-center py-3.5 px-4 no-sort">Action</th>
+                <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-405 dark:text-slate-450 text-[11px] font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                    <th class="text-left py-3 px-4">#</th>
+                    <th class="text-left py-3 px-4">Brand Name</th>
+                    <th class="text-left py-3 px-4">Brand Code</th>
+                    <th class="text-left py-3 px-4">Status</th>
+                    <th class="text-left py-3 px-4">Created Date</th>
+                    <th class="text-center py-3 px-4 no-sort">Action</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-slate-100">
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-[12px]">
                 @foreach ($brands as $index => $brand)
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="py-4 px-4 font-semibold text-slate-400 text-sm">{{ $index + 1 }}</td>
-                        <td class="py-4 px-4 font-bold text-slate-800 text-sm">{{ $brand->name }}</td>
-                        <td class="py-4 px-4 font-mono font-bold text-slate-600 text-sm">{{ $brand->slug }}</td>
-                        <td class="py-4 px-4 text-sm">
+                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+                        <td class="py-3 px-4 font-semibold text-slate-400 dark:text-slate-500">{{ $index + 1 }}</td>
+                        <td class="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">{{ $brand->name }}</td>
+                        <td class="py-3 px-4 font-mono font-bold text-slate-650 dark:text-slate-400">{{ $brand->slug }}</td>
+                        <td class="py-3 px-4">
                             @if ($brand->status === 'active')
-                                <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Active</span>
+                                <span class="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-600/20 dark:ring-emerald-500/20">Active</span>
                             @else
-                                <span class="inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-700 ring-1 ring-inset ring-red-600/20">Inactive</span>
+                                <span class="inline-flex items-center rounded-full bg-red-50 dark:bg-red-500/10 px-2 py-0.5 text-[11px] font-bold text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-600/20 dark:ring-red-500/20">Inactive</span>
                             @endif
                         </td>
-                        <td class="py-4 px-4 text-slate-500 text-sm">{{ $brand->created_at->format('Y-m-d H:i') }}</td>
-                        <td class="py-4 px-4 text-center">
-                            <div class="flex items-center justify-center gap-2">
+                        <td class="py-3 px-4 text-slate-500 dark:text-slate-450">{{ $brand->created_at->format('Y-m-d H:i') }}</td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
                                 @can('brands.view')
-                                    <a href="{{ route('brands.show', $brand->id) }}" class="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 transition-colors" title="View">
-                                        <i class="fa-regular fa-eye text-xs"></i>
+                                    <a href="{{ route('brands.show', $brand->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/50 transition-colors" title="View">
+                                        <i class="fa-regular fa-eye text-[11px]"></i>
                                     </a>
                                 @endcan
 
                                 @can('brands.update')
-                                    <a href="{{ route('brands.edit', $brand->id) }}" class="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 hover:text-violet-600 hover:bg-violet-50 hover:border-violet-200 transition-colors" title="Edit">
-                                        <i class="fa-regular fa-pen-to-square text-xs"></i>
+                                    <a href="{{ route('brands.edit', $brand->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-violet-600 hover:bg-violet-50 hover:border-violet-200 dark:hover:bg-violet-900/50 transition-colors" title="Edit">
+                                        <i class="fa-regular fa-pen-to-square text-[11px]"></i>
                                     </a>
                                 @endcan
 
@@ -64,8 +64,8 @@
                                     <form id="delete-form-{{ $brand->id }}" action="{{ route('brands.destroy', $brand->id) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" data-id="{{ $brand->id }}" data-name="{{ $brand->name }}" class="delete-btn inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-colors" title="Delete">
-                                            <i class="fa-regular fa-trash-can text-xs"></i>
+                                        <button type="button" data-id="{{ $brand->id }}" data-name="{{ $brand->name }}" class="delete-btn inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/50 transition-colors" title="Delete">
+                                            <i class="fa-regular fa-trash-can text-[11px]"></i>
                                         </button>
                                     </form>
                                 @endcan
@@ -88,14 +88,10 @@
                 { targets: 'no-sort', orderable: false }
             ],
             language: {
-                searchPlaceholder: "Search records...",
+                searchPlaceholder: "Search brands...",
                 search: ""
             },
-            dom: '<"flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-1"<"flex items-center"l><"flex items-center"f>>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 px-1"ip>',
-            // Export buttons layout placeholder
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
+            dom: '<"flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-1"<"flex items-center"l><"flex items-center"f>>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 px-1"ip>'
         });
 
         // Setup SweetAlert2 delete confirmation
@@ -104,6 +100,8 @@
             const brandId = $(this).data('id');
             const brandName = $(this).data('name');
             const form = $(`#delete-form-${brandId}`);
+            
+            const isDark = document.documentElement.classList.contains('dark');
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -114,10 +112,10 @@
                 cancelButtonColor: '#ef4444',
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'Cancel',
-                background: '#1f2937',
-                color: '#fff',
+                background: isDark ? '#18181b' : '#fff',
+                color: isDark ? '#fff' : '#1e293b',
                 customClass: {
-                    popup: 'rounded-2xl border border-zinc-800 shadow-2xl'
+                    popup: 'rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -132,12 +130,14 @@
                                     title: 'Deleted!',
                                     text: response.message,
                                     icon: 'success',
-                                    background: '#1f2937',
-                                    color: '#fff',
+                                    background: isDark ? '#18181b' : '#fff',
+                                    color: isDark ? '#fff' : '#1e293b',
                                     confirmButtonColor: '#3b82f6'
                                 }).then(() => {
                                     window.location.reload();
                                 });
+                            } else {
+                                toastr.error(response.message);
                             }
                         },
                         error: function(xhr) {

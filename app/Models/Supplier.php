@@ -14,11 +14,20 @@ class Supplier extends Model
     protected $fillable = [
         'name',
         'company_name',
-        'email',
+        'contact_person',
         'phone',
+        'alt_phone',
+        'email',
+        'gst_number',
+        'pan_number',
         'address',
-        'tax_number',
+        'city',
+        'state',
+        'country',
+        'pincode',
+        'opening_balance',
         'status',
+        'notes',
     ];
 
     public function purchases(): HasMany

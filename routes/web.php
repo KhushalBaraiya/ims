@@ -8,6 +8,10 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\MainCategoryController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CustomerController;
 
 // Root redirect
 Route::get('/', function () {
@@ -30,9 +34,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Profile Management Routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
+
+    // User Management CRUD Resource Route
+    Route::resource('users', UserController::class);
+
     // Inventory CRUD Resource Routes
     Route::resource('brands', BrandController::class);
     Route::resource('main-categories', MainCategoryController::class);
+    Route::resource('suppliers', SupplierController::class);
+    Route::resource('customers', CustomerController::class);
 });
 
 

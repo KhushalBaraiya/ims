@@ -50,6 +50,11 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
+        // Update last login timestamp
+        $user->forceFill([
+            'last_login_at' => now(),
+        ])->save();
+
         // Log successful login
         ActivityLog::log('Login', 'User authenticated and logged into the system.');
 
