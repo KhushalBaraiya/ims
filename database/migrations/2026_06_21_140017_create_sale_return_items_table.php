@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('unit_price', 15, 2);
             $table->decimal('tax_amount', 15, 2)->default(0.00);
             $table->decimal('total_amount', 15, 2);
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

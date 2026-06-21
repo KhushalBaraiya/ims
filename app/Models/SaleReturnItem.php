@@ -17,6 +17,7 @@ class SaleReturnItem extends Model
         'unit_price',
         'tax_amount',
         'total_amount',
+        'reason',
     ];
 
     public function saleReturn(): BelongsTo

@@ -16,6 +16,8 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SaleReturnController;
 
 // Root redirect
 Route::get('/', function () {
@@ -59,7 +61,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('currencies', CurrencyController::class);
     
     // Products Routes
+    Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
     Route::resource('products', ProductController::class);
+
+    // Sales Routes
+    Route::get('/sales/{sale}/print', [SaleController::class, 'printInvoice'])->name('sales.print');
+    Route::resource('sales', SaleController::class);
+
+    // Sales Return Routes
+    Route::get('/sales/{sale}/return-data', [SaleReturnController::class, 'getSaleReturnData'])->name('sales.return-data');
+    Route::get('/sale-returns/{sale_return}/print', [SaleReturnController::class, 'printReturn'])->name('sale-returns.print');
+    Route::resource('sale-returns', SaleReturnController::class);
 });
 
 

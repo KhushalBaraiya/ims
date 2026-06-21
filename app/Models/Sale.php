@@ -13,10 +13,11 @@ class Sale extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'reference_no',
+        'invoice_no',
+        'invoice_date',
         'customer_id',
-        'sale_status',
-        'payment_status',
+        'sales_person_id',
+        'reference_no',
         'sub_total',
         'tax_amount',
         'discount_amount',
@@ -26,6 +27,7 @@ class Sale extends Model
         'due_amount',
         'payment_method',
         'notes',
+        'status',
         'user_id',
     ];
 
@@ -37,6 +39,11 @@ class Sale extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function salesPerson(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sales_person_id');
     }
 
     public function items(): HasMany

@@ -320,11 +320,20 @@
                                 Purchases
                             </a>
                         </li>
+                        @can('sales.view')
                         <li>
-                            <a href="#" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 text-slate-400 hover:text-white hover:bg-slate-800/30 transition-all">
+                            <a href="{{ route('sales.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('sales.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
                                 Sales
                             </a>
                         </li>
+                        @endcan
+                        @can('sale_returns.view')
+                        <li>
+                            <a href="{{ route('sale-returns.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('sale-returns.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                                Sales Returns
+                            </a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
 

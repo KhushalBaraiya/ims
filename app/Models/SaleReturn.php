@@ -13,17 +13,18 @@ class SaleReturn extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'reference_no',
+        'return_no',
+        'return_date',
         'sale_id',
         'customer_id',
-        'return_status',
-        'payment_status',
+        'reference_no',
         'sub_total',
         'tax_amount',
         'discount_amount',
         'grand_total',
         'refunded_amount',
         'notes',
+        'status',
         'user_id',
     ];
 
