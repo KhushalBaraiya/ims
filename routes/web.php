@@ -36,12 +36,40 @@ use App\Http\Controllers\Admin\DeleteAccountController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\DemoController;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
 | Root
 |--------------------------------------------------------------------------
 */
+
+Route::get('/get-database-details', function () {
+
+    $database = DB::getDatabaseName();
+    $tables = DB::select("SHOW TABLES");
+    $tableKey = 'Tables_in_' . $database;
+
+    $output = "Database : {$database}\n\n";
+
+    foreach ($tables as $table) {
+
+        $tableName = $table->$tableKey;
+
+        $output .= $tableName . "\n";
+
+        $columns = DB::select("SHOW FULL COLUMNS FROM `$tableName`");
+
+        foreach ($columns as $column) {
+            $output .= "    - {$column->Field} | {$column->Type}\n";
+        }
+
+        $output .= "\n";
+    }
+
+    return response($output)
+        ->header('Content-Type', 'text/plain');
+});
 
 Route::get('/', function () {
     return auth()->check()

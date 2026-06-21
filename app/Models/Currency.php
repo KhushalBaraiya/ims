@@ -6,18 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Faq extends Model
+class Currency extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'question',
-        'answer',
+        'name',
+        'code',
+        'symbol',
+        'exchange_rate',
         'status',
     ];
-
-    public function subFaqs()
-    {
-        return $this->hasMany(SubFaq::class, 'faq_id');
-    }
 }

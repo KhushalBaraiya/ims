@@ -28,17 +28,6 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        // Only Admin (role_id = 1) can login to admin panel
-        if ($user->role_id !== 1) {
-            Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return back()->withErrors([
-                'email' => 'You do not have permission to access the admin panel.',
-            ])->onlyInput('email');
-        }
-
         $request->session()->regenerate();
 
         return redirect()->route('admin.dashboard');

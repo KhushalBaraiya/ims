@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductService extends Model
+class Location extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'name',
+        'code',
         'description',
-        'price',
-        'image',
-        'status'
+        'status',
     ];
-    protected $table = 'product_services';
-    protected $dates = ['deleted_at'];
 }

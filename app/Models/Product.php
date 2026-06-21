@@ -10,52 +10,35 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'products';
-
     protected $fillable = [
-        'name',
-        'slug',
-        'sku',
         'category_id',
         'subcategory_id',
         'brand_id',
-        'sub_in_categories_id',
+        'supplier_id',
+        'unit_id',
+        'location_id',
+        'currency_id',
+        'sku',
+        'barcode',
+        'name',
+        'model',
         'description',
-        'product_details',
-        'fabric',
-        'age_group',
-        'care_instructions',
-        'clothing_features',
-        'neckline',
-        'sleeve_length_type',
-        'original_price',
-        'price',
-        'total_price',
-        'discount_percent',
-        'images',
-        'rating',
-        'quantity',
+        'purchase_price',
+        'selling_price',
+        'minimum_stock',
+        'current_stock',
         'status',
-        'is_favourite',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
-        'original_price'   => 'decimal:2',
-        'price'            => 'decimal:2',
-        'total_price'      => 'decimal:2',
-        'discount_percent' => 'integer',
-        'rating'           => 'decimal:1',
-        'quantity'         => 'integer',
-        'is_favourite'     => 'boolean',
-        'images'           => 'array',
-        'deleted_at'       => 'datetime',
+        'purchase_price' => 'decimal:2',
+        'selling_price' => 'decimal:2',
+        'minimum_stock' => 'integer',
+        'current_stock' => 'integer',
+        'deleted_at' => 'datetime',
     ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONSHIPS
-    |--------------------------------------------------------------------------
-    */
 
     public function category()
     {
@@ -69,59 +52,41 @@ class Product extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id');
+        return $this->belongsTo(Brand::class);
     }
 
-    public function subInCategory()
+    public function supplier()
     {
-        return $this->belongsTo(SubInCategory::class, 'sub_in_categories_id');
+        return $this->belongsTo(Supplier::class);
     }
 
-    public function reviews()
+    public function unit()
     {
-        return $this->hasMany(Reviews::class);
+        return $this->belongsTo(Unit::class);
     }
 
-    public function orderItems()
+    public function location()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsTo(Location::class);
     }
 
-    public function wishlists()
+    public function currency()
     {
-        return $this->hasMany(WishList::class);
+        return $this->belongsTo(Currency::class);
     }
 
-    public function attributes()
+    public function stockMovements()
     {
-        return $this->hasMany(ProductAttribute::class);
+        return $this->hasMany(Stock::class);
     }
 
-    public function colors()
+    public function createdBy()
     {
-        return $this->hasMany(ProductAttribute::class)->where('attribute_key', 'Color');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function sizes()
+    public function updatedBy()
     {
-        return $this->hasMany(ProductAttribute::class)->where('attribute_key', 'Size');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | ACCESSORS
-    |--------------------------------------------------------------------------
-    */
-
-    // Dynamically computed average rating from reviews
-    public function getAverageRatingAttribute(): float
-    {
-        return round($this->reviews()->avg('rating') ?? 0, 1);
-    }
-
-    // Discount amount in currency
-    public function getDiscountAmountAttribute(): float
-    {
-        return round($this->original_price - $this->price, 2);
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

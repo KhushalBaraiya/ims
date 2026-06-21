@@ -10,16 +10,17 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->date('date');
-            $table->string('type'); // in, out, adjustment
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
+            $table->string('reference_no')->nullable();
+            $table->enum('movement_type', ['in', 'out', 'adjustment']);
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
-            $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->decimal('unit_cost', 15, 2)->nullable();
+            $table->decimal('total_cost', 15, 2)->nullable();
+            $table->text('notes')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 
