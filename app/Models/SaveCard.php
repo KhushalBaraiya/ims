@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class SaveCard extends Model
+{
+    use SoftDeletes;
+
+    protected $fillable = [
+        'user_id',
+        'card_holder_name',
+        'last_four_digits',
+        'expiry_month',
+        'expiry_year',
+        'card_brand',
+        'gateway_token',
+        'status',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}

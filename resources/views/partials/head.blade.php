@@ -1,0 +1,461 @@
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>@yield('title', 'Admin Dashboard')</title>
+    <meta name="description" content="" />
+
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('admin-theme') || 'light';
+                document.documentElement.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
+            } catch (e) {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+            }
+        })();
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Boxicons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
+
+    <!-- Template Icons -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/iconify-icons.css') }}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/admin-custom.css') }}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <!-- DataTables Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
+
+    @stack('styles')
+
+    <!-- Admin Custom Styles -->
+    <style>
+        .btn-action {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .tbl-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tbl-img-wide {
+            width: 80px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tbl-img-round {
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* ===== Image Preview in create/edit forms ===== */
+        .img-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+            border-radius: 50%;
+        }
+
+        .img-preview-contain {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            display: block;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .img-preview-service {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            display: block;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        /* ===== Image Remove Button ===== */
+        .img-remove-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            transform: translate(40%, -40%);
+            line-height: 1;
+        }
+
+        .icon-sm {
+            font-size: 14px;
+        }
+
+        /* ===== Status Toggle ===== */
+        /* .status-toggle-btn {
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .toggle-switch-input {
+            width: 3rem;
+            height: 1.5rem;
+            cursor: pointer;
+        } */
+
+        /* ===== Avatar Initials ===== */
+        .avatar-initials {
+            background: #696cff;
+            font-size: 1.1rem;
+        }
+
+        .avatar-initials-hidden {
+            display: none !important;
+        }
+
+        .icon-md-tbl {
+            font-size: 1.3rem;
+        }
+
+        .img-fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2f5;
+            color: #adb5bd;
+            flex-shrink: 0;
+            font-size: 1.3rem;
+        }
+
+        .img-fallback.tbl-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .img-fallback.tbl-img-round {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+        }
+
+        .img-fallback.tbl-img-wide {
+            width: 80px;
+            height: 50px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* SweetAlert2 z-index fix for Sneat template */
+        .swal2-container {
+            z-index: 99999 !important;
+        }
+
+        .swal2-toast {
+            z-index: 99999 !important;
+        }
+
+        .swal-top-toast {
+            z-index: 99999 !important;
+            top: 1rem !important;
+            right: 1rem !important;
+        }
+
+        /* ===== Custom Admin Toast ===== */
+        #adminToast {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 99999;
+            min-width: 260px;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.13);
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 1rem 1.3rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #333;
+            border-left: 4px solid #28a745;
+            animation: toastSlideIn 0.3s ease;
+            cursor: pointer;
+        }
+
+        #adminToast.toast-error {
+            border-left-color: #dc3545;
+        }
+
+        #adminToast.toast-warning {
+            border-left-color: #ffc107;
+        }
+
+        #adminToast.toast-success {
+            border-left-color: #28a745;
+        }
+
+        #adminToast .toast-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        #adminToast.toast-success .toast-icon {
+            color: #28a745;
+        }
+
+        #adminToast.toast-error .toast-icon {
+            color: #dc3545;
+        }
+
+        #adminToast.toast-warning .toast-icon {
+            color: #ffc107;
+        }
+
+        #adminToast .toast-msg {
+            flex: 1;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        #adminToast .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            border-radius: 0 0 10px 10px;
+            background: #28a745;
+            animation: toastProgress 3s linear forwards;
+        }
+
+        #adminToast.toast-error .toast-progress {
+            background: #dc3545;
+        }
+
+        #adminToast.toast-warning .toast-progress {
+            background: #ffc107;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastProgress {
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
+        }
+
+        /* ===== jQuery Validate — field icons ===== */
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545 !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%23dc3545' stroke-width='2'/%3E%3Cline x1='12' y1='8' x2='12' y2='12' stroke='%23dc3545' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='16' r='1' fill='%23dc3545'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 0.75rem center !important;
+            background-size: 1.2rem !important;
+            padding-right: 2.5rem !important;
+        }
+
+        .form-control.is-valid,
+        .form-select.is-valid {
+            border-color: #28a745 !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpolyline points='20 6 9 17 4 12' fill='none' stroke='%2328a745' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 0.75rem center !important;
+            background-size: 1.2rem !important;
+            padding-right: 2.5rem !important;
+        }
+
+        /* input-group ની અંદર icon ન show થાય — last input પર show */
+        .input-group .form-control.is-invalid,
+        .input-group .form-control.is-valid {
+            background-position: right 0.75rem center !important;
+        }
+
+        /* ===== Select2 — Sneat Theme Match ===== */
+        .select2-container--bootstrap-5 .select2-selection {
+            border: 1px solid #d9dee3 !important;
+            border-radius: 0.375rem !important;
+            min-height: 42px !important;
+            padding: 0.375rem 0.75rem !important;
+            font-size: 0.9375rem !important;
+            font-family: 'Public Sans', sans-serif !important;
+            color: #697a8d !important;
+            background-color: #fff !important;
+            box-shadow: none !important;
+            transition: border-color 0.15s ease-in-out !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single {
+            min-height: 42px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+            color: #697a8d !important;
+            padding: 0 !important;
+            line-height: 1.5 !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__placeholder {
+            color: #b4bdc6 !important;
+        }
+
+        .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+        .select2-container--bootstrap-5.select2-container--open .select2-selection {
+            border-color: #696cff !important;
+            box-shadow: 0 0 0 0.2rem rgba(105, 108, 255, 0.15) !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown {
+            border-color: #696cff !important;
+            border-radius: 0.375rem !important;
+            box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45) !important;
+            font-family: 'Public Sans', sans-serif !important;
+            font-size: 0.9375rem !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-results__option {
+            padding: 0.5rem 0.75rem !important;
+            color: #697a8d !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-results__option--highlighted {
+            background-color: #696cff !important;
+            color: #fff !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-results__option--selected {
+            background-color: rgba(105, 108, 255, 0.08) !important;
+            color: #696cff !important;
+            font-weight: 500 !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+            border: 1px solid #d9dee3 !important;
+            border-radius: 0.375rem !important;
+            padding: 0.375rem 0.75rem !important;
+            font-size: 0.9375rem !important;
+            color: #697a8d !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field:focus {
+            border-color: #696cff !important;
+            box-shadow: 0 0 0 0.2rem rgba(105, 108, 255, 0.15) !important;
+            outline: none !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection__clear {
+            color: #a1acb8 !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection__clear:hover {
+            color: #697a8d !important;
+        }
+
+        /* lg size */
+        .select2-lg .select2-container--bootstrap-5 .select2-selection {
+            min-height: 48px !important;
+            font-size: 1rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+
+    </style>
+
+    <!-- imgError: called inline onerror on all tbl-img tags -->
+    <script>
+        function imgError(img) {
+            var cls = img.className;
+            var d = document.createElement('div');
+            d.className = 'img-fallback ' + cls;
+            d.innerHTML = '<i class="bx bx-image img-fallback-icon"></i>';
+            img.parentNode.replaceChild(d, img);
+        }
+
+        function imgPreview(input, previewId) {
+            var file = input.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var el = document.getElementById(previewId);
+                if (el) {
+                    el.src = e.target.result;
+                    el.style.display = 'block';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+
+    <!-- Helpers -->
+    <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
+
+    <!-- Config -->
+    <script src="{{ asset('assets/js/config.js') }}"></script>
+</head>
