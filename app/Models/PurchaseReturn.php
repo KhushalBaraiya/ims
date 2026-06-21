@@ -13,17 +13,18 @@ class PurchaseReturn extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'return_no',
+        'return_date',
         'reference_no',
         'purchase_id',
         'supplier_id',
-        'return_status',
-        'payment_status',
         'sub_total',
         'tax_amount',
         'discount_amount',
         'grand_total',
         'refunded_amount',
         'notes',
+        'status',
         'user_id',
     ];
 

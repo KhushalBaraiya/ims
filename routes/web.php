@@ -18,6 +18,8 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseReturnController;
 
 // Root redirect
 Route::get('/', function () {
@@ -72,6 +74,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/{sale}/return-data', [SaleReturnController::class, 'getSaleReturnData'])->name('sales.return-data');
     Route::get('/sale-returns/{sale_return}/print', [SaleReturnController::class, 'printReturn'])->name('sale-returns.print');
     Route::resource('sale-returns', SaleReturnController::class);
+    // Purchase Management Routes
+    Route::get('/purchases/search-products', [PurchaseController::class, 'searchProducts'])->name('purchases.search-products');
+    Route::get('/purchases/{purchase}/print', [PurchaseController::class, 'printInvoice'])->name('purchases.print');
+    Route::resource('purchases', PurchaseController::class);
+
+    // Purchase Return Routes
+    Route::get('/purchases/{purchase}/return-data', [PurchaseReturnController::class, 'getPurchaseReturnData'])->name('purchases.return-data');
+    Route::get('/purchase-returns/{purchase_return}/print', [PurchaseReturnController::class, 'printReturn'])->name('purchase-returns.print');
+    Route::resource('purchase-returns', PurchaseReturnController::class);
 });
 
 

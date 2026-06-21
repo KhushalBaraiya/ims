@@ -13,10 +13,11 @@ class Purchase extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'purchase_no',
+        'purchase_date',
+        'purchase_person_id',
         'reference_no',
         'supplier_id',
-        'purchase_status',
-        'payment_status',
         'sub_total',
         'tax_amount',
         'discount_amount',
@@ -25,7 +26,10 @@ class Purchase extends Model
         'paid_amount',
         'due_amount',
         'payment_method',
+        'invoice_no',
+        'invoice_date',
         'notes',
+        'status',
         'user_id',
     ];
 
@@ -36,7 +40,12 @@ class Purchase extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function purchasePerson(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'purchase_person_id');
     }
 
     public function items(): HasMany

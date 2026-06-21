@@ -17,6 +17,7 @@ class PurchaseReturnItem extends Model
         'purchase_price',
         'tax_amount',
         'total_amount',
+        'reason',
     ];
 
     public function purchaseReturn(): BelongsTo

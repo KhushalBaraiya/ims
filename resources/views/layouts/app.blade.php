@@ -315,11 +315,20 @@
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform duration-200"></i>
                     </button>
                     <ul class="sidebar-group-items mt-1 pl-8 space-y-0.5 hidden">
+                        @can('purchases.view')
                         <li>
-                            <a href="#" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 text-slate-400 hover:text-white hover:bg-slate-800/30 transition-all">
+                            <a href="{{ route('purchases.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('purchases.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
                                 Purchases
                             </a>
                         </li>
+                        @endcan
+                        @can('purchase_returns.view')
+                        <li>
+                            <a href="{{ route('purchase-returns.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('purchase-returns.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
+                                Purchase Returns
+                            </a>
+                        </li>
+                        @endcan
                         @can('sales.view')
                         <li>
                             <a href="{{ route('sales.index') }}" class="group flex gap-x-3 rounded-lg p-1.5 text-xs font-semibold leading-5 {{ request()->routeIs('sales.*') ? 'text-white bg-slate-800' : 'text-slate-400 hover:text-white hover:bg-slate-800/30' }} transition-all">
@@ -394,10 +403,6 @@
                 </li>
             </ul>
         </nav>
-
-        <div class="p-3 border-t border-slate-800 text-center text-[10px] text-slate-500">
-            &copy; 2026 Antigravity POS
-        </div>
     </div>
 
     <!-- Main Wrapper -->
