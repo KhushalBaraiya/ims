@@ -22,4 +22,18 @@ class ActivityLog extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Helper to log user activities automatically.
+     */
+    public static function log(string $activity, ?string $description = null): self
+    {
+        return self::create([
+            'user_id' => auth()->id(),
+            'activity' => $activity,
+            'description' => $description,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+    }
 }
