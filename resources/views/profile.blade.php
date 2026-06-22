@@ -1,125 +1,171 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
 @section('title', 'My Profile')
 
 @section('content')
-    <!-- Header -->
-    <div class="mb-6">
-        <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight">Account Profile</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Manage your user profile settings and password security
-            details.</p>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">My Profile</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Profile</li>
+                </ol>
+            </nav>
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <!-- Profile Overview Card -->
-        <div class="lg:col-span-1">
-            <x-card title="Profile Overview" subtitle="Your account parameters">
-                <div class="flex flex-col items-center text-center pb-4 border-b border-slate-100 dark:border-slate-800">
-                    <!-- Profile Photo -->
-                    <div class="relative group">
-                        @if ($user->profile_photo)
-                            <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}" alt="Avatar"
-                                class="h-20 w-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-800 shadow-sm">
-                        @else
-                            <div
-                                class="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-white font-bold text-2xl shadow-md border-2 border-slate-200 dark:border-slate-800">
-                                {{ substr($user->name, 0, 1) }}
-                            </div>
-                        @endif
-                    </div>
+    <div class="row g-4">
 
-                    <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 mt-3">{{ $user->name }}</h4>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $user->email }}</p>
-
-                    <div class="mt-3">
-                        <x-badge variant="primary" :text="$user->roles->pluck('name')->implode(', ') ?: 'Staff'" />
-                    </div>
+        {{-- Left: Profile Overview --}}
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bx bx-user-circle me-2 text-primary"></i>Profile Overview</h6>
                 </div>
-
-                <div class="mt-5 space-y-3.5 divide-y divide-slate-100 dark:divide-slate-800">
-                    <div class="flex justify-between items-center text-[12px] pt-3">
-                        <span class="font-semibold text-slate-400 dark:text-slate-500">Phone Number</span>
-                        <span
-                            class="font-bold text-slate-700 dark:text-slate-300">{{ $user->phone ?: 'Not provided' }}</span>
-                    </div>
-                    <div class="flex justify-between items-center text-[12px] pt-3">
-                        <span class="font-semibold text-slate-400 dark:text-slate-500">Member Since</span>
-                        <span
-                            class="font-bold text-slate-700 dark:text-slate-300">{{ $user->created_at->format('M d, Y') }}</span>
-                    </div>
-                    <div class="flex justify-between items-center text-[12px] pt-3">
-                        <span class="font-semibold text-slate-400 dark:text-slate-500">Last Login</span>
-                        <span class="font-bold text-slate-700 dark:text-slate-300">
-                            {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Never' }}
-                        </span>
-                    </div>
-                </div>
-            </x-card>
-        </div>
-
-        <!-- Edit Profile and Change Password Forms -->
-        <div class="lg:col-span-2 space-y-6">
-
-            <!-- General Profile Settings -->
-            <x-card title="Profile Information"
-                subtitle="Update your account name, email address, phone, and profile photo.">
-                <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-4">
-                    @csrf
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <x-input label="Name" name="name" :value="old('name', $user->name)" required placeholder="John Doe" />
-                        <x-input label="Email Address" name="email" type="email" :value="old('email', $user->email)" required
-                            placeholder="john@company.com" />
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <x-input label="Phone Number" name="phone" :value="old('phone', $user->phone)" placeholder="e.g. +1234567890" />
-
-                        <div>
-                            <label for="profile_photo"
-                                class="block text-[12px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                                Profile Picture
-                            </label>
-                            <input type="file" name="profile_photo" id="profile_photo"
-                                class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-slate-800 dark:file:text-slate-300 focus:outline-none cursor-pointer border border-slate-300 dark:border-slate-800 rounded-lg p-0.5 bg-white dark:bg-slate-950">
-                            <p class="text-[10px] text-slate-400 mt-1">Allowed files: JPG, PNG, GIF. Max size: 2MB.</p>
-                            @error('profile_photo')
-                                <p class="mt-1 text-xs text-red-500 flex items-center gap-1">
-                                    <i class="fa-solid fa-circle-info"></i> {{ $message }}
-                                </p>
-                            @enderror
+                <div class="card-body p-4 text-center">
+                    @if ($user->profile_photo)
+                        <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}"
+                            class="rounded-circle mb-3 shadow-sm"
+                            style="width:80px;height:80px;object-fit:cover;border:3px solid #e0e0e0;">
+                    @else
+                        <div class="rounded-circle d-flex align-items-center justify-content-center bg-label-primary mx-auto mb-3"
+                            style="width:80px;height:80px;">
+                            <span class="fw-bold text-primary" style="font-size:2rem;">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </span>
                         </div>
-                    </div>
+                    @endif
+                    <h5 class="fw-bold mb-1">{{ $user->name }}</h5>
+                    <p class="text-muted small mb-2">{{ $user->email }}</p>
+                    <span class="badge bg-label-primary">{{ $user->roles->pluck('name')->implode(', ') ?: 'Staff' }}</span>
 
-                    <div class="flex justify-end pt-3">
-                        <x-button type="submit" variant="primary">
-                            <i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Profile Details
-                        </x-button>
-                    </div>
-                </form>
-            </x-card>
+                    <hr class="my-3">
 
-            <!-- Change Password Settings -->
-            <x-card title="Change Password" subtitle="Change your current login security credentials.">
-                <form method="POST" action="{{ route('profile.password') }}" class="space-y-4">
-                    @csrf
+                    <ul class="list-unstyled text-start mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">Phone</span>
+                            <span class="small fw-bold">{{ $user->phone ?: 'Not set' }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">Member Since</span>
+                            <span class="small">{{ $user->created_at->format('d M Y') }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted small fw-semibold">Last Login</span>
+                            <span
+                                class="small">{{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'N/A' }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <x-input label="Current Password" name="current_password" type="password" required
-                            placeholder="••••••••" />
-                        <x-input label="New Password" name="password" type="password" required placeholder="••••••••" />
-                        <x-input label="Confirm New Password" name="password_confirmation" type="password" required
-                            placeholder="••••••••" />
-                    </div>
+        {{-- Right: Forms --}}
+        <div class="col-lg-8">
 
-                    <div class="flex justify-end pt-3">
-                        <x-button type="submit" variant="danger">
-                            <i class="fa-solid fa-key mr-1.5"></i> Change Password
-                        </x-button>
-                    </div>
-                </form>
-            </x-card>
+            {{-- Profile Information --}}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bx bx-edit me-2 text-primary"></i>Profile Information</h6>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name"
+                                    class="form-control @error('name') is-invalid @enderror"
+                                    value="{{ old('name', $user->name) }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    value="{{ old('email', $user->email) }}" required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Phone</label>
+                                <input type="text" name="phone"
+                                    class="form-control @error('phone') is-invalid @enderror"
+                                    value="{{ old('phone', $user->phone) }}" placeholder="+1234567890">
+                                @error('phone')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Profile Photo</label>
+                                <input type="file" name="profile_photo"
+                                    class="form-control @error('profile_photo') is-invalid @enderror"
+                                    accept="image/jpeg,image/png,image/gif">
+                                <div class="form-text">JPG, PNG, GIF — max 2MB</div>
+                                @error('profile_photo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bx bx-save me-1"></i> Save Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Change Password --}}
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bx bx-key me-2 text-warning"></i>Change Password</h6>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ route('profile.password') }}">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Current Password <span
+                                        class="text-danger">*</span></label>
+                                <input type="password" name="current_password"
+                                    class="form-control @error('current_password') is-invalid @enderror"
+                                    placeholder="••••••••" required>
+                                @error('current_password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">New Password <span
+                                        class="text-danger">*</span></label>
+                                <input type="password" name="password"
+                                    class="form-control @error('password') is-invalid @enderror" placeholder="••••••••"
+                                    required>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Confirm Password <span
+                                        class="text-danger">*</span></label>
+                                <input type="password" name="password_confirmation" class="form-control"
+                                    placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bx bx-key me-1"></i> Change Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
         </div>
     </div>
+
 @endsection

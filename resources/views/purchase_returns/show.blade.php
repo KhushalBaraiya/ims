@@ -1,31 +1,31 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Purchase Return Details')
 
 @section('content')
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Purchase Return Details</h2>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Detailed view of supplier return, returned items, and refund information.</p>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="">
+            <h2 class="fw-bold mb-1 h4">Purchase Return Details</h2>
+            <p class="text-muted small">Detailed view of supplier return, returned items, and refund information.</p>
         </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0 gap-2">
-            <x-button href="{{ route('purchase-returns.index') }}" variant="secondary">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Back to Returns
-            </x-button>
+        <div class="d-flex gap-2">
+            <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+                <i class="bx bx-arrow-back me-1"></i> Back to Returns
+            </a>
             <a href="{{ route('purchase-returns.print', $purchaseReturn->id) }}" target="_blank" class="inline-flex items-center gap-x-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md transition-all active:scale-[0.98]">
-                <i class="fa-solid fa-print"></i> Print Return
+                <i class="bx bx-printer"></i> Print Return
             </a>
             @can('purchase_returns.update')
-                <x-button href="{{ route('purchase-returns.edit', $purchaseReturn->id) }}" variant="primary">
-                    <i class="fa-regular fa-pen-to-square mr-1"></i> Edit Return
-                </x-button>
+                <a href="{{ route('purchase-returns.edit', $purchaseReturn->id) }}" class="btn btn-primary">
+                    <i class="bx bx-edit me-1"></i> Edit Return
+                </a>
             @endcan
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 text-[14px]">
-        <div class="lg:col-span-1 space-y-6">
-            <x-card title="Return Summary">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Return Summary</h6></div><div class="card-body p-4">
                 <div class="space-y-4">
                     <div>
                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Return No</span>
@@ -58,9 +58,9 @@
                         </div>
                     </div>
                 </div>
-            </x-card>
+            </div></div>
 
-            <x-card title="Refund Details">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Refund Details</h6></div><div class="card-body p-4">
                 <div class="space-y-3 text-sm">
                     <div class="flex justify-between items-center py-1.5 border-b border-slate-100 dark:border-slate-800">
                         <span class="text-xs font-bold text-slate-400 uppercase">Grand Total</span>
@@ -71,17 +71,17 @@
                         <span class="font-bold text-violet-600">₹{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
                     </div>
                 </div>
-            </x-card>
+            </div></div>
 
             @if($purchaseReturn->notes)
-            <x-card title="Notes">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Notes</h6></div><div class="card-body p-4">
                 <p class="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line">{{ $purchaseReturn->notes }}</p>
-            </x-card>
+            </div></div>
             @endif
         </div>
 
-        <div class="lg:col-span-3">
-            <x-card title="Returned Items" subtitle="{{ $purchaseReturn->items->count() }} item(s) returned">
+        <div class="col-lg-9">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Returned Items</h6><small class="text-muted">{{ $purchaseReturn->items->count() }} item(s) returned</small></div><div class="card-body p-4">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-[13px]">
                         <thead>
@@ -107,7 +107,7 @@
                         </tbody>
                     </table>
                 </div>
-            </x-card>
+            </div></div>
         </div>
     </div>
 @endsection

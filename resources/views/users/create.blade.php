@@ -1,18 +1,33 @@
-@extends('layouts.app')
-
-@section('title', 'Create User')
+@extends('layouts.admin')
+@section('title', 'Add User')
 
 @section('content')
-    <!-- Header -->
-    <div class="mb-6">
-        <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight">Create User</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Register a new user account with Spatie role assignments.</p>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Add User</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></li>
+                    <li class="breadcrumb-item active">Add</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">
+            <i class="bx bx-arrow-back me-1"></i> Back
+        </a>
     </div>
 
-    <!-- Form Card -->
-    <x-card title="Account Details" subtitle="Provide the credentials and details for the new user.">
-        <form method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
-            @include('users.form')
-        </form>
-    </x-card>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-user me-2 text-primary"></i>User Details</h6>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
+                @include('users.form')
+            </form>
+        </div>
+    </div>
+
 @endsection

@@ -1,20 +1,26 @@
-@extends('layouts.app')
-
-@section('title', 'Create Supplier')
-
+@extends('layouts.admin')
+@section('title', 'Add Supplier')
 @section('content')
-    <!-- Header -->
-    <div class="mb-6">
-        <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Create Supplier</h2>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Add a new electronics and inventory supplier.</p>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Add Supplier</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('suppliers.index') }}">Suppliers</a></li>
+                    <li class="breadcrumb-item active">Add</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="{{ route('suppliers.index') }}" class="btn btn-outline-secondary"><i class="bx bx-arrow-back me-1"></i>
+            Back</a>
     </div>
-
-    <!-- Form Wrapper -->
-    <div class="max-w-4xl">
-        <x-card>
-            <form method="POST" action="{{ route('suppliers.store') }}">
-                @include('suppliers.form')
-            </form>
-        </x-card>
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-group me-2 text-primary"></i>Supplier Details</h6>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST" action="{{ route('suppliers.store') }}">@include('suppliers.form')</form>
+        </div>
     </div>
 @endsection

@@ -1,108 +1,173 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
 @section('title', 'Edit Purchase Return')
 
 @section('content')
-    <div class="mb-6">
-        <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Edit Purchase Return</h2>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Modify the return details and quantities. Stock adjustments will be recalculated automatically.</p>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Edit Purchase Return</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">Purchase Returns</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+            <i class="bx bx-arrow-back me-1"></i> Back
+        </a>
     </div>
 
     <form method="POST" action="{{ route('purchase-returns.update', $purchaseReturn->id) }}" id="returnForm" novalidate>
-        @csrf
-        @method('PUT')
+        @csrf @method('PUT')
+        <div class="row g-4">
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 text-[14px]">
-
-            <!-- Left Column -->
-            <div class="lg:col-span-1 space-y-6">
-                <x-card title="Return Details">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Return No</label>
-                            <input type="text" class="block w-full rounded-lg border border-slate-350 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 py-2 px-3.5 text-[14px] text-slate-500 font-bold font-mono outline-none" value="{{ $purchaseReturn->return_no }}" readonly>
+            <div class="col-lg-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bx bx-info-circle me-2 text-primary"></i>Return Details</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Return No</label>
+                            <input type="text" class="form-control bg-light fw-bold"
+                                value="{{ $purchaseReturn->return_no }}" readonly>
                         </div>
-                        <div>
-                            <label class="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Purchase Order</label>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Purchase Order</label>
                             <input type="hidden" name="purchase_id" value="{{ $purchaseReturn->purchase_id }}">
-                            <input type="text" class="block w-full rounded-lg border border-slate-350 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 py-2 px-3.5 text-[14px] text-slate-500 font-bold font-mono outline-none" value="{{ $purchaseReturn->purchase->purchase_no ?? '-' }}" readonly>
+                            <input type="text" class="form-control bg-light fw-bold"
+                                value="{{ $purchaseReturn->purchase->purchase_no ?? '-' }}" readonly>
                         </div>
-                        <div>
-                            <x-input label="Return Date" type="date" name="return_date" :value="old('return_date', $purchaseReturn->return_date)" required />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
+                            <input type="date" name="return_date"
+                                class="form-control @error('return_date') is-invalid @enderror"
+                                value="{{ old('return_date', $purchaseReturn->return_date) }}" required>
+                            @error('return_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-                        <div>
-                            <x-input label="Reference No" name="reference_no" :value="old('reference_no', $purchaseReturn->reference_no ?? '')" placeholder="Optional reference..." />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reference No</label>
+                            <input type="text" name="reference_no" class="form-control"
+                                value="{{ old('reference_no', $purchaseReturn->reference_no ?? '') }}"
+                                placeholder="Optional...">
                         </div>
-                        <div>
-                            <x-select label="Status" name="status" required>
-                                <option value="Completed" {{ old('status', $purchaseReturn->status) === 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Pending"   {{ old('status', $purchaseReturn->status) === 'Pending' ? 'selected' : '' }}>Pending</option>
-                            </x-select>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                            <select name="status" class="form-select" required>
+                                <option value="Completed"
+                                    {{ old('status', $purchaseReturn->status) === 'Completed' ? 'selected' : '' }}>
+                                    Completed</option>
+                                <option value="Pending"
+                                    {{ old('status', $purchaseReturn->status) === 'Pending' ? 'selected' : '' }}>Pending
+                                </option>
+                            </select>
                         </div>
                     </div>
-                </x-card>
-                <x-card title="Refund Details">
-                    <div class="space-y-4">
-                        <div>
-                            <x-input label="Refunded Amount" type="number" step="0.01" name="refunded_amount" id="refunded_amount" :value="old('refunded_amount', $purchaseReturn->refunded_amount)" required />
-                        </div>
-                    </div>
-                </x-card>
-            </div>
-
-            <!-- Right Column: Items -->
-            <div class="lg:col-span-3 space-y-6">
-                <x-card title="Return Items">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-slate-800 dark:text-slate-200 text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50 dark:bg-slate-800/40 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-                                    <th class="py-2.5 px-3">Product</th>
-                                    <th class="py-2.5 px-3 w-32 text-center">Orig. Qty Returned</th>
-                                    <th class="py-2.5 px-3 w-28 text-center">Return Qty</th>
-                                    <th class="py-2.5 px-3">Reason</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-[12px]">
-                                @foreach($purchaseReturn->items as $index => $item)
-                                <tr class="hover:bg-slate-50/40 dark:hover:bg-slate-800/20 transition-colors">
-                                    <td class="py-3 px-3 font-bold text-slate-800 dark:text-slate-200">
-                                        {{ $item->product->name }}
-                                        <input type="hidden" name="items[{{ $index }}][product_id]" value="{{ $item->product_id }}">
-                                    </td>
-                                    <td class="py-3 px-3 text-center text-slate-500 font-semibold">{{ number_format($item->quantity, 2) }}</td>
-                                    <td class="py-3 px-3">
-                                        <input type="number" step="0.01" min="0" name="items[{{ $index }}][quantity]" value="{{ old("items.{$index}.quantity", $item->quantity) }}" class="block w-20 mx-auto rounded border border-slate-350 dark:border-slate-850 bg-white dark:bg-slate-950 py-1 px-1.5 text-xs text-slate-800 dark:text-slate-100 outline-none text-center font-bold focus:border-blue-500">
-                                    </td>
-                                    <td class="py-3 px-3">
-                                        <input type="text" name="items[{{ $index }}][reason]" value="{{ old("items.{$index}.reason", $item->reason ?? '') }}" class="block w-full rounded border border-slate-305 dark:border-slate-855 bg-white dark:bg-slate-950 py-1 px-2 text-xs text-slate-800 dark:text-slate-100 outline-none placeholder-slate-400" placeholder="Reason...">
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </x-card>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <x-card title="Notes">
-                        <x-textarea name="notes" rows="6" :value="old('notes', $purchaseReturn->notes ?? '')" placeholder="Return reason, conditions..." />
-                    </x-card>
-                    <x-card title="Refund Summary">
-                        <div class="space-y-4 text-xs">
-                            <div class="bg-violet-50 dark:bg-violet-950/20 p-3 rounded-xl border border-violet-100 dark:border-violet-900/30 flex justify-between items-center">
-                                <span class="text-[10px] text-violet-500 font-bold uppercase">Refunded Amount</span>
-                                <span class="font-black text-violet-600 dark:text-violet-400 text-sm">₹{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
-                            </div>
-                        </div>
-                    </x-card>
                 </div>
 
-                <div class="flex justify-end gap-3">
-                    <x-button href="{{ route('purchase-returns.index') }}" variant="secondary">Cancel</x-button>
-                    <x-button type="submit" variant="primary">Update Return</x-button>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bx bx-money me-2 text-success"></i>Refund Details</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" name="refunded_amount"
+                            class="form-control @error('refunded_amount') is-invalid @enderror"
+                            value="{{ old('refunded_amount', $purchaseReturn->refunded_amount) }}" required>
+                        @error('refunded_amount')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bx bx-list-ul me-2 text-info"></i>Return Items</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-3">Product</th>
+                                        <th class="text-center">Orig. Qty Returned</th>
+                                        <th class="text-center" style="width:110px">Return Qty</th>
+                                        <th>Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($purchaseReturn->items as $index => $item)
+                                        <tr>
+                                            <td class="ps-3 fw-semibold">
+                                                {{ $item->product->name }}
+                                                <input type="hidden" name="items[{{ $index }}][product_id]"
+                                                    value="{{ $item->product_id }}">
+                                            </td>
+                                            <td class="text-center text-muted fw-semibold">
+                                                {{ number_format($item->quantity, 2) }}</td>
+                                            <td class="text-center">
+                                                <input type="number" step="0.01" min="0"
+                                                    name="items[{{ $index }}][quantity]"
+                                                    value="{{ old("items.{$index}.quantity", $item->quantity) }}"
+                                                    class="form-control form-control-sm text-center"
+                                                    style="width:90px;margin:auto;">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="items[{{ $index }}][reason]"
+                                                    value="{{ old("items.{$index}.reason", $item->reason ?? '') }}"
+                                                    class="form-control form-control-sm" placeholder="Reason...">
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white py-3 border-bottom">
+                                <h6 class="mb-0 fw-semibold">Notes</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <textarea name="notes" rows="5" class="form-control" placeholder="Return reason, conditions...">{{ old('notes', $purchaseReturn->notes ?? '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white py-3 border-bottom">
+                                <h6 class="mb-0 fw-semibold">Refund Summary</h6>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="bg-light rounded p-3 d-flex justify-content-between align-items-center">
+                                    <span class="text-muted fw-semibold">Refunded Amount</span>
+                                    <span
+                                        class="fw-bold text-success fs-5">₹{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+                        <i class="bx bx-x me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-save me-1"></i> Update Return
+                    </button>
                 </div>
             </div>
         </div>
     </form>
+
 @endsection

@@ -176,16 +176,3 @@ class RolePermissionSeeder extends Seeder
         $admin->assignRole($superAdminRole);
     }
 }
-Roles & Permison Thay Gyu 
-Have CUrrency Nu Proper Setting Baki 
-Report ma and Dashbord ma Data Show krva na hoy - and export pdf excel 
-Language changes baki 
-Desgin CHanges Baki 
-
-// Have Currency and Reporrt Dashbord Aaje Reva De  
-to a kayre krishu
-
-Desgin and Langauge change nu krvii 
-
-Pn have tu k shu kru ? 
-k have tu krii ??  

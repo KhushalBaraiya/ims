@@ -1,18 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Units')
 
 @section('content')
     <!-- Header Section -->
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Units</h2>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Manage units of measurement (e.g. Piece, Box, Kilogram) used for product quantities.</p>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="">
+            <h2 class="fw-bold mb-1 h4">Units</h2>
+            <p class="text-muted small">Manage units of measurement (e.g. Piece, Box, Kilogram) used for product quantities.</p>
         </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0">
+        <div class="d-flex gap-2">
             @can('units.create')
                 <a href="{{ route('units.create') }}" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98] cursor-pointer">
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="bx bx-plus"></i>
                     Add Unit
                 </a>
             @endcan
@@ -20,7 +20,7 @@
     </div>
 
     <!-- DataTables Card -->
-    <x-card>
+    <div class="card shadow-sm mb-4"><div class="card-body p-4">
         <div class="overflow-x-auto">
             <table id="unitsTable" class="w-full text-slate-800 dark:text-slate-200 display responsive nowrap" style="width:100%">
                 <thead>
@@ -40,20 +40,20 @@
                             <td class="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">{{ $unit->name }}</td>
                             <td class="py-3 px-4 font-semibold text-slate-600 dark:text-slate-350">{{ $unit->short_name }}</td>
                             <td class="py-3 px-4">
-                                <x-badge :variant="$unit->status === 'active' ? 'success' : 'danger'" :text="ucfirst($unit->status)" />
+                                <span class="badge rounded-pill {{ ${1}->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ ucfirst(${1}->status) }}</span>
                             </td>
                             <td class="py-3 px-4 text-slate-500 dark:text-slate-400">{{ $unit->created_at->format('Y-m-d') }}</td>
                             <td class="py-3 px-4 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
                                     @can('units.view')
                                         <a href="{{ route('units.show', $unit->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/50 transition-colors" title="View">
-                                            <i class="fa-regular fa-eye text-[11px]"></i>
+                                            <i class="bx bx-show text-[11px]"></i>
                                         </a>
                                     @endcan
 
                                     @can('units.update')
                                         <a href="{{ route('units.edit', $unit->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-violet-600 hover:bg-violet-50 hover:border-violet-200 dark:hover:bg-violet-900/50 transition-colors" title="Edit">
-                                            <i class="fa-regular fa-pen-to-square text-[11px]"></i>
+                                            <i class="bx bx-edit text-[11px]"></i>
                                         </a>
                                     @endcan
 
@@ -62,7 +62,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" data-id="{{ $unit->id }}" data-name="{{ $unit->name }}" class="delete-btn inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/50 transition-colors" title="Delete">
-                                                <i class="fa-regular fa-trash-can text-[11px]"></i>
+                                                <i class="bx bx-trash text-[11px]"></i>
                                             </button>
                                         </form>
                                     @endcan
@@ -73,7 +73,7 @@
                 </tbody>
             </table>
         </div>
-    </x-card>
+    </div></div>
 @endsection
 
 @push('scripts')

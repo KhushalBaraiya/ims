@@ -1,101 +1,106 @@
-@extends('layouts.app')
-
-@section('title', 'Supplier Details')
-
+@extends('layouts.admin')
+@section('title', 'Supplier — ' . $supplier->name)
 @section('content')
-    <!-- Header -->
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Supplier Details</h2>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Detailed account profile for: {{ $supplier->name }}.</p>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Supplier Details</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('suppliers.index') }}">Suppliers</a></li>
+                    <li class="breadcrumb-item active">{{ $supplier->name }}</li>
+                </ol>
+            </nav>
         </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0 gap-3">
-            <x-button href="{{ route('suppliers.index') }}" variant="outline">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Back to List
-            </x-button>
+        <div class="d-flex gap-2">
             @can('suppliers.update')
-                <x-button href="{{ route('suppliers.edit', $supplier->id) }}" variant="primary">
-                    <i class="fa-solid fa-pen-to-square mr-1"></i> Edit Supplier
-                </x-button>
+                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-primary"><i class="bx bx-edit me-1"></i>
+                    Edit</a>
             @endcan
+            <a href="{{ route('suppliers.index') }}" class="btn btn-outline-secondary"><i class="bx bx-arrow-back me-1"></i>
+                Back</a>
         </div>
     </div>
-
-    <!-- Details Grid -->
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <!-- Overview Card -->
-        <div class="lg:col-span-1">
-            <x-card title="Overview">
-                <div class="flex flex-col items-center text-center pb-4 border-b border-slate-100 dark:border-slate-800">
-                    <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-xl border border-blue-100 dark:border-blue-800 shadow-md">
-                        <i class="fa-solid fa-building text-2xl"></i>
-                    </div>
-                    <h4 class="text-base font-bold text-slate-800 dark:text-slate-200 mt-3">{{ $supplier->name }}</h4>
-                    <p class="text-xs text-slate-405 dark:text-slate-500 mt-0.5">{{ $supplier->company_name ?: 'No Company Associated' }}</p>
-                    <div class="mt-3">
-                        <x-badge :variant="$supplier->status === 'active' ? 'success' : 'danger'" :text="ucfirst($supplier->status)" />
-                    </div>
-                </div>
-
-                <div class="mt-4 space-y-3 divide-y divide-slate-150 dark:divide-slate-800">
-                    <div class="flex justify-between items-center text-xs pt-3">
-                        <span class="font-semibold text-slate-400 dark:text-slate-500">Contact Person</span>
-                        <span class="font-bold text-slate-700 dark:text-slate-350">{{ $supplier->contact_person ?: '-' }}</span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs pt-3">
-                        <span class="font-semibold text-slate-400 dark:text-slate-500">Opening Balance</span>
-                        <span class="font-bold text-slate-700 dark:text-slate-350">${{ number_format($supplier->opening_balance, 2) }}</span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs pt-3">
-                        <span class="font-semibold text-slate-400 dark:text-slate-500">Registered Date</span>
-                        <span class="font-bold text-slate-700 dark:text-slate-350">{{ $supplier->created_at->format('M d, Y') }}</span>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="d-flex align-items-center justify-content-center bg-label-primary rounded-3"
+                            style="width:60px;height:60px;flex-shrink:0;"><i class="bx bx-buildings text-primary"
+                                style="font-size:1.8rem;"></i></div>
+                        <div>
+                            <h5 class="fw-bold mb-1">{{ $supplier->name }}</h5>
+                            <p class="text-muted small mb-1">{{ $supplier->company_name ?: 'No company associated' }}</p>
+                            <span
+                                class="badge rounded-pill {{ $supplier->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ $supplier->status }}</span>
+                        </div>
                     </div>
                 </div>
-            </x-card>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold">Contact & Tax Details</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3"><span
+                                class="text-muted fw-semibold">Phone</span><span>{{ $supplier->phone }}</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3"><span
+                                class="text-muted fw-semibold">Email</span><span>{{ $supplier->email ?: '-' }}</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3"><span
+                                class="text-muted fw-semibold">GST
+                                Number</span><code>{{ $supplier->gst_number ?: '-' }}</code></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3"><span
+                                class="text-muted fw-semibold">City</span><span>{{ $supplier->city ?: '-' }}</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3"><span
+                                class="text-muted fw-semibold">Opening
+                                Balance</span><strong>{{ format_currency($supplier->opening_balance ?? 0) }}</strong></li>
+                        <li class="list-group-item px-4 py-3"><span
+                                class="text-muted fw-semibold d-block mb-1">Address</span>
+                            <p class="mb-0">{{ $supplier->address ?: 'Not provided.' }}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
-        <!-- Contact & Operations Details -->
-        <div class="lg:col-span-2 space-y-6">
-            <x-card title="Business Contact & Tax Parameters">
-                <div class="divide-y divide-slate-100 dark:divide-slate-800">
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">Phone Number</span>
-                        <span class="col-span-2 text-xs font-bold text-slate-800 dark:text-slate-200">{{ $supplier->phone }}</span>
-                    </div>
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">Alternative Phone</span>
-                        <span class="col-span-2 text-xs text-slate-700 dark:text-slate-350">{{ $supplier->alt_phone ?: '-' }}</span>
-                    </div>
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">Email Address</span>
-                        <span class="col-span-2 text-xs text-slate-700 dark:text-slate-350">{{ $supplier->email ?: '-' }}</span>
-                    </div>
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">GST Number</span>
-                        <span class="col-span-2 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">{{ $supplier->gst_number ?: '-' }}</span>
-                    </div>
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">PAN Number</span>
-                        <span class="col-span-2 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">{{ $supplier->pan_number ?: '-' }}</span>
-                    </div>
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">Full Address</span>
-                        <span class="col-span-2 text-xs text-slate-700 dark:text-slate-300">
-                            @if($supplier->address || $supplier->city || $supplier->state)
-                                {{ $supplier->address }}<br>
-                                {{ $supplier->city }}{{ $supplier->state ? ', ' . $supplier->state : '' }} {{ $supplier->pincode }}<br>
-                                {{ $supplier->country }}
-                            @else
-                                -
-                            @endif
-                        </span>
-                    </div>
-                    <div class="grid grid-cols-3 py-3">
-                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">Internal Notes</span>
-                        <span class="col-span-2 text-xs text-slate-600 dark:text-slate-400 italic">{{ $supplier->notes ?: 'No notes available.' }}</span>
-                    </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bx bx-bolt-circle me-2 text-warning"></i>Quick Actions</h6>
                 </div>
-            </x-card>
+                <div class="card-body p-4 d-grid gap-2">
+                    @can('suppliers.update')
+                        <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-primary"><i
+                                class="bx bx-edit me-1"></i> Edit</a>
+                    @endcan
+                    @can('suppliers.delete')
+                        <form id="deleteForm" action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
+                            @csrf @method('DELETE')
+                            <button type="button" class="btn btn-outline-danger w-100 delete-btn"
+                                data-name="{{ $supplier->name }}"><i class="bx bx-trash me-1"></i> Delete</button>
+                        </form>
+                    @endcan
+                </div>
+            </div>
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        $(document).on('click', '.delete-btn', function() {
+            Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Delete "${$(this).data('name')}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes!'
+                })
+                .then((r) => {
+                    if (r.isConfirmed) document.getElementById('deleteForm').submit();
+                });
+        });
+    </script>
+@endpush

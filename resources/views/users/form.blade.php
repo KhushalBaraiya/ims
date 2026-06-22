@@ -1,83 +1,106 @@
 @csrf
 
-<div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-    <!-- Profile Photo Preview & Upload -->
-    <div class="sm:col-span-6 flex items-center gap-5">
-        <div class="shrink-0">
-            @if (isset($user) && $user->profile_photo)
-                <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}" alt="Avatar" class="h-16 w-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-800 shadow-sm">
-            @else
-                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-2 border-slate-200 dark:border-slate-800">
-                    <i class="fa-solid fa-user text-2xl"></i>
-                </div>
-            @endif
-        </div>
-        
-        <div class="w-full max-w-xs">
-            <label for="profile_photo" class="block text-[12px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Profile Photo
-            </label>
-            <input type="file" name="profile_photo" id="profile_photo" 
-                class="block w-full text-xs text-slate-500 dark:text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-slate-800 dark:file:text-slate-300 focus:outline-none cursor-pointer border border-slate-300 dark:border-slate-800 rounded-lg p-0.5 bg-white dark:bg-slate-950">
-            @error('profile_photo')
-                <p class="mt-1 text-xs text-red-500 flex items-center gap-1">
-                    <i class="fa-solid fa-circle-info"></i> {{ $message }}
-                </p>
-            @enderror
-        </div>
+{{-- Profile Photo --}}
+<div class="mb-4 d-flex align-items-center gap-3">
+    <div class="flex-shrink-0">
+        @if (isset($user) && $user->profile_photo)
+            <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}" class="rounded-circle"
+                style="width:64px;height:64px;object-fit:cover;border:2px solid #e0e0e0;">
+        @else
+            <div class="rounded-circle d-flex align-items-center justify-content-center bg-label-primary"
+                style="width:64px;height:64px;">
+                <i class="bx bx-user fs-4 text-primary"></i>
+            </div>
+        @endif
     </div>
-
-    <!-- Name -->
-    <div class="sm:col-span-3">
-        <x-input label="Name" name="name" :value="old('name', $user->name ?? '')" required placeholder="John Doe" />
-    </div>
-
-    <!-- Email -->
-    <div class="sm:col-span-3">
-        <x-input label="Email Address" name="email" type="email" :value="old('email', $user->email ?? '')" required placeholder="john@company.com" />
-    </div>
-
-    <!-- Phone -->
-    <div class="sm:col-span-2">
-        <x-input label="Phone Number" name="phone" :value="old('phone', $user->phone ?? '')" placeholder="e.g. +123456789" />
-    </div>
-
-    <!-- Role (Spatie) -->
-    <div class="sm:col-span-2">
-        <x-select label="Role" name="role" required>
-            <option value="" disabled {{ !isset($user) ? 'selected' : '' }}>Select Role</option>
-            @foreach ($roles as $role)
-                <option value="{{ $role->name }}" 
-                    {{ (old('role', isset($user) ? $user->roles->first()?->name : '') === $role->name) ? 'selected' : '' }}>
-                    {{ $role->name }}
-                </option>
-            @endforeach
-        </x-select>
-    </div>
-
-    <!-- Status -->
-    <div class="sm:col-span-2">
-        <x-select label="Status" name="status" required>
-            <option value="active" {{ old('status', $user->status ?? 'active') === 'active' ? 'selected' : '' }}>Active</option>
-            <option value="inactive" {{ old('status', $user->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-        </x-select>
-    </div>
-
-    <!-- Password fields (only required on CREATE, optional on EDIT) -->
-    <div class="sm:col-span-3">
-        <x-input label="Password {{ isset($user) ? '(Leave blank to keep current)' : '' }}" name="password" type="password" :required="!isset($user)" placeholder="••••••••" />
-    </div>
-
-    <div class="sm:col-span-3">
-        <x-input label="Confirm Password" name="password_confirmation" type="password" :required="!isset($user)" placeholder="••••••••" />
+    <div>
+        <label class="form-label fw-semibold mb-1">Profile Photo</label>
+        <input type="file" name="profile_photo"
+            class="form-control form-control-sm @error('profile_photo') is-invalid @enderror"
+            accept="image/jpeg,image/png,image/gif">
+        <div class="form-text">JPG, PNG, GIF — max 2MB</div>
+        @error('profile_photo')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
 </div>
 
-<div class="mt-8 pt-5 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
-    <a href="{{ route('users.index') }}" class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-        Cancel
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+            value="{{ old('name', $user->name ?? '') }}" placeholder="John Doe" required>
+        @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+            value="{{ old('email', $user->email ?? '') }}" placeholder="john@company.com" required>
+        @error('email')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Phone</label>
+        <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+            value="{{ old('phone', $user->phone ?? '') }}" placeholder="+1234567890">
+        @error('phone')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Role <span class="text-danger">*</span></label>
+        <select name="role" class="form-select @error('role') is-invalid @enderror" required>
+            <option value="" disabled {{ !isset($user) ? 'selected' : '' }}>Select Role</option>
+            @foreach ($roles as $role)
+                <option value="{{ $role->name }}"
+                    {{ old('role', isset($user) ? $user->roles->first()?->name : '') === $role->name ? 'selected' : '' }}>
+                    {{ $role->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('role')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+            <option value="active" {{ old('status', $user->status ?? 'active') === 'active' ? 'selected' : '' }}>
+                Active</option>
+            <option value="inactive" {{ old('status', $user->status ?? '') === 'inactive' ? 'selected' : '' }}>
+                Inactive</option>
+        </select>
+        @error('status')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">
+            Password
+            {{ isset($user) ? '<small class="text-muted fw-normal">(leave blank to keep)</small>' : '<span class="text-danger">*</span>' }}
+        </label>
+        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+            placeholder="••••••••" {{ !isset($user) ? 'required' : '' }}>
+        @error('password')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Confirm Password
+            {{ isset($user) ? '' : '<span class="text-danger">*</span>' }}</label>
+        <input type="password" name="password_confirmation" class="form-control" placeholder="••••••••"
+            {{ !isset($user) ? 'required' : '' }}>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end gap-2 pt-4 mt-2 border-top">
+    <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">
+        <i class="bx bx-x me-1"></i> Cancel
     </a>
-    <button type="submit" class="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98] cursor-pointer">
-        {{ isset($user) ? 'Update User' : 'Save User' }}
+    <button type="submit" class="btn btn-primary">
+        <i class="bx bx-save me-1"></i> {{ isset($user) ? 'Update User' : 'Save User' }}
     </button>
 </div>

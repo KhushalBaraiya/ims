@@ -1,258 +1,289 @@
-@extends('layouts.app')
-
-@section('title', 'Edit Sales Return')
+@extends('layouts.admin')
+@section('title', 'Edit Sales Return — ' . $saleReturn->return_no)
 
 @section('content')
-    <!-- Header -->
-    <div class="mb-6">
-        <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Edit Sales Return</h2>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Modify returned items, quantities, or details of return record: <span class="font-mono font-bold">{{ $saleReturn->return_no }}</span>.</p>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Edit Sales Return</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('sale-returns.index') }}">Sale Returns</a></li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary">
+            <i class="bx bx-arrow-back me-1"></i> Back
+        </a>
     </div>
 
-    <!-- Form wrapper -->
     <form method="POST" action="{{ route('sale-returns.update', $saleReturn->id) }}" id="returnForm" novalidate>
-        @csrf
-        @method('PUT')
-        
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 text-[14px]">
-            
-            <!-- Left Column: Return Info -->
-            <div class="lg:col-span-1 space-y-6">
-                <x-card title="Return Details">
-                    <div class="space-y-4">
-                        <!-- Invoice Number (Readonly) -->
-                        <div>
-                            <label class="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Invoice Number</label>
-                            <input type="text" class="block w-full rounded-lg border border-slate-350 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 py-2 px-3.5 text-[14px] text-slate-500 font-bold font-mono outline-none" value="{{ $saleReturn->sale->invoice_no }}" readonly>
+        @csrf @method('PUT')
+        <div class="row g-4">
+
+            <div class="col-lg-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bx bx-info-circle me-2 text-primary"></i>Return Details</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Invoice No</label>
+                            <input type="text" class="form-control bg-light fw-bold"
+                                value="{{ $saleReturn->sale->invoice_no }}" readonly>
                             <input type="hidden" name="sale_id" value="{{ $saleReturn->sale_id }}">
                         </div>
-
-                        <!-- Customer (Readonly) -->
-                        <div>
-                            <label class="block text-[13px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Customer</label>
-                            <input type="text" class="block w-full rounded-lg border border-slate-350 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 py-2 px-3.5 text-[14px] text-slate-500 font-bold outline-none" value="{{ $saleReturn->customer->name }}" readonly>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Customer</label>
+                            <input type="text" class="form-control bg-light fw-bold"
+                                value="{{ $saleReturn->customer->name }}" readonly>
                         </div>
-
-                        <!-- Return Date -->
-                        <div>
-                            <x-input label="Return Date" type="date" name="return_date" :value="old('return_date', $saleReturn->return_date)" required />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
+                            <input type="date" name="return_date"
+                                class="form-control @error('return_date') is-invalid @enderror"
+                                value="{{ old('return_date', $saleReturn->return_date) }}" required>
+                            @error('return_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        <!-- Reference No -->
-                        <div>
-                            <x-input label="Reference No" name="reference_no" :value="old('reference_no', $saleReturn->reference_no)" placeholder="Optional reference..." />
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reference No</label>
+                            <input type="text" name="reference_no" class="form-control"
+                                value="{{ old('reference_no', $saleReturn->reference_no) }}" placeholder="Optional...">
                         </div>
-
-                        <!-- Status -->
-                        <div>
-                            <x-select label="Status" name="status" required>
-                                <option value="Completed" {{ old('status', $saleReturn->status) === 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Pending" {{ old('status', $saleReturn->status) === 'Pending' ? 'selected' : '' }}>Pending</option>
-                            </x-select>
-                        </div>
-                    </div>
-                </x-card>
-                
-                <!-- Refund details card -->
-                <x-card title="Refund Details">
-                    <div class="space-y-4">
-                        <!-- Refunded Amount -->
-                        <div>
-                            <x-input label="Refunded Amount" type="number" step="0.01" name="refunded_amount" id="refunded_amount" :value="old('refunded_amount', $saleReturn->refunded_amount)" required />
-                            <p class="mt-1 text-[10px] text-slate-400">Total amount paid back to the customer.</p>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                            <select name="status" class="form-select" required>
+                                <option value="Completed"
+                                    {{ old('status', $saleReturn->status) === 'Completed' ? 'selected' : '' }}>Completed
+                                </option>
+                                <option value="Pending"
+                                    {{ old('status', $saleReturn->status) === 'Pending' ? 'selected' : '' }}>Pending
+                                </option>
+                            </select>
                         </div>
                     </div>
-                </x-card>
-            </div>
-
-            <!-- Right Column: Sale Items Comparison Table -->
-            <div class="lg:col-span-3 space-y-6">
-                
-                <!-- Items Table Card -->
-                <x-card title="Invoice Return Items">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-slate-800 dark:text-slate-200 text-left border-collapse" id="returnItemsTable">
-                            <thead>
-                                <tr class="bg-slate-50 dark:bg-slate-800/40 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-                                    <th class="py-2.5 px-3 w-16">Image</th>
-                                    <th class="py-2.5 px-3">Product Name</th>
-                                    <th class="py-2.5 px-3 w-28 text-center">Sold Qty</th>
-                                    <th class="py-2.5 px-3 w-28 text-center">Other Returns</th>
-                                    <th class="py-2.5 px-3 w-28 text-center">Unit Price</th>
-                                    <th class="py-2.5 px-3 w-28 text-center">Avail. Return</th>
-                                    <th class="py-2.5 px-3 w-28 text-center">Return Qty</th>
-                                    <th class="py-2.5 px-3">Reason</th>
-                                    <th class="py-2.5 px-3 w-28 text-right">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-[12px]" id="returnItemsContainer">
-                                @php $rowCount = 0; @endphp
-                                @foreach($saleReturn->sale->items as $item)
-                                    @php
-                                        // Sum returned items in completed returns excluding this one
-                                        $otherReturned = \App\Models\SaleReturnItem::whereHas('saleReturn', function($q) use ($saleReturn) {
-                                            $q->where('sale_id', $saleReturn->sale_id)
-                                              ->where('id', '!=', $saleReturn->id)
-                                              ->where('status', 'Completed');
-                                        })->where('product_id', $item->product_id)->sum('quantity');
-
-                                        $currentReturnedItem = $saleReturn->items->where('product_id', $item->product_id)->first();
-                                        $currentQty = $currentReturnedItem ? (float)$currentReturnedItem->quantity : 0.00;
-                                        $currentReason = $currentReturnedItem ? $currentReturnedItem->reason : '';
-                                        $maxReturnable = max(0.00, $item->quantity - $otherReturned);
-                                    @endphp
-                                    @if($maxReturnable > 0 || $currentQty > 0)
-                                        <tr class="item-row hover:bg-slate-50/40 dark:hover:bg-slate-800/20 transition-colors" data-product-id="{{ $item->product_id }}">
-                                            <td class="py-3 px-3">
-                                                @if ($item->product->image)
-                                                    <img src="{{ asset('uploads/products/' . $item->product->image) }}" class="h-8 w-8 rounded object-cover border dark:border-slate-700 shadow-sm">
-                                                @else
-                                                    <div class="h-8 w-8 bg-slate-50 dark:bg-slate-800 rounded flex items-center justify-center text-slate-405 border border-slate-100 dark:border-slate-700 shadow-inner">
-                                                        <i class="fa-regular fa-image text-[10px]"></i>
-                                                    </div>
-                                                @endif
-                                            </td>
-                                            <td class="py-3 px-3 font-bold text-slate-800 dark:text-slate-200">
-                                                {{ $item->product->name }}
-                                                <input type="hidden" name="items[{{ $rowCount }}][product_id]" value="{{ $item->product_id }}">
-                                            </td>
-                                            <td class="py-3 px-3 text-center text-slate-500 font-semibold">{{ number_format($item->quantity, 2) }} {{ $item->product->unit->short_name ?? 'PCS' }}</td>
-                                            <td class="py-3 px-3 text-center text-slate-450 font-semibold">{{ number_format($otherReturned, 2) }} {{ $item->product->unit->short_name ?? 'PCS' }}</td>
-                                            <td class="py-3 px-3 text-center font-semibold price-cell" data-price="{{ $item->unit_price }}">₹{{ number_format($item->unit_price, 2) }}</td>
-                                            <td class="py-3 px-3 text-center font-bold text-slate-600 dark:text-slate-400 max-returnable-cell" data-max="{{ $maxReturnable }}">
-                                                {{ number_format($maxReturnable, 2) }} {{ $item->product->unit->short_name ?? 'PCS' }}
-                                            </td>
-                                            <td class="py-3 px-3">
-                                                <input type="number" step="0.01" min="0" max="{{ $maxReturnable }}" name="items[{{ $rowCount }}][quantity]" value="{{ number_format($currentQty, 2) }}" class="qty-input block w-20 mx-auto rounded border border-slate-350 dark:border-slate-850 bg-white dark:bg-slate-950 py-1 px-1.5 text-xs text-slate-800 dark:text-slate-100 outline-none text-center font-bold focus:border-blue-500">
-                                            </td>
-                                            <td class="py-3 px-3">
-                                                <input type="text" name="items[{{ $rowCount }}][reason]" value="{{ $currentReason }}" class="reason-input block w-full rounded border border-slate-305 dark:border-slate-855 bg-white dark:bg-slate-950 py-1 px-2 text-xs text-slate-800 dark:text-slate-100 outline-none placeholder-slate-400" placeholder="Reason (e.g. damaged)...">
-                                            </td>
-                                            <td class="py-3 px-3 font-bold text-right subtotal-cell text-slate-700 dark:text-slate-300">₹{{ number_format($currentQty * $item->unit_price, 2) }}</td>
-                                        </tr>
-                                        @php $rowCount++; @endphp
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </x-card>
-
-                <!-- Summary & Notes -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Notes -->
-                    <x-card title="Return Notes">
-                        <x-textarea name="notes" rows="6" :value="old('notes', $saleReturn->notes)" placeholder="State return reasons, item conditions, or general annotations..." />
-                    </x-card>
-
-                    <!-- Calculation Summary -->
-                    <x-card title="Refund Summary">
-                        <div class="space-y-4 text-xs">
-                            <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-850 pb-2">
-                                <span class="text-slate-400 font-semibold uppercase">Total Refund Subtotal</span>
-                                <span class="font-bold text-slate-700 dark:text-slate-300" id="sum_subtotal">₹{{ number_format($saleReturn->sub_total, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-850 pb-2">
-                                <span class="text-slate-700 dark:text-slate-200 font-bold uppercase text-[13px]">Grand Total Refund</span>
-                                <span class="font-black text-blue-600 dark:text-blue-400 text-sm" id="sum_grandtotal">₹{{ number_format($saleReturn->grand_total, 2) }}</span>
-                            </div>
-                            
-                            <div class="bg-blue-50 dark:bg-blue-950/20 p-3 rounded-xl border border-blue-100 dark:border-blue-900/30 flex justify-between items-center">
-                                <span class="text-[10px] text-blue-500 font-bold uppercase">Customer Credit/Refund</span>
-                                <span class="font-black text-blue-600 dark:text-blue-400 text-xs" id="summary_refunded">₹{{ number_format($saleReturn->refunded_amount, 2) }}</span>
-                            </div>
-                        </div>
-                    </x-card>
                 </div>
 
-                <!-- Submit Row -->
-                <div class="flex justify-end gap-3">
-                    <x-button href="{{ route('sale-returns.index') }}" variant="secondary">Cancel</x-button>
-                    <x-button type="submit" variant="primary" id="submitBtn">
-                        Update Return
-                    </x-button>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bx bx-money me-2 text-success"></i>Refund Details</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" name="refunded_amount" id="refunded_amount"
+                            class="form-control @error('refunded_amount') is-invalid @enderror"
+                            value="{{ old('refunded_amount', $saleReturn->refunded_amount) }}" required>
+                        <div class="form-text">Total amount paid back to the customer.</div>
+                        @error('refunded_amount')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
-
             </div>
 
+            <div class="col-lg-9">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bx bx-list-ul me-2 text-info"></i>Invoice Return Items</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Product</th>
+                                        <th class="text-center">Sold Qty</th>
+                                        <th class="text-center">Other Returns</th>
+                                        <th class="text-center">Unit Price</th>
+                                        <th class="text-center">Avail. Return</th>
+                                        <th class="text-center" style="width:110px">Return Qty</th>
+                                        <th>Reason</th>
+                                        <th class="text-end">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="returnItemsContainer">
+                                    @php $rowCount = 0; @endphp
+                                    @foreach ($saleReturn->sale->items as $item)
+                                        @php
+                                            $otherReturned = \App\Models\SaleReturnItem::whereHas(
+                                                'saleReturn',
+                                                function ($q) use ($saleReturn) {
+                                                    $q->where('sale_id', $saleReturn->sale_id)
+                                                        ->where('id', '!=', $saleReturn->id)
+                                                        ->where('status', 'Completed');
+                                                },
+                                            )
+                                                ->where('product_id', $item->product_id)
+                                                ->sum('quantity');
+                                            $currentReturnedItem = $saleReturn->items
+                                                ->where('product_id', $item->product_id)
+                                                ->first();
+                                            $currentQty = $currentReturnedItem
+                                                ? (float) $currentReturnedItem->quantity
+                                                : 0.0;
+                                            $currentReason = $currentReturnedItem ? $currentReturnedItem->reason : '';
+                                            $maxReturnable = max(0.0, $item->quantity - $otherReturned);
+                                        @endphp
+                                        @if ($maxReturnable > 0 || $currentQty > 0)
+                                            <tr class="item-row" data-product-id="{{ $item->product_id }}">
+                                                <td>
+                                                    @if ($item->product->image)
+                                                        <img src="{{ asset('uploads/products/' . $item->product->image) }}"
+                                                            class="tbl-img rounded" onerror="imgError(this)">
+                                                    @else
+                                                        <div
+                                                            class="tbl-img d-flex align-items-center justify-content-center bg-light rounded img-fallback tbl-img">
+                                                            <i class="bx bx-package text-muted"></i></div>
+                                                    @endif
+                                                </td>
+                                                <td class="fw-semibold">
+                                                    {{ $item->product->name }}
+                                                    <input type="hidden" name="items[{{ $rowCount }}][product_id]"
+                                                        value="{{ $item->product_id }}">
+                                                </td>
+                                                <td class="text-center text-muted">{{ number_format($item->quantity, 2) }}
+                                                </td>
+                                                <td class="text-center text-muted">{{ number_format($otherReturned, 2) }}
+                                                </td>
+                                                <td class="text-center price-cell fw-semibold"
+                                                    data-price="{{ $item->unit_price }}">
+                                                    ₹{{ number_format($item->unit_price, 2) }}</td>
+                                                <td class="text-center fw-bold text-success max-returnable-cell"
+                                                    data-max="{{ $maxReturnable }}">
+                                                    {{ number_format($maxReturnable, 2) }}</td>
+                                                <td class="text-center">
+                                                    <input type="number" step="0.01" min="0"
+                                                        max="{{ $maxReturnable }}"
+                                                        name="items[{{ $rowCount }}][quantity]"
+                                                        value="{{ number_format($currentQty, 2) }}"
+                                                        class="qty-input form-control form-control-sm text-center"
+                                                        style="width:90px;margin:auto;">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="items[{{ $rowCount }}][reason]"
+                                                        value="{{ $currentReason }}" class="form-control form-control-sm"
+                                                        placeholder="Reason...">
+                                                </td>
+                                                <td class="text-end fw-bold subtotal-cell">
+                                                    ₹{{ number_format($currentQty * $item->unit_price, 2) }}</td>
+                                            </tr>
+                                            @php $rowCount++; @endphp
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white py-3 border-bottom">
+                                <h6 class="mb-0 fw-semibold">Return Notes</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <textarea name="notes" rows="5" class="form-control" placeholder="Return reasons...">{{ old('notes', $saleReturn->notes) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white py-3 border-bottom">
+                                <h6 class="mb-0 fw-semibold">Refund Summary</h6>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between border-bottom py-2">
+                                    <span class="text-muted small fw-semibold">Refund Subtotal</span>
+                                    <span class="fw-bold"
+                                        id="sum_subtotal">₹{{ number_format($saleReturn->sub_total, 2) }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between border-bottom py-2">
+                                    <span class="fw-bold">Grand Total Refund</span>
+                                    <span class="fw-bold text-primary"
+                                        id="sum_grandtotal">₹{{ number_format($saleReturn->grand_total, 2) }}</span>
+                                </div>
+                                <div class="bg-light rounded p-3 mt-3 d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small fw-semibold">Customer Refund</span>
+                                    <span class="fw-bold text-success"
+                                        id="summary_refunded">₹{{ number_format($saleReturn->refunded_amount, 2) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary">
+                        <i class="bx bx-x me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="bx bx-save me-1"></i> Update Return
+                    </button>
+                </div>
+            </div>
         </div>
     </form>
+
 @endsection
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        const refundedInput = $('#refunded_amount');
+    <script>
+        $(document).ready(function() {
+            const refundedInput = $('#refunded_amount');
 
-        // Qty input triggers calculations
-        $(document).on('input change', '.qty-input', function() {
-            const row = $(this);
-            const qtyVal = parseFloat(row.val()) || 0;
-            const maxVal = parseFloat(row.closest('tr').find('.max-returnable-cell').data('max'));
+            $(document).on('input change', '.qty-input', function() {
+                const qtyVal = parseFloat($(this).val()) || 0;
+                const maxVal = parseFloat($(this).closest('tr').find('.max-returnable-cell').data('max'));
+                if (qtyVal > maxVal) {
+                    $(this).val(maxVal.toFixed(2));
+                    showAdminToast(`Max returnable: ${maxVal.toFixed(2)} units.`, 'error');
+                }
+                if (qtyVal < 0) {
+                    $(this).val(0);
+                }
+                calculateRefundTotals();
+            });
 
-            if (qtyVal > maxVal) {
-                row.val(maxVal.toFixed(2));
-                toastr.error(`Cannot return more than available quantity (${maxVal.toFixed(2)} units).`);
+            refundedInput.on('input change', function() {
+                $('#summary_refunded').text('₹' + (parseFloat($(this).val()) || 0).toFixed(2));
+            });
+
+            function calculateRefundTotals() {
+                let refundSubtotal = 0;
+                $('#returnItemsContainer tr.item-row').each(function() {
+                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const price = parseFloat($(this).find('.price-cell').data('price')) || 0;
+                    const rowSub = price * qty;
+                    $(this).find('.subtotal-cell').text('₹' + rowSub.toFixed(2));
+                    refundSubtotal += rowSub;
+                });
+                $('#sum_subtotal').text('₹' + refundSubtotal.toFixed(2));
+                $('#sum_grandtotal').text('₹' + refundSubtotal.toFixed(2));
+                const currentRefunded = parseFloat(refundedInput.val()) || 0;
+                if (currentRefunded > refundSubtotal) {
+                    refundedInput.val(refundSubtotal.toFixed(2));
+                }
+                $('#summary_refunded').text('₹' + (parseFloat(refundedInput.val()) || 0).toFixed(2));
             }
 
-            if (qtyVal < 0) {
-                row.val(0.00);
-                toastr.warning('Return quantity cannot be negative.');
-            }
+            $('#returnForm').on('submit', function(e) {
+                let total = 0;
+                $('.qty-input').each(function() {
+                    total += parseFloat($(this).val()) || 0;
+                });
+                if (total <= 0) {
+                    e.preventDefault();
+                    showAdminToast('Please specify return quantity for at least one item.', 'error');
+                }
+            });
 
             calculateRefundTotals();
         });
-
-        // Refund input updates labels
-        refundedInput.on('input change', function() {
-            const val = parseFloat($(this).val()) || 0;
-            $('#summary_refunded').text('₹' + val.toFixed(2));
-        });
-
-        // Refund Calculations
-        function calculateRefundTotals() {
-            let refundSubtotal = 0;
-
-            $('#returnItemsContainer tr.item-row').each(function() {
-                const row = $(this);
-                const qty = parseFloat(row.find('.qty-input').val()) || 0;
-                const price = parseFloat(row.find('.price-cell').data('price')) || 0;
-
-                const rowSub = price * qty;
-                row.find('.subtotal-cell').text('₹' + rowSub.toFixed(2));
-
-                refundSubtotal += rowSub;
-            });
-
-            $('#sum_subtotal').text('₹' + refundSubtotal.toFixed(2));
-            $('#sum_grandtotal').text('₹' + refundSubtotal.toFixed(2));
-            
-            // Auto match refunded amount to return subtotal on calculation if it's currently 0 or has not been custom set
-            const currentRefunded = parseFloat(refundedInput.val()) || 0;
-            if (currentRefunded === 0 || currentRefunded > refundSubtotal) {
-                refundedInput.val(refundSubtotal.toFixed(2));
-                $('#summary_refunded').text('₹' + refundSubtotal.toFixed(2));
-            } else {
-                $('#summary_refunded').text('₹' + currentRefunded.toFixed(2));
-            }
-        }
-
-        // Prevent submitting form if no quantities are returned
-        $('#returnForm').on('submit', function(e) {
-            let totalReturnQty = 0;
-            $('.qty-input').each(function() {
-                totalReturnQty += (parseFloat($(this).val()) || 0);
-            });
-
-            if (totalReturnQty <= 0) {
-                e.preventDefault();
-                toastr.error('Please specify return quantity for at least one item.');
-                return false;
-            }
-        });
-
-        // Run initial calculations
-        calculateRefundTotals();
-    });
-</script>
+    </script>
 @endpush

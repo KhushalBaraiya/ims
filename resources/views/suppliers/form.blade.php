@@ -1,95 +1,87 @@
 @csrf
 
-<div class="grid grid-cols-1 gap-y-5 gap-x-4 sm:grid-cols-6 text-[14px]">
-    <!-- Supplier Name -->
-    <div class="sm:col-span-3">
-        <x-input label="Supplier Name" name="name" :value="old('name', $supplier->name ?? '')" required placeholder="e.g. Acme Corporation" />
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Supplier Name <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+            value="{{ old('name', $supplier->name ?? '') }}" placeholder="e.g. Acme Corporation" required>
+        @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Company Name -->
-    <div class="sm:col-span-3">
-        <x-input label="Company Name" name="company_name" :value="old('company_name', $supplier->company_name ?? '')" placeholder="e.g. Acme Corp Inc." />
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Company Name</label>
+        <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror"
+            value="{{ old('company_name', $supplier->company_name ?? '') }}" placeholder="e.g. Acme Corp Inc.">
+        @error('company_name')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Contact Person -->
-    <div class="sm:col-span-2">
-        <x-input label="Contact Person" name="contact_person" :value="old('contact_person', $supplier->contact_person ?? '')" placeholder="e.g. John Doe" />
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Phone <span class="text-danger">*</span></label>
+        <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+            value="{{ old('phone', $supplier->phone ?? '') }}" placeholder="+1234567890" required>
+        @error('phone')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Phone -->
-    <div class="sm:col-span-2">
-        <x-input label="Phone Number" name="phone" :value="old('phone', $supplier->phone ?? '')" required placeholder="e.g. +1234567890" />
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Email</label>
+        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+            value="{{ old('email', $supplier->email ?? '') }}" placeholder="supplier@company.com">
+        @error('email')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Alternative Phone -->
-    <div class="sm:col-span-2">
-        <x-input label="Alternative Phone" name="alt_phone" :value="old('alt_phone', $supplier->alt_phone ?? '')" placeholder="e.g. +1098765432" />
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">GST Number</label>
+        <input type="text" name="gst_number" class="form-control @error('gst_number') is-invalid @enderror"
+            value="{{ old('gst_number', $supplier->gst_number ?? '') }}" placeholder="22AAAAA0000A1Z5">
+        @error('gst_number')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Email -->
-    <div class="sm:col-span-3">
-        <x-input label="Email Address" name="email" type="email" :value="old('email', $supplier->email ?? '')" placeholder="e.g. supplier@company.com" />
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Opening Balance</label>
+        <input type="number" step="0.01" name="opening_balance"
+            class="form-control @error('opening_balance') is-invalid @enderror"
+            value="{{ old('opening_balance', $supplier->opening_balance ?? '0.00') }}" placeholder="0.00">
+        @error('opening_balance')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- GST Number -->
-    <div class="sm:col-span-3">
-        <x-input label="GST Number" name="gst_number" :value="old('gst_number', $supplier->gst_number ?? '')" placeholder="e.g. 22AAAAA0000A1Z5" />
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+            <option value="active" {{ old('status', $supplier->status ?? 'active') === 'active' ? 'selected' : '' }}>
+                Active</option>
+            <option value="inactive"
+                {{ old('status', $supplier->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+        </select>
+        @error('status')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- PAN Number -->
-    <div class="sm:col-span-2">
-        <x-input label="PAN Number" name="pan_number" :value="old('pan_number', $supplier->pan_number ?? '')" placeholder="e.g. ABCDE1234F" />
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">City</label>
+        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
+            value="{{ old('city', $supplier->city ?? '') }}" placeholder="City">
+        @error('city')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Opening Balance -->
-    <div class="sm:col-span-2">
-        <x-input label="Opening Balance" name="opening_balance" type="number" step="0.01" :value="old('opening_balance', $supplier->opening_balance ?? '0.00')" placeholder="e.g. 1500.00" />
-    </div>
-
-    <!-- Status -->
-    <div class="sm:col-span-2">
-        <x-select label="Status" name="status" required>
-            <option value="active" {{ old('status', $supplier->status ?? 'active') === 'active' ? 'selected' : '' }}>Active</option>
-            <option value="inactive" {{ old('status', $supplier->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-        </x-select>
-    </div>
-
-    <!-- Address -->
-    <div class="sm:col-span-6">
-        <x-textarea label="Street Address" name="address" :value="old('address', $supplier->address ?? '')" placeholder="e.g. 123 Main St, Suite 400" />
-    </div>
-
-    <!-- City -->
-    <div class="sm:col-span-2">
-        <x-input label="City" name="city" :value="old('city', $supplier->city ?? '')" placeholder="e.g. New York" />
-    </div>
-
-    <!-- State -->
-    <div class="sm:col-span-2">
-        <x-input label="State / Province" name="state" :value="old('state', $supplier->state ?? '')" placeholder="e.g. NY" />
-    </div>
-
-    <!-- Country -->
-    <div class="sm:col-span-2">
-        <x-input label="Country" name="country" :value="old('country', $supplier->country ?? '')" placeholder="e.g. United States" />
-    </div>
-
-    <!-- Pincode -->
-    <div class="sm:col-span-2">
-        <x-input label="Pincode / ZIP" name="pincode" :value="old('pincode', $supplier->pincode ?? '')" placeholder="e.g. 10001" />
-    </div>
-
-    <!-- Notes -->
-    <div class="sm:col-span-4">
-        <x-input label="Notes" name="notes" :value="old('notes', $supplier->notes ?? '')" placeholder="Any internal annotations about this supplier..." />
+    <div class="col-12">
+        <label class="form-label fw-semibold">Address</label>
+        <textarea name="address" rows="2" class="form-control @error('address') is-invalid @enderror"
+            placeholder="Street address...">{{ old('address', $supplier->address ?? '') }}</textarea>
+        @error('address')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
 </div>
 
-<div class="mt-8 pt-5 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
-    <x-button href="{{ route('suppliers.index') }}" variant="secondary">
-        Cancel
-    </x-button>
-    <x-button type="submit" variant="primary">
-        {{ isset($supplier) ? 'Update Supplier' : 'Save Supplier' }}
-    </x-button>
+<div class="d-flex justify-content-end gap-2 pt-4 mt-2 border-top">
+    <a href="{{ route('suppliers.index') }}" class="btn btn-outline-secondary"><i class="bx bx-x me-1"></i> Cancel</a>
+    <button type="submit" class="btn btn-primary"><i class="bx bx-save me-1"></i>
+        {{ isset($supplier) ? 'Update' : 'Save' }}</button>
 </div>

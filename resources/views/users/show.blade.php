@@ -1,74 +1,146 @@
-@extends('layouts.app')
-
-@section('title', 'User Details')
+@extends('layouts.admin')
+@section('title', 'User — ' . $user->name)
 
 @section('content')
-    <!-- Header -->
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight">User Details</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Account profile and operations summary.</p>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">User Details</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></li>
+                    <li class="breadcrumb-item active">{{ $user->name }}</li>
+                </ol>
+            </nav>
         </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0 gap-3">
-            <a href="{{ route('users.index') }}" class="inline-flex items-center gap-x-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">
-                <i class="fa-solid fa-arrow-left"></i> Back to List
-            </a>
+        <div class="d-flex gap-2">
             @can('users.update')
-                <a href="{{ route('users.edit', $user->id) }}" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98]">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit User
+                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">
+                    <i class="bx bx-edit me-1"></i> Edit
                 </a>
             @endcan
+            <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">
+                <i class="bx bx-arrow-back me-1"></i> Back
+            </a>
         </div>
     </div>
 
-    <!-- Details Card -->
-    <div class="max-w-3xl">
-        <x-card title="General Information" subtitle="User account parameters">
-            <div class="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100 dark:border-slate-800 mb-6">
-                <!-- Profile Avatar -->
-                <div>
-                    @if ($user->profile_photo)
-                        <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}" alt="Avatar" class="h-20 w-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-800 shadow-sm">
-                    @else
-                        <div class="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-violet-500 text-white font-bold text-2xl shadow-md border-2 border-slate-200 dark:border-slate-800">
-                            {{ substr($user->name, 0, 1) }}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-4">
+                        @if ($user->profile_photo)
+                            <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}"
+                                class="rounded-circle shadow-sm"
+                                style="width:80px;height:80px;object-fit:cover;flex-shrink:0;">
+                        @else
+                            <div class="rounded-circle d-flex align-items-center justify-content-center bg-label-primary"
+                                style="width:80px;height:80px;flex-shrink:0;">
+                                <span class="fw-bold text-primary"
+                                    style="font-size:2rem;">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                            </div>
+                        @endif
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h4 class="fw-bold mb-0">{{ $user->name }}</h4>
+                                <span
+                                    class="badge rounded-pill {{ $user->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $user->status }}
+                                </span>
+                            </div>
+                            <p class="text-muted small mb-1"><i class="bx bx-envelope me-1"></i>{{ $user->email }}</p>
+                            <p class="text-muted small mb-1"><i class="bx bx-phone me-1"></i>{{ $user->phone ?: 'N/A' }}
+                            </p>
+                            <span
+                                class="badge bg-label-primary">{{ $user->roles->pluck('name')->implode(', ') ?: 'Staff' }}</span>
                         </div>
-                    @endif
-                </div>
-
-                <div class="text-center sm:text-left">
-                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">{{ $user->name }}</h3>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{{ $user->email }}</p>
-                    <div class="mt-2.5 flex items-center justify-center sm:justify-start gap-2">
-                        <x-badge variant="primary" :text="$user->roles->pluck('name')->implode(', ') ?: 'Staff'" />
-                        <x-badge :variant="$user->status === 'active' ? 'success' : 'danger'" :text="ucfirst($user->status)" />
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="divide-y divide-slate-100 dark:divide-slate-800 text-[12px]">
-                <div class="grid grid-cols-3 py-3">
-                    <span class="font-semibold text-slate-400 dark:text-slate-500">Phone Number</span>
-                    <span class="col-span-2 font-bold text-slate-700 dark:text-slate-300">{{ $user->phone ?: 'Not provided' }}</span>
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bx bx-info-circle me-2 text-primary"></i>Information</h6>
                 </div>
-
-                <div class="grid grid-cols-3 py-3">
-                    <span class="font-semibold text-slate-400 dark:text-slate-500">Last Login Timestamp</span>
-                    <span class="col-span-2 font-bold text-slate-700 dark:text-slate-300">
-                        {{ $user->last_login_at ? $user->last_login_at->format('Y-m-d H:i:s') . ' (' . $user->last_login_at->diffForHumans() . ')' : 'Never logged in' }}
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-3 py-3">
-                    <span class="font-semibold text-slate-400 dark:text-slate-500">Account Created Date</span>
-                    <span class="col-span-2 font-bold text-slate-700 dark:text-slate-300">{{ $user->created_at->format('Y-m-d H:i:s') }}</span>
-                </div>
-
-                <div class="grid grid-cols-3 py-3">
-                    <span class="font-semibold text-slate-400 dark:text-slate-500">Last Profile Update</span>
-                    <span class="col-span-2 font-bold text-slate-700 dark:text-slate-300">{{ $user->updated_at->format('Y-m-d H:i:s') }}</span>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                            <span class="text-muted small fw-semibold">ID</span>
+                            <span class="fw-bold">#{{ $user->id }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                            <span class="text-muted small fw-semibold">Name</span>
+                            <span class="fw-bold">{{ $user->name }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                            <span class="text-muted small fw-semibold">Role</span>
+                            <span
+                                class="badge bg-label-primary">{{ $user->roles->pluck('name')->implode(', ') ?: 'Staff' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                            <span class="text-muted small fw-semibold">Status</span>
+                            <span
+                                class="badge rounded-pill {{ $user->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ $user->status }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                            <span class="text-muted small fw-semibold">Created</span>
+                            <span class="small">{{ $user->created_at->format('d M Y') }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                            <span class="text-muted small fw-semibold">Updated</span>
+                            <span class="small">{{ $user->updated_at->format('d M Y') }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </x-card>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bx bx-bolt-circle me-2 text-warning"></i>Quick Actions</h6>
+                </div>
+                <div class="card-body p-4 d-grid gap-2">
+                    @can('users.update')
+                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary">
+                            <i class="bx bx-edit me-1"></i> Edit User
+                        </a>
+                    @endcan
+                    @can('users.delete')
+                        @if (auth()->id() !== $user->id)
+                            <form id="deleteForm" action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                @csrf @method('DELETE')
+                                <button type="button" class="btn btn-outline-danger w-100 delete-btn"
+                                    data-name="{{ $user->name }}">
+                                    <i class="bx bx-trash me-1"></i> Delete User
+                                </button>
+                            </form>
+                        @endif
+                    @endcan
+                </div>
+            </div>
+        </div>
     </div>
+
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).on('click', '.delete-btn', function() {
+            const name = $(this).data('name');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Delete user "${name}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete!',
+            }).then((r) => {
+                if (r.isConfirmed) document.getElementById('deleteForm').submit();
+            });
+        });
+    </script>
+@endpush

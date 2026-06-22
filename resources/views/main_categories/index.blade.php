@@ -1,154 +1,142 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
 @section('title', 'Main Categories')
 
 @section('content')
-    <!-- Header Section -->
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Main Categories</h2>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Manage main product classifications for inventory grouping.</p>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Main Categories</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Main Categories</li>
+                </ol>
+            </nav>
         </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0">
-            @can('main_categories.create')
-                <a href="{{ route('main-categories.create') }}" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98]">
-                    <i class="fa-solid fa-plus"></i>
-                    Add Category
-                </a>
-            @endcan
+        @can('main_categories.create')
+            <a href="{{ route('main-categories.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i> Add Category
+            </a>
+        @endcan
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive p-3">
+                <table class="table table-hover align-middle mb-0" id="categoriesTable" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Category Name</th>
+                            <th>Code</th>
+                            <th class="text-center">Status</th>
+                            <th>Created</th>
+                            <th class="text-center no-sort">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($categories as $index => $category)
+                            <tr>
+                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                <td><strong>{{ $category->name }}</strong></td>
+                                <td><code>{{ $category->slug }}</code></td>
+                                <td class="text-center">
+                                    <span
+                                        class="badge rounded-pill {{ $category->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ ucfirst($category->status) }}
+                                    </span>
+                                </td>
+                                <td class="text-muted small">{{ $category->created_at->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        @can('main_categories.view')
+                                            <a href="{{ route('main-categories.show', $category->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="View">
+                                                <i class="bx bx-show"></i>
+                                            </a>
+                                        @endcan
+                                        @can('main_categories.update')
+                                            <a href="{{ route('main-categories.edit', $category->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="Edit">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('main_categories.delete')
+                                            <form id="delete-form-{{ $category->id }}"
+                                                action="{{ route('main-categories.destroy', $category->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $category->id }}" data-name="{{ $category->name }}"
+                                                    title="Delete">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- DataTables Card -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden p-6 transition-colors duration-150">
-        <table id="categoriesTable" class="w-full text-slate-800 dark:text-slate-200 display responsive nowrap" style="width:100%">
-            <thead>
-                <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-405 dark:text-slate-450 text-[11px] font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-                    <th class="text-left py-3 px-4">#</th>
-                    <th class="text-left py-3 px-4">Category Name</th>
-                    <th class="text-left py-3 px-4">Category Code</th>
-                    <th class="text-left py-3 px-4">Status</th>
-                    <th class="text-left py-3 px-4">Created Date</th>
-                    <th class="text-center py-3 px-4 no-sort">Action</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-[12px]">
-                @foreach ($categories as $index => $category)
-                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td class="py-3 px-4 font-semibold text-slate-400 dark:text-slate-500">{{ $index + 1 }}</td>
-                        <td class="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">{{ $category->name }}</td>
-                        <td class="py-3 px-4 font-mono font-bold text-slate-650 dark:text-slate-400">{{ $category->slug }}</td>
-                        <td class="py-3 px-4">
-                            @if ($category->status === 'active')
-                                <span class="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-600/20 dark:ring-emerald-500/20">Active</span>
-                            @else
-                                <span class="inline-flex items-center rounded-full bg-red-50 dark:bg-red-500/10 px-2 py-0.5 text-[11px] font-bold text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-600/20 dark:ring-red-500/20">Inactive</span>
-                            @endif
-                        </td>
-                        <td class="py-3 px-4 text-slate-500 dark:text-slate-450">{{ $category->created_at->format('Y-m-d H:i') }}</td>
-                        <td class="py-3 px-4 text-center">
-                            <div class="flex items-center justify-center gap-1.5">
-                                @can('main_categories.view')
-                                    <a href="{{ route('main-categories.show', $category->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/50 transition-colors" title="View">
-                                        <i class="fa-regular fa-eye text-[11px]"></i>
-                                    </a>
-                                @endcan
-
-                                @can('main_categories.update')
-                                    <a href="{{ route('main-categories.edit', $category->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-violet-600 hover:bg-violet-50 hover:border-violet-200 dark:hover:bg-violet-900/50 transition-colors" title="Edit">
-                                        <i class="fa-regular fa-pen-to-square text-[11px]"></i>
-                                    </a>
-                                @endcan
-
-                                @can('main_categories.delete')
-                                    <form id="delete-form-{{ $category->id }}" action="{{ route('main-categories.destroy', $category->id) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" data-id="{{ $category->id }}" data-name="{{ $category->name }}" class="delete-btn inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/50 transition-colors" title="Delete">
-                                            <i class="fa-regular fa-trash-can text-[11px]"></i>
-                                        </button>
-                                    </form>
-                                @endcan
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
 @endsection
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        // Initialize DataTables
-        $('#categoriesTable').DataTable({
-            responsive: true,
-            columnDefs: [
-                { targets: 'no-sort', orderable: false }
-            ],
-            language: {
-                searchPlaceholder: "Search categories...",
-                search: ""
-            },
-            dom: '<"flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-1"<"flex items-center"l><"flex items-center"f>>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 px-1"ip>'
-        });
+    <script>
+        $(document).ready(function() {
+            $('#categoriesTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                order: [
+                    [0, 'asc']
+                ],
+                columnDefs: [{
+                    targets: 'no-sort',
+                    orderable: false
+                }]
+            });
 
-        // Setup SweetAlert2 delete confirmation
-        $('.delete-btn').on('click', function(e) {
-            e.preventDefault();
-            const categoryId = $(this).data('id');
-            const categoryName = $(this).data('name');
-            const form = $(`#delete-form-${categoryId}`);
-            
-            const isDark = document.documentElement.classList.contains('dark');
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `You are about to delete category "${categoryName}". This action will soft-delete the record.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3b82f6',
-                cancelButtonColor: '#ef4444',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                background: isDark ? '#18181b' : '#fff',
-                color: isDark ? '#fff' : '#1e293b',
-                customClass: {
-                    popup: 'rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Send AJAX delete request
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire({
+            $(document).on('click', '.delete-btn', function() {
+                const id = $(this).data('id'),
+                    name = $(this).data('name');
+                const form = $(`#delete-form-${id}`);
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Delete category "${name}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete!'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
+                            success: function(res) {
+                                if (res.success) Swal.fire({
                                     title: 'Deleted!',
-                                    text: response.message,
+                                    text: res.message,
                                     icon: 'success',
-                                    background: isDark ? '#18181b' : '#fff',
-                                    color: isDark ? '#fff' : '#1e293b',
-                                    confirmButtonColor: '#3b82f6'
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                toastr.error(response.message);
+                                    confirmButtonColor: '#696cff'
+                                }).then(() => window.location.reload());
+                                else showAdminToast(res.message, 'error');
+                            },
+                            error: function() {
+                                showAdminToast('An error occurred.', 'error');
                             }
-                        },
-                        error: function(xhr) {
-                            toastr.error('An error occurred while deleting the category.');
-                        }
-                    });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    toastr.info(`Deletion of "${categoryName}" was canceled.`);
-                }
+                        });
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 @endpush

@@ -1,34 +1,34 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Sales Invoice Details')
 
 @section('content')
     <!-- Header Section -->
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white tracking-tight">Invoice Details</h2>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Deep transaction view, itemized entries, and payments history.</p>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="">
+            <h2 class="fw-bold mb-1 h4">Invoice Details</h2>
+            <p class="text-muted small">Deep transaction view, itemized entries, and payments history.</p>
         </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0 gap-2">
-            <x-button href="{{ route('sales.index') }}" variant="secondary">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Back to Invoices
-            </x-button>
+        <div class="d-flex gap-2">
+            <a href="{{ route('sales.index') }}" class="btn btn-outline-secondary">
+                <i class="bx bx-arrow-back me-1"></i> Back to Invoices
+            </a>
             <a href="{{ route('sales.print', $sale->id) }}" target="_blank" class="inline-flex items-center gap-x-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md transition-all active:scale-[0.98]">
-                <i class="fa-solid fa-print"></i> Print Invoice
+                <i class="bx bx-printer"></i> Print Invoice
             </a>
             @can('sales.update')
-                <x-button href="{{ route('sales.edit', $sale->id) }}" variant="primary">
-                    <i class="fa-regular fa-pen-to-square mr-1"></i> Edit Invoice
-                </x-button>
+                <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-primary">
+                    <i class="bx bx-edit me-1"></i> Edit Invoice
+                </a>
             @endcan
         </div>
     </div>
 
     <!-- Details Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 text-[14px]">
+    <div class="row g-4">
         <!-- Invoice Header Card -->
-        <div class="lg:col-span-1 space-y-6">
-            <x-card title="Invoice Summary">
+        <div class="col-lg-3">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Invoice Summary</h6></div><div class="card-body p-4">
                 <div class="space-y-4">
                     <div>
                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Invoice No</span>
@@ -71,9 +71,9 @@
                         </div>
                     </div>
                 </div>
-            </x-card>
+            </div></div>
 
-            <x-card title="Payment Details">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Payment Details</h6></div><div class="card-body p-4">
                 <div class="space-y-4">
                     <div>
                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Payment Method</span>
@@ -88,12 +88,12 @@
                         <span class="text-sm font-bold text-red-600 dark:text-red-400 mt-1 block">₹{{ number_format($sale->due_amount, 2) }}</span>
                     </div>
                 </div>
-            </x-card>
+            </div></div>
         </div>
 
         <!-- Items Table and Summary -->
-        <div class="lg:col-span-3 space-y-6">
-            <x-card title="Invoice Items">
+        <div class="col-lg-9">
+            <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Invoice Items</h6></div><div class="card-body p-4">
                 <div class="overflow-x-auto">
                     <table class="w-full text-slate-800 dark:text-slate-200 text-left border-collapse text-xs">
                         <thead>
@@ -116,7 +116,7 @@
                                             <img src="{{ asset('uploads/products/' . $item->product->image) }}" class="h-8 w-8 rounded object-cover shadow-sm ring-1 ring-slate-200 dark:ring-slate-700">
                                         @else
                                             <div class="h-8 w-8 bg-slate-50 dark:bg-slate-800 rounded flex items-center justify-center text-slate-400 border border-slate-100 dark:border-slate-700 shadow-inner">
-                                                <i class="fa-regular fa-image text-[10px]"></i>
+                                                <i class="bx bx-image text-[10px]"></i>
                                             </div>
                                         @endif
                                     </td>
@@ -132,17 +132,17 @@
                         </tbody>
                     </table>
                 </div>
-            </x-card>
+            </div></div>
 
             <!-- Bottom summary -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="row g-4">
                 <!-- Notes -->
-                <x-card title="Invoice Notes">
+                <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Invoice Notes</h6></div><div class="card-body p-4">
                     <p class="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-line leading-relaxed">{{ $sale->notes ?: 'No customer notes or annotations added to this invoice.' }}</p>
-                </x-card>
+                </div></div>
 
                 <!-- Calculations summary -->
-                <x-card title="Invoice Calculations">
+                <div class="card shadow-sm mb-4"><div class="card-header bg-white py-3 border-bottom"><h6 class="mb-0 fw-semibold">Invoice Calculations</h6></div><div class="card-body p-4">
                     <div class="space-y-3.5 text-xs">
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-850 pb-1.5">
                             <span class="text-slate-400 font-semibold uppercase">Subtotal</span>
@@ -165,7 +165,7 @@
                             <span class="font-black text-blue-600 dark:text-blue-400 text-sm">₹{{ number_format($sale->grand_total, 2) }}</span>
                         </div>
                     </div>
-                </x-card>
+                </div></div>
             </div>
         </div>
     </div>

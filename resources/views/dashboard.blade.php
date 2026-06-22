@@ -1,223 +1,358 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
 @section('title', 'Dashboard')
 
+@push('styles')
+    <style>
+        .stats-card-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border-radius: 50%;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        @media(max-width:768px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        .stat-border-card {
+            border-left: 4px solid;
+            transition: transform 0.2s;
+        }
+
+        .stat-border-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 600;
+        }
+    </style>
+@endpush
+
 @section('content')
-    <!-- Dashboard Title and Header Section -->
-    <div class="md:flex md:items-center md:justify-between mb-6">
-        <div class="min-w-0 flex-1">
-            <h2 class="text-xl font-bold leading-7 text-slate-900 dark:text-white sm:truncate sm:text-2xl tracking-tight">
-                POS Dashboard
-            </h2>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                Welcome back, {{ auth()->user()->name ?? 'User' }}! Here is a summary of today's activities.
-            </p>
-        </div>
-        <div class="mt-4 flex md:ml-4 md:mt-0">
-            <button type="button" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98]">
-                <i class="fa-solid fa-cart-shopping"></i>
-                New POS Sale
-            </button>
-        </div>
-    </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        
-        <!-- Total Products Card -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
-            <div class="flex items-center">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform duration-200">
-                    <i class="fa-solid fa-box text-lg"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Total Products</p>
-                    <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">{{ number_format($totalProducts) }}</p>
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400"></div>
-        </div>
-
-        <!-- Total Categories Card -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
-            <div class="flex items-center">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 group-hover:scale-105 transition-transform duration-200">
-                    <i class="fa-solid fa-tags text-lg"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Total Categories</p>
-                    <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">{{ number_format($totalCategories) }}</p>
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-purple-400"></div>
-        </div>
-
-        <!-- Total Suppliers Card -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
-            <div class="flex items-center">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 group-hover:scale-105 transition-transform duration-200">
-                    <i class="fa-solid fa-parachute-box text-lg"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Total Suppliers</p>
-                    <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">{{ number_format($totalSuppliers) }}</p>
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-500 to-cyan-400"></div>
-        </div>
-
-        <!-- Total Customers Card -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
-            <div class="flex items-center">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform duration-200">
-                    <i class="fa-solid fa-users text-lg"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Total Customers</p>
-                    <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">{{ number_format($totalCustomers) }}</p>
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 to-emerald-400"></div>
-        </div>
-
-        <!-- Today's Purchase -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
-            <div class="flex items-center">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 group-hover:scale-105 transition-transform duration-200">
-                    <i class="fa-solid fa-truck-ramp-box text-lg"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Today's Purchases</p>
-                    <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">${{ number_format($todayPurchase, 2) }}</p>
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-orange-500 to-orange-400"></div>
-        </div>
-
-        <!-- Today's Sales -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5">
-            <div class="flex items-center">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 group-hover:scale-105 transition-transform duration-200">
-                    <i class="fa-solid fa-sack-dollar text-lg"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Today's Sales</p>
-                    <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">${{ number_format($todaySales, 2) }}</p>
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-rose-500 to-rose-400"></div>
-        </div>
-
-        <!-- Low Stock Alert Panel Card -->
-        <div class="relative overflow-hidden rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-905 p-4 shadow-sm hover:shadow-md transition-all duration-300 group hover:-translate-y-0.5 sm:col-span-2">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 group-hover:scale-105 transition-transform duration-200">
-                        <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-[10px] font-semibold text-slate-450 dark:text-slate-500 uppercase tracking-wider">Low Stock Warnings</p>
-                        <p class="text-xl font-bold text-slate-800 dark:text-slate-200 mt-0.5">{{ $lowStockProducts->count() }}</p>
-                    </div>
-                </div>
-                <div>
-                    @if ($lowStockProducts->count() > 0)
-                        <span class="inline-flex items-center rounded-full bg-red-50 dark:bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 ring-1 ring-inset ring-red-600/10 dark:ring-red-500/20">Action Needed</span>
-                    @else
-                        <span class="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 ring-1 ring-inset ring-emerald-600/10 dark:ring-emerald-500/20">Stock Healthy</span>
-                    @endif
-                </div>
-            </div>
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-red-500 to-red-400"></div>
-        </div>
-        
-    </div>
-
-    <!-- Details Grid split columns -->
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        
-        <!-- Low Stock Warning Table Card -->
-        <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
-            <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <h3 class="text-sm font-bold text-slate-850 dark:text-slate-200 flex items-center gap-2">
-                    <i class="fa-solid fa-warehouse text-red-500"></i>
-                    Low Stock Alert List
-                </h3>
-            </div>
-            
-            <div class="overflow-x-auto flex-1">
-                <table class="min-w-full divide-y divide-slate-100 dark:divide-slate-800 align-middle">
-                    <thead class="bg-slate-50 dark:bg-slate-950">
-                        <tr>
-                            <th class="px-5 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Code</th>
-                            <th class="px-5 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Product Name</th>
-                            <th class="px-5 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Min Alert Qty</th>
-                            <th class="px-5 py-3 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Current Stock</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                        @forelse ($lowStockProducts as $product)
-                            <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                                <td class="px-5 py-3 whitespace-nowrap font-semibold text-slate-400 dark:text-slate-500">{{ $product->code }}</td>
-                                <td class="px-5 py-3 whitespace-nowrap font-bold text-slate-800 dark:text-slate-200">{{ $product->name }}</td>
-                                {{-- <td class="px-5 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400">{{ number_format($product->stock_alert_qty, 0) }}</td> --}}
-                                <td class="px-5 py-3 whitespace-nowrap text-right font-extrabold text-red-500 dark:text-red-400">
-                                    {{ number_format($product->stock->quantity ?? 0, 0) }}
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center py-12 text-slate-400 dark:text-slate-500">
-                                    <div class="flex flex-col items-center justify-center">
-                                        <i class="fa-regular fa-circle-check text-4xl text-emerald-450 mb-3"></i>
-                                        <p class="font-semibold text-slate-500 dark:text-slate-400">All stock is currently OK!</p>
-                                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">No products are under the stock alert quantity.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Recent Activities Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
-            <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-                <h3 class="text-sm font-bold text-slate-850 dark:text-slate-200 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-blue-500"></i>
-                    Recent Activities
-                </h3>
-            </div>
-            
-            <div class="p-5 flex-1 overflow-y-auto">
-                <ul class="space-y-4 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100 dark:before:bg-slate-800">
-                    @forelse ($recentActivities as $activity)
-                        <li class="relative pl-8 flex gap-x-3">
-                            <div class="absolute left-0 flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
-                                <i class="fa-solid fa-user-clock text-[10px]"></i>
-                            </div>
-                            <div class="flex-auto py-0.5">
-                                <div class="flex justify-between items-center gap-x-2">
-                                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">{{ $activity->user->name ?? 'System' }}</span>
-                                    <span class="text-[10px] text-slate-400 dark:text-slate-500 whitespace-nowrap">{{ $activity->created_at->diffForHumans() }}</span>
-                                </div>
-                                <p class="text-xs font-semibold text-slate-600 dark:text-slate-350 mt-1 leading-normal">{{ $activity->activity }}</p>
-                                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">{{ $activity->description }}</p>
-                            </div>
-                        </li>
-                    @empty
-                        <div class="text-center py-12 text-slate-400 dark:text-slate-500">
-                            <div class="flex flex-col items-center justify-center">
-                                <i class="fa-regular fa-folder-open text-4xl text-slate-300 dark:text-slate-700 mb-3"></i>
-                                <p class="font-semibold text-slate-500 dark:text-slate-400">No activity recorded</p>
-                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">System operations will be logged here.</p>
+    {{-- Welcome Banner --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card overflow-hidden" style="background:linear-gradient(135deg,#696cff 0%,#9155fd 100%);">
+                <div class="d-flex align-items-center row">
+                    <div class="col-sm-7">
+                        <div class="card-body text-white py-4">
+                            <h4 class="text-white mb-1">Welcome back, {{ auth()->user()->name }} 👋</h4>
+                            <p class="mb-3" style="opacity:.8;">Here's your store overview for today.</p>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a href="{{ route('purchases.index') }}" class="btn btn-light btn-sm"><i
+                                        class="bx bx-cart-download me-1"></i> Purchases</a>
+                                <a href="{{ route('products.create') }}" class="btn btn-outline-light btn-sm"><i
+                                        class="bx bx-plus me-1"></i> Add Products</a>
+                                <a href="{{ route('users.index') }}" class="btn btn-outline-light btn-sm"><i
+                                        class="bx bx-group me-1"></i> Users</a>
                             </div>
                         </div>
-                    @endforelse
-                </ul>
+                    </div>
+                    <div class="col-sm-5 d-none d-sm-flex align-items-center justify-content-center py-3">
+                        <div class="text-center text-white" id="dashboardClock">
+                            <div id="dashClock-time"
+                                style="font-size:2.6rem;font-weight:700;letter-spacing:.03em;line-height:1.1;font-variant-numeric:tabular-nums;">
+                                --:--:--</div>
+                            <div id="dashClock-ampm"
+                                style="font-size:1rem;font-weight:600;opacity:.75;margin-top:2px;letter-spacing:.1em;">--
+                            </div>
+                            <div id="dashClock-date" style="font-size:.9rem;opacity:.8;margin-top:6px;font-weight:500;">--
+                                -- ----</div>
+                            <div id="dashClock-day"
+                                style="font-size:.78rem;opacity:.6;margin-top:2px;letter-spacing:.08em;text-transform:uppercase;">
+                                --------</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
     </div>
+
+    {{-- Today Stats --}}
+    <div class="row mb-2">
+        <div class="col-12">
+            <p class="text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.08em;">TODAY</p>
+        </div>
+        <div class="col-6 col-xl-3 mb-4">
+            <div class="card stat-border-card border-primary h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 text-muted small">Today's Purchases</p>
+                        <h3 class="mb-0 text-primary">{{ $todayPurchases ?? 0 }}</h3>
+                    </div>
+                    <span class="stats-card-icon bg-label-primary"><i class="bx bx-cart-download"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3 mb-4">
+            <div class="card stat-border-card border-success h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 text-muted small">Today's Sales</p>
+                        <h3 class="mb-0 text-success">{{ format_currency($todaySales ?? 0) }}</h3>
+                    </div>
+                    <span class="stats-card-icon bg-label-success"><i class="bx bx-rupee"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3 mb-4">
+            <div class="card stat-border-card border-warning h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 text-muted small">Pending Sales</p>
+                        <h3 class="mb-0 text-warning">{{ $pendingSales ?? 0 }}</h3>
+                    </div>
+                    <span class="stats-card-icon bg-label-warning"><i class="bx bx-time-five"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3 mb-4">
+            <div class="card stat-border-card border-danger h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1 text-muted small">Low Stock Products</p>
+                        <h3 class="mb-0 text-danger">{{ $lowStockProducts->count() }}</h3>
+                    </div>
+                    <span class="stats-card-icon bg-label-danger"><i class="bx bx-error-circle"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Overall Stats --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <p class="text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.08em;">OVERALL</p>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 text-muted small">Total Revenue</p>
+                            <h4 class="mb-1 fw-bold">{{ format_currency($totalRevenue ?? 0) }}</h4>
+                            <small class="text-success"><i class="bx bx-trending-up"></i> From sales</small>
+                        </div>
+                        <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.5rem;"><i
+                                class="bx bx-rupee"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 text-muted small">Total Purchases</p>
+                            <h4 class="mb-1 fw-bold">{{ $totalPurchases ?? 0 }}</h4>
+                            <small class="text-info"><i class="bx bx-check-circle"></i> All time</small>
+                        </div>
+                        <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.5rem;"><i
+                                class="bx bx-cart-download"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 text-muted small">Total Products</p>
+                            <h4 class="mb-1 fw-bold">{{ $totalProducts ?? 0 }}</h4>
+                            <small class="text-danger"><i class="bx bx-error-circle"></i> {{ $lowStockProducts->count() }}
+                                low stock</small>
+                        </div>
+                        <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.5rem;"><i
+                                class="bx bx-package"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 text-muted small">Total Users</p>
+                            <h4 class="mb-1 fw-bold">{{ $totalUsers ?? 0 }}</h4>
+                            <small class="text-primary"><i class="bx bx-user-check"></i> Registered</small>
+                        </div>
+                        <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.5rem;"><i
+                                class="bx bx-group"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Recent Sales + Low Stock --}}
+    <div class="row mb-4">
+        <div class="col-xl-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Sales</h5>
+                    <a href="{{ route('sales.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Invoice</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($recentSales ?? [] as $sale)
+                                <tr>
+                                    <td><strong class="text-primary">{{ $sale->invoice_no }}</strong></td>
+                                    <td>{{ $sale->customer->name ?? '-' }}</td>
+                                    <td><strong>{{ format_currency($sale->grand_total) }}</strong></td>
+                                    <td class="text-success">{{ format_currency($sale->paid_amount) }}</td>
+                                    <td>
+                                        @if ($sale->status === 'Completed')
+                                            <span class="badge rounded-pill bg-success">Completed</span>
+                                        @elseif($sale->status === 'Draft')
+                                            <span class="badge rounded-pill bg-warning text-dark">Draft</span>
+                                        @else
+                                            <span class="badge rounded-pill bg-danger">Cancelled</span>
+                                        @endif
+                                    </td>
+                                    <td><small class="text-muted">{{ $sale->invoice_date }}</small></td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">No recent sales found.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Low Stock Alert</h5>
+                    <a href="{{ route('stocks.index') }}" class="btn btn-sm btn-outline-danger">Manage</a>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @forelse($lowStockProducts as $product)
+                            <li class="list-group-item d-flex align-items-center px-4 py-3">
+                                <span
+                                    class="avatar-initial rounded bg-label-danger me-3 d-flex align-items-center justify-content-center"
+                                    style="width:36px;height:36px;border-radius:8px!important;flex-shrink:0;">
+                                    <i class="bx bx-package"></i>
+                                </span>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <h6 class="mb-0 text-truncate">{{ $product->name }}</h6>
+                                    <small class="text-muted">{{ format_currency($product->selling_price) }}</small>
+                                </div>
+                                <span class="badge bg-danger ms-2">{{ $product->stock->quantity ?? 0 }} left</span>
+                            </li>
+                        @empty
+                            <li class="list-group-item text-center text-success py-4">
+                                <i class="bx bx-check-circle fs-4"></i><br>All stock is healthy!
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Quick Stats --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 col-md-3 mb-3 mb-md-0">
+                            <div class="border-end">
+                                <h4 class="text-primary mb-1">{{ $totalCategories ?? 0 }}</h4>
+                                <small class="text-muted">Categories</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3 mb-md-0">
+                            <div class="border-end">
+                                <h4 class="text-success mb-1">{{ $totalBrands ?? 0 }}</h4>
+                                <small class="text-muted">Brands</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3 mb-md-0">
+                            <div class="border-end">
+                                <h4 class="text-warning mb-1">{{ $totalSuppliers ?? 0 }}</h4>
+                                <small class="text-muted">Suppliers</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <h4 class="text-info mb-1">{{ $totalCustomers ?? 0 }}</h4>
+                            <small class="text-muted">Customers</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
+
+@push('scripts')
+    <script>
+        (function() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            function pad(n) {
+                return String(n).padStart(2, '0');
+            }
+
+            function tick() {
+                const now = new Date();
+                let h = now.getHours(),
+                    m = now.getMinutes(),
+                    s = now.getSeconds();
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                const t = document.getElementById('dashClock-time');
+                if (!t) return;
+                document.getElementById('dashClock-time').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+                document.getElementById('dashClock-ampm').textContent = ampm;
+                document.getElementById('dashClock-date').textContent = pad(now.getDate()) + ' ' + months[now
+                .getMonth()] + ' ' + now.getFullYear();
+                document.getElementById('dashClock-day').textContent = days[now.getDay()];
+            }
+            tick();
+            setInterval(tick, 1000);
+        })();
+    </script>
+@endpush

@@ -1,48 +1,67 @@
 @csrf
 
-<div class="grid grid-cols-1 gap-y-5 gap-x-4 sm:grid-cols-6 text-[14px]">
-    <!-- Main Category -->
-    <div class="sm:col-span-3">
-        <x-select label="Main Category" name="main_category_id" required>
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Main Category <span class="text-danger">*</span></label>
+        <select name="main_category_id" class="form-select @error('main_category_id') is-invalid @enderror" required>
             <option value="">Select Main Category</option>
-            @foreach($mainCategories as $cat)
-                <option value="{{ $cat->id }}" {{ old('main_category_id', $subCategory->main_category_id ?? '') == $cat->id ? 'selected' : '' }}>
+            @foreach ($mainCategories as $cat)
+                <option value="{{ $cat->id }}"
+                    {{ old('main_category_id', $subCategory->main_category_id ?? '') == $cat->id ? 'selected' : '' }}>
                     {{ $cat->name }}
                 </option>
             @endforeach
-        </x-select>
+        </select>
+        @error('main_category_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
 
-    <!-- Sub Category Name -->
-    <div class="sm:col-span-3">
-        <x-input label="Sub Category Name" name="name" :value="old('name', $subCategory->name ?? '')" required placeholder="e.g. Laptops, Motherboards" />
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Sub Category Name <span class="text-danger">*</span></label>
+        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+            value="{{ old('name', $subCategory->name ?? '') }}" placeholder="e.g. Laptops" required>
+        @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Sub Category Code (Slug) -->
-    <div class="sm:col-span-3">
-        <x-input label="Sub Category Code (SKU Prefix)" name="slug" :value="old('slug', $subCategory->slug ?? '')" required placeholder="e.g. LAPTOP, MBOARD" />
-        <p class="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Unique identifier for the subcategory (letters, numbers, dashes, underscores only).</p>
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Code / SKU Prefix <span class="text-danger">*</span></label>
+        <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
+            value="{{ old('slug', $subCategory->slug ?? '') }}" placeholder="e.g. LAPTOP" required>
+        <div class="form-text">Unique identifier (letters, numbers, dashes only).</div>
+        @error('slug')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Status -->
-    <div class="sm:col-span-3">
-        <x-select label="Status" name="status" required>
-            <option value="active" {{ old('status', $subCategory->status ?? 'active') === 'active' ? 'selected' : '' }}>Active</option>
-            <option value="inactive" {{ old('status', $subCategory->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-        </x-select>
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+            <option value="active" {{ old('status', $subCategory->status ?? 'active') === 'active' ? 'selected' : '' }}>
+                Active</option>
+            <option value="inactive" {{ old('status', $subCategory->status ?? '') === 'inactive' ? 'selected' : '' }}>
+                Inactive
+            </option>
+        </select>
+        @error('status')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
-
-    <!-- Description -->
-    <div class="sm:col-span-6">
-        <x-textarea label="Description" name="description" :value="old('description', $subCategory->description ?? '')" placeholder="Describe the sub category..." />
+    <div class="col-12">
+        <label class="form-label fw-semibold">Description</label>
+        <textarea name="description" rows="3" class="form-control @error('description') is-invalid @enderror"
+            placeholder="Describe this sub category...">{{ old('description', $subCategory->description ?? '') }}</textarea>
+        @error('description')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
 </div>
 
-<div class="mt-8 pt-5 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
-    <x-button href="{{ route('sub-categories.index') }}" variant="secondary">
-        Cancel
-    </x-button>
-    <x-button type="submit" variant="primary">
-        {{ isset($subCategory) ? 'Update Sub Category' : 'Save Sub Category' }}
-    </x-button>
+<div class="d-flex justify-content-end gap-2 pt-4 mt-2 border-top">
+    <a href="{{ route('sub-categories.index') }}" class="btn btn-outline-secondary">
+        <i class="bx bx-x me-1"></i> Cancel
+    </a>
+    <button type="submit" class="btn btn-primary">
+        <i class="bx bx-save me-1"></i> {{ isset($subCategory) ? 'Update' : 'Save' }}
+    </button>
 </div>
