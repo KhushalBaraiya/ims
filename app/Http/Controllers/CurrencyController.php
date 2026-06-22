@@ -150,4 +150,25 @@ class CurrencyController extends Controller
             'status' => $newStatus,
         ]);
     }
+
+    /**
+     * Switch the globally active currency.
+     */
+    public function switchCurrency(Request $request): JsonResponse
+    {
+        $request->validate([
+            'currency_id' => 'required|exists:currencies,id',
+        ]);
+
+        $currency = Currency::where('status', 'active')->findOrFail($request->currency_id);
+        
+        session(['active_currency' => $currency]);
+
+        ActivityLog::log('Currency Switched', "Switched active currency to: {$currency->name} ({$currency->code})");
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Active currency switched successfully.',
+        ]);
+    }
 }

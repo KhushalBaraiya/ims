@@ -34,9 +34,9 @@ class DashboardController extends Controller
         $lowStockProducts = Product::with('stock')
             ->where(function ($query) {
                 $query->whereHas('stock', function ($q) {
-                    $q->whereRaw('stocks.quantity <= products.stock_alert_qty');
+                    // $q->whereRaw('stocks.quantity <= products.stock_alert_qty');
                 })
-                ->orWhereDoesntHave('stock'); // If no stock entry exists, it means 0 stock
+                    ->orWhereDoesntHave('stock'); // If no stock entry exists, it means 0 stock
             })
             ->where('status', 'active')
             ->take(8) // Limit list to fit layout

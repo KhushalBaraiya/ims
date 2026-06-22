@@ -158,7 +158,7 @@ class PurchaseReturnController extends Controller
     public function show(PurchaseReturn $purchaseReturn): View
     {
         Gate::authorize('purchase_returns.view');
-        $purchaseReturn->load(['items.product.unit', 'supplier', 'user', 'purchase']);
+        $purchaseReturn->load(['items.product', 'supplier', 'user', 'purchase']);
         return view('purchase_returns.show', compact('purchaseReturn'));
     }
 
@@ -286,7 +286,7 @@ class PurchaseReturnController extends Controller
     public function printReturn(PurchaseReturn $purchaseReturn): View
     {
         Gate::authorize('purchase_returns.view');
-        $purchaseReturn->load(['items.product.unit', 'supplier', 'user', 'purchase']);
+        $purchaseReturn->load(['items.product', 'supplier', 'user', 'purchase']);
         ActivityLog::log('Purchase Return Printed', "Printed return: {$purchaseReturn->return_no}");
         return view('purchase_returns.print', compact('purchaseReturn'));
     }

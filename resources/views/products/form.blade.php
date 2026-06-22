@@ -33,14 +33,19 @@
                 </x-select>
             </div>
 
-            <!-- Unit -->
+            <!-- Unit Name -->
             <div class="sm:col-span-2">
-                <x-select label="Unit of Measure" name="unit_id" required>
-                    <option value="">Select Unit</option>
-                    @foreach($units as $unit)
-                        <option value="{{ $unit->id }}" {{ old('unit_id', $product->unit_id ?? '') == $unit->id ? 'selected' : '' }}>{{ $unit->name }} ({{ $unit->short_name }})</option>
-                    @endforeach
-                </x-select>
+                <x-input label="Unit Name" name="unit_name" :value="old('unit_name', $product->unit_name ?? '')" required placeholder="e.g. Piece, Box, Kilogram" />
+            </div>
+
+            <!-- Unit Code -->
+            <div class="sm:col-span-2">
+                <x-input label="Unit Code" name="unit_code" :value="old('unit_code', $product->unit_code ?? '')" required placeholder="e.g. PCS, BOX, KG" />
+            </div>
+
+            <!-- Base Unit -->
+            <div class="sm:col-span-2">
+                <x-input label="Base Unit (Optional)" name="base_unit" :value="old('base_unit', $product->base_unit ?? '')" placeholder="e.g. unit, kg" />
             </div>
 
             <!-- Main Category -->
@@ -70,7 +75,7 @@
         </h3>
         <div class="grid grid-cols-1 gap-y-5 gap-x-4 sm:grid-cols-6">
             <!-- Supplier -->
-            <div class="sm:col-span-2">
+            <div class="sm:col-span-3">
                 <x-select label="Supplier" name="supplier_id" required>
                     <option value="">Select Supplier</option>
                     @foreach($suppliers as $supplier)
@@ -79,20 +84,8 @@
                 </x-select>
             </div>
 
-            <!-- Currency -->
-            <div class="sm:col-span-2">
-                <x-select label="Currency" name="currency_id" required>
-                    <option value="">Select Currency</option>
-                    @foreach($currencies as $currency)
-                        <option value="{{ $currency->id }}" {{ old('currency_id', $product->currency_id ?? '') == $currency->id ? 'selected' : ($currency->is_default ? 'selected' : '') }}>
-                            {{ $currency->name }} ({{ $currency->code }} - {{ $currency->symbol }})
-                        </option>
-                    @endforeach
-                </x-select>
-            </div>
-
             <!-- MRP -->
-            <div class="sm:col-span-2">
+            <div class="sm:col-span-3">
                 <x-input label="MRP (Maximum Retail Price)" type="number" step="0.01" name="mrp" :value="old('mrp', $product->mrp ?? '0.00')" />
             </div>
 

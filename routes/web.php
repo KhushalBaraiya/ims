@@ -1,25 +1,25 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\MainCategoryController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SubCategoryController;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MainCategoryController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseReturnController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 // Root redirect
 Route::get('/', function () {
@@ -41,7 +41,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Profile Management Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -56,12 +56,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('sub-categories', SubCategoryController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('customers', CustomerController::class);
-    Route::resource('units', UnitController::class);
-    
-    // Currencies Routes (with status toggle)
+    Route::resource('stocks', StockController::class);
+
+    // Currencies Routes (with status toggle and switcher)
+    Route::post('/currencies/switch', [CurrencyController::class, 'switchCurrency'])->name('currencies.switch');
     Route::post('/currencies/{currency}/toggle-status', [CurrencyController::class, 'toggleStatus'])->name('currencies.toggle-status');
     Route::resource('currencies', CurrencyController::class);
-    
+
     // Products Routes
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
     Route::resource('products', ProductController::class);
@@ -85,15 +86,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('purchase-returns', PurchaseReturnController::class);
 });
 
-
-
 Route::get('/database-structure', function () {
 
     $database = DB::getDatabaseName();
 
-    $tables = DB::select("SHOW TABLES");
+    $tables = DB::select('SHOW TABLES');
 
-    $tableKey = 'Tables_in_' . $database;
+    $tableKey = 'Tables_in_'.$database;
 
     $output = "Database : {$database}\n\n";
 
@@ -110,7 +109,7 @@ Route::get('/database-structure', function () {
             'job_batches',
             'failed_jobs',
             'password_reset_tokens',
-            'sessions'
+            'sessions',
         ])) {
             continue;
         }

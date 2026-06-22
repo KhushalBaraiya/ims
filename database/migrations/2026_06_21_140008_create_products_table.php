@@ -33,7 +33,7 @@ return new class extends Migration
             $table->longText('full_description')->nullable();
             $table->string('status')->default('active');
             $table->boolean('is_featured')->default(false);
-            
+
             // Optional product details
             $table->string('manufacturer')->nullable();
             $table->string('model_number')->nullable();
@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->string('weight')->nullable();
             $table->string('country_of_origin')->nullable();
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

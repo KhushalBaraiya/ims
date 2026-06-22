@@ -42,7 +42,7 @@
         <!-- Header -->
         <div class="flex justify-between items-start border-b border-slate-200 pb-8 mb-8">
             <div>
-                <div class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1">⚡ Antigravity POS</div>
+                <div class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1">⚡Kalathiya POS</div>
                 <p class="text-xs text-slate-400">Electronics & Inventory Management System</p>
             </div>
             <div class="text-right">

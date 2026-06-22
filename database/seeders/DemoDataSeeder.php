@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use App\Models\Brand;
 use App\Models\MainCategory;
 use App\Models\SubCategory;
-use App\Models\Unit;
 use App\Models\Currency;
 use App\Models\Supplier;
 use App\Models\Product;
@@ -55,19 +54,7 @@ class DemoDataSeeder extends Seeder
             SubCategory::firstOrCreate(['slug' => $sc['slug']], $sc);
         }
 
-        // 4. Seed Units
-        $units = [
-            ['name' => 'Piece', 'short_name' => 'PCS', 'description' => 'Single item unit', 'status' => 'active'],
-            ['name' => 'Box', 'short_name' => 'BOX', 'description' => 'Box packaging unit', 'status' => 'active'],
-            ['name' => 'Pack', 'short_name' => 'PK', 'description' => 'Packet unit', 'status' => 'active'],
-            ['name' => 'Meter', 'short_name' => 'MTR', 'description' => 'Linear metric length', 'status' => 'active'],
-            ['name' => 'Kilogram', 'short_name' => 'KG', 'description' => 'Weight unit in kilograms', 'status' => 'active'],
-        ];
-        foreach ($units as $u) {
-            Unit::firstOrCreate(['short_name' => $u['short_name']], $u);
-        }
-
-        // 5. Seed Currencies
+        // 4. Seed Currencies
         $currencies = [
             ['name' => 'Indian Rupee', 'code' => 'INR', 'symbol' => '₹', 'exchange_rate' => 1.0000, 'is_default' => true, 'status' => 'active'],
             ['name' => 'US Dollar', 'code' => 'USD', 'symbol' => '$', 'exchange_rate' => 83.5000, 'is_default' => false, 'status' => 'active'],
@@ -77,7 +64,7 @@ class DemoDataSeeder extends Seeder
             Currency::firstOrCreate(['code' => $c['code']], $c);
         }
 
-        // 6. Seed Suppliers
+        // 5. Seed Suppliers
         $suppliers = [
             [
                 'name' => 'Asus Tech India',
@@ -104,15 +91,12 @@ class DemoDataSeeder extends Seeder
             Supplier::firstOrCreate(['email' => $s['email']], $s);
         }
 
-        // 7. Seed Products
+        // 6. Seed Products
         $intelBrand = Brand::where('slug', 'INTEL')->first();
         $asusBrand = Brand::where('slug', 'ASUS')->first();
         
         $cpuSub = SubCategory::where('slug', 'CPUS')->first();
         $laptopSub = SubCategory::where('slug', 'LAPTOPS')->first();
-
-        $pcsUnit = Unit::where('short_name', 'PCS')->first();
-        $inrCurrency = Currency::where('code', 'INR')->first();
 
         $intelSupplier = Supplier::where('name', 'Intel Distributors')->first();
         $asusSupplier = Supplier::where('name', 'Asus Tech India')->first();
@@ -126,9 +110,10 @@ class DemoDataSeeder extends Seeder
                 'brand_id' => $intelBrand->id,
                 'main_category_id' => $hardwareCat->id,
                 'sub_category_id' => $cpuSub->id,
-                'unit_id' => $pcsUnit->id,
+                'unit_name' => 'Piece',
+                'unit_code' => 'PCS',
+                'base_unit' => null,
                 'supplier_id' => $intelSupplier->id,
-                'currency_id' => $inrCurrency->id,
                 'purchase_price' => 32000.00,
                 'selling_price' => 36500.00,
                 'mrp' => 42000.00,
@@ -154,9 +139,10 @@ class DemoDataSeeder extends Seeder
                 'brand_id' => $asusBrand->id,
                 'main_category_id' => $laptopCat->id,
                 'sub_category_id' => $laptopSub->id,
-                'unit_id' => $pcsUnit->id,
+                'unit_name' => 'Piece',
+                'unit_code' => 'PCS',
+                'base_unit' => null,
                 'supplier_id' => $asusSupplier->id,
-                'currency_id' => $inrCurrency->id,
                 'purchase_price' => 110000.00,
                 'selling_price' => 125000.00,
                 'mrp' => 145000.00,

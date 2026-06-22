@@ -150,7 +150,7 @@ class SaleController extends Controller
     public function show(Sale $sale): View
     {
         Gate::authorize('sales.view');
-        $sale->load(['customer', 'user', 'salesPerson', 'items.product.unit', 'items.product.currency']);
+        $sale->load(['customer', 'user', 'salesPerson', 'items.product.stock']);
         return view('sales.show', compact('sale'));
     }
 
@@ -161,7 +161,7 @@ class SaleController extends Controller
     {
         Gate::authorize('sales.update');
         
-        $sale->load(['items.product.stock', 'items.product.unit']);
+        $sale->load(['items.product.stock']);
         $customers = Customer::where('status', 'active')->orderBy('name')->get();
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
 
@@ -307,7 +307,7 @@ class SaleController extends Controller
             return response()->json([]);
         }
 
-        $products = Product::with(['stock', 'unit', 'currency'])
+        $products = Product::with(['stock'])
             ->where('status', 'active')
             ->where(function($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
@@ -317,19 +317,24 @@ class SaleController extends Controller
             ->limit(10)
             ->get();
 
+        $activeCurrency = current_currency();
+        $rate = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;
+        $symbol = $activeCurrency ? $activeCurrency->symbol : '₹';
+
         $results = [];
         foreach ($products as $p) {
+            $price = $rate > 0 ? ($p->selling_price / $rate) : $p->selling_price;
             $results[] = [
                 'id' => $p->id,
                 'name' => $p->name,
                 'sku' => $p->code,
                 'barcode' => $p->barcode,
                 'stock' => $p->stock->quantity ?? 0.00,
-                'price' => $p->selling_price,
+                'price' => $price,
                 'tax' => $p->tax_percentage,
                 'discount' => $p->discount_percentage,
-                'unit' => $p->unit->short_name ?? 'PCS',
-                'currency_symbol' => $p->currency->symbol ?? '₹',
+                'unit' => $p->unit_code ?? 'PCS',
+                'currency_symbol' => $symbol,
                 'image_url' => $p->image ? asset('uploads/products/' . $p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image'
             ];
         }
@@ -344,7 +349,7 @@ class SaleController extends Controller
     {
         Gate::authorize('sales.view');
         
-        $sale->load(['customer', 'user', 'salesPerson', 'items.product.unit', 'items.product.currency']);
+        $sale->load(['customer', 'user', 'salesPerson', 'items.product.stock']);
         
         // Log the printing activity
         ActivityLog::log('Sale Printed', "Printed invoice sheet: {$sale->invoice_no}");

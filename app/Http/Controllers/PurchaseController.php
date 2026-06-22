@@ -147,7 +147,7 @@ class PurchaseController extends Controller
     public function show(Purchase $purchase): View
     {
         Gate::authorize('purchases.view');
-        $purchase->load(['supplier', 'user', 'purchasePerson', 'items.product.unit', 'items.product.currency']);
+        $purchase->load(['supplier', 'user', 'purchasePerson', 'items.product.stock']);
         return view('purchases.show', compact('purchase'));
     }
 
@@ -158,7 +158,7 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.update');
 
-        $purchase->load(['items.product.stock', 'items.product.unit']);
+        $purchase->load(['items.product.stock']);
         $suppliers       = Supplier::where('status', 'active')->orderBy('name')->get();
         $purchasePersons = User::where('status', 'active')->orderBy('name')->get();
 
@@ -306,7 +306,7 @@ class PurchaseController extends Controller
     public function printInvoice(Purchase $purchase): View
     {
         Gate::authorize('purchases.view');
-        $purchase->load(['supplier', 'user', 'purchasePerson', 'items.product.unit', 'items.product.currency']);
+        $purchase->load(['supplier', 'user', 'purchasePerson', 'items.product.stock']);
         ActivityLog::log('Purchase Printed', "Printed purchase order: {$purchase->purchase_no}");
         return view('purchases.print', compact('purchase'));
     }
@@ -321,7 +321,7 @@ class PurchaseController extends Controller
             return response()->json([]);
         }
 
-        $products = Product::with(['stock', 'unit', 'currency'])
+        $products = Product::with(['stock'])
             ->where('status', 'active')
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
@@ -331,20 +331,26 @@ class PurchaseController extends Controller
             ->limit(10)
             ->get();
 
+        $activeCurrency = current_currency();
+        $rate = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;
+        $symbol = $activeCurrency ? $activeCurrency->symbol : '₹';
+
         $results = [];
         foreach ($products as $p) {
+            $purchasePrice = $rate > 0 ? ($p->purchase_price / $rate) : $p->purchase_price;
+            $sellingPrice = $rate > 0 ? ($p->selling_price / $rate) : $p->selling_price;
             $results[] = [
                 'id'              => $p->id,
                 'name'            => $p->name,
                 'sku'             => $p->code,
                 'barcode'         => $p->barcode,
                 'stock'           => $p->stock->quantity ?? 0.00,
-                'purchase_price'  => $p->purchase_price,
-                'selling_price'   => $p->selling_price,
+                'purchase_price'  => $purchasePrice,
+                'selling_price'   => $sellingPrice,
                 'tax'             => $p->tax_percentage,
                 'discount'        => $p->discount_percentage,
-                'unit'            => $p->unit->short_name ?? 'PCS',
-                'currency_symbol' => $p->currency->symbol ?? '₹',
+                'unit'            => $p->unit_code ?? 'PCS',
+                'currency_symbol' => $symbol,
                 'image_url'       => $p->image
                     ? asset('uploads/products/' . $p->image)
                     : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image',

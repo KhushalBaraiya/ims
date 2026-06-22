@@ -175,7 +175,7 @@ class SaleReturnController extends Controller
     public function show(SaleReturn $saleReturn): View
     {
         Gate::authorize('sale_returns.view');
-        $saleReturn->load(['sale', 'customer', 'user', 'items.product.unit', 'items.product.currency']);
+        $saleReturn->load(['sale', 'customer', 'user', 'items.product.stock']);
         return view('sale_returns.show', compact('saleReturn'));
     }
 
@@ -185,7 +185,7 @@ class SaleReturnController extends Controller
     public function edit(SaleReturn $saleReturn): View
     {
         Gate::authorize('sale_returns.update');
-        $saleReturn->load(['items.product.unit', 'sale']);
+        $saleReturn->load(['items.product', 'sale']);
         return view('sale_returns.edit', compact('saleReturn'));
     }
 
@@ -338,7 +338,7 @@ class SaleReturnController extends Controller
     {
         Gate::authorize('sale_returns.create');
 
-        $sale->load(['items.product.unit', 'customer']);
+        $sale->load(['items.product', 'customer']);
 
         $items = [];
         foreach ($sale->items as $item) {
@@ -357,7 +357,7 @@ class SaleReturnController extends Controller
                 'sold_quantity' => (float)$item->quantity,
                 'returned_quantity' => (float)$alreadyReturned,
                 'available_quantity' => (float)$availableReturn,
-                'unit' => $item->product->unit->short_name ?? 'PCS',
+                'unit' => $item->product->unit_code ?? 'PCS',
                 'image_url' => $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image'
             ];
         }
@@ -377,7 +377,7 @@ class SaleReturnController extends Controller
     {
         Gate::authorize('sale_returns.view');
         
-        $saleReturn->load(['sale', 'customer', 'user', 'items.product.unit', 'items.product.currency']);
+        $saleReturn->load(['sale', 'customer', 'user', 'items.product.stock']);
         
         // Log the printing activity
         ActivityLog::log('Sale Printed', "Printed return sheet: {$saleReturn->return_no}");

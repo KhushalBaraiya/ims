@@ -160,7 +160,7 @@
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                                 <td class="px-5 py-3 whitespace-nowrap font-semibold text-slate-400 dark:text-slate-500">{{ $product->code }}</td>
                                 <td class="px-5 py-3 whitespace-nowrap font-bold text-slate-800 dark:text-slate-200">{{ $product->name }}</td>
-                                <td class="px-5 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400">{{ number_format($product->stock_alert_qty, 0) }}</td>
+                                {{-- <td class="px-5 py-3 whitespace-nowrap text-slate-500 dark:text-slate-400">{{ number_format($product->stock_alert_qty, 0) }}</td> --}}
                                 <td class="px-5 py-3 whitespace-nowrap text-right font-extrabold text-red-500 dark:text-red-400">
                                     {{ number_format($product->stock->quantity ?? 0, 0) }}
                                 </td>

@@ -75,7 +75,7 @@
             <div>
                 <!-- Brand logo placeholder -->
                 <span class="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent print:text-black print:bg-none print:from-transparent print:to-transparent">
-                    <i class="fa-solid fa-bolt mr-1 text-blue-600 print:text-black"></i> Antigravity POS
+                    <i class="fa-solid fa-bolt mr-1 text-blue-600 print:text-black"></i> Kalathiya POS POS
                 </span>
                 <p class="text-xs text-slate-500 mt-1.5 print:text-black font-semibold">Electronics ERP & Inventory Management System</p>
                 <p class="text-[11px] text-slate-400 mt-0.5 print:text-black">Sector 5, Salt Lake, Kolkata, WB, 700091</p>
@@ -92,7 +92,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Billing details grid -->
         <div class="grid grid-cols-2 gap-8 border-b border-slate-100 print:border-black pb-6 mb-6">
             <div>
@@ -207,7 +206,7 @@
             
             <div class="text-right">
                 <p class="text-slate-400 print:text-black">Thank you for your business!</p>
-                <p class="text-[10px] text-slate-350 print:text-black mt-1">Generated via Antigravity POS ERP</p>
+                <p class="text-[10px] text-slate-350 print:text-black mt-1">Generated via Kalathiya POS ERP</p>
             </div>
         </div>
 

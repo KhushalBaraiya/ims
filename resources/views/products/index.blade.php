@@ -146,8 +146,8 @@
                             <td class="py-3 px-4 text-slate-500 dark:text-slate-400">{{ $product->mainCategory->name ?? '-' }}</td>
                             <td class="py-3 px-4 text-slate-500 dark:text-slate-400">{{ $product->subCategory->name ?? '-' }}</td>
                             <td class="py-3 px-4 text-slate-500 dark:text-slate-400">{{ $product->supplier->name ?? '-' }}</td>
-                            <td class="py-3 px-4 font-semibold text-slate-600 dark:text-slate-350">{{ $product->currency->symbol ?? '$' }}{{ number_format($product->purchase_price, 2) }}</td>
-                            <td class="py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{{ $product->currency->symbol ?? '$' }}{{ number_format($product->selling_price, 2) }}</td>
+                            <td class="py-3 px-4 font-semibold text-slate-600 dark:text-slate-350">{{ format_currency($product->purchase_price) }}</td>
+                            <td class="py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{{ format_currency($product->selling_price) }}</td>
                             <td class="py-3 px-4">
                                 <span class="font-bold {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-red-500' : 'text-emerald-500' }}">
                                     {{ number_format($product->stock->quantity ?? 0.00, 2) }}

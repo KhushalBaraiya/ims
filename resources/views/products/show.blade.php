@@ -96,7 +96,7 @@
                     </div>
                     <div>
                         <span class="block text-xs font-bold text-slate-400 uppercase">Unit of Measurement</span>
-                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-1 block">{{ $product->unit->name ?? '-' }} ({{ $product->unit->short_name ?? '-' }})</span>
+                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-1 block">{{ $product->unit_name ?? '-' }} ({{ $product->unit_code ?? '-' }})</span>
                     </div>
                     <div>
                         <span class="block text-xs font-bold text-slate-400 uppercase">Vendor Supplier</span>
@@ -113,8 +113,8 @@
                         </span>
                     </div>
                     <div>
-                        <span class="block text-xs font-bold text-slate-400 uppercase">Currency Base</span>
-                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-1 block">{{ $product->currency->name ?? '-' }} ({{ $product->currency->code ?? '-' }} - {{ $product->currency->symbol ?? '-' }})</span>
+                        <span class="block text-xs font-bold text-slate-400 uppercase">Base Unit</span>
+                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-1 block">{{ $product->base_unit ?: '-' }}</span>
                     </div>
                 </div>
             </x-card>
@@ -126,15 +126,15 @@
                     <div class="space-y-4">
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-2">
                             <span class="text-xs text-slate-400 uppercase font-semibold">Maximum Retail Price (MRP)</span>
-                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ $product->currency->symbol ?? '$' }}{{ number_format($product->mrp, 2) }}</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ format_currency($product->mrp) }}</span>
                         </div>
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-2">
                             <span class="text-xs text-slate-400 uppercase font-semibold">Purchase Unit Cost</span>
-                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ $product->currency->symbol ?? '$' }}{{ number_format($product->purchase_price, 2) }}</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ format_currency($product->purchase_price) }}</span>
                         </div>
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-2">
                             <span class="text-xs text-slate-400 uppercase font-bold text-slate-850 dark:text-slate-100">ERP Selling Price</span>
-                            <span class="text-base font-bold text-blue-600 dark:text-blue-400">{{ $product->currency->symbol ?? '$' }}{{ number_format($product->selling_price, 2) }}</span>
+                            <span class="text-base font-bold text-blue-600 dark:text-blue-400">{{ format_currency($product->selling_price) }}</span>
                         </div>
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-2">
                             <span class="text-xs text-slate-400 uppercase font-semibold">Associated Tax %</span>
@@ -153,16 +153,16 @@
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-2">
                             <span class="text-xs text-slate-400 uppercase font-semibold">Current Physical Stock</span>
                             <span class="text-base font-bold {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-red-500' : 'text-emerald-500' }}">
-                                {{ number_format($product->stock->quantity ?? 0.00, 2) }} {{ $product->unit->short_name ?? 'Units' }}
+                                {{ number_format($product->stock->quantity ?? 0.00, 2) }} {{ $product->unit_code ?? 'Units' }}
                             </span>
                         </div>
                         <div class="flex justify-between items-center border-b border-slate-50 dark:border-slate-800 pb-2">
                             <span class="text-xs text-slate-400 uppercase font-semibold">Minimum Alert Quantity</span>
-                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ number_format($product->minimum_stock_alert, 2) }} {{ $product->unit->short_name ?? 'Units' }}</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ number_format($product->minimum_stock_alert, 2) }} {{ $product->unit_code ?? 'Units' }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-xs text-slate-400 uppercase font-semibold">Opening Stock Quantity</span>
-                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ number_format($product->opening_stock, 2) }} {{ $product->unit->short_name ?? 'Units' }}</span>
+                            <span class="text-sm font-semibold text-slate-700 dark:text-slate-350">{{ number_format($product->opening_stock, 2) }} {{ $product->unit_code ?? 'Units' }}</span>
                         </div>
                     </div>
                 </x-card>

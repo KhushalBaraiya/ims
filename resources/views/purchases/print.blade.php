@@ -43,7 +43,7 @@
         <div class="flex justify-between items-start border-b border-slate-200 pb-8 mb-8">
             <div>
                 <div class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1">
-                    ⚡ Antigravity POS
+                    ⚡ Kalathiya POS
                 </div>
                 <p class="text-xs text-slate-400">Electronics & Inventory Management System</p>
             </div>
@@ -168,7 +168,7 @@
 
         <!-- Footer -->
         <div class="border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
-            <p>This is a system-generated purchase order from <strong>Antigravity POS</strong> &mdash; Electronics & Inventory Management System.</p>
+            <p>This is a system-generated purchase order from <strong>Kalathiya POS</strong> &mdash; Electronics & Inventory Management System.</p>
             <p class="mt-1">Created by: {{ $purchase->user->name ?? 'System' }} &bull; Printed on: {{ now()->format('d M Y, h:i A') }}</p>
         </div>
     </div>

@@ -21,9 +21,10 @@ class Product extends Model
         'brand_id',
         'main_category_id',
         'sub_category_id',
-        'unit_id',
+        'unit_name',
+        'unit_code',
+        'base_unit',
         'supplier_id',
-        'currency_id',
         'purchase_price',
         'selling_price',
         'mrp',
@@ -66,19 +67,9 @@ class Product extends Model
         return $this->belongsTo(SubCategory::class);
     }
 
-    public function unit(): BelongsTo
-    {
-        return $this->belongsTo(Unit::class);
-    }
-
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
-    }
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
     }
 
     public function stock(): HasOne

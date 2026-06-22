@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Antigravity POS</title>
+    <title>@yield('title') - Kalathiya POS</title>
     
     <!-- Google Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +37,7 @@
         <!-- Logo -->
         <div class="text-center mb-2">
             <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
-                <i class="fa-solid fa-bolt mr-2"></i>Antigravity POS
+                <i class="fa-solid fa-bolt mr-2"></i>Kalathiya POS
             </span>
         </div>
         <div class="text-center text-xs text-zinc-500 font-medium tracking-wide uppercase mb-8">

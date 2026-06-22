@@ -7,9 +7,7 @@ use App\Models\Product;
 use App\Models\Brand;
 use App\Models\MainCategory;
 use App\Models\SubCategory;
-use App\Models\Unit;
 use App\Models\Supplier;
-use App\Models\Currency;
 use App\Models\ActivityLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
@@ -27,7 +25,7 @@ class ProductController extends Controller
     {
         Gate::authorize('products.view');
 
-        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'unit', 'supplier', 'currency', 'stock'])->latest();
+        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'supplier', 'stock'])->latest();
 
         // Apply filters
         if ($request->filled('brand_id')) {
@@ -81,11 +79,9 @@ class ProductController extends Controller
         $brands = Brand::where('status', 'active')->orderBy('name')->get();
         $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
-        $units = Unit::where('status', 'active')->orderBy('name')->get();
         $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
-        $currencies = Currency::where('status', 'active')->orderBy('name')->get();
 
-        return view('products.create', compact('brands', 'categories', 'subCategories', 'units', 'suppliers', 'currencies'));
+        return view('products.create', compact('brands', 'categories', 'subCategories', 'suppliers'));
     }
 
     /**
@@ -143,7 +139,7 @@ class ProductController extends Controller
     {
         Gate::authorize('products.view');
 
-        $product->load(['brand', 'mainCategory', 'subCategory', 'unit', 'supplier', 'currency', 'stock']);
+        $product->load(['brand', 'mainCategory', 'subCategory', 'supplier', 'stock']);
 
         return view('products.show', compact('product'));
     }
@@ -158,11 +154,9 @@ class ProductController extends Controller
         $brands = Brand::where('status', 'active')->orderBy('name')->get();
         $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
-        $units = Unit::where('status', 'active')->orderBy('name')->get();
         $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
-        $currencies = Currency::where('status', 'active')->orderBy('name')->get();
 
-        return view('products.edit', compact('product', 'brands', 'categories', 'subCategories', 'units', 'suppliers', 'currencies'));
+        return view('products.edit', compact('product', 'brands', 'categories', 'subCategories', 'suppliers'));
     }
 
     /**
