@@ -28,6 +28,38 @@
                 </button>
             </li>
 
+            {{-- Language Switcher --}}
+            <li class="nav-item dropdown me-1">
+                <a class="nav-link dropdown-toggle d-flex align-items-center gap-1 px-2" href="javascript:void(0);"
+                    data-bs-toggle="dropdown" aria-expanded="false" title="{{ __('messages.language') }}"
+                    style="height:36px;">
+                    @php
+                        $currentLocale = app()->getLocale();
+                        $currentLang = $supportedLanguages[$currentLocale] ?? $supportedLanguages['en'];
+                    @endphp
+                    <span style="font-size:1.15rem;">{{ $currentLang['flag'] }}</span>
+                    <span class="d-none d-lg-inline small fw-semibold">{{ strtoupper($currentLocale) }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width:150px;">
+                    <li class="dropdown-header small text-uppercase text-muted px-3 py-1">
+                        {{ __('messages.language') }}
+                    </li>
+                    @foreach ($supportedLanguages as $code => $lang)
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 px-3 py-2
+                                       {{ app()->getLocale() === $code ? 'active fw-semibold' : '' }}"
+                                href="{{ route('language.switch', $code) }}">
+                                <span style="font-size:1.1rem;">{{ $lang['flag'] }}</span>
+                                <span>{{ $lang['label'] }}</span>
+                                @if (app()->getLocale() === $code)
+                                    <i class="bx bx-check ms-auto text-primary"></i>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </li>
+
             {{-- User Dropdown --}}
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -77,7 +109,7 @@
 
                     <li>
                         <a class="dropdown-item" href="{{ route('profile.show') }}">
-                            <i class="bx bx-user me-2"></i> My Profile
+                            <i class="bx bx-user me-2"></i> {{ __('messages.profile') }}
                         </a>
                     </li>
 
@@ -89,7 +121,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-item text-danger">
-                                <i class="bx bx-power-off me-2"></i> Logout
+                                <i class="bx bx-power-off me-2"></i> {{ __('messages.logout') }}
                             </button>
                         </form>
                     </li>

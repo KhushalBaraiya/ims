@@ -13,7 +13,6 @@ class RolePermissionSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-
     public function run(): void
     {
         // All permissions definition
@@ -176,3 +175,4 @@ class RolePermissionSeeder extends Seeder
         $admin->assignRole($superAdminRole);
     }
 }
+//

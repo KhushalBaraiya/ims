@@ -67,18 +67,18 @@
 
         {{-- ── MAIN ── --}}
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Main</span>
+            <span class="menu-header-text">{{ __('messages.section_main') }}</span>
         </li>
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-dashboard"></i>
-                <div class="text-truncate">Dashboard</div>
+                <div class="text-truncate">{{ __('messages.menu_dashboard') }}</div>
             </a>
         </li>
 
         {{-- ── INVENTORY ── --}}
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Inventory</span>
+            <span class="menu-header-text">{{ __('messages.section_inventory') }}</span>
         </li>
 
         @php
@@ -87,17 +87,17 @@
         <li class="menu-item {{ $catActive ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-category"></i>
-                <div class="text-truncate">Categories</div>
+                <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->routeIs('main-categories.*') ? 'active' : '' }}">
                     <a href="{{ route('main-categories.index') }}" class="menu-link">
-                        <div class="text-truncate">Main Categories</div>
+                        <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
                     <a href="{{ route('sub-categories.index') }}" class="menu-link">
-                        <div class="text-truncate">Sub Categories</div>
+                        <div class="text-truncate">{{ __('messages.menu_sub_categories') }}</div>
                     </a>
                 </li>
             </ul>
@@ -106,111 +106,111 @@
         <li class="menu-item {{ request()->routeIs('brands.*') ? 'active' : '' }}">
             <a href="{{ route('brands.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-award"></i>
-                <div class="text-truncate">Brands</div>
+                <div class="text-truncate">{{ __('messages.menu_brands') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
             <a href="{{ route('products.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-package"></i>
-                <div class="text-truncate">Products</div>
+                <div class="text-truncate">{{ __('messages.menu_products') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active' : '' }}">
             <a href="{{ route('stocks.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-store-alt"></i>
-                <div class="text-truncate">Stock</div>
+                <div class="text-truncate">{{ __('messages.menu_stock') }}</div>
             </a>
         </li>
 
         {{-- ── TRANSACTIONS ── --}}
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Transactions</span>
+            <span class="menu-header-text">{{ __('messages.section_transactions') }}</span>
         </li>
 
         <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
             <a href="{{ route('purchases.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-cart-download"></i>
-                <div class="text-truncate">Purchases</div>
+                <div class="text-truncate">{{ __('messages.menu_purchases') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('purchase-returns.*') ? 'active' : '' }}">
             <a href="{{ route('purchase-returns.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-revision"></i>
-                <div class="text-truncate">Purchase Returns</div>
+                <div class="text-truncate">{{ __('messages.menu_purchase_returns') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
             <a href="{{ route('sales.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-cart-alt"></i>
-                <div class="text-truncate">Sales</div>
+                <div class="text-truncate">{{ __('messages.menu_sales') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('sale-returns.*') ? 'active' : '' }}">
             <a href="{{ route('sale-returns.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-transfer"></i>
-                <div class="text-truncate">Sale Returns</div>
+                <div class="text-truncate">{{ __('messages.menu_sale_returns') }}</div>
             </a>
         </li>
 
         {{-- ── MANAGEMENT ── --}}
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Management</span>
+            <span class="menu-header-text">{{ __('messages.section_management') }}</span>
         </li>
 
         <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
             <a href="{{ route('suppliers.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-group"></i>
-                <div class="text-truncate">Suppliers</div>
+                <div class="text-truncate">{{ __('messages.menu_suppliers') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
             <a href="{{ route('customers.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                <div class="text-truncate">Customers</div>
+                <div class="text-truncate">{{ __('messages.menu_customers') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('currencies.*') ? 'active' : '' }}">
             <a href="{{ route('currencies.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-money"></i>
-                <div class="text-truncate">Currencies</div>
+                <div class="text-truncate">{{ __('messages.menu_currencies') }}</div>
             </a>
         </li>
 
         {{-- ── USERS ── --}}
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Users</span>
+            <span class="menu-header-text">{{ __('messages.section_users') }}</span>
         </li>
 
         <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
             <a href="{{ route('users.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div class="text-truncate">User Accounts</div>
+                <div class="text-truncate">{{ __('messages.user_accounts') }}</div>
             </a>
         </li>
 
         <li class="menu-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
             <a href="{{ route('roles.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-shield"></i>
-                <div class="text-truncate">Roles</div>
+                <div class="text-truncate">{{ __('messages.menu_roles') }}</div>
             </a>
         </li>
 
         {{-- ── ACCOUNT ── --}}
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Account</span>
+            <span class="menu-header-text">{{ __('messages.section_account') }}</span>
         </li>
 
         <li class="menu-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <a href="{{ route('profile.show') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                <div class="text-truncate">My Profile</div>
+                <div class="text-truncate">{{ __('messages.profile') }}</div>
             </a>
         </li>
 
@@ -218,7 +218,7 @@
             <a href="javascript:void(0);" class="menu-link"
                 onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
                 <i class="menu-icon tf-icons bx bx-power-off text-danger"></i>
-                <div class="text-truncate text-danger">Logout</div>
+                <div class="text-truncate text-danger">{{ __('messages.logout') }}</div>
             </a>
         </li>
 
