@@ -1,20 +1,19 @@
 <?php
 
-
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
+
     public function run(): void
     {
         // All permissions definition
@@ -147,7 +146,7 @@ class RolePermissionSeeder extends Seeder
 
             return false;
         });
-
+        // kev ne
         $managerRole->syncPermissions($managerPermissions);
 
         // Define Staff permissions
@@ -177,3 +176,16 @@ class RolePermissionSeeder extends Seeder
         $admin->assignRole($superAdminRole);
     }
 }
+Roles & Permison Thay Gyu 
+Have CUrrency Nu Proper Setting Baki 
+Report ma and Dashbord ma Data Show krva na hoy - and export pdf excel 
+Language changes baki 
+Desgin CHanges Baki 
+
+// Have Currency and Reporrt Dashbord Aaje Reva De  
+to a kayre krishu
+
+Desgin and Langauge change nu krvii 
+
+Pn have tu k shu kru ? 
+k have tu krii ??  
