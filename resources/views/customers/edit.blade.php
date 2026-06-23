@@ -1,27 +1,31 @@
 @extends('layouts.admin')
-@section('title', 'Edit Customer — ' . $customer->name)
+@section('title', __('messages.edit_customer') . ' — ' . $customer->name)
 @section('content')
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">Edit Customer</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.edit_customer') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('customers.index') }}">Customers</a></li>
-                    <li class="breadcrumb-item active">Edit</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('customers.index') }}">{{ __('messages.menu_customers') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.edit_label') }}</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary"><i class="bx bx-arrow-back me-1"></i>
-            Back</a>
+        <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary">
+            <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
+        </a>
     </div>
     <div class="card shadow-sm">
         <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-user-circle me-2 text-primary"></i>Customer Details</h6>
+            <h6 class="mb-0 fw-semibold"><i
+                    class="bx bx-user-circle me-2 text-primary"></i>{{ __('messages.customer_details') }}</h6>
         </div>
         <div class="card-body p-4">
             <form method="POST" action="{{ route('customers.update', $customer->id) }}">
-                @method('PUT')@include('customers.form')</form>
+                @method('PUT')@include('customers.form')
+            </form>
         </div>
     </div>
 @endsection

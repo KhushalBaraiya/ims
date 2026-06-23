@@ -8,7 +8,7 @@
 <div class="row g-4 mb-4">
     <div class="col-md-6">
         <label class="form-label fw-semibold" for="displayNameInput">
-            Display Name <span class="text-danger">*</span>
+            {{ __('messages.display_name') }} <span class="text-danger">*</span>
         </label>
         <input type="text" id="displayNameInput" name="display_name"
             class="form-control @error('display_name') is-invalid @enderror" placeholder="e.g. HR Manager"
@@ -19,8 +19,8 @@
     </div>
     <div class="col-md-6">
         <label class="form-label fw-semibold" for="nameInput">
-            System Name <span class="text-danger">*</span>
-            <small class="text-muted fw-normal">(auto-generated)</small>
+            {{ __('messages.system_name') }} <span class="text-danger">*</span>
+            <small class="text-muted fw-normal">({{ __('messages.auto_generated') }})</small>
         </label>
         <input type="text" id="nameInput" name="name"
             class="form-control bg-light @error('name') is-invalid @enderror" value="{{ $name }}" readonly>
@@ -34,12 +34,13 @@
 <div class="mb-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
         <div>
-            <h6 class="fw-bold mb-0">Permissions</h6>
-            <small class="text-muted">Assign granular permissions to this role</small>
+            <h6 class="fw-bold mb-0">{{ __('messages.permissions') }}</h6>
+            <small class="text-muted">{{ __('messages.permissions') }}</small>
         </div>
         <div class="form-check form-switch mb-0">
             <input class="form-check-input" type="checkbox" id="selectAllPermissions" role="switch">
-            <label class="form-check-label fw-semibold" for="selectAllPermissions">Select All</label>
+            <label class="form-check-label fw-semibold"
+                for="selectAllPermissions">{{ __('messages.select_all') }}</label>
         </div>
     </div>
 
@@ -47,13 +48,13 @@
         <table class="table table-bordered align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Module</th>
-                    <th class="text-center" style="width:70px;">All</th>
-                    <th class="text-center" style="width:70px;">View</th>
+                    <th>{{ __('messages.module_label') }}</th>
+                    <th class="text-center" style="width:70px;">{{ __('messages.select_all') }}</th>
+                    <th class="text-center" style="width:70px;">{{ __('messages.view') }}</th>
                     <th class="text-center" style="width:70px;">Own</th>
-                    <th class="text-center" style="width:70px;">Create</th>
-                    <th class="text-center" style="width:70px;">Update</th>
-                    <th class="text-center" style="width:70px;">Delete</th>
+                    <th class="text-center" style="width:70px;">{{ __('messages.create') }}</th>
+                    <th class="text-center" style="width:70px;">{{ __('messages.update') }}</th>
+                    <th class="text-center" style="width:70px;">{{ __('messages.delete') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -89,8 +90,9 @@
 </div>
 
 <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-    <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary">Cancel</a>
+    <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary">{{ __('messages.cancel') }}</a>
     <button type="submit" class="btn btn-primary">
-        <i class="bx bx-save me-1"></i>{{ isset($role) ? 'Update Role' : 'Save Role' }}
+        <i class="bx bx-save me-1"></i>{{ isset($role) ? __('messages.update') : __('messages.save') }}
+        {{ __('messages.role') }}
     </button>
 </div>

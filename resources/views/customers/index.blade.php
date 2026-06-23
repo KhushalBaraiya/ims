@@ -1,20 +1,22 @@
 @extends('layouts.admin')
-@section('title', 'Customers')
+@section('title', __('messages.menu_customers'))
 
 @section('content')
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">Customers</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.menu_customers') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Customers</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.menu_customers') }}</li>
                 </ol>
             </nav>
         </div>
         @can('customers.create')
-            <a href="{{ route('customers.create') }}" class="btn btn-primary"><i class="bx bx-plus me-1"></i> Add Customer</a>
+            <a href="{{ route('customers.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i> {{ __('messages.add_customer') }}
+            </a>
         @endcan
     </div>
 
@@ -24,13 +26,13 @@
                 <table class="table table-hover align-middle mb-0" id="customersTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th class="text-center">Status</th>
-                            <th>Created</th>
-                            <th class="text-center no-sort">Action</th>
+                            <th>{{ __('messages.th_no') }}</th>
+                            <th>{{ __('messages.th_name') }}</th>
+                            <th>{{ __('messages.th_phone') }}</th>
+                            <th>{{ __('messages.th_email') }}</th>
+                            <th class="text-center">{{ __('messages.th_status') }}</th>
+                            <th>{{ __('messages.th_created') }}</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,8 +42,11 @@
                                 <td><strong>{{ $customer->name }}</strong></td>
                                 <td class="fw-semibold">{{ $customer->phone }}</td>
                                 <td class="text-muted">{{ $customer->email ?: '-' }}</td>
-                                <td class="text-center"><span
-                                        class="badge rounded-pill {{ $customer->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ ucfirst($customer->status) }}</span>
+                                <td class="text-center">
+                                    <span
+                                        class="badge rounded-pill {{ $customer->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $customer->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                    </span>
                                 </td>
                                 <td class="text-muted small">{{ $customer->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
@@ -49,12 +54,12 @@
                                         @can('customers.view')
                                             <a href="{{ route('customers.show', $customer->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="View"><i class="bx bx-show"></i></a>
+                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
                                         @endcan
                                         @can('customers.update')
                                             <a href="{{ route('customers.edit', $customer->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="Edit"><i class="bx bx-edit"></i></a>
+                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
                                         @endcan
                                         @can('customers.delete')
                                             <form id="delete-form-{{ $customer->id }}"
@@ -64,7 +69,7 @@
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                     data-id="{{ $customer->id }}" data-name="{{ $customer->name }}"
-                                                    title="Delete"><i class="bx bx-trash"></i></button>
+                                                    title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>
                                             </form>
                                         @endcan
                                     </div>
@@ -98,35 +103,36 @@
                     name = $(this).data('name'),
                     form = $(`#delete-form-${id}`);
                 Swal.fire({
-                        title: 'Are you sure?',
-                        text: `Delete "${name}"?`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Yes!'
-                    })
-                    .then((r) => {
-                        if (r.isConfirmed) {
-                            $.ajax({
-                                url: form.attr('action'),
-                                type: 'POST',
-                                data: form.serialize(),
-                                success: function(res) {
-                                    if (res.success) Swal.fire({
-                                        title: 'Deleted!',
-                                        text: res.message,
-                                        icon: 'success',
-                                        confirmButtonColor: '#696cff'
-                                    }).then(() => window.location.reload());
-                                    else showAdminToast(res.message, 'error');
-                                },
-                                error: function() {
-                                    showAdminToast('An error occurred.', 'error');
-                                }
-                            });
-                        }
-                    });
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: `{{ __('messages.delete') }} "${name}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
+                            success: function(res) {
+                                if (res.success) Swal.fire({
+                                    title: '{{ __('messages.deleted_title') }}',
+                                    text: res.message,
+                                    icon: 'success',
+                                    confirmButtonColor: '#696cff'
+                                }).then(() => window.location.reload());
+                                else showAdminToast(res.message, 'error');
+                            },
+                            error: function() {
+                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                    'error');
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

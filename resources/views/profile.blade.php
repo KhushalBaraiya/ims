@@ -1,15 +1,15 @@
 @extends('layouts.admin')
-@section('title', 'My Profile')
+@section('title', __('messages.my_profile'))
 
 @section('content')
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">My Profile</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.my_profile') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Profile</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.profile') }}</li>
                 </ol>
             </nav>
         </div>
@@ -17,11 +17,11 @@
 
     <div class="row g-4">
 
-        {{-- Left: Profile Overview --}}
         <div class="col-lg-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i class="bx bx-user-circle me-2 text-primary"></i>Profile Overview</h6>
+                    <h6 class="mb-0 fw-semibold"><i
+                            class="bx bx-user-circle me-2 text-primary"></i>{{ __('messages.profile_overview') }}</h6>
                 </div>
                 <div class="card-body p-4 text-center">
                     @if ($user->profile_photo)
@@ -44,15 +44,15 @@
 
                     <ul class="list-unstyled text-start mb-0">
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Phone</span>
-                            <span class="small fw-bold">{{ $user->phone ?: 'Not set' }}</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.phone_label') }}</span>
+                            <span class="small fw-bold">{{ $user->phone ?: __('messages.not_set') }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Member Since</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.member_since') }}</span>
                             <span class="small">{{ $user->created_at->format('d M Y') }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Last Login</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.last_login') }}</span>
                             <span
                                 class="small">{{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'N/A' }}</span>
                         </li>
@@ -61,20 +61,20 @@
             </div>
         </div>
 
-        {{-- Right: Forms --}}
         <div class="col-lg-8">
 
-            {{-- Profile Information --}}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i class="bx bx-edit me-2 text-primary"></i>Profile Information</h6>
+                    <h6 class="mb-0 fw-semibold"><i
+                            class="bx bx-edit me-2 text-primary"></i>{{ __('messages.profile_information') }}</h6>
                 </div>
                 <div class="card-body p-4">
                     <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.name_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input type="text" name="name"
                                     class="form-control @error('name') is-invalid @enderror"
                                     value="{{ old('name', $user->name) }}" required>
@@ -83,7 +83,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.th_email') }} <span
+                                        class="text-danger">*</span></label>
                                 <input type="email" name="email"
                                     class="form-control @error('email') is-invalid @enderror"
                                     value="{{ old('email', $user->email) }}" required>
@@ -92,7 +93,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Phone</label>
+                                <label class="form-label fw-semibold">{{ __('messages.phone_label') }}</label>
                                 <input type="text" name="phone"
                                     class="form-control @error('phone') is-invalid @enderror"
                                     value="{{ old('phone', $user->phone) }}" placeholder="+1234567890">
@@ -101,7 +102,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Profile Photo</label>
+                                <label class="form-label fw-semibold">{{ __('messages.profile_photo') }}</label>
                                 <input type="file" name="profile_photo"
                                     class="form-control @error('profile_photo') is-invalid @enderror"
                                     accept="image/jpeg,image/png,image/gif">
@@ -113,24 +114,24 @@
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bx bx-save me-1"></i> Save Profile
+                                <i class="bx bx-save me-1"></i> {{ __('messages.save_profile') }}
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            {{-- Change Password --}}
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i class="bx bx-key me-2 text-warning"></i>Change Password</h6>
+                    <h6 class="mb-0 fw-semibold"><i
+                            class="bx bx-key me-2 text-warning"></i>{{ __('messages.change_password') }}</h6>
                 </div>
                 <div class="card-body p-4">
                     <form method="POST" action="{{ route('profile.password') }}">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Current Password <span
+                                <label class="form-label fw-semibold">{{ __('messages.current_password') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="password" name="current_password"
                                     class="form-control @error('current_password') is-invalid @enderror"
@@ -140,7 +141,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">New Password <span
+                                <label class="form-label fw-semibold">{{ __('messages.new_password') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="password" name="password"
                                     class="form-control @error('password') is-invalid @enderror" placeholder="••••••••"
@@ -150,7 +151,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Confirm Password <span
+                                <label class="form-label fw-semibold">{{ __('messages.confirm_password') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="password" name="password_confirmation" class="form-control"
                                     placeholder="••••••••" required>
@@ -158,7 +159,7 @@
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-warning">
-                                <i class="bx bx-key me-1"></i> Change Password
+                                <i class="bx bx-key me-1"></i> {{ __('messages.change_password') }}
                             </button>
                         </div>
                     </form>

@@ -1,21 +1,21 @@
 @extends('layouts.admin')
-@section('title', 'Main Categories')
+@section('title', __('messages.main_categories'))
 
 @section('content')
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">Main Categories</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.main_categories') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Main Categories</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.main_categories') }}</li>
                 </ol>
             </nav>
         </div>
         @can('main_categories.create')
             <a href="{{ route('main-categories.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus me-1"></i> Add Category
+                <i class="bx bx-plus me-1"></i> {{ __('messages.add_category') }}
             </a>
         @endcan
     </div>
@@ -26,12 +26,12 @@
                 <table class="table table-hover align-middle mb-0" id="categoriesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
-                            <th>Category Name</th>
-                            <th>Code</th>
-                            <th class="text-center">Status</th>
-                            <th>Created</th>
-                            <th class="text-center no-sort">Action</th>
+                            <th>{{ __('messages.th_no') }}</th>
+                            <th>{{ __('messages.category_name') }}</th>
+                            <th>{{ __('messages.th_code') }}</th>
+                            <th class="text-center">{{ __('messages.th_status') }}</th>
+                            <th>{{ __('messages.th_created') }}</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +43,7 @@
                                 <td class="text-center">
                                     <span
                                         class="badge rounded-pill {{ $category->status === 'active' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ ucfirst($category->status) }}
+                                        {{ $category->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                     </span>
                                 </td>
                                 <td class="text-muted small">{{ $category->created_at->format('d M Y') }}</td>
@@ -52,16 +52,12 @@
                                         @can('main_categories.view')
                                             <a href="{{ route('main-categories.show', $category->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="View">
-                                                <i class="bx bx-show"></i>
-                                            </a>
+                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
                                         @endcan
                                         @can('main_categories.update')
                                             <a href="{{ route('main-categories.edit', $category->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="Edit">
-                                                <i class="bx bx-edit"></i>
-                                            </a>
+                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
                                         @endcan
                                         @can('main_categories.delete')
                                             <form id="delete-form-{{ $category->id }}"
@@ -71,9 +67,7 @@
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                     data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                                    title="Delete">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
+                                                    title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>
                                             </form>
                                         @endcan
                                     </div>
@@ -102,19 +96,19 @@
                     orderable: false
                 }]
             });
-
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
-                    name = $(this).data('name');
-                const form = $(`#delete-form-${id}`);
+                    name = $(this).data('name'),
+                    form = $(`#delete-form-${id}`);
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: `Delete category "${name}"?`,
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: `{{ __('messages.delete') }} "${name}"?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete!'
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
                         $.ajax({
@@ -123,7 +117,7 @@
                             data: form.serialize(),
                             success: function(res) {
                                 if (res.success) Swal.fire({
-                                    title: 'Deleted!',
+                                    title: '{{ __('messages.deleted_title') }}',
                                     text: res.message,
                                     icon: 'success',
                                     confirmButtonColor: '#696cff'
@@ -131,7 +125,8 @@
                                 else showAdminToast(res.message, 'error');
                             },
                             error: function() {
-                                showAdminToast('An error occurred.', 'error');
+                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                    'error');
                             }
                         });
                     }

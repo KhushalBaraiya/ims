@@ -1,21 +1,21 @@
 @extends('layouts.admin')
-@section('title', 'Currencies')
+@section('title', __('messages.default_currency'))
 
 @section('content')
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">Currencies</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.default_currency') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Currencies</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.menu_currencies') }}</li>
                 </ol>
             </nav>
         </div>
         @can('currencies.create')
             <button type="button" id="openCreateModalBtn" class="btn btn-primary">
-                <i class="bx bx-plus me-1"></i> Add Currency
+                <i class="bx bx-plus me-1"></i> {{ __('messages.add_currency') }}
             </button>
         @endcan
     </div>
@@ -26,14 +26,14 @@
                 <table class="table table-hover align-middle mb-0" id="currenciesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
-                            <th>Currency Name</th>
-                            <th>Code</th>
-                            <th>Symbol</th>
-                            <th>Exchange Rate</th>
-                            <th>Default</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center no-sort">Action</th>
+                            <th>{{ __('messages.th_no') }}</th>
+                            <th>{{ __('messages.currency_name') }}</th>
+                            <th>{{ __('messages.th_code') }}</th>
+                            <th>{{ __('messages.th_symbol') }}</th>
+                            <th>{{ __('messages.th_exchange_rate') }}</th>
+                            <th>{{ __('messages.th_default') }}</th>
+                            <th class="text-center">{{ __('messages.th_status') }}</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +49,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title fw-semibold" id="currencyModalLabel">Add New Currency</h6>
+                    <h6 class="modal-title fw-semibold" id="currencyModalLabel">{{ __('messages.add_new_currency') }}</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="currencyForm" method="POST" novalidate>
@@ -57,38 +57,43 @@
                     <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="modal-body">
                         <div class="mb-3 form-group-container">
-                            <label class="form-label fw-semibold">Currency Name <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.currency_name') }} <span
+                                    class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" class="form-control"
-                                placeholder="e.g. Indian Rupee" required>
+                                placeholder="{{ __('messages.currency_placeholder_name') }}" required>
                             <span class="error-msg text-danger small d-none"><span class="msg-content"></span></span>
                         </div>
                         <div class="mb-3 form-group-container">
-                            <label class="form-label fw-semibold">Currency Code <span class="text-danger">*</span></label>
-                            <input type="text" name="code" id="code" class="form-control" placeholder="e.g. INR"
-                                required>
+                            <label class="form-label fw-semibold">{{ __('messages.currency_code') }} <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" name="code" id="code" class="form-control"
+                                placeholder="{{ __('messages.currency_placeholder_code') }}" required>
                             <span class="error-msg text-danger small d-none"><span class="msg-content"></span></span>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6 form-group-container">
-                                <label class="form-label fw-semibold">Symbol <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.currency_symbol_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input type="text" name="symbol" id="symbol" class="form-control"
-                                    placeholder="e.g. ₹" required>
+                                    placeholder="{{ __('messages.currency_placeholder_sym') }}" required>
                                 <span class="error-msg text-danger small d-none"><span class="msg-content"></span></span>
                             </div>
                             <div class="col-md-6 form-group-container">
-                                <label class="form-label fw-semibold">Exchange Rate <span
+                                <label class="form-label fw-semibold">{{ __('messages.exchange_rate') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="number" step="0.0001" name="exchange_rate" id="exchange_rate"
-                                    class="form-control" placeholder="e.g. 83.5000" required>
+                                    class="form-control" placeholder="{{ __('messages.currency_placeholder_rate') }}"
+                                    required>
                                 <span class="error-msg text-danger small d-none"><span class="msg-content"></span></span>
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
                             <div class="col-md-6 form-group-container">
-                                <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.status') }} <span
+                                        class="text-danger">*</span></label>
                                 <select name="status" id="status" class="form-select" required>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="active">{{ __('messages.active') }}</option>
+                                    <option value="inactive">{{ __('messages.inactive') }}</option>
                                 </select>
                                 <span class="error-msg text-danger small d-none"><span class="msg-content"></span></span>
                             </div>
@@ -96,15 +101,17 @@
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch" name="is_default"
                                         id="is_default" value="1">
-                                    <label class="form-check-label fw-semibold" for="is_default">Set as Default</label>
+                                    <label class="form-check-label fw-semibold"
+                                        for="is_default">{{ __('messages.set_as_default_switch') }}</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="bx bx-save me-1"></i> Save
-                            Currency</button>
+                        <button type="button" class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
+                        <button type="submit" class="btn btn-primary"><i class="bx bx-save me-1"></i>
+                            {{ __('messages.save_currency') }}</button>
                     </div>
                 </form>
             </div>
@@ -150,9 +157,10 @@
                     {
                         data: 'is_default',
                         render: (d, t, r) => {
-                            if (d) return '<span class="badge bg-label-primary">Default</span>';
+                            if (d)
+                                return '<span class="badge bg-label-primary">{{ __('messages.th_default') }}</span>';
                             if (canUpdate)
-                            return `<button type="button" class="btn btn-sm btn-outline-secondary set-default-btn" data-id="${r.id}" style="font-size:11px;">Set Default</button>`;
+                                return `<button type="button" class="btn btn-sm btn-outline-secondary set-default-btn" data-id="${r.id}" style="font-size:11px;">{{ __('messages.set_default') }}</button>`;
                             return '<span class="text-muted">—</span>';
                         }
                     },
@@ -162,7 +170,7 @@
                             const cls = d === 'active' ? 'bg-success' : 'bg-danger';
                             const txt = d.charAt(0).toUpperCase() + d.slice(1);
                             if (canUpdate)
-                            return `<span class="badge rounded-pill ${cls} toggle-status-btn" data-id="${r.id}" style="cursor:pointer;">${txt}</span>`;
+                                return `<span class="badge rounded-pill ${cls} toggle-status-btn" data-id="${r.id}" style="cursor:pointer;">${txt}</span>`;
                             return `<span class="badge rounded-pill ${cls}">${txt}</span>`;
                         }
                     },
@@ -173,9 +181,9 @@
                             let btns =
                                 '<div class="d-flex align-items-center justify-content-center gap-1">';
                             if (canUpdate) btns +=
-                                `<button type="button" class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action edit-btn" data-id="${r.id}" title="Edit"><i class="bx bx-edit"></i></button>`;
+                                `<button type="button" class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action edit-btn" data-id="${r.id}" title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></button>`;
                             if (canDelete) btns +=
-                                `<button type="button" class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn" data-id="${r.id}" data-name="${r.name}" title="Delete"><i class="bx bx-trash"></i></button>`;
+                                `<button type="button" class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn" data-id="${r.id}" data-name="${r.name}" title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>`;
                             return btns + '</div>';
                         }
                     }
@@ -187,7 +195,7 @@
 
             $('#openCreateModalBtn').on('click', function() {
                 resetForm();
-                $('#currencyModalLabel').text('Add New Currency');
+                $('#currencyModalLabel').text('{{ __('messages.add_new_currency') }}');
                 $('#formMethod').val('POST');
                 form.attr('action', "{{ route('currencies.store') }}");
                 modal.show();

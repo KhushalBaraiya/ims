@@ -1,10 +1,10 @@
 @csrf
 
 {{-- Section 1: Basic Information --}}
-<h6 class="fw-semibold text-primary mb-3"><i class="bx bx-info-circle me-2"></i>Basic Information</h6>
+<h6 class="fw-semibold text-primary mb-3"><i class="bx bx-info-circle me-2"></i>{{ __('messages.information') }}</h6>
 <div class="row g-3 pb-4 mb-4 border-bottom">
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Product Name <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.product_name') }} <span class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
             value="{{ old('name', $product->name ?? '') }}" placeholder="e.g. Core i9 Processor" required>
         @error('name')
@@ -12,7 +12,7 @@
         @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Product Code (SKU) <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.sku') }} <span class="text-danger">*</span></label>
         <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
             value="{{ old('code', $product->code ?? '') }}" placeholder="e.g. LPT-LAT-5440" required>
         <div class="form-text">Unique identifier for this product.</div>
@@ -29,12 +29,13 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Brand <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.brand') }} <span class="text-danger">*</span></label>
         <select name="brand_id" class="form-select @error('brand_id') is-invalid @enderror" required>
-            <option value="">Select Brand</option>
+            <option value="">{{ __('messages.all_brands') }}</option>
             @foreach ($brands as $brand)
                 <option value="{{ $brand->id }}"
-                    {{ old('brand_id', $product->brand_id ?? '') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}
+                    {{ old('brand_id', $product->brand_id ?? '') == $brand->id ? 'selected' : '' }}>
+                    {{ $brand->name }}
                 </option>
             @endforeach
         </select>
@@ -67,10 +68,10 @@
         @enderror
     </div>
     <div class="col-md-3">
-        <label class="form-label fw-semibold">Main Category <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.category') }} <span class="text-danger">*</span></label>
         <select name="main_category_id" id="main_category_id"
             class="form-select @error('main_category_id') is-invalid @enderror" required>
-            <option value="">Select Main Category</option>
+            <option value="">{{ __('messages.select_main_category') }}</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}"
                     {{ old('main_category_id', $product->main_category_id ?? '') == $category->id ? 'selected' : '' }}>
@@ -82,10 +83,11 @@
         @enderror
     </div>
     <div class="col-md-3">
-        <label class="form-label fw-semibold">Sub Category <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.sub_category') }} <span
+                class="text-danger">*</span></label>
         <select name="sub_category_id" id="sub_category_id"
             class="form-select @error('sub_category_id') is-invalid @enderror" required>
-            <option value="">Select Sub Category</option>
+            <option value="">{{ __('messages.select_sub_category') }}</option>
         </select>
         @error('sub_category_id')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -94,7 +96,8 @@
 </div>
 
 {{-- Section 2: Pricing & Inventory --}}
-<h6 class="fw-semibold text-primary mb-3"><i class="bx bx-money me-2"></i>Pricing & Inventory</h6>
+<h6 class="fw-semibold text-primary mb-3"><i class="bx bx-money me-2"></i>{{ __('messages.selling_price') }} &
+    {{ __('messages.available_stock') }}</h6>
 <div class="row g-3 pb-4 mb-4 border-bottom">
     <div class="col-md-4">
         <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
@@ -177,8 +180,8 @@
         <select name="status" class="form-select @error('status') is-invalid @enderror" required>
             <option value="active" {{ old('status', $product->status ?? 'active') === 'active' ? 'selected' : '' }}>
                 Active</option>
-            <option value="inactive"
-                {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            <option value="inactive" {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>
+                Inactive</option>
         </select>
         @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -332,7 +335,7 @@
                 subCategories.filter(s => s.main_category_id == mainCategoryId).forEach(s => {
                     subSelect.append(
                         `<option value="${s.id}" ${s.id == preselectedId ? 'selected' : ''}>${s.name}</option>`
-                        );
+                    );
                 });
             }
 

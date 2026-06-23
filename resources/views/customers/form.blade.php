@@ -2,7 +2,8 @@
 
 <div class="row g-3">
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Customer Name <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.customer_name') }} <span
+                class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
             value="{{ old('name', $customer->name ?? '') }}" placeholder="e.g. John Doe" required>
         @error('name')
@@ -10,7 +11,7 @@
         @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Email</label>
+        <label class="form-label fw-semibold">{{ __('messages.th_email') }}</label>
         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
             value="{{ old('email', $customer->email ?? '') }}" placeholder="john@example.com">
         @error('email')
@@ -18,7 +19,8 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Phone <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.phone_label') }} <span
+                class="text-danger">*</span></label>
         <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
             value="{{ old('phone', $customer->phone ?? '') }}" placeholder="+1234567890" required>
         @error('phone')
@@ -26,7 +28,7 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">GST Number</label>
+        <label class="form-label fw-semibold">{{ __('messages.gst_number') }}</label>
         <input type="text" name="gst_number" class="form-control @error('gst_number') is-invalid @enderror"
             value="{{ old('gst_number', $customer->gst_number ?? '') }}" placeholder="22AAAAA0000A1Z5">
         @error('gst_number')
@@ -34,7 +36,7 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Opening Balance</label>
+        <label class="form-label fw-semibold">{{ __('messages.opening_balance') }}</label>
         <input type="number" step="0.01" name="opening_balance"
             class="form-control @error('opening_balance') is-invalid @enderror"
             value="{{ old('opening_balance', $customer->opening_balance ?? '0.00') }}" placeholder="0.00">
@@ -43,27 +45,27 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
         <select name="status" class="form-select @error('status') is-invalid @enderror" required>
             <option value="active" {{ old('status', $customer->status ?? 'active') === 'active' ? 'selected' : '' }}>
-                Active</option>
-            <option value="inactive"
-                {{ old('status', $customer->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                {{ __('messages.active') }}</option>
+            <option value="inactive" {{ old('status', $customer->status ?? '') === 'inactive' ? 'selected' : '' }}>
+                {{ __('messages.inactive') }}</option>
         </select>
         @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">City</label>
+        <label class="form-label fw-semibold">{{ __('messages.city') }}</label>
         <input type="text" name="city" class="form-control @error('city') is-invalid @enderror"
-            value="{{ old('city', $customer->city ?? '') }}" placeholder="City">
+            value="{{ old('city', $customer->city ?? '') }}" placeholder="{{ __('messages.city') }}">
         @error('city')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
     <div class="col-12">
-        <label class="form-label fw-semibold">Address</label>
+        <label class="form-label fw-semibold">{{ __('messages.address_label') }}</label>
         <textarea name="address" rows="2" class="form-control @error('address') is-invalid @enderror"
             placeholder="Street address...">{{ old('address', $customer->address ?? '') }}</textarea>
         @error('address')
@@ -73,7 +75,10 @@
 </div>
 
 <div class="d-flex justify-content-end gap-2 pt-4 mt-2 border-top">
-    <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary"><i class="bx bx-x me-1"></i> Cancel</a>
-    <button type="submit" class="btn btn-primary"><i class="bx bx-save me-1"></i>
-        {{ isset($customer) ? 'Update' : 'Save' }}</button>
+    <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary">
+        <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
+    </a>
+    <button type="submit" class="btn btn-primary">
+        <i class="bx bx-save me-1"></i> {{ isset($customer) ? __('messages.update') : __('messages.save') }}
+    </button>
 </div>

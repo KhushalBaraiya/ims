@@ -14,7 +14,7 @@
         @endif
     </div>
     <div>
-        <label class="form-label fw-semibold mb-1">Profile Photo</label>
+        <label class="form-label fw-semibold mb-1">{{ __('messages.profile_photo') }}</label>
         <input type="file" name="profile_photo"
             class="form-control form-control-sm @error('profile_photo') is-invalid @enderror"
             accept="image/jpeg,image/png,image/gif">
@@ -27,7 +27,7 @@
 
 <div class="row g-3">
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.name_label') }} <span class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
             value="{{ old('name', $user->name ?? '') }}" placeholder="John Doe" required>
         @error('name')
@@ -35,7 +35,8 @@
         @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.email_address') }} <span
+                class="text-danger">*</span></label>
         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
             value="{{ old('email', $user->email ?? '') }}" placeholder="john@company.com" required>
         @error('email')
@@ -43,7 +44,7 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Phone</label>
+        <label class="form-label fw-semibold">{{ __('messages.phone_label') }}</label>
         <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
             value="{{ old('phone', $user->phone ?? '') }}" placeholder="+1234567890">
         @error('phone')
@@ -51,9 +52,10 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Role <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.role') }} <span class="text-danger">*</span></label>
         <select name="role" class="form-select @error('role') is-invalid @enderror" required>
-            <option value="" disabled {{ !isset($user) ? 'selected' : '' }}>Select Role</option>
+            <option value="" disabled {{ !isset($user) ? 'selected' : '' }}>{{ __('messages.select_role') }}
+            </option>
             @foreach ($roles as $role)
                 <option value="{{ $role->name }}"
                     {{ old('role', isset($user) ? $user->roles->first()?->name : '') === $role->name ? 'selected' : '' }}>
@@ -66,12 +68,12 @@
         @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+        <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
         <select name="status" class="form-select @error('status') is-invalid @enderror" required>
             <option value="active" {{ old('status', $user->status ?? 'active') === 'active' ? 'selected' : '' }}>
-                Active</option>
+                {{ __('messages.active') }}</option>
             <option value="inactive" {{ old('status', $user->status ?? '') === 'inactive' ? 'selected' : '' }}>
-                Inactive</option>
+                {{ __('messages.inactive') }}</option>
         </select>
         @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -79,8 +81,12 @@
     </div>
     <div class="col-md-6">
         <label class="form-label fw-semibold">
-            Password
-            {{ isset($user) ? '<small class="text-muted fw-normal">(leave blank to keep)</small>' : '<span class="text-danger">*</span>' }}
+            {{ __('messages.password') }}
+            @if (isset($user))
+                <small class="text-muted fw-normal">({{ __('messages.back') }})</small>
+            @else
+                <span class="text-danger">*</span>
+            @endif
         </label>
         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
             placeholder="••••••••" {{ !isset($user) ? 'required' : '' }}>
@@ -89,8 +95,11 @@
         @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label fw-semibold">Confirm Password
-            {{ isset($user) ? '' : '<span class="text-danger">*</span>' }}</label>
+        <label class="form-label fw-semibold">{{ __('messages.confirm_password') }}
+            @if (!isset($user))
+                <span class="text-danger">*</span>
+            @endif
+        </label>
         <input type="password" name="password_confirmation" class="form-control" placeholder="••••••••"
             {{ !isset($user) ? 'required' : '' }}>
     </div>
@@ -98,9 +107,9 @@
 
 <div class="d-flex justify-content-end gap-2 pt-4 mt-2 border-top">
     <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">
-        <i class="bx bx-x me-1"></i> Cancel
+        <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
     </a>
     <button type="submit" class="btn btn-primary">
-        <i class="bx bx-save me-1"></i> {{ isset($user) ? 'Update User' : 'Save User' }}
+        <i class="bx bx-save me-1"></i> {{ isset($user) ? __('messages.update') : __('messages.save') }}
     </button>
 </div>
