@@ -21,15 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Set locale from session on every request
-        if (session()->has('locale')) {
-            $locale = session('locale');
-            if (array_key_exists($locale, LanguageController::SUPPORTED)) {
-                app()->setLocale($locale);
-            }
-        }
-
-        // Share supported languages with all views
+        // Share supported languages with all views.
+        // Locale is applied per-request by App\Http\Middleware\SetLocale
+        // (after session middleware has run), not here.
         View::share('supportedLanguages', LanguageController::SUPPORTED);
     }
 }

@@ -63,12 +63,11 @@
 
             if (themeToggle) {
                 const icon = themeToggle.querySelector('i');
-                themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
                 themeToggle.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
 
                 if (icon) {
-                    icon.classList.toggle('bx-moon', !isDark);
-                    icon.classList.toggle('bx-sun', isDark);
+                    icon.className = isDark ? 'bx bx-sun' : 'bx bx-moon';
+                    icon.style.fontSize = '1.2rem';
                 }
             }
 

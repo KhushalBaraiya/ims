@@ -24,8 +24,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
+
+    {{-- Apply a font stack that covers Latin + Gujarati + Devanagari --}}
+    <style>
+        :root {
+            --bs-body-font-family: 'Public Sans', 'Noto Sans Gujarati', 'Noto Sans Devanagari', sans-serif;
+        }
+
+        body,
+        .menu-text,
+        .card,
+        .table,
+        .form-control,
+        .form-select,
+        .btn {
+            font-family: var(--bs-body-font-family) !important;
+        }
+    </style>
 
     <!-- Boxicons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
@@ -425,7 +442,6 @@
             font-size: 1rem !important;
             padding: 0.5rem 1rem !important;
         }
-
     </style>
 
     <!-- imgError: called inline onerror on all tbl-img tags -->

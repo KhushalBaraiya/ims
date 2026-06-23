@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 class LanguageController extends Controller
 {
     /**
-     * Supported languages with their labels and flag emojis.
+     * Supported languages — no external flag images, using CSS color badges instead.
+     * 'color'  = badge background colour
+     * 'abbr'   = 2-letter country abbreviation shown in the badge
      */
     public const SUPPORTED = [
-        'en' => ['label' => 'English',    'flag' => '🇬🇧'],
-        'gu' => ['label' => 'ગુજરાતી',    'flag' => '🇮🇳'],
-        'hi' => ['label' => 'हिन्दी',      'flag' => '🇮🇳'],
+        'en' => ['label' => 'English',  'abbr' => 'GB', 'code' => 'EN'],
+        'hi' => ['label' => 'Hindi',    'abbr' => 'IN', 'code' => 'HI'],
+        'gu' => ['label' => 'Gujarati', 'abbr' => 'IN', 'code' => 'GU'],
     ];
 
     /**
