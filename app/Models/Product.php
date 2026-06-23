@@ -23,21 +23,17 @@ class Product extends Model
         'sub_category_id',
         'unit_name',
         'unit_code',
-        'base_unit',
         'supplier_id',
         'purchase_price',
         'selling_price',
-        'mrp',
         'tax_percentage',
         'discount_percentage',
-        'opening_stock',
         'minimum_stock_alert',
         'image',
         'gallery',
         'short_description',
         'full_description',
         'status',
-        'is_featured',
         'manufacturer',
         'model_number',
         'part_number',
@@ -49,7 +45,6 @@ class Product extends Model
 
     protected $casts = [
         'gallery' => 'array',
-        'is_featured' => 'boolean',
     ];
 
     public function brand(): BelongsTo

@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
 
     // Products Routes
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
+    Route::get('/products/{product}/copy', [ProductController::class, 'copy'])->name('products.copy');
     Route::resource('products', ProductController::class);
 
     // Sales Routes

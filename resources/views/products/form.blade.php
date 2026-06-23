@@ -1,6 +1,6 @@
 @csrf
 
-{{-- Section 1: Basic Information --}}
+{{-- ── Section 1: Basic Information ── --}}
 <h6 class="fw-semibold text-primary mb-3"><i class="bx bx-info-circle me-2"></i>{{ __('messages.information') }}</h6>
 <div class="row g-3 pb-4 mb-4 border-bottom">
     <div class="col-md-6">
@@ -43,31 +43,23 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-4">
+    <div class="col-md-2">
         <label class="form-label fw-semibold">Unit Name <span class="text-danger">*</span></label>
         <input type="text" name="unit_name" class="form-control @error('unit_name') is-invalid @enderror"
-            value="{{ old('unit_name', $product->unit_name ?? '') }}" placeholder="e.g. Piece, Box" required>
+            value="{{ old('unit_name', $product->unit_name ?? 'Piece') }}" placeholder="e.g. Piece, Box" required>
         @error('unit_name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label class="form-label fw-semibold">Unit Code <span class="text-danger">*</span></label>
         <input type="text" name="unit_code" class="form-control @error('unit_code') is-invalid @enderror"
-            value="{{ old('unit_code', $product->unit_code ?? '') }}" placeholder="e.g. PCS, BOX" required>
+            value="{{ old('unit_code', $product->unit_code ?? 'PCS') }}" placeholder="e.g. PCS, BOX" required>
         @error('unit_code')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-3">
-        <label class="form-label fw-semibold">Base Unit</label>
-        <input type="text" name="base_unit" class="form-control @error('base_unit') is-invalid @enderror"
-            value="{{ old('base_unit', $product->base_unit ?? '') }}" placeholder="e.g. unit, kg">
-        @error('base_unit')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.category') }} <span class="text-danger">*</span></label>
         <select name="main_category_id" id="main_category_id"
             class="form-select @error('main_category_id') is-invalid @enderror" required>
@@ -82,7 +74,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.sub_category') }} <span
                 class="text-danger">*</span></label>
         <select name="sub_category_id" id="sub_category_id"
@@ -93,11 +85,22 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
+        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+            <option value="active" {{ old('status', $product->status ?? 'active') === 'active' ? 'selected' : '' }}>
+                Active</option>
+            <option value="inactive"
+                {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+        </select>
+        @error('status')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 </div>
 
-{{-- Section 2: Pricing & Inventory --}}
-<h6 class="fw-semibold text-primary mb-3"><i class="bx bx-money me-2"></i>{{ __('messages.selling_price') }} &
-    {{ __('messages.available_stock') }}</h6>
+{{-- ── Section 2: Pricing ── --}}
+<h6 class="fw-semibold text-primary mb-3"><i class="bx bx-money me-2"></i>Pricing</h6>
 <div class="row g-3 pb-4 mb-4 border-bottom">
     <div class="col-md-4">
         <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
@@ -110,14 +113,6 @@
             @endforeach
         </select>
         @error('supplier_id')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-4">
-        <label class="form-label fw-semibold">MRP</label>
-        <input type="number" step="0.01" name="mrp" class="form-control @error('mrp') is-invalid @enderror"
-            value="{{ old('mrp', $product->mrp ?? '0.00') }}">
-        @error('mrp')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
@@ -139,7 +134,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <label class="form-label fw-semibold">Tax %</label>
         <input type="number" step="0.01" name="tax_percentage"
             class="form-control @error('tax_percentage') is-invalid @enderror"
@@ -148,7 +143,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <label class="form-label fw-semibold">Discount %</label>
         <input type="number" step="0.01" name="discount_percentage"
             class="form-control @error('discount_percentage') is-invalid @enderror"
@@ -157,16 +152,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-3">
-        <label class="form-label fw-semibold">Opening Stock Qty</label>
-        <input type="number" step="0.01" name="opening_stock"
-            class="form-control @error('opening_stock') is-invalid @enderror"
-            value="{{ old('opening_stock', $product->stock->quantity ?? ($product->opening_stock ?? '0.00')) }}">
-        @error('opening_stock')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-3">
+    <div class="col-md-6">
         <label class="form-label fw-semibold">Min Stock Alert Level</label>
         <input type="number" step="0.01" name="minimum_stock_alert"
             class="form-control @error('minimum_stock_alert') is-invalid @enderror"
@@ -175,21 +161,39 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-3">
-        <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
-            <option value="active" {{ old('status', $product->status ?? 'active') === 'active' ? 'selected' : '' }}>
-                Active</option>
-            <option value="inactive" {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>
-                Inactive</option>
-        </select>
-        @error('status')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
 </div>
 
-{{-- Section 3: Technical Specifications --}}
+{{-- ── Section 3: Opening Stock (CREATE only — not shown on edit) ── --}}
+@if (!isset($product) || isset($isCopy))
+    <div class="pb-4 mb-4 border-bottom">
+        <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" role="switch" name="add_opening_stock"
+                id="addOpeningStock" value="1" {{ old('add_opening_stock') ? 'checked' : '' }}>
+            <label class="form-check-label fw-semibold" for="addOpeningStock">
+                <i class="bx bx-box me-1 text-success"></i>Add stock while creating product
+            </label>
+            <div class="form-text">Check this to add an initial stock quantity. A Purchase record will be created
+                automatically for traceability.</div>
+        </div>
+        <div id="openingStockBox" class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold" for="initial_qty">Opening Qty <span
+                            class="text-danger">*</span></label>
+                    <input type="number" step="0.01" min="0.01" name="initial_qty" id="initial_qty"
+                        class="form-control @error('initial_qty') is-invalid @enderror"
+                        value="{{ old('initial_qty', '') }}" placeholder="e.g. 10">
+                    <div class="form-text">Stock that will be added and a matching purchase entry created.</div>
+                    @error('initial_qty')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+{{-- ── Section 4: Technical Specifications ── --}}
 <h6 class="fw-semibold text-success mb-3"><i class="bx bx-chip me-2"></i>Technical Specifications (Optional)</h6>
 <div class="row g-3 pb-4 mb-4 border-bottom">
     <div class="col-md-3">
@@ -227,16 +231,9 @@
         <input type="text" name="country_of_origin" class="form-control"
             value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}" placeholder="e.g. Taiwan">
     </div>
-    <div class="col-md-3 d-flex align-items-end">
-        <div class="form-check form-switch mb-2">
-            <input class="form-check-input" type="checkbox" role="switch" name="is_featured" value="1"
-                id="isFeatured" {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
-            <label class="form-check-label fw-semibold" for="isFeatured">Featured Product</label>
-        </div>
-    </div>
 </div>
 
-{{-- Section 4: Media & Descriptions --}}
+{{-- ── Section 5: Media & Descriptions ── --}}
 <h6 class="fw-semibold text-warning mb-3"><i class="bx bx-image me-2"></i>Media & Description</h6>
 <div class="row g-4">
     <div class="col-md-6">
@@ -263,7 +260,6 @@
                 <input type="hidden" name="remove_image" id="remove_image" value="0">
             </div>
         </div>
-
         {{-- Gallery --}}
         <div class="card border">
             <div class="card-body p-3">
@@ -319,34 +315,49 @@
         <i class="bx bx-x me-1"></i> Cancel
     </a>
     <button type="submit" class="btn btn-primary">
-        <i class="bx bx-save me-1"></i> {{ isset($product) ? 'Update Product' : 'Save Product' }}
+        <i class="bx bx-save me-1"></i>
+        {{ isset($isCopy) ? 'Save Copied Product' : (isset($product) && $product->exists ? 'Update Product' : 'Save Product') }}
     </button>
 </div>
 
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+            // ── Sub-category dynamic load ──
             const subCategories = @json($subCategories);
             const selectedSubCategoryId = "{{ old('sub_category_id', $product->sub_category_id ?? '') }}";
 
-            function loadSubcategories(mainCategoryId, preselectedId = '') {
+            function loadSubcategories(mainCategoryId, preselectedId) {
                 const subSelect = $('#sub_category_id');
                 subSelect.html('<option value="">Select Sub Category</option>');
-                subCategories.filter(s => s.main_category_id == mainCategoryId).forEach(s => {
-                    subSelect.append(
-                        `<option value="${s.id}" ${s.id == preselectedId ? 'selected' : ''}>${s.name}</option>`
-                    );
-                });
+                subCategories
+                    .filter(s => s.main_category_id == mainCategoryId)
+                    .forEach(s => {
+                        subSelect.append(
+                            `<option value="${s.id}" ${s.id == preselectedId ? 'selected' : ''}>${s.name}</option>`
+                        );
+                    });
             }
 
             $('#main_category_id').on('change', function() {
                 loadSubcategories($(this).val());
             });
-
             const initialMainCatId = $('#main_category_id').val();
             if (initialMainCatId) loadSubcategories(initialMainCatId, selectedSubCategoryId);
 
-            // Primary image
+            // ── Opening-stock toggle (create / copy form only) ──
+            $('#addOpeningStock').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#openingStockBox').removeClass('d-none');
+                    $('#initial_qty').prop('required', true);
+                } else {
+                    $('#openingStockBox').addClass('d-none');
+                    $('#initial_qty').prop('required', false).val('');
+                }
+            });
+
+            // ── Primary image ──
             $('#triggerImageBtn').on('click', () => $('#imageInput').click());
 
             $('#imageInput').on('change', function(e) {
@@ -369,7 +380,7 @@
                 $('#remove_image').val('1');
             });
 
-            // Gallery
+            // ── Gallery ──
             let removedGalleryImages = [];
 
             $(document).on('click', '.remove-gallery-img-btn', function(e) {

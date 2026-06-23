@@ -85,7 +85,8 @@
                             <span class="badge bg-label-primary small mb-1">{{ $product->brand->name ?? 'Generic' }}</span>
                             <h4 class="fw-bold mb-1">{{ $product->name }}</h4>
                             <p class="text-muted small mb-0">SKU: <code>{{ $product->code }}</code> | Barcode:
-                                <code>{{ $product->barcode ?: '-' }}</code></p>
+                                <code>{{ $product->barcode ?: '-' }}</code>
+                            </p>
                         </div>
                         <span
                             class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ ucfirst($product->status) }}</span>
@@ -101,14 +102,6 @@
                         <div class="col-md-4"><small
                                 class="text-muted fw-semibold d-block">Supplier</small><span>{{ $product->supplier->name ?? '-' }}</span>
                         </div>
-                        <div class="col-md-4"><small class="text-muted fw-semibold d-block">Featured</small>
-                            @if ($product->is_featured)
-                            <span class="text-warning"><i class="bx bxs-star me-1"></i>Featured</span>@else<span
-                                    class="text-muted">Regular</span>
-                            @endif
-                        </div>
-                        <div class="col-md-4"><small class="text-muted fw-semibold d-block">Base
-                                Unit</small><span>{{ $product->base_unit ?: '-' }}</span></div>
                     </div>
                 </div>
             </div>
@@ -121,9 +114,6 @@
                         </div>
                         <div class="card-body p-0">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between px-4 py-3"><span
-                                        class="text-muted small">MRP</span><span
-                                        class="fw-semibold">{{ format_currency($product->mrp) }}</span></li>
                                 <li class="list-group-item d-flex justify-content-between px-4 py-3"><span
                                         class="text-muted small">Purchase Price</span><span
                                         class="fw-semibold">{{ format_currency($product->purchase_price) }}</span></li>
@@ -161,10 +151,6 @@
                                 <li class="list-group-item d-flex justify-content-between px-4 py-3"><span
                                         class="text-muted small">Min Alert Qty</span><span
                                         class="fw-semibold">{{ number_format($product->minimum_stock_alert, 2) }}</span>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between px-4 py-3"><span
-                                        class="text-muted small">Opening Stock</span><span
-                                        class="fw-semibold">{{ number_format($product->opening_stock ?? 0, 2) }}</span>
                                 </li>
                             </ul>
                         </div>

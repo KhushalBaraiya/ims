@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Brand;
-use App\Models\MainCategory;
-use App\Models\SubCategory;
 use App\Models\Currency;
-use App\Models\Supplier;
+use App\Models\MainCategory;
 use App\Models\Product;
+use App\Models\SubCategory;
+use App\Models\Supplier;
+use Illuminate\Database\Seeder;
 
 class DemoDataSeeder extends Seeder
 {
@@ -94,7 +94,7 @@ class DemoDataSeeder extends Seeder
         // 6. Seed Products
         $intelBrand = Brand::where('slug', 'INTEL')->first();
         $asusBrand = Brand::where('slug', 'ASUS')->first();
-        
+
         $cpuSub = SubCategory::where('slug', 'CPUS')->first();
         $laptopSub = SubCategory::where('slug', 'LAPTOPS')->first();
 
@@ -112,19 +112,15 @@ class DemoDataSeeder extends Seeder
                 'sub_category_id' => $cpuSub->id,
                 'unit_name' => 'Piece',
                 'unit_code' => 'PCS',
-                'base_unit' => null,
                 'supplier_id' => $intelSupplier->id,
                 'purchase_price' => 32000.00,
                 'selling_price' => 36500.00,
-                'mrp' => 42000.00,
                 'tax_percentage' => 18.00,
                 'discount_percentage' => 5.00,
-                'opening_stock' => 25.00,
                 'minimum_stock_alert' => 5.00,
                 'short_description' => 'Intel Core i7-14700K 14th Gen Desktop Processor 20 Cores up to 5.6 GHz',
                 'full_description' => 'Intel Core i7-14700K 14th Gen Desktop Processor 20 Cores (8 P-cores + 12 E-cores) up to 5.6 GHz LGA1700. Unlocked for overclocking, featuring Intel UHD Graphics 770.',
                 'status' => 'active',
-                'is_featured' => true,
                 'manufacturer' => 'Intel Corporation',
                 'model_number' => 'i7-14700K',
                 'part_number' => 'BX8071514700K',
@@ -141,19 +137,15 @@ class DemoDataSeeder extends Seeder
                 'sub_category_id' => $laptopSub->id,
                 'unit_name' => 'Piece',
                 'unit_code' => 'PCS',
-                'base_unit' => null,
                 'supplier_id' => $asusSupplier->id,
                 'purchase_price' => 110000.00,
                 'selling_price' => 125000.00,
-                'mrp' => 145000.00,
                 'tax_percentage' => 18.00,
                 'discount_percentage' => 8.00,
-                'opening_stock' => 10.05,
                 'minimum_stock_alert' => 2.00,
                 'short_description' => 'Asus ROG Strix G16 Intel i7 13th Gen, RTX 4060, 16GB DDR5, 512GB SSD',
                 'full_description' => 'Asus ROG Strix G16 (2023) Gaming Laptop. 16-inch FHD+ 165Hz Display. Intel Core i7-13650HX, NVIDIA GeForce RTX 4060 Laptop GPU, 16GB DDR5 RAM, 512GB PCIe SSD, Windows 11.',
                 'status' => 'active',
-                'is_featured' => true,
                 'manufacturer' => 'ASUSTeK Computer Inc.',
                 'model_number' => 'G614JV-AS73',
                 'part_number' => '90NR0C61-M008H0',
@@ -163,13 +155,19 @@ class DemoDataSeeder extends Seeder
                 'country_of_origin' => 'China',
             ],
         ];
+
+        $stockQtys = [
+            'CPU-INT-I7-14700K' => 25.00,
+            'LPT-ASU-ROG-G16' => 10.05,
+        ];
+
         foreach ($products as $p) {
             $prod = Product::firstOrCreate(['code' => $p['code']], $p);
-            
+
             // Create stock record
             $prod->stock()->updateOrCreate(
                 ['product_id' => $prod->id],
-                ['quantity' => $p['opening_stock']]
+                ['quantity' => $stockQtys[$p['code']] ?? 0]
             );
         }
     }

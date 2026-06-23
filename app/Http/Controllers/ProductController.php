@@ -9,9 +9,13 @@ use App\Models\MainCategory;
 use App\Models\SubCategory;
 use App\Models\Supplier;
 use App\Models\ActivityLog;
+use App\Models\Purchase;
+use App\Models\PurchaseItem;
+use App\Models\StockAdjustment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\File;
@@ -27,7 +31,6 @@ class ProductController extends Controller
 
         $query = Product::with(['brand', 'mainCategory', 'subCategory', 'supplier', 'stock'])->latest();
 
-        // Apply filters
         if ($request->filled('brand_id')) {
             $query->where('brand_id', $request->brand_id);
         }
@@ -60,11 +63,10 @@ class ProductController extends Controller
 
         $products = $query->get();
 
-        // Get filter options
-        $brands = Brand::where('status', 'active')->orderBy('name')->get();
-        $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
+        $brands        = Brand::where('status', 'active')->orderBy('name')->get();
+        $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
-        $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
+        $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
         return view('products.index', compact('products', 'brands', 'categories', 'subCategories', 'suppliers'));
     }
@@ -76,39 +78,43 @@ class ProductController extends Controller
     {
         Gate::authorize('products.create');
 
-        $brands = Brand::where('status', 'active')->orderBy('name')->get();
-        $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
+        $brands        = Brand::where('status', 'active')->orderBy('name')->get();
+        $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
-        $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
+        $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
         return view('products.create', compact('brands', 'categories', 'subCategories', 'suppliers'));
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * If the user checks "Add stock while creating product", we:
+     *  1. Create a Stock row with the given initial qty.
+     *  2. Create a Purchase (Completed) + PurchaseItem for traceability.
+     *  3. Log a StockAdjustment (Restock) for the stock history page.
      */
     public function store(ProductRequest $request): RedirectResponse
     {
         Gate::authorize('products.create');
 
         $validated = $request->validated();
-        $validated['is_featured'] = $request->has('is_featured');
 
-        // Make sure uploads directory exists
+        // Upload directory
         $uploadPath = public_path('uploads/products');
         if (!File::exists($uploadPath)) {
             File::makeDirectory($uploadPath, 0755, true);
         }
 
-        // Handle single image upload
+        // Primary image
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
+            $file     = $request->file('image');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $fileName);
             $validated['image'] = $fileName;
         }
 
-        // Handle gallery images upload
+        // Gallery
         $gallery = [];
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $file) {
@@ -119,15 +125,71 @@ class ProductController extends Controller
         }
         $validated['gallery'] = $gallery;
 
-        // Create product
-        $product = Product::create($validated);
+        $addStock   = $request->boolean('add_opening_stock');
+        $initialQty = $addStock ? max(0, (float) $request->input('initial_qty', 0)) : 0.00;
 
-        // Manage opening stock record
-        $product->stock()->create([
-            'quantity' => $validated['opening_stock'] ?? 0.00
-        ]);
+        DB::beginTransaction();
+        try {
+            // 1. Create the product
+            $product = Product::create($validated);
 
-        ActivityLog::log('Product Created', "Created product: {$product->name} (SKU: {$product->code})");
+            // 2. Always create a stock row
+            $product->stock()->create(['quantity' => $initialQty]);
+
+            // 3. If checkbox was ticked and qty > 0 — create Purchase + PurchaseItem + StockAdjustment
+            if ($addStock && $initialQty > 0) {
+                $purchaseNo = 'PO-INIT-' . strtoupper($product->code) . '-' . now()->format('YmdHis');
+                $lineTotal  = round($initialQty * $product->purchase_price, 2);
+
+                $purchase = Purchase::create([
+                    'purchase_no'        => $purchaseNo,
+                    'purchase_date'      => now()->toDateString(),
+                    'supplier_id'        => $product->supplier_id,
+                    'purchase_person_id' => auth()->id(),
+                    'reference_no'       => 'Opening stock — ' . $product->name,
+                    'sub_total'          => $lineTotal,
+                    'tax_amount'         => 0.00,
+                    'discount_amount'    => 0.00,
+                    'shipping_amount'    => 0.00,
+                    'grand_total'        => $lineTotal,
+                    'paid_amount'        => $lineTotal,
+                    'due_amount'         => 0.00,
+                    'payment_method'     => 'Cash',
+                    'status'             => 'Completed',
+                    'notes'              => 'Auto-created opening-stock purchase on product creation.',
+                    'user_id'            => auth()->id(),
+                ]);
+
+                PurchaseItem::create([
+                    'purchase_id'     => $purchase->id,
+                    'product_id'      => $product->id,
+                    'quantity'        => $initialQty,
+                    'purchase_price'  => $product->purchase_price,
+                    'tax_amount'      => 0.00,
+                    'discount_amount' => 0.00,
+                    'total_amount'    => $lineTotal,
+                ]);
+
+                StockAdjustment::create([
+                    'product_id'      => $product->id,
+                    'quantity_change' => $initialQty,
+                    'adjustment_type' => 'Restock',
+                    'notes'           => "Opening stock added on product creation (Purchase: {$purchaseNo}).",
+                    'user_id'         => auth()->id(),
+                ]);
+            }
+
+            ActivityLog::log(
+                'Product Created',
+                "Created product: {$product->name} (SKU: {$product->code})" .
+                ($addStock && $initialQty > 0 ? ", opening stock: {$initialQty}" : '')
+            );
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->withErrors(['error' => 'Could not save product: ' . $e->getMessage()]);
+        }
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
@@ -151,27 +213,27 @@ class ProductController extends Controller
     {
         Gate::authorize('products.update');
 
-        $brands = Brand::where('status', 'active')->orderBy('name')->get();
-        $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
+        $brands        = Brand::where('status', 'active')->orderBy('name')->get();
+        $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
-        $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
+        $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
         return view('products.edit', compact('product', 'brands', 'categories', 'subCategories', 'suppliers'));
     }
 
     /**
      * Update the specified resource in storage.
+     * NOTE: No opening-stock checkbox on edit — stock is managed via the Stock Adjustment page.
      */
     public function update(ProductRequest $request, Product $product): RedirectResponse
     {
         Gate::authorize('products.update');
 
         $validated = $request->validated();
-        $validated['is_featured'] = $request->has('is_featured');
 
         $uploadPath = public_path('uploads/products');
 
-        // Handle single image removal
+        // Single image removal
         if ($request->input('remove_image') == 1) {
             if ($product->image && File::exists($uploadPath . '/' . $product->image)) {
                 File::delete($uploadPath . '/' . $product->image);
@@ -179,19 +241,18 @@ class ProductController extends Controller
             $validated['image'] = null;
         }
 
-        // Handle single image replacement/upload
+        // Single image replacement
         if ($request->hasFile('image')) {
-            // Delete old file
             if ($product->image && File::exists($uploadPath . '/' . $product->image)) {
                 File::delete($uploadPath . '/' . $product->image);
             }
-            $file = $request->file('image');
+            $file     = $request->file('image');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move($uploadPath, $fileName);
             $validated['image'] = $fileName;
         }
 
-        // Handle gallery clearance
+        // Gallery clearance
         $gallery = $product->gallery ?: [];
         if ($request->input('clear_gallery') == 1) {
             foreach ($gallery as $img) {
@@ -202,10 +263,9 @@ class ProductController extends Controller
             $gallery = [];
         }
 
-        // Remove specific gallery images if requested
+        // Remove specific gallery images
         if ($request->filled('remove_gallery_images')) {
-            $imagesToRemove = explode(',', $request->remove_gallery_images);
-            foreach ($imagesToRemove as $imgToRemove) {
+            foreach (explode(',', $request->remove_gallery_images) as $imgToRemove) {
                 $imgToRemove = trim($imgToRemove);
                 if (($key = array_search($imgToRemove, $gallery)) !== false) {
                     if (File::exists($uploadPath . '/' . $imgToRemove)) {
@@ -214,10 +274,10 @@ class ProductController extends Controller
                     unset($gallery[$key]);
                 }
             }
-            $gallery = array_values($gallery); // Re-index array
+            $gallery = array_values($gallery);
         }
 
-        // Handle new gallery uploads
+        // New gallery uploads
         if ($request->hasFile('gallery')) {
             if (!File::exists($uploadPath)) {
                 File::makeDirectory($uploadPath, 0755, true);
@@ -230,18 +290,45 @@ class ProductController extends Controller
         }
         $validated['gallery'] = $gallery;
 
-        // Update product
         $product->update($validated);
 
-        // Update stock record (sync opening stock changes if needed)
-        $product->stock()->updateOrCreate(
-            ['product_id' => $product->id],
-            ['quantity' => $validated['opening_stock'] ?? 0.00]
-        );
+        // Ensure a stock row exists (do NOT overwrite current live quantity)
+        $product->stock()->firstOrCreate(['product_id' => $product->id], ['quantity' => 0]);
 
         ActivityLog::log('Product Updated', "Updated product: {$product->name} (SKU: {$product->code})");
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+    }
+
+    /**
+     * Pre-fill the create form with an existing product's data for quick duplication.
+     * A new unique SKU is generated; all other fields are copied.
+     */
+    public function copy(Product $product): View
+    {
+        Gate::authorize('products.create');
+
+        $brands        = Brand::where('status', 'active')->orderBy('name')->get();
+        $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
+        $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
+        $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
+
+        // Build a copy with a fresh unique SKU (append -COPY-{random})
+        $copy = $product->replicate(['code', 'barcode', 'image', 'gallery', 'slug']);
+        $copy->code    = strtoupper($product->code) . '-COPY-' . strtoupper(\Illuminate\Support\Str::random(4));
+        $copy->barcode = null;
+        $copy->image   = null;
+        $copy->gallery = [];
+        $copy->exists  = false; // treat as a new (unsaved) model so the form renders correctly
+
+        return view('products.create', [
+            'product'       => $copy,
+            'brands'        => $brands,
+            'categories'    => $categories,
+            'subCategories' => $subCategories,
+            'suppliers'     => $suppliers,
+            'isCopy'        => true,
+        ]);
     }
 
     /**
@@ -252,9 +339,8 @@ class ProductController extends Controller
         Gate::authorize('products.delete');
 
         $productName = $product->name;
-        $productSku = $product->code;
+        $productSku  = $product->code;
 
-        // We do not delete physical files on soft-delete, keeping database soft-delete clean.
         $product->delete();
 
         ActivityLog::log('Product Deleted', "Deleted product: {$productName} (SKU: {$productSku})");

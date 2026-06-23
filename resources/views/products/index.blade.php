@@ -177,6 +177,11 @@
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
                                                 title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
                                         @endcan
+                                        @can('products.create')
+                                            <a href="{{ route('products.copy', $product->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
+                                                title="Copy product"><i class="bx bx-copy"></i></a>
+                                        @endcan
                                         @can('products.delete')
                                             <form id="delete-form-{{ $product->id }}"
                                                 action="{{ route('products.destroy', $product->id) }}" method="POST"
