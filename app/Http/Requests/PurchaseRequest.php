@@ -21,7 +21,6 @@ class PurchaseRequest extends FormRequest
     {
         return [
             'supplier_id' => 'required|exists:suppliers,id',
-            'purchase_person_id' => 'required|exists:users,id',
             'purchase_date' => 'required|date',
             'reference_no' => 'nullable|string|max:255',
             'payment_method' => 'required|string|max:100',
@@ -29,8 +28,6 @@ class PurchaseRequest extends FormRequest
             'discount_amount' => 'nullable|numeric|min:0',
             'tax_amount' => 'nullable|numeric|min:0',
             'shipping_amount' => 'nullable|numeric|min:0',
-            'invoice_no' => 'nullable|string|max:255',
-            'invoice_date' => 'nullable|date',
             'notes' => 'nullable|string',
             'status' => 'required|in:Draft,Completed,Cancelled',
             
@@ -51,15 +48,12 @@ class PurchaseRequest extends FormRequest
     {
         return [
             'supplier_id' => 'Supplier',
-            'purchase_person_id' => 'Purchase Person',
             'purchase_date' => 'Purchase Date',
             'payment_method' => 'Payment Method',
             'paid_amount' => 'Paid Amount',
             'discount_amount' => 'Discount',
             'tax_amount' => 'Tax',
             'shipping_amount' => 'Shipping Charge',
-            'invoice_no' => 'Invoice Number',
-            'invoice_date' => 'Invoice Date',
             'status' => 'Status',
             'items' => 'Purchase Items',
             'items.*.product_id' => 'Product ID',

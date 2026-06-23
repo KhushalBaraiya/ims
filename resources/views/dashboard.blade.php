@@ -67,7 +67,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-5 d-none d-sm-flex align-items-center justify-content-center py-3">
+                    {{-- <div class="col-sm-5 d-none d-sm-flex align-items-center justify-content-center py-3">
                         <div class="text-center text-white" id="dashboardClock">
                             <div id="dashClock-time"
                                 style="font-size:2.6rem;font-weight:700;letter-spacing:.03em;line-height:1.1;font-variant-numeric:tabular-nums;">
@@ -81,7 +81,7 @@
                                 style="font-size:.78rem;opacity:.6;margin-top:2px;letter-spacing:.08em;text-transform:uppercase;">
                                 --------</div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

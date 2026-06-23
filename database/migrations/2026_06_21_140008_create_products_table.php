@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
             $table->foreignId('main_category_id')->nullable()->constrained('main_categories')->onDelete('set null');
             $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->onDelete('set null');
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('set null');
 
             // Unit stored as plain strings — no FK to a units table
             $table->string('unit_name')->default('Piece');

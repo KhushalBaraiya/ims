@@ -23,7 +23,6 @@ class Product extends Model
         'sub_category_id',
         'unit_name',
         'unit_code',
-        'supplier_id',
         'purchase_price',
         'selling_price',
         'tax_percentage',
@@ -60,11 +59,6 @@ class Product extends Model
     public function subCategory(): BelongsTo
     {
         return $this->belongsTo(SubCategory::class);
-    }
-
-    public function supplier(): BelongsTo
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function stock(): HasOne

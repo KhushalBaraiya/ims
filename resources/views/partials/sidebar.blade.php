@@ -37,7 +37,7 @@
     <div class="menu-divider mt-0"></div>
 
     {{-- Logged-in user --}}
-    <div class="px-3 py-3">
+    {{-- <div class="px-3 py-3">
         <a href="{{ route('profile.show') }}"
             class="d-flex align-items-center gap-3 text-decoration-none sidebar-user-card rounded-3 px-2 py-2"
             style="transition:background .18s;">
@@ -58,7 +58,7 @@
                     {{ Auth::user()->email }}</div>
             </div>
         </a>
-    </div>
+    </div> --}}
 
     <div class="menu-divider my-0"></div>
     <div class="menu-inner-shadow"></div>
