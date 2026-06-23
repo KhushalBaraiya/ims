@@ -12,15 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropForeign(['unit_id']);
-            $table->dropColumn('unit_id');
+            if (Schema::hasColumn('products', 'unit_id')) {
+                $table->dropForeign(['unit_id']);
+                $table->dropColumn('unit_id');
+            }
 
-            $table->dropForeign(['currency_id']);
-            $table->dropColumn('currency_id');
+            if (Schema::hasColumn('products', 'currency_id')) {
+                $table->dropForeign(['currency_id']);
+                $table->dropColumn('currency_id');
+            }
 
-            $table->string('unit_name')->nullable()->after('sub_category_id');
-            $table->string('unit_code')->nullable()->after('unit_name');
-            $table->string('base_unit')->nullable()->after('unit_code');
+            if (!Schema::hasColumn('products', 'unit_name')) {
+                $table->string('unit_name')->nullable()->after('sub_category_id');
+            }
+            if (!Schema::hasColumn('products', 'unit_code')) {
+                $table->string('unit_code')->nullable()->after('unit_name');
+            }
+            if (!Schema::hasColumn('products', 'base_unit')) {
+                $table->string('base_unit')->nullable()->after('unit_code');
+            }
         });
 
         Schema::dropIfExists('units');

@@ -1,74 +1,81 @@
 @extends('layouts.auth')
-
 @section('title', 'Reset Password')
 
 @section('content')
-    <div class="mb-6 text-center text-sm text-zinc-400">
-        {{ __('messages.reset_password_desc') }}
+
+    <div class="brand-wrap">
+        <div class="brand-icon"><i class="bx bx-bolt-circle"></i></div>
+        <span class="brand-name">Kalathiya POS</span>
     </div>
 
-    <form method="POST" action="{{ route('password.update') }}" class="space-y-5">
-        @csrf
+    <div class="auth-title">Set New Password 🔑</div>
+    <div class="auth-subtitle">{{ __('messages.reset_password_desc') }}</div>
 
-        <!-- Password Reset Token -->
+    <form method="POST" action="{{ route('password.update') }}">
+        @csrf
         <input type="hidden" name="token" value="{{ $token }}">
 
-        <!-- Email Address -->
-        <div>
-            <label for="email"
-                class="block text-sm font-semibold text-zinc-300 mb-1.5">{{ __('messages.email_address_label') }}</label>
-            <div class="relative rounded-lg shadow-sm">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-500">
-                    <i class="fa-regular fa-envelope"></i>
-                </div>
-                <input id="email" type="email" name="email" value="{{ $email ?? old('email') }}" required
-                    autocomplete="email" readonly
-                    class="block w-full rounded-lg border border-zinc-800 bg-zinc-950/20 py-2.5 pl-10 pr-4 text-sm text-zinc-400 placeholder-zinc-600 outline-none cursor-not-allowed">
-            </div>
+        {{-- Email (readonly) --}}
+        <div class="mb-field">
+            <label class="form-label-dark" for="email">{{ __('messages.email_address_label') }}</label>
+            <input type="email" id="email" name="email" value="{{ $email ?? old('email') }}" readonly
+                class="input-dark @error('email') is-invalid @enderror" />
             @error('email')
-                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
-                    <i class="fa-solid fa-circle-info"></i> {{ $message }}
-                </p>
+                <div class="field-error"><i class="bx bx-info-circle"></i> {{ $message }}</div>
             @enderror
         </div>
 
-        <!-- Password -->
-        <div>
-            <label for="password"
-                class="block text-sm font-semibold text-zinc-300 mb-1.5">{{ __('messages.new_password_label') }}</label>
-            <div class="relative rounded-lg shadow-sm">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-500">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <input id="password" type="password" name="password" required autocomplete="new-password"
-                    class="block w-full rounded-lg border border-zinc-800 bg-zinc-950/40 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-600 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 @error('password') border-red-500/80 focus:border-red-500 focus:ring-red-500/30 @enderror"
-                    placeholder="••••••••">
+        {{-- New password --}}
+        <div class="mb-field">
+            <label class="form-label-dark" for="password">{{ __('messages.new_password_label') }}</label>
+            <div class="pw-wrap">
+                <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password"
+                    required class="input-dark @error('password') is-invalid @enderror" />
+                <button type="button" class="pw-toggle" id="togglePw" tabindex="-1">
+                    <i class="bx bx-hide" id="pwIcon"></i>
+                </button>
             </div>
             @error('password')
-                <p class="mt-1.5 text-xs text-red-400 flex items-center gap-1">
-                    <i class="fa-solid fa-circle-info"></i> {{ $message }}
-                </p>
+                <div class="field-error"><i class="bx bx-info-circle"></i> {{ $message }}</div>
             @enderror
         </div>
 
-        <!-- Confirm Password -->
-        <div>
-            <label for="password_confirmation" class="block text-sm font-semibold text-zinc-300 mb-1.5">Confirm New
-                Password</label>
-            <div class="relative rounded-lg shadow-sm">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-zinc-500">
-                    <i class="fa-solid fa-circle-check"></i>
-                </div>
-                <input id="password_confirmation" type="password" name="password_confirmation" required
-                    autocomplete="new-password"
-                    class="block w-full rounded-lg border border-zinc-800 bg-zinc-950/40 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-600 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50"
-                    placeholder="••••••••">
+        {{-- Confirm password --}}
+        <div class="mb-field">
+            <label class="form-label-dark" for="password_confirmation">Confirm New Password</label>
+            <div class="pw-wrap">
+                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••"
+                    autocomplete="new-password" required class="input-dark" />
+                <button type="button" class="pw-toggle" id="toggleConfirm" tabindex="-1">
+                    <i class="bx bx-hide" id="confirmIcon"></i>
+                </button>
             </div>
         </div>
 
-        <button type="submit"
-            class="w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-violet-600 py-2.5 text-sm font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 focus:outline-none transition-all active:scale-[0.99]">
-            <i class="fa-solid fa-key"></i> {{ __('messages.reset_password_btn') }}
+        <button type="submit" class="btn-submit" style="margin-bottom:.75rem;">
+            <i class="bx bx-check-shield"></i> {{ __('messages.reset_password_btn') }}
         </button>
+
+        <div class="text-center">
+            <a href="{{ route('login') }}" class="back-link">
+                <i class="bx bx-chevron-left"></i> {{ __('messages.back_to_sign_in') }}
+            </a>
+        </div>
     </form>
+
+    <script>
+        function toggleField(inputId, iconId) {
+            var inp = document.getElementById(inputId);
+            var icon = document.getElementById(iconId);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            icon.className = inp.type === 'text' ? 'bx bx-show' : 'bx bx-hide';
+        }
+        document.getElementById('togglePw').addEventListener('click', function() {
+            toggleField('password', 'pwIcon');
+        });
+        document.getElementById('toggleConfirm').addEventListener('click', function() {
+            toggleField('password_confirmation', 'confirmIcon');
+        });
+    </script>
+
 @endsection

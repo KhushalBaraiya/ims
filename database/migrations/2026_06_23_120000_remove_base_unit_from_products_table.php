@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -9,8 +10,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('base_unit');
-            $table->dropColumn('opening_stock');
+            if (Schema::hasColumn('products', 'base_unit')) {
+                $table->dropColumn('base_unit');
+            }
+            if (Schema::hasColumn('products', 'opening_stock')) {
+                $table->dropColumn('opening_stock');
+            }
         });
     }
 
