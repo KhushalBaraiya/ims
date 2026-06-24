@@ -14,6 +14,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseReturnController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReturnController;
@@ -108,4 +109,14 @@ Route::middleware('auth')->group(function () {
 
     // Activity Logs Routes
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+
+    // Reports Routes
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/',             [ReportController::class, 'index'])      ->name('index');
+        Route::get('/sales',        [ReportController::class, 'sales'])      ->name('sales');
+        Route::get('/purchases',    [ReportController::class, 'purchases'])  ->name('purchases');
+        Route::get('/profit-loss',  [ReportController::class, 'profitLoss'])->name('profit-loss');
+        Route::get('/top-selling',  [ReportController::class, 'topSelling'])->name('top-selling');
+        Route::get('/stock-alert',  [ReportController::class, 'stockAlert'])->name('stock-alert');
+    });
 });

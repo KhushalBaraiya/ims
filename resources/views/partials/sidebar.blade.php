@@ -212,6 +212,49 @@
             </a>
         </li>
 
+        {{-- ── REPORTS ── --}}
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Reports</span>
+        </li>
+
+        @php $reportsActive = request()->routeIs('reports.*'); @endphp
+        <li class="menu-item {{ $reportsActive && request()->routeIs('reports.index') ? 'active' : '' }}">
+            <a href="{{ route('reports.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                <div class="text-truncate">All Reports</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
+            <a href="{{ route('reports.sales') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cart-alt"></i>
+                <div class="text-truncate">Sales Report</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
+            <a href="{{ route('reports.purchases') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                <div class="text-truncate">Purchase Report</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('reports.profit-loss') ? 'active' : '' }}">
+            <a href="{{ route('reports.profit-loss') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-trending-up"></i>
+                <div class="text-truncate">Profit & Loss</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('reports.top-selling') ? 'active' : '' }}">
+            <a href="{{ route('reports.top-selling') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-trophy"></i>
+                <div class="text-truncate">Top Selling</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->routeIs('reports.stock-alert') ? 'active' : '' }}">
+            <a href="{{ route('reports.stock-alert') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-error"></i>
+                <div class="text-truncate">Stock Alert</div>
+            </a>
+        </li>
+
         {{-- ── USERS ── --}}
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">{{ __('messages.section_users') }}</span>
