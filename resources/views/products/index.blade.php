@@ -15,8 +15,8 @@
         </div>
         <div class="d-flex gap-2">
             <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-filter-alt me-1"></i> {{ __('messages.filters') }} <i id="filtersChevron"
-                    class="bx bx-chevron-down ms-1"></i>
+                <i class="bx bx-filter-alt me-1"></i> {{ __('messages.filters') }}
+                <i id="filtersChevron" class="bx bx-chevron-down ms-1"></i>
             </button>
             @can('products.create')
                 <a href="{{ route('products.create') }}" class="btn btn-primary">
@@ -26,10 +26,13 @@
         </div>
     </div>
 
+    {{-- Filters --}}
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2"></i>{{ __('messages.filter_products') }}</h6>
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bx bx-filter-alt me-2"></i>{{ __('messages.filter_products') }}
+                </h6>
             </div>
             <div class="card-body p-4">
                 <form method="GET" action="{{ route('products.index') }}">
@@ -46,7 +49,9 @@
                                 <option value="">{{ __('messages.all_brands') }}</option>
                                 @foreach ($brands as $b)
                                     <option value="{{ $b->id }}"
-                                        {{ request('brand_id') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
+                                        {{ request('brand_id') == $b->id ? 'selected' : '' }}>
+                                        {{ $b->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -66,7 +71,8 @@
                                 <option value="">{{ __('messages.all_categories') }}</option>
                                 @foreach ($categories as $c)
                                     <option value="{{ $c->id }}"
-                                        {{ request('main_category_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}
+                                        {{ request('main_category_id') == $c->id ? 'selected' : '' }}>
+                                        {{ $c->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -91,14 +97,16 @@
                     <div class="d-flex justify-content-end gap-2 mt-3">
                         <a href="{{ route('products.index') }}"
                             class="btn btn-outline-secondary btn-sm">{{ __('messages.reset') }}</a>
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="bx bx-search me-1"></i>
-                            {{ __('messages.apply') }}</button>
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    {{-- Table --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive p-3">
@@ -123,32 +131,44 @@
                         @foreach ($products as $index => $product)
                             <tr>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+
+                                {{-- Image cell with selling-price badge --}}
                                 <td>
-                                    @if ($product->image)
-                                        <img src="{{ asset('uploads/products/' . $product->image) }}" class="tbl-img"
-                                            onerror="imgError(this)">
-                                    @else
-                                        <div
-                                            class="tbl-img d-flex align-items-center justify-content-center bg-light rounded img-fallback tbl-img">
-                                            <i class="bx bx-package text-muted"></i>
-                                        </div>
-                                    @endif
+                                    <div class="prod-img-cell">
+                                        @if ($product->image)
+                                            <img src="{{ asset('uploads/products/' . $product->image) }}"
+                                                class="prod-thumb" onerror="imgError(this)">
+                                        @else
+                                            <div class="prod-thumb img-fallback">
+                                                <i class="bx bx-package"></i>
+                                            </div>
+                                        @endif
+                                        <span class="prod-price-tag">
+                                            {{ format_currency($product->selling_price) }}
+                                        </span>
+                                    </div>
                                 </td>
+
                                 <td><strong>{{ $product->name }}</strong></td>
                                 <td><code>{{ $product->code }}</code></td>
                                 <td class="text-muted">{{ $product->brand->name ?? '-' }}</td>
                                 <td class="text-muted">{{ $product->mainCategory->name ?? '-' }}</td>
                                 <td class="text-muted">{{ $product->subCategory->name ?? '-' }}</td>
-                                <td class="text-end fw-semibold">{{ format_currency($product->purchase_price) }}</td>
-                                <td class="text-end fw-bold text-primary">{{ format_currency($product->selling_price) }}
+                                <td class="text-end fw-semibold">
+                                    {{ format_currency($product->purchase_price) }}
+                                </td>
+                                <td class="text-end fw-bold text-primary">
+                                    {{ format_currency($product->selling_price) }}
                                 </td>
                                 <td
-                                    class="text-end fw-bold {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-danger' : 'text-success' }}">
+                                    class="text-end fw-bold
+                                    {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-danger' : 'text-success' }}">
                                     {{ number_format($product->stock->quantity ?? 0, 2) }}
                                 </td>
                                 <td class="text-center">
                                     <span
-                                        class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        class="badge rounded-pill
+                                        {{ $product->status === 'active' ? 'bg-success' : 'bg-danger' }}">
                                         {{ $product->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                     </span>
                                 </td>
@@ -157,17 +177,23 @@
                                         @can('products.view')
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
+                                                title="{{ __('messages.view') }}">
+                                                <i class="bx bx-show"></i>
+                                            </a>
                                         @endcan
                                         @can('products.update')
                                             <a href="{{ route('products.edit', $product->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
+                                                title="{{ __('messages.edit') }}">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
                                         @endcan
                                         @can('products.create')
                                             <a href="{{ route('products.copy', $product->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
-                                                title="Copy product"><i class="bx bx-copy"></i></a>
+                                                title="Copy product">
+                                                <i class="bx bx-copy"></i>
+                                            </a>
                                         @endcan
                                         @can('products.delete')
                                             <form id="delete-form-{{ $product->id }}"
@@ -177,7 +203,9 @@
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                     data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                                                    title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>
+                                                    title="{{ __('messages.delete') }}">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
                                             </form>
                                         @endcan
                                     </div>
@@ -191,6 +219,69 @@
     </div>
 
 @endsection
+
+@push('styles')
+    <style>
+        /* ── Product image cell with price-tag overlay ── */
+        .prod-img-cell {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 0;
+        }
+
+        /* Thumbnail */
+        .prod-thumb {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+            /* flat bottom — joins price tag */
+            border: 1.5px solid #dee2e6;
+            border-bottom: none;
+            display: block;
+            transition: filter .2s, transform .2s;
+        }
+
+        .prod-img-cell:hover .prod-thumb {
+            filter: brightness(1.04);
+            transform: translateY(-2px);
+        }
+
+        /* Fallback box (no image) */
+        .prod-thumb.img-fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f2f5;
+            color: #adb5bd;
+            font-size: 1.4rem;
+            border-radius: 10px 10px 0 0;
+            border: 1.5px solid #dee2e6;
+            border-bottom: none;
+        }
+
+        /* Price tag strip */
+        .prod-price-tag {
+            display: block;
+            width: 64px;
+            text-align: center;
+            background: linear-gradient(90deg, #696cff 0%, #9c3fe4 100%);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            padding: 4px 4px 5px;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-shadow: 0 3px 8px rgba(105, 108, 255, .30);
+        }
+    </style>
+@endpush
 
 @push('scripts')
     <script>
@@ -206,6 +297,8 @@
                     orderable: false
                 }]
             });
+
+            // Filter panel toggle
             let filtersOpen = localStorage.getItem('products_filters_open') === 'true';
             if (filtersOpen) {
                 $('#filtersCard').removeClass('d-none');
@@ -218,6 +311,8 @@
                     isOpen);
                 localStorage.setItem('products_filters_open', isOpen);
             });
+
+            // Sub-category dynamic filter
             const subCategories = @json($subCategories);
             const selectedSubCategoryId = "{{ request('sub_category_id') }}";
 
@@ -225,20 +320,24 @@
                 const subSelect = $('#filter_sub_category_id');
                 subSelect.html('<option value="">{{ __('messages.all_categories') }}</option>');
                 if (!mainCategoryId) return;
-                subCategories.filter(sub => sub.main_category_id == mainCategoryId).forEach(sub => {
-                    const selected = sub.id == preselectedId ? 'selected' : '';
-                    subSelect.append(`<option value="${sub.id}" ${selected}>${sub.name}</option>`);
-                });
+                subCategories
+                    .filter(sub => sub.main_category_id == mainCategoryId)
+                    .forEach(sub => {
+                        const selected = sub.id == preselectedId ? 'selected' : '';
+                        subSelect.append(`<option value="${sub.id}" ${selected}>${sub.name}</option>`);
+                    });
             }
             $('#filter_main_category_id').on('change', function() {
                 loadFilterSubcategories($(this).val());
             });
             const initialMainCatId = $('#filter_main_category_id').val();
             if (initialMainCatId) loadFilterSubcategories(initialMainCatId, selectedSubCategoryId);
+
+            // Delete confirmation
             $(document).on('click', '.delete-btn', function() {
-                const id = $(this).data('id'),
-                    name = $(this).data('name'),
-                    form = $(`#delete-form-${id}`);
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const form = $(`#delete-form-${id}`);
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
                     text: `{{ __('messages.delete') }} "${name}"?`,
@@ -255,13 +354,16 @@
                             type: 'POST',
                             data: form.serialize(),
                             success: function(res) {
-                                if (res.success) Swal.fire({
-                                    title: '{{ __('messages.deleted_title') }}',
-                                    text: res.message,
-                                    icon: 'success',
-                                    confirmButtonColor: '#696cff'
-                                }).then(() => window.location.reload());
-                                else showAdminToast(res.message, 'error');
+                                if (res.success) {
+                                    Swal.fire({
+                                        title: '{{ __('messages.deleted_title') }}',
+                                        text: res.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#696cff'
+                                    }).then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
                             },
                             error: function() {
                                 showAdminToast('{{ __('messages.error_occurred') }}',
