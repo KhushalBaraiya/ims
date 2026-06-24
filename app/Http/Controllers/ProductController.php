@@ -23,6 +23,91 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
     /**
+     * Product Gallery — visual card grid with filters, sorting, and pagination.
+     */
+    public function gallery(Request $request): View
+    {
+        Gate::authorize('products.view');
+
+        $perPage = (int) $request->input('per_page', 24);
+        $perPage = in_array($perPage, [12, 24, 48, 96]) ? $perPage : 24;
+
+        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'stock']);
+
+        // Filters
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('name', 'like', "%{$s}%")
+                  ->orWhere('code', 'like', "%{$s}%")
+                  ->orWhere('barcode', 'like', "%{$s}%");
+            });
+        }
+        if ($request->filled('brand_id')) {
+            $query->where('brand_id', $request->brand_id);
+        }
+        if ($request->filled('main_category_id')) {
+            $query->where('main_category_id', $request->main_category_id);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Stock filter — join stocks table
+        if ($request->filled('stock_filter')) {
+            $query->leftJoin('stocks', 'stocks.product_id', '=', 'products.id')
+                  ->select('products.*');
+            match ($request->stock_filter) {
+                'out' => $query->where(function ($q) {
+                    $q->whereNull('stocks.quantity')->orWhere('stocks.quantity', '<=', 0);
+                }),
+                'low' => $query->whereNotNull('stocks.quantity')
+                               ->where('stocks.quantity', '>', 0)
+                               ->whereRaw('stocks.quantity <= products.minimum_stock_alert'),
+                'ok'  => $query->whereNotNull('stocks.quantity')
+                               ->whereRaw('stocks.quantity > products.minimum_stock_alert'),
+                default => null,
+            };
+        }
+
+        // Sorting
+        switch ($request->input('sort', 'latest')) {
+            case 'name_asc':    $query->orderBy('products.name', 'asc');          break;
+            case 'name_desc':   $query->orderBy('products.name', 'desc');         break;
+            case 'price_asc':   $query->orderBy('selling_price', 'asc');          break;
+            case 'price_desc':  $query->orderBy('selling_price', 'desc');         break;
+            case 'stock_asc':   $query->leftJoin('stocks as st2', 'st2.product_id', '=', 'products.id')
+                                      ->select('products.*')
+                                      ->orderBy('st2.quantity', 'asc');           break;
+            case 'stock_desc':  $query->leftJoin('stocks as st3', 'st3.product_id', '=', 'products.id')
+                                      ->select('products.*')
+                                      ->orderBy('st3.quantity', 'desc');          break;
+            default:            $query->latest('products.created_at');            break;
+        }
+
+        $products = $query->paginate($perPage)->withQueryString();
+
+        // Summary counts (unfiltered base)
+        $activeCount     = Product::where('status', 'active')->count();
+        $lowStockCount   = Product::whereHas('stock', fn ($q) =>
+                               $q->where('quantity', '>', 0)
+                                 ->whereRaw('stocks.quantity <= products.minimum_stock_alert')
+                           )->count();
+        $outOfStockCount = Product::where(function ($q) {
+            $q->whereHas('stock', fn ($sq) => $sq->where('quantity', '<=', 0))
+              ->orWhereDoesntHave('stock');
+        })->count();
+
+        $brands     = Brand::where('status', 'active')->orderBy('name')->get();
+        $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
+
+        return view('products.gallery', compact(
+            'products', 'brands', 'categories',
+            'activeCount', 'lowStockCount', 'outOfStockCount'
+        ));
+    }
+
+    /**
      * Display a listing of the resource with filters.
      */
     public function index(Request $request): View

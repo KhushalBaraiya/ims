@@ -554,4 +554,49 @@ return [
     'edit_purchase_order' => 'ખરીદી ઓર્ડર સુધારો',
     'edit_purchase_desc' => 'ખરીદી વિગત, જથ્થો અપડેટ કરો અને ઇન્વેન્ટરી સ્ટૉક ફરી સિંક કરો.',
 
+    // Units module
+    'menu_units'                => 'એકમો',
+    'unit_list'                 => 'એકમ સૂચિ',
+    'add_unit'                  => 'એકમ ઉમેરો',
+    'edit_unit'                 => 'એકમ સુધારો',
+    'unit_details'              => 'એકમ વિગત',
+    'unit_name'                 => 'એકમ નામ',
+    'short_name'                => 'ટૂંકું નામ',
+    'short_name_hint'           => 'ઉત્પાદ નોંધ માં ઉપયોગ થતો સંક્ષેપ (દા.ત. Pcs, Kg).',
+    'save_unit'                 => 'એકમ સાચવો',
+    'update_unit'               => 'એકમ અપડેટ',
+    'publish'                   => 'પ્રકાશિત',
+
+    // Settings module
+    'company_information'       => 'કંપની માહિતી',
+    'invoice_tax_settings'      => 'ઇન્વૉઇસ અને ટૅક્સ સેટિંગ',
+    'save_settings'             => 'સેટિંગ સાચવો',
+    'current_values'            => 'વર્તમાન મૂલ્ય',
+    'invoice_prefix'            => 'ઇન્વૉઇસ ઉપસર્ગ',
+    'purchase_prefix'           => 'ખરીદ ઉપસર્ગ',
+    'invoice_prefix_hint'       => 'ઇન્વૉઇસ નંબર માટે ઉપસર્ગ (દા.ત. INV-0001).',
+    'purchase_prefix_hint'      => 'ખરીદ ઓર્ડર નંબર માટે ઉપસર્ગ (દા.ત. PO-0001).',
+    'tax_name'                  => 'ટૅક્સ નામ',
+    'tax_percentage'            => 'ટૅક્સ ટકા',
+    'currency_managed_separately' => 'ચલણ, ચલણ વિભાગ થી અલગ સંચાલિત થાય છે.',
+
+    // Activity Logs module
+    'activity_logs'             => 'પ્રવૃત્તિ નોંધ',
+    'activity_log_list'         => 'પ્રવૃત્તિ નોંધ',
+    'activity'                  => 'પ્રવૃત્તિ',
+    'ip_address'                => 'IP સરનામું',
+    'user'                      => 'વપરાશકર્તા',
+    'all_users'                 => 'બધા વપરાશકર્તા',
+    'search_activity_placeholder' => 'પ્રવૃત્તિ અથવા વર્ણન શોધો...',
+    'system'                    => 'સિસ્ટમ',
+
+    // Product Gallery
+    'product_gallery'           => 'ઉત્પાદ ગૅલેરી',
+    'gallery_view'              => 'ગૅલેરી વ્યૂ',
+    'list_view'                 => 'સૂચિ વ્યૂ',
+    'profit'                    => 'નફો',
+
+    // Stock overview extra
+    'stock_overview'            => 'સ્ટૉક ઓવરવ્યૂ',
+
 ];

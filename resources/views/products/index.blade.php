@@ -18,6 +18,9 @@
                 <i class="bx bx-filter-alt me-1"></i> {{ __('messages.filters') }}
                 <i id="filtersChevron" class="bx bx-chevron-down ms-1"></i>
             </button>
+            <a href="{{ route('products.gallery') }}" class="btn btn-outline-info btn-sm">
+                <i class="bx bx-grid-alt me-1"></i> Gallery View
+            </a>
             @can('products.create')
                 <a href="{{ route('products.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-1"></i> {{ __('messages.add_product') }}

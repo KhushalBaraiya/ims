@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('currencies', CurrencyController::class);
 
     // Products Routes
+    Route::get('/products/gallery', [ProductController::class, 'gallery'])->name('products.gallery');
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
     Route::get('/products/{product}/copy', [ProductController::class, 'copy'])->name('products.copy');
     Route::resource('products', ProductController::class);

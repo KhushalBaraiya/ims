@@ -580,4 +580,53 @@ return [
     'edit_purchase_order'       => 'खरीद ऑर्डर संपादित',
     'edit_purchase_desc'        => 'खरीद विवरण, मात्रा अपडेट करें और इन्वेंटरी स्टॉक पुनः सिंक करें।',
 
+    // Units module
+    'menu_units'                => 'इकाइयां',
+    'unit_list'                 => 'इकाई सूची',
+    'add_unit'                  => 'इकाई जोड़ें',
+    'edit_unit'                 => 'इकाई संपादित',
+    'unit_details'              => 'इकाई विवरण',
+    'unit_name'                 => 'इकाई नाम',
+    'short_name'                => 'संक्षिप्त नाम',
+    'short_name_hint'           => 'उत्पाद प्रविष्टियों में उपयोग होने वाला संक्षेप (जैसे Pcs, Kg)।',
+    'save_unit'                 => 'इकाई सहेजें',
+    'update_unit'               => 'इकाई अपडेट',
+    'publish'                   => 'प्रकाशित करें',
+
+    // Settings module
+    'company_information'       => 'कंपनी जानकारी',
+    'invoice_tax_settings'      => 'इनवॉइस और कर सेटिंग्स',
+    'save_settings'             => 'सेटिंग्स सहेजें',
+    'current_values'            => 'वर्तमान मान',
+    'invoice_prefix'            => 'इनवॉइस उपसर्ग',
+    'purchase_prefix'           => 'खरीद उपसर्ग',
+    'invoice_prefix_hint'       => 'उत्पन्न इनवॉइस नंबरों के लिए उपसर्ग (जैसे INV-0001)।',
+    'purchase_prefix_hint'      => 'खरीद ऑर्डर नंबरों के लिए उपसर्ग (जैसे PO-0001)।',
+    'tax_name'                  => 'कर नाम',
+    'tax_percentage'            => 'कर प्रतिशत',
+    'currency_managed_separately' => 'मुद्रा को मुद्राएं अनुभाग से अलग प्रबंधित किया जाता है।',
+
+    // Activity Logs module
+    'activity_logs'             => 'गतिविधि लॉग',
+    'activity_log_list'         => 'गतिविधि लॉग',
+    'activity'                  => 'गतिविधि',
+    'ip_address'                => 'IP पता',
+    'user'                      => 'उपयोगकर्ता',
+    'all_users'                 => 'सभी उपयोगकर्ता',
+    'search_activity_placeholder' => 'गतिविधि या विवरण खोजें...',
+    'system'                    => 'सिस्टम',
+
+    // Product Gallery
+    'product_gallery'           => 'उत्पाद गैलरी',
+    'gallery_view'              => 'गैलरी दृश्य',
+    'list_view'                 => 'सूची दृश्य',
+    'in_stock'                  => 'स्टॉक में',
+    'out_of_stock'              => 'स्टॉक खत्म',
+    'low_stock_badge'           => 'कम स्टॉक',
+    'profit'                    => 'लाभ',
+    'cost_price'                => 'लागत मूल्य',
+
+    // Stock overview extra
+    'stock_overview'            => 'स्टॉक सारांश',
+
 ];
