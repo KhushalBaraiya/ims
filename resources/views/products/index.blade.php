@@ -51,17 +51,6 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ __('messages.supplier') }}</label>
-                            <select name="supplier_id" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.all_suppliers') }}</option>
-                                @foreach ($suppliers as $s)
-                                    <option value="{{ $s->id }}"
-                                        {{ request('supplier_id') == $s->id ? 'selected' : '' }}>{{ $s->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
                             <label class="form-label fw-semibold">{{ __('messages.status') }}</label>
                             <select name="status" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
@@ -123,7 +112,6 @@
                             <th>{{ __('messages.th_brand') }}</th>
                             <th>{{ __('messages.category') }}</th>
                             <th>{{ __('messages.sub_category') }}</th>
-                            <th>{{ __('messages.supplier') }}</th>
                             <th class="text-end">{{ __('messages.th_buy_price') }}</th>
                             <th class="text-end">{{ __('messages.th_sell_price') }}</th>
                             <th class="text-end">{{ __('messages.th_stock') }}</th>
@@ -151,7 +139,6 @@
                                 <td class="text-muted">{{ $product->brand->name ?? '-' }}</td>
                                 <td class="text-muted">{{ $product->mainCategory->name ?? '-' }}</td>
                                 <td class="text-muted">{{ $product->subCategory->name ?? '-' }}</td>
-                                <td class="text-muted">{{ $product->supplier->name ?? '-' }}</td>
                                 <td class="text-end fw-semibold">{{ format_currency($product->purchase_price) }}</td>
                                 <td class="text-end fw-bold text-primary">{{ format_currency($product->selling_price) }}
                                 </td>

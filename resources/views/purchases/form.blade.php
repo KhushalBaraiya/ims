@@ -1,5 +1,16 @@
 @csrf
 
+{{-- Show stock errors prominently --}}
+@if ($errors->has('stock_error'))
+    <div class="alert alert-danger d-flex align-items-start gap-2 mb-4">
+        <i class="bx bx-error-circle fs-5 mt-1 flex-shrink-0"></i>
+        <div>
+            <strong>Stock Error — Cannot save purchase.</strong><br>
+            {{ $errors->first('stock_error') }}
+        </div>
+    </div>
+@endif
+
 <div class="row g-4">
 
     {{-- Left: Order Info --}}
@@ -40,22 +51,6 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Purchase Person <span class="text-danger">*</span></label>
-                    <select name="purchase_person_id"
-                        class="form-select @error('purchase_person_id') is-invalid @enderror" required>
-                        <option value="">Select Person</option>
-                        @foreach ($purchasePersons as $pp)
-                            <option value="{{ $pp->id }}"
-                                {{ old('purchase_person_id', $purchase->purchase_person_id ?? auth()->id()) == $pp->id ? 'selected' : '' }}>
-                                {{ $pp->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('purchase_person_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-3">
                     <label class="form-label fw-semibold">Reference / PO No</label>
                     <input type="text" name="reference_no" class="form-control"
                         value="{{ old('reference_no', $purchase->reference_no ?? '') }}"
@@ -68,31 +63,12 @@
                             {{ old('status', $purchase->status ?? 'Completed') === 'Completed' ? 'selected' : '' }}>
                             Completed</option>
                         <option value="Draft"
-                            {{ old('status', $purchase->status ?? '') === 'Draft' ? 'selected' : '' }}>Draft
-                        </option>
+                            {{ old('status', $purchase->status ?? '') === 'Draft' ? 'selected' : '' }}>
+                            Draft</option>
                         <option value="Cancelled"
-                            {{ old('status', $purchase->status ?? '') === 'Cancelled' ? 'selected' : '' }}>Cancelled
-                        </option>
+                            {{ old('status', $purchase->status ?? '') === 'Cancelled' ? 'selected' : '' }}>
+                            Cancelled</option>
                     </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-receipt me-2 text-info"></i>Supplier Invoice</h6>
-            </div>
-            <div class="card-body p-4">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Supplier Invoice No</label>
-                    <input type="text" name="invoice_no" class="form-control"
-                        value="{{ old('invoice_no', $purchase->invoice_no ?? '') }}"
-                        placeholder="Supplier invoice number...">
-                </div>
-                <div class="mb-0">
-                    <label class="form-label fw-semibold">Supplier Invoice Date</label>
-                    <input type="date" name="invoice_date" class="form-control"
-                        value="{{ old('invoice_date', $purchase->invoice_date ?? '') }}">
                 </div>
             </div>
         </div>
@@ -252,7 +228,7 @@
             </a>
             <button type="submit" class="btn btn-primary">
                 <i class="bx bx-save me-1"></i>
-                {{ isset($purchase) ? 'Update Purchase Order' : 'Save Purchase Order' }}
+                {{ isset($purchase) && $purchase->exists ? 'Update Purchase Order' : 'Save Purchase Order' }}
             </button>
         </div>
 
@@ -271,11 +247,13 @@
                         name: "{{ addslashes($item->product->name) }}",
                         sku: "{{ $item->product->code }}",
                         purchase_price: parseFloat("{{ $item->purchase_price }}"),
-                        tax: parseFloat("{{ $item->tax_amount }}") / parseFloat("{{ $item->quantity }}"),
-                        discount: parseFloat("{{ $item->discount_amount }}") / parseFloat(
-                            "{{ $item->quantity }}"),
+                        tax: parseFloat(
+                            "{{ $item->quantity > 0 ? $item->tax_amount / $item->quantity : 0 }}"),
+                        discount: parseFloat(
+                                "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
+                                ),
                         qty: parseFloat("{{ $item->quantity }}"),
-                        unit: "{{ $item->product->unit->short_name ?? 'PCS' }}",
+                        unit: "{{ $item->product->unit_code ?? 'PCS' }}",
                         image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
                     });
                 @endforeach
@@ -304,28 +282,29 @@
                             if (data.length > 0) {
                                 data.forEach(p => {
                                     resultsContainer.append(`
-                                <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;"
-                                     data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}"
-                                     data-purchase-price="${p.purchase_price}" data-tax="${p.tax}" data-discount="${p.discount}"
-                                     data-unit="${p.unit}" data-image="${p.image_url}">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="${p.image_url}" class="rounded" style="width:36px;height:36px;object-fit:cover;">
-                                        <div>
-                                            <div class="fw-semibold small">${p.name}</div>
-                                            <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
+                                    <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom"
+                                         style="cursor:pointer;"
+                                         data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}"
+                                         data-purchase-price="${p.purchase_price}" data-tax="${p.tax}"
+                                         data-discount="${p.discount}" data-unit="${p.unit}" data-image="${p.image_url}">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="${p.image_url}" class="rounded" style="width:36px;height:36px;object-fit:cover;">
+                                            <div>
+                                                <div class="fw-semibold small">${p.name}</div>
+                                                <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="fw-bold text-primary small">${p.currency_symbol}${parseFloat(p.purchase_price).toFixed(2)}</div>
-                                        <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
-                                    </div>
-                                </div>`);
+                                        <div class="text-end">
+                                            <div class="fw-bold text-primary small">${p.currency_symbol}${parseFloat(p.purchase_price).toFixed(2)}</div>
+                                            <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
+                                        </div>
+                                    </div>`);
                                 });
                                 resultsContainer.removeClass('d-none');
                             } else {
                                 resultsContainer.html(
                                     '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
-                                    ).removeClass('d-none');
+                                ).removeClass('d-none');
                             }
                         }
                     });
@@ -373,20 +352,41 @@
                 const itemDisc = (p.discount / 100) * p.purchase_price;
                 const price = p.purchase_price || 0;
                 $('#purchaseItemsContainer').append(`
-            <tr class="item-row" data-product-id="${p.id}">
-                <td><img src="${p.image_url}" class="tbl-img rounded" onerror="imgError(this)"></td>
-                <td class="fw-semibold">
-                    ${p.name}
-                    <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
-                </td>
-                <td><code class="small">${p.sku}</code></td>
-                <td class="text-center"><input type="number" step="0.01" min="0.01" name="items[${rowCount}][quantity]" value="${p.qty}" class="qty-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
-                <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][purchase_price]" value="${price.toFixed(2)}" class="price-input form-control form-control-sm text-center" style="width:100px;margin:auto;"></td>
-                <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][discount_amount]" value="${itemDisc.toFixed(2)}" class="discount-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
-                <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][tax_amount]" value="${itemTax.toFixed(2)}" class="tax-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
-                <td class="text-end fw-bold subtotal-cell">₹0.00</td>
-                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button></td>
-            </tr>`);
+                <tr class="item-row" data-product-id="${p.id}">
+                    <td><img src="${p.image_url}" class="tbl-img rounded" onerror="imgError(this)"></td>
+                    <td class="fw-semibold">
+                        ${p.name}
+                        <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
+                    </td>
+                    <td><code class="small">${p.sku}</code></td>
+                    <td class="text-center">
+                        <input type="number" step="0.01" min="0.01" name="items[${rowCount}][quantity]"
+                               value="${p.qty}" class="qty-input form-control form-control-sm text-center"
+                               style="width:80px;margin:auto;">
+                    </td>
+                    <td class="text-center">
+                        <input type="number" step="0.01" min="0" name="items[${rowCount}][purchase_price]"
+                               value="${price.toFixed(2)}" class="price-input form-control form-control-sm text-center"
+                               style="width:100px;margin:auto;">
+                    </td>
+                    <td class="text-center">
+                        <input type="number" step="0.01" min="0" name="items[${rowCount}][discount_amount]"
+                               value="${itemDisc.toFixed(2)}" class="discount-input form-control form-control-sm text-center"
+                               style="width:80px;margin:auto;">
+                    </td>
+                    <td class="text-center">
+                        <input type="number" step="0.01" min="0" name="items[${rowCount}][tax_amount]"
+                               value="${itemTax.toFixed(2)}" class="tax-input form-control form-control-sm text-center"
+                               style="width:80px;margin:auto;">
+                    </td>
+                    <td class="text-end fw-bold subtotal-cell">₹0.00</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                style="width:28px;height:28px;padding:0;">
+                            <i class="bx bx-trash" style="font-size:13px;"></i>
+                        </button>
+                    </td>
+                </tr>`);
                 rowCount++;
                 calculateTotals();
             }
@@ -397,10 +397,8 @@
                 calculateTotals();
             });
 
-            $(document).on('input change', '.qty-input, .price-input, .discount-input, .tax-input', function() {
-                calculateTotals();
-            });
-
+            $(document).on('input change', '.qty-input, .price-input, .discount-input, .tax-input',
+            calculateTotals);
             $('#discount_amount, #tax_amount, #shipping_amount, #paid_amount').on('input change', calculateTotals);
 
             function calculateTotals() {

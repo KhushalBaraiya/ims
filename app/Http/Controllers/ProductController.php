@@ -29,7 +29,7 @@ class ProductController extends Controller
     {
         Gate::authorize('products.view');
 
-        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'supplier', 'stock'])->latest();
+        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'stock'])->latest();
 
         if ($request->filled('brand_id')) {
             $query->where('brand_id', $request->brand_id);
@@ -39,9 +39,6 @@ class ProductController extends Controller
         }
         if ($request->filled('sub_category_id')) {
             $query->where('sub_category_id', $request->sub_category_id);
-        }
-        if ($request->filled('supplier_id')) {
-            $query->where('supplier_id', $request->supplier_id);
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -66,9 +63,8 @@ class ProductController extends Controller
         $brands        = Brand::where('status', 'active')->orderBy('name')->get();
         $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
-        $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
-        return view('products.index', compact('products', 'brands', 'categories', 'subCategories', 'suppliers'));
+        return view('products.index', compact('products', 'brands', 'categories', 'subCategories'));
     }
 
     /**
@@ -100,6 +96,10 @@ class ProductController extends Controller
 
         $validated = $request->validated();
 
+        // supplier_id is only for opening stock — do NOT persist on product
+        $openingSupplier = $validated['supplier_id'] ?? null;
+        unset($validated['supplier_id'], $validated['initial_qty']);
+
         // Upload directory
         $uploadPath = public_path('uploads/products');
         if (!File::exists($uploadPath)) {
@@ -130,7 +130,7 @@ class ProductController extends Controller
 
         DB::beginTransaction();
         try {
-            // 1. Create the product
+            // 1. Create the product (no supplier_id on product)
             $product = Product::create($validated);
 
             // 2. Always create a stock row
@@ -142,22 +142,21 @@ class ProductController extends Controller
                 $lineTotal  = round($initialQty * $product->purchase_price, 2);
 
                 $purchase = Purchase::create([
-                    'purchase_no'        => $purchaseNo,
-                    'purchase_date'      => now()->toDateString(),
-                    'supplier_id'        => $product->supplier_id,
-                    'purchase_person_id' => auth()->id(),
-                    'reference_no'       => 'Opening stock — ' . $product->name,
-                    'sub_total'          => $lineTotal,
-                    'tax_amount'         => 0.00,
-                    'discount_amount'    => 0.00,
-                    'shipping_amount'    => 0.00,
-                    'grand_total'        => $lineTotal,
-                    'paid_amount'        => $lineTotal,
-                    'due_amount'         => 0.00,
-                    'payment_method'     => 'Cash',
-                    'status'             => 'Completed',
-                    'notes'              => 'Auto-created opening-stock purchase on product creation.',
-                    'user_id'            => auth()->id(),
+                    'purchase_no'    => $purchaseNo,
+                    'purchase_date'  => now()->toDateString(),
+                    'supplier_id'    => $openingSupplier,
+                    'reference_no'   => 'Opening stock — ' . $product->name,
+                    'sub_total'      => $lineTotal,
+                    'tax_amount'     => 0.00,
+                    'discount_amount' => 0.00,
+                    'shipping_amount' => 0.00,
+                    'grand_total'    => $lineTotal,
+                    'paid_amount'    => $lineTotal,
+                    'due_amount'     => 0.00,
+                    'payment_method' => 'Cash',
+                    'status'         => 'Completed',
+                    'notes'          => 'Auto-created opening-stock purchase on product creation.',
+                    'user_id'        => auth()->id(),
                 ]);
 
                 PurchaseItem::create([
@@ -201,7 +200,7 @@ class ProductController extends Controller
     {
         Gate::authorize('products.view');
 
-        $product->load(['brand', 'mainCategory', 'subCategory', 'supplier', 'stock']);
+        $product->load(['brand', 'mainCategory', 'subCategory', 'stock']);
 
         return view('products.show', compact('product'));
     }
@@ -230,6 +229,9 @@ class ProductController extends Controller
         Gate::authorize('products.update');
 
         $validated = $request->validated();
+
+        // supplier_id / initial_qty are only for opening stock on create — strip them
+        unset($validated['supplier_id'], $validated['initial_qty']);
 
         $uploadPath = public_path('uploads/products');
 
@@ -302,7 +304,6 @@ class ProductController extends Controller
 
     /**
      * Pre-fill the create form with an existing product's data for quick duplication.
-     * A new unique SKU is generated; all other fields are copied.
      */
     public function copy(Product $product): View
     {
@@ -313,13 +314,12 @@ class ProductController extends Controller
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
         $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
-        // Build a copy with a fresh unique SKU (append -COPY-{random})
         $copy = $product->replicate(['code', 'barcode', 'image', 'gallery', 'slug']);
         $copy->code    = strtoupper($product->code) . '-COPY-' . strtoupper(\Illuminate\Support\Str::random(4));
         $copy->barcode = null;
         $copy->image   = null;
         $copy->gallery = [];
-        $copy->exists  = false; // treat as a new (unsaved) model so the form renders correctly
+        $copy->exists  = false;
 
         return view('products.create', [
             'product'       => $copy,

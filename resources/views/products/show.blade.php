@@ -99,9 +99,6 @@
                         <div class="col-md-4"><small
                                 class="text-muted fw-semibold d-block">Unit</small><span>{{ $product->unit_name ?? '-' }}
                                 ({{ $product->unit_code ?? '-' }})</span></div>
-                        <div class="col-md-4"><small
-                                class="text-muted fw-semibold d-block">Supplier</small><span>{{ $product->supplier->name ?? '-' }}</span>
-                        </div>
                     </div>
                 </div>
             </div>

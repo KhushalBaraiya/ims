@@ -78,7 +78,7 @@
         <label class="form-label fw-semibold">{{ __('messages.sub_category') }} <span
                 class="text-danger">*</span></label>
         <select name="sub_category_id" id="sub_category_id"
-            class="form-select @error('sub_category_id') is-invalid @enderror" required>
+            class="form-select @error('sub_category_id') is-invalid @enderror">
             <option value="">{{ __('messages.select_sub_category') }}</option>
         </select>
         @error('sub_category_id')
@@ -90,8 +90,8 @@
         <select name="status" class="form-select @error('status') is-invalid @enderror" required>
             <option value="active" {{ old('status', $product->status ?? 'active') === 'active' ? 'selected' : '' }}>
                 Active</option>
-            <option value="inactive"
-                {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            <option value="inactive" {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>
+                Inactive</option>
         </select>
         @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -102,20 +102,6 @@
 {{-- ── Section 2: Pricing ── --}}
 <h6 class="fw-semibold text-primary mb-3"><i class="bx bx-money me-2"></i>Pricing</h6>
 <div class="row g-3 pb-4 mb-4 border-bottom">
-    <div class="col-md-4">
-        <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
-        <select name="supplier_id" class="form-select @error('supplier_id') is-invalid @enderror" required>
-            <option value="">Select Supplier</option>
-            @foreach ($suppliers as $supplier)
-                <option value="{{ $supplier->id }}"
-                    {{ old('supplier_id', $product->supplier_id ?? '') == $supplier->id ? 'selected' : '' }}>
-                    {{ $supplier->name }}</option>
-            @endforeach
-        </select>
-        @error('supplier_id')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
     <div class="col-md-4">
         <label class="form-label fw-semibold">Purchase Price <span class="text-danger">*</span></label>
         <input type="number" step="0.01" name="purchase_price"
@@ -131,6 +117,15 @@
             class="form-control @error('selling_price') is-invalid @enderror"
             value="{{ old('selling_price', $product->selling_price ?? '0.00') }}" required>
         @error('selling_price')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-4">
+        <label class="form-label fw-semibold">Min Stock Alert Level</label>
+        <input type="number" step="0.01" name="minimum_stock_alert"
+            class="form-control @error('minimum_stock_alert') is-invalid @enderror"
+            value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}">
+        @error('minimum_stock_alert')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
@@ -152,18 +147,9 @@
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
-    <div class="col-md-6">
-        <label class="form-label fw-semibold">Min Stock Alert Level</label>
-        <input type="number" step="0.01" name="minimum_stock_alert"
-            class="form-control @error('minimum_stock_alert') is-invalid @enderror"
-            value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}">
-        @error('minimum_stock_alert')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
 </div>
 
-{{-- ── Section 3: Opening Stock (CREATE only — not shown on edit) ── --}}
+{{-- ── Section 3: Opening Stock (CREATE only) ── --}}
 @if (!isset($product) || isset($isCopy))
     <div class="pb-4 mb-4 border-bottom">
         <div class="form-check form-switch mb-0">
@@ -175,15 +161,33 @@
             <div class="form-text">Check this to add an initial stock quantity. A Purchase record will be created
                 automatically for traceability.</div>
         </div>
+
         <div id="openingStockBox" class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3">
             <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold" for="supplier_id">Supplier <span
+                            class="text-danger">*</span></label>
+                    <select name="supplier_id" id="supplier_id"
+                        class="form-select @error('supplier_id') is-invalid @enderror">
+                        <option value="">Select Supplier</option>
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}"
+                                {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                {{ $supplier->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('supplier_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
                 <div class="col-md-4">
                     <label class="form-label fw-semibold" for="initial_qty">Opening Qty <span
                             class="text-danger">*</span></label>
                     <input type="number" step="0.01" min="0.01" name="initial_qty" id="initial_qty"
                         class="form-control @error('initial_qty') is-invalid @enderror"
                         value="{{ old('initial_qty', '') }}" placeholder="e.g. 10">
-                    <div class="form-text">Stock that will be added and a matching purchase entry created.</div>
+                    <div class="form-text">Stock quantity to add. A purchase entry will be created automatically.</div>
                     @error('initial_qty')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -346,16 +350,24 @@
             const initialMainCatId = $('#main_category_id').val();
             if (initialMainCatId) loadSubcategories(initialMainCatId, selectedSubCategoryId);
 
-            // ── Opening-stock toggle (create / copy form only) ──
+            // ── Opening-stock toggle ──
             $('#addOpeningStock').on('change', function() {
                 if ($(this).is(':checked')) {
                     $('#openingStockBox').removeClass('d-none');
+                    $('#supplier_id').prop('required', true);
                     $('#initial_qty').prop('required', true);
                 } else {
                     $('#openingStockBox').addClass('d-none');
+                    $('#supplier_id').prop('required', false).val('');
                     $('#initial_qty').prop('required', false).val('');
                 }
             });
+
+            // Set required state on page load if checkbox is already checked (e.g. old input)
+            if ($('#addOpeningStock').is(':checked')) {
+                $('#supplier_id').prop('required', true);
+                $('#initial_qty').prop('required', true);
+            }
 
             // ── Primary image ──
             $('#triggerImageBtn').on('click', () => $('#imageInput').click());
