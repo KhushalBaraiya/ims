@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
+use App\Models\MainCategory;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\StockAdjustment;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,50 +15,68 @@ use Illuminate\View\View;
 
 class StockController extends Controller
 {
-    /**
-     * Display the stock management overview.
-     */
+    // ──────────────────────────────────────────────────
+    //  1. INVENTORY OVERVIEW
+    // ──────────────────────────────────────────────────
     public function index(Request $request): View
     {
         Gate::authorize('stocks.view');
 
-        // Build inventory list with stock quantities and values
         $query = Product::with(['stock', 'brand', 'mainCategory'])
             ->where('status', 'active')
             ->orderBy('name');
 
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%");
-            });
+            $s = $request->search;
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+                                      ->orWhere('code', 'like', "%$s%"));
         }
 
         if ($request->filled('main_category_id')) {
             $query->where('main_category_id', $request->main_category_id);
         }
 
-        $products = $query->get();
+        if ($request->filled('stock_status')) {
+            match ($request->stock_status) {
+                'out'  => $query->whereHas('stock', fn($q) => $q->where('quantity', '<=', 0)),
+                'low'  => $query->whereHas('stock', fn($q) => $q->whereColumn('quantity', '<=', 'minimum_stock_alert')
+                                                                  ->where('quantity', '>', 0)),
+                'ok'   => $query->whereHas('stock', fn($q) => $q->whereColumn('quantity', '>', 'minimum_stock_alert')),
+                default => null,
+            };
+        }
 
-        // Stock adjustment history (most recent first)
-        $adjustments = StockAdjustment::with(['product', 'user'])
-            ->latest()
-            ->take(50)
-            ->get();
+        $products   = $query->get();
+        $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
 
-        // Products dropdown for the adjustment form
-        $allProducts = Product::where('status', 'active')->orderBy('name')->get();
+        // Summary stats
+        $totalProducts   = $products->count();
+        $outOfStock      = $products->filter(fn($p) => ($p->stock->quantity ?? 0) <= 0)->count();
+        $lowStock        = $products->filter(fn($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
+        $totalInvValue   = $products->sum(fn($p) => ($p->stock->quantity ?? 0) * $p->purchase_price);
 
-        // Filter options
-        $categories = \App\Models\MainCategory::where('status', 'active')->orderBy('name')->get();
-
-        return view('stocks.index', compact('products', 'adjustments', 'allProducts', 'categories'));
+        return view('stocks.index', compact(
+            'products', 'categories',
+            'totalProducts', 'outOfStock', 'lowStock', 'totalInvValue'
+        ));
     }
 
-    /**
-     * Store a manual stock adjustment.
-     */
+    // ──────────────────────────────────────────────────
+    //  2. ADJUSTMENT FORM PAGE
+    // ──────────────────────────────────────────────────
+    public function adjust(Request $request): View
+    {
+        Gate::authorize('stocks.create');
+
+        $allProducts = Product::with('stock')->where('status', 'active')->orderBy('name')->get();
+        $preselected = $request->query('product_id');
+
+        return view('stocks.adjust', compact('allProducts', 'preselected'));
+    }
+
+    // ──────────────────────────────────────────────────
+    //  3. SAVE ADJUSTMENT  (POST)
+    // ──────────────────────────────────────────────────
     public function store(Request $request): RedirectResponse
     {
         Gate::authorize('stocks.create');
@@ -74,22 +92,18 @@ class StockController extends Controller
         try {
             $product = Product::with('stock')->findOrFail($validated['product_id']);
             $change  = (float) $validated['quantity_change'];
+            $stock   = $product->stock ?? $product->stock()->create(['quantity' => 0]);
 
-            // Ensure stock record exists
-            $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
-
-            // Guard: prevent negative stock
-            $newQty = $stock->quantity + $change;
+            $newQty  = $stock->quantity + $change;
             if ($newQty < 0) {
-                return back()
-                    ->withInput()
-                    ->withErrors(['quantity_change' => "Adjustment would result in negative stock ({$newQty}) for \"{$product->name}\". Current stock: {$stock->quantity}."]);
+                return back()->withInput()
+                    ->withErrors(['quantity_change' =>
+                        "Adjustment would result in negative stock ({$newQty}) for \"{$product->name}\". "
+                        . "Current stock: {$stock->quantity}."]);
             }
 
-            // Apply the change
             $stock->update(['quantity' => $newQty]);
 
-            // Log the adjustment
             StockAdjustment::create([
                 'product_id'      => $product->id,
                 'quantity_change' => $change,
@@ -101,44 +115,55 @@ class StockController extends Controller
             $sign = $change > 0 ? '+' : '';
             ActivityLog::log(
                 'Stock Adjusted',
-                "Adjusted stock for \"{$product->name}\" (SKU: {$product->code}): {$sign}{$change} [{$validated['adjustment_type']}]. New qty: {$newQty}."
+                "Adjusted stock for \"{$product->name}\" (SKU: {$product->code}): "
+                . "{$sign}{$change} [{$validated['adjustment_type']}]. New qty: {$newQty}."
             );
 
             DB::commit();
             return redirect()->route('stocks.index')
-                ->with('success', "Stock adjusted successfully for \"{$product->name}\" (new qty: {$newQty}).");
+                ->with('success', "Stock adjusted for \"{$product->name}\" → new qty: {$newQty}.");
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
 
-    /**
-     * Unused resource methods — stock has no individual show/edit/destroy pages.
-     * Defined to satisfy the resource route binding without 404s.
-     */
-    public function create(): never
+    // ──────────────────────────────────────────────────
+    //  4. HISTORY PAGE
+    // ──────────────────────────────────────────────────
+    public function history(Request $request): View
     {
-        abort(404);
+        Gate::authorize('stocks.view');
+
+        $query = StockAdjustment::with(['product', 'user'])->latest();
+
+        if ($request->filled('product_id')) {
+            $query->where('product_id', $request->product_id);
+        }
+        if ($request->filled('adjustment_type')) {
+            $query->where('adjustment_type', $request->adjustment_type);
+        }
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween(
+                DB::raw('DATE(created_at)'),
+                [$request->start_date, $request->end_date]
+            );
+        }
+
+        $adjustments = $query->get();
+        $allProducts = Product::orderBy('name')->get(['id', 'name', 'code']);
+
+        $types = ['Restock', 'Damage', 'Return', 'Write-Off', 'Correction', 'Other'];
+
+        return view('stocks.history', compact('adjustments', 'allProducts', 'types'));
     }
 
-    public function show(Stock $stock): never
-    {
-        abort(404);
-    }
-
-    public function edit(Stock $stock): never
-    {
-        abort(404);
-    }
-
-    public function update(Request $request, Stock $stock): never
-    {
-        abort(404);
-    }
-
-    public function destroy(Stock $stock): never
-    {
-        abort(404);
-    }
+    // ──────────────────────────────────────────────────
+    //  Unused stubs
+    // ──────────────────────────────────────────────────
+    public function create(): never  { abort(404); }
+    public function show(Stock $stock): never  { abort(404); }
+    public function edit(Stock $stock): never  { abort(404); }
+    public function update(Request $request, Stock $stock): never { abort(404); }
+    public function destroy(Stock $stock): never { abort(404); }
 }

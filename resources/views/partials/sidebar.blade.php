@@ -117,11 +117,33 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active' : '' }}">
-            <a href="{{ route('stocks.index') }}" class="menu-link">
+        <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active open' : '' }}">
+            <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-store-alt"></i>
                 <div class="text-truncate">{{ __('messages.menu_stock') }}</div>
             </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->routeIs('stocks.index') ? 'active' : '' }}">
+                    <a href="{{ route('stocks.index') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                        <div class="text-truncate">{{ __('messages.stock_overview') }}</div>
+                    </a>
+                </li>
+                @can('stocks.create')
+                    <li class="menu-item {{ request()->routeIs('stocks.adjust') ? 'active' : '' }}">
+                        <a href="{{ route('stocks.adjust') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-slider"></i>
+                            <div class="text-truncate">{{ __('messages.adjust_stock') }}</div>
+                        </a>
+                    </li>
+                @endcan
+                <li class="menu-item {{ request()->routeIs('stocks.history') ? 'active' : '' }}">
+                    <a href="{{ route('stocks.history') }}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-history"></i>
+                        <div class="text-truncate">{{ __('messages.stock_history') }}</div>
+                    </a>
+                </li>
+            </ul>
         </li>
 
         {{-- ── TRANSACTIONS ── --}}
@@ -183,6 +205,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ request()->routeIs('units.*') ? 'active' : '' }}">
+            <a href="{{ route('units.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-ruler"></i>
+                <div class="text-truncate">{{ __('messages.menu_units') }}</div>
+            </a>
+        </li>
+
         {{-- ── USERS ── --}}
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">{{ __('messages.section_users') }}</span>
@@ -206,6 +235,24 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">{{ __('messages.section_account') }}</span>
         </li>
+
+        @can('settings.view')
+            <li class="menu-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                <a href="{{ route('settings.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cog"></i>
+                    <div class="text-truncate">{{ __('messages.menu_settings') }}</div>
+                </a>
+            </li>
+        @endcan
+
+        @can('activity_logs.view')
+            <li class="menu-item {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
+                <a href="{{ route('activity-logs.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-history"></i>
+                    <div class="text-truncate">{{ __('messages.activity_logs') }}</div>
+                </a>
+            </li>
+        @endcan
 
         <li class="menu-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <a href="{{ route('profile.show') }}" class="menu-link">

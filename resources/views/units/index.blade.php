@@ -1,151 +1,144 @@
 @extends('layouts.admin')
-
-@section('title', 'Units')
+@section('title', __('messages.menu_units'))
 
 @section('content')
-    <!-- Header Section -->
+
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <div class="">
-            <h2 class="fw-bold mb-1 h4">Units</h2>
-            <p class="text-muted small">Manage units of measurement (e.g. Piece, Box, Kilogram) used for product quantities.</p>
+        <div>
+            <h4 class="fw-bold mb-1">{{ __('messages.unit_list') }}</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.menu_units') }}</li>
+                </ol>
+            </nav>
         </div>
-        <div class="d-flex gap-2">
-            @can('units.create')
-                <a href="{{ route('units.create') }}" class="inline-flex items-center gap-x-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all active:scale-[0.98] cursor-pointer">
-                    <i class="bx bx-plus"></i>
-                    Add Unit
-                </a>
-            @endcan
+        @can('units.create')
+            <a href="{{ route('units.create') }}" class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i> {{ __('messages.add_unit') }}
+            </a>
+        @endcan
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive p-3">
+                <table class="table table-hover align-middle mb-0" id="unitsTable" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th>{{ __('messages.th_no') }}</th>
+                            <th>{{ __('messages.unit_name') }}</th>
+                            <th>{{ __('messages.short_name') }}</th>
+                            <th class="text-center">{{ __('messages.th_status') }}</th>
+                            <th>{{ __('messages.th_created') }}</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($units as $index => $unit)
+                            <tr>
+                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                <td><strong>{{ $unit->name }}</strong></td>
+                                <td><code>{{ $unit->short_name }}</code></td>
+                                <td class="text-center">
+                                    <span
+                                        class="badge rounded-pill {{ $unit->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                    </span>
+                                </td>
+                                <td class="text-muted small">{{ $unit->created_at->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        @can('units.view')
+                                            <a href="{{ route('units.show', $unit->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
+                                        @endcan
+                                        @can('units.update')
+                                            <a href="{{ route('units.edit', $unit->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
+                                        @endcan
+                                        @can('units.delete')
+                                            <form id="delete-form-{{ $unit->id }}"
+                                                action="{{ route('units.destroy', $unit->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $unit->id }}" data-name="{{ $unit->name }}"
+                                                    title="{{ __('messages.delete') }}">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- DataTables Card -->
-    <div class="card shadow-sm mb-4"><div class="card-body p-4">
-        <div class="overflow-x-auto">
-            <table id="unitsTable" class="w-full text-slate-800 dark:text-slate-200 display responsive nowrap" style="width:100%">
-                <thead>
-                    <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-405 dark:text-slate-450 text-[11px] font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
-                        <th class="text-left py-3 px-4">#</th>
-                        <th class="text-left py-3 px-4">Unit Name</th>
-                        <th class="text-left py-3 px-4">Short Name</th>
-                        <th class="text-left py-3 px-4">Status</th>
-                        <th class="text-left py-3 px-4">Created Date</th>
-                        <th class="text-center py-3 px-4 no-sort">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-[12px]">
-                    @foreach ($units as $index => $unit)
-                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                            <td class="py-3 px-4 font-semibold text-slate-400">{{ $index + 1 }}</td>
-                            <td class="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">{{ $unit->name }}</td>
-                            <td class="py-3 px-4 font-semibold text-slate-600 dark:text-slate-350">{{ $unit->short_name }}</td>
-                            <td class="py-3 px-4">
-                                <span class="badge rounded-pill {{ ${1}->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ ucfirst(${1}->status) }}</span>
-                            </td>
-                            <td class="py-3 px-4 text-slate-500 dark:text-slate-400">{{ $unit->created_at->format('Y-m-d') }}</td>
-                            <td class="py-3 px-4 text-center">
-                                <div class="flex items-center justify-center gap-1.5">
-                                    @can('units.view')
-                                        <a href="{{ route('units.show', $unit->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/50 transition-colors" title="View">
-                                            <i class="bx bx-show text-[11px]"></i>
-                                        </a>
-                                    @endcan
-
-                                    @can('units.update')
-                                        <a href="{{ route('units.edit', $unit->id) }}" class="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-violet-600 hover:bg-violet-50 hover:border-violet-200 dark:hover:bg-violet-900/50 transition-colors" title="Edit">
-                                            <i class="bx bx-edit text-[11px]"></i>
-                                        </a>
-                                    @endcan
-
-                                    @can('units.delete')
-                                        <form id="delete-form-{{ $unit->id }}" action="{{ route('units.destroy', $unit->id) }}" method="POST" class="inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" data-id="{{ $unit->id }}" data-name="{{ $unit->name }}" class="delete-btn inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/50 transition-colors" title="Delete">
-                                                <i class="bx bx-trash text-[11px]"></i>
-                                            </button>
-                                        </form>
-                                    @endcan
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div></div>
 @endsection
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        // Initialize DataTables
-        $('#unitsTable').DataTable({
-            responsive: true,
-            columnDefs: [
-                { targets: 'no-sort', orderable: false }
-            ],
-            language: {
-                searchPlaceholder: "Search units...",
-                search: ""
-            },
-            dom: '<"flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-1"<"flex items-center"l><"flex items-center"f>>rt<"flex flex-col md:flex-row justify-between items-center gap-4 mt-4 px-1"ip>'
-        });
+    <script>
+        $(document).ready(function() {
+            $('#unitsTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                order: [
+                    [0, 'asc']
+                ],
+                columnDefs: [{
+                    targets: 'no-sort',
+                    orderable: false
+                }]
+            });
 
-        // Setup SweetAlert2 delete confirmation
-        $('.delete-btn').on('click', function(e) {
-            e.preventDefault();
-            const id = $(this).data('id');
-            const name = $(this).data('name');
-            const form = $(`#delete-form-${id}`);
-            
-            const isDark = document.documentElement.classList.contains('dark');
+            $(document).on('click', '.delete-btn', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const form = $(`#delete-form-${id}`);
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `You are about to delete unit "${name}". This action will soft-delete the record.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3b82f6',
-                cancelButtonColor: '#ef4444',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                background: isDark ? '#18181b' : '#fff',
-                color: isDark ? '#fff' : '#1e293b',
-                customClass: {
-                    popup: 'rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    title: 'Deleted!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    background: isDark ? '#18181b' : '#fff',
-                                    color: isDark ? '#fff' : '#1e293b',
-                                    confirmButtonColor: '#3b82f6'
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
-                                toastr.error(response.message);
+                Swal.fire({
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: `{{ __('messages.delete') }} "${name}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                        title: '{{ __('messages.deleted_title') }}',
+                                        text: res.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#696cff'
+                                    }).then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                    'error');
                             }
-                        },
-                        error: function(xhr) {
-                            toastr.error('An error occurred while deleting the unit.');
-                        }
-                    });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    toastr.info(`Deletion of "${name}" was canceled.`);
-                }
+                        });
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 @endpush

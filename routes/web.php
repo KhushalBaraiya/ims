@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -16,11 +17,12 @@ use App\Http\Controllers\PurchaseReturnController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReturnController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 // Root redirect
@@ -65,6 +67,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('suppliers', SupplierController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('stocks', StockController::class);
+    Route::get('/stocks-adjust', [StockController::class, 'adjust'])->name('stocks.adjust');
+    Route::get('/stocks-history', [StockController::class, 'history'])->name('stocks.history');
 
     // Currencies Routes (with status toggle and switcher)
     Route::post('/currencies/switch', [CurrencyController::class, 'switchCurrency'])->name('currencies.switch');
@@ -93,47 +97,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchases/{purchase}/return-data', [PurchaseReturnController::class, 'getPurchaseReturnData'])->name('purchases.return-data');
     Route::get('/purchase-returns/{purchase_return}/print', [PurchaseReturnController::class, 'printReturn'])->name('purchase-returns.print');
     Route::resource('purchase-returns', PurchaseReturnController::class);
-});
 
-Route::get('/database-structure', function () {
+    // Units Routes
+    Route::resource('units', UnitController::class);
 
-    $database = DB::getDatabaseName();
+    // Settings Routes
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
-    $tables = DB::select('SHOW TABLES');
-
-    $tableKey = 'Tables_in_'.$database;
-
-    $output = "Database : {$database}\n\n";
-
-    foreach ($tables as $table) {
-
-        $tableName = $table->$tableKey;
-
-        // Laravel internal tables skip
-        if (in_array($tableName, [
-            'migrations',
-            'cache',
-            'cache_locks',
-            'jobs',
-            'job_batches',
-            'failed_jobs',
-            'password_reset_tokens',
-            'sessions',
-        ])) {
-            continue;
-        }
-
-        $output .= "{$tableName}\n";
-
-        $columns = DB::select("SHOW COLUMNS FROM `{$tableName}`");
-
-        foreach ($columns as $column) {
-            $output .= "    - {$column->Field} | {$column->Type}\n";
-        }
-
-        $output .= "\n";
-    }
-
-    return response($output)
-        ->header('Content-Type', 'text/plain');
+    // Activity Logs Routes
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });

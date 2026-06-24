@@ -369,6 +369,12 @@ return [
     'add_to_stock' => 'Add Stock',
     'remove_stock' => 'Remove Stock',
 
+    // Stock pages — new
+    'stock_overview'   => 'Stock Overview',
+    'adjust_stock'     => 'Adjust Stock',
+    'stock_history'    => 'Stock Adjustment History',
+    'all_products'     => 'All Products',
+
     // Dashboard extra
     'store_desc' => 'Generate a new transaction bill, allocate items, and manage customer payments.',
     'new_purchase_desc' => 'Record a new supplier purchase, add products, and update inventory stock automatically.',
@@ -579,5 +585,41 @@ return [
     'create_purchase_order'     => 'Create Purchase Order',
     'edit_purchase_order'       => 'Edit Purchase Order',
     'edit_purchase_desc'        => 'Update the purchase details, modify quantities, and re-synchronize inventory stock.',
+
+    // Units module
+    'menu_units'                => 'Units',
+    'unit_list'                 => 'Unit List',
+    'add_unit'                  => 'Add Unit',
+    'edit_unit'                 => 'Edit Unit',
+    'unit_details'              => 'Unit Details',
+    'unit_name'                 => 'Unit Name',
+    'short_name'                => 'Short Name',
+    'short_name_hint'           => 'Abbreviation used in product entries (e.g. Pcs, Kg).',
+    'save_unit'                 => 'Save Unit',
+    'update_unit'               => 'Update Unit',
+    'publish'                   => 'Publish',
+
+    // Settings module
+    'company_information'       => 'Company Information',
+    'invoice_tax_settings'      => 'Invoice & Tax Settings',
+    'save_settings'             => 'Save Settings',
+    'current_values'            => 'Current Values',
+    'invoice_prefix'            => 'Invoice Prefix',
+    'purchase_prefix'           => 'Purchase Prefix',
+    'invoice_prefix_hint'       => 'Prefix for generated invoice numbers (e.g. INV-0001).',
+    'purchase_prefix_hint'      => 'Prefix for purchase order numbers (e.g. PO-0001).',
+    'tax_name'                  => 'Tax Name',
+    'tax_percentage'            => 'Tax Percentage',
+    'currency_managed_separately' => 'Currency is managed separately via the Currencies section.',
+
+    // Activity Logs module
+    'activity_logs'             => 'Activity Logs',
+    'activity_log_list'         => 'Activity Log',
+    'activity'                  => 'Activity',
+    'ip_address'                => 'IP Address',
+    'user'                      => 'User',
+    'all_users'                 => 'All Users',
+    'search_activity_placeholder' => 'Search activity or description...',
+    'system'                    => 'System',
 
 ];
