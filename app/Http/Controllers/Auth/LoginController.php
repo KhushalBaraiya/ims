@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\LanguageController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\ActivityLog;
+use App\Models\Currency;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +56,22 @@ class LoginController extends Controller
         $user->forceFill([
             'last_login_at' => now(),
         ])->save();
+
+        // Load user's preferred language into session
+        if ($user->language && array_key_exists($user->language, LanguageController::SUPPORTED)) {
+            session(['locale' => $user->language]);
+        }
+
+        // Load user's preferred currency into session
+        $userCurrency = Currency::where('code', strtoupper($user->currency ?? 'INR'))
+            ->where('status', 'active')
+            ->first();
+        if (!$userCurrency) {
+            $userCurrency = Currency::where('is_default', true)->where('status', 'active')->first();
+        }
+        if ($userCurrency) {
+            session(['active_currency' => $userCurrency]);
+        }
 
         // Log successful login
         ActivityLog::log('Login', 'User authenticated and logged into the system.');

@@ -18,7 +18,18 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('status')->default('active');
+
+            // Profile fields
+            $table->string('phone')->nullable();
+            $table->string('profile_photo')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+
+            // Preferences — stored so they survive session expiry / re-login
+            $table->string('language', 10)->default('en');   // e.g. 'en', 'hi', 'gu'
+            $table->string('currency', 10)->default('INR');  // e.g. 'INR', 'USD', 'EUR'
+
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 

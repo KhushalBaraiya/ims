@@ -152,7 +152,8 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Switch the globally active currency.
+     * Switch the globally active currency for the logged-in user.
+     * Saves the preference to the user record so it persists across sessions.
      */
     public function switchCurrency(Request $request): JsonResponse
     {
@@ -161,14 +162,26 @@ class CurrencyController extends Controller
         ]);
 
         $currency = Currency::where('status', 'active')->findOrFail($request->currency_id);
-        
+
+        // Persist in session (immediate effect)
         session(['active_currency' => $currency]);
+
+        // Persist to user record (survives session expiry / re-login)
+        if (auth()->check()) {
+            auth()->user()->update(['currency' => $currency->code]);
+        }
 
         ActivityLog::log('Currency Switched', "Switched active currency to: {$currency->name} ({$currency->code})");
 
         return response()->json([
-            'success' => true,
-            'message' => 'Active currency switched successfully.',
+            'success'  => true,
+            'message'  => "Currency switched to {$currency->name} ({$currency->symbol}).",
+            'currency' => [
+                'id'     => $currency->id,
+                'name'   => $currency->name,
+                'code'   => $currency->code,
+                'symbol' => $currency->symbol,
+            ],
         ]);
     }
 }

@@ -28,6 +28,8 @@ class User extends Authenticatable
         'phone',
         'profile_photo',
         'last_login_at',
+        'language',
+        'currency',
     ];
 
     /**
