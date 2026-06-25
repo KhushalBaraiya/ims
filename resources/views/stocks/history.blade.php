@@ -59,12 +59,12 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
-                        <input type="date" name="start_date" class="form-control form-control-sm"
+                        <input type="date" name="start_date" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('start_date') }}">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
-                        <input type="date" name="end_date" class="form-control form-control-sm"
+                        <input type="date" name="end_date" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('end_date') }}">
                     </div>
                     <div class="col-md-2 d-flex align-items-end gap-2">

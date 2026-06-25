@@ -42,12 +42,12 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
-                        <input type="date" name="date_from" class="form-control form-control-sm"
+                        <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('date_from') }}">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
-                        <input type="date" name="date_to" class="form-control form-control-sm"
+                        <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('date_to') }}">
                     </div>
                     <div class="col-md-2 d-flex gap-2">

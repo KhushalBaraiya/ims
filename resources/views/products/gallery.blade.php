@@ -279,8 +279,10 @@
                     <div class="col-6 col-sm-3 col-lg-2">
                         <select name="stock_filter" class="form-select form-select-sm">
                             <option value="">All Stock</option>
-                            <option value="ok" {{ request('stock_filter') === 'ok' ? 'selected' : '' }}>In Stock</option>
-                            <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock</option>
+                            <option value="ok" {{ request('stock_filter') === 'ok' ? 'selected' : '' }}>In Stock
+                            </option>
+                            <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock
+                            </option>
                             <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>Out of Stock
                             </option>
                         </select>
@@ -289,7 +291,8 @@
                         <select name="status" class="form-select form-select-sm">
                             <option value="">All Status</option>
                             <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive
+                            </option>
                         </select>
                     </div>
                     <div class="col-12 col-lg-1 d-flex gap-1">
@@ -310,7 +313,8 @@
             of <strong>{{ $products->total() }}</strong> products
         </p>
         <div class="d-flex gap-2 align-items-center flex-wrap">
-            <select class="form-select form-select-sm" style="width:auto;" onchange="applyParam('sort',this.value)">
+            <select class="form-select form-select-sm" style="width:auto;" data-no-select2
+                onchange="applyParam('sort',this.value)">
                 <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>Latest</option>
                 <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
                 <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
@@ -319,7 +323,8 @@
                 <option value="stock_asc" {{ request('sort') === 'stock_asc' ? 'selected' : '' }}>Stock ↑</option>
                 <option value="stock_desc" {{ request('sort') === 'stock_desc' ? 'selected' : '' }}>Stock ↓</option>
             </select>
-            <select class="form-select form-select-sm" style="width:auto;" onchange="applyParam('per_page',this.value)">
+            <select class="form-select form-select-sm" style="width:auto;" data-no-select2
+                onchange="applyParam('per_page',this.value)">
                 <option value="12" {{ request('per_page', 24) == 12 ? 'selected' : '' }}>12 / page</option>
                 <option value="24" {{ request('per_page', 24) == 24 ? 'selected' : '' }}>24 / page</option>
                 <option value="48" {{ request('per_page', 24) == 48 ? 'selected' : '' }}>48 / page</option>
@@ -456,8 +461,8 @@
                             @if (count($gallery))
                                 <div class="d-flex gap-1 mb-2 flex-wrap">
                                     @foreach (array_slice($gallery, 0, 3) as $gi)
-                                        <img src="{{ asset('uploads/products/' . $gi) }}" class="pg-thumb" loading="lazy"
-                                            onerror="this.style.display='none'">
+                                        <img src="{{ asset('uploads/products/' . $gi) }}" class="pg-thumb"
+                                            loading="lazy" onerror="this.style.display='none'">
                                     @endforeach
                                     @if (count($gallery) > 3)
                                         <div class="pg-thumb d-flex align-items-center justify-content-center bg-light text-muted fw-bold"

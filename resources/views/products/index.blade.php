@@ -321,14 +321,29 @@
 
             function loadFilterSubcategories(mainCategoryId, preselectedId = '') {
                 const subSelect = $('#filter_sub_category_id');
+                if (subSelect.hasClass('select2-hidden-accessible')) subSelect.select2('destroy');
                 subSelect.html('<option value="">{{ __('messages.all_categories') }}</option>');
-                if (!mainCategoryId) return;
+                if (!mainCategoryId) {
+                    subSelect.select2({
+                        theme: 'bootstrap-5',
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: '{{ __('messages.all_categories') }}'
+                    });
+                    return;
+                }
                 subCategories
                     .filter(sub => sub.main_category_id == mainCategoryId)
                     .forEach(sub => {
                         const selected = sub.id == preselectedId ? 'selected' : '';
                         subSelect.append(`<option value="${sub.id}" ${selected}>${sub.name}</option>`);
                     });
+                subSelect.select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: '{{ __('messages.all_categories') }}'
+                });
             }
             $('#filter_main_category_id').on('change', function() {
                 loadFilterSubcategories($(this).val());

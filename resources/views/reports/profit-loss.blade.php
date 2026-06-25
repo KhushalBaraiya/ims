@@ -22,11 +22,13 @@
             <form method="GET" class="row g-2 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label fw-semibold small">Date From</label>
-                    <input type="date" name="date_from" class="form-control form-control-sm" value="{{ $dateFrom }}">
+                    <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
+                        value="{{ $dateFrom }}">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label fw-semibold small">Date To</label>
-                    <input type="date" name="date_to" class="form-control form-control-sm" value="{{ $dateTo }}">
+                    <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
+                        value="{{ $dateTo }}">
                 </div>
                 <div class="col-md-2 d-flex gap-1">
                     <button type="submit" class="btn btn-success btn-sm flex-fill"><i

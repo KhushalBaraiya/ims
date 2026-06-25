@@ -29,7 +29,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Purchase Date <span class="text-danger">*</span></label>
                     <input type="date" name="purchase_date"
-                        class="form-control @error('purchase_date') is-invalid @enderror"
+                        class="form-control flatpickr-date @error('purchase_date') is-invalid @enderror"
                         value="{{ old('purchase_date', $purchase->purchase_date ?? date('Y-m-d')) }}" required>
                     @error('purchase_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -250,8 +250,8 @@
                         tax: parseFloat(
                             "{{ $item->quantity > 0 ? $item->tax_amount / $item->quantity : 0 }}"),
                         discount: parseFloat(
-                                "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
-                                ),
+                            "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
+                        ),
                         qty: parseFloat("{{ $item->quantity }}"),
                         unit: "{{ $item->product->unit_code ?? 'PCS' }}",
                         image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
@@ -398,7 +398,7 @@
             });
 
             $(document).on('input change', '.qty-input, .price-input, .discount-input, .tax-input',
-            calculateTotals);
+                calculateTotals);
             $('#discount_amount, #tax_amount, #shipping_amount, #paid_amount').on('input change', calculateTotals);
 
             function calculateTotals() {

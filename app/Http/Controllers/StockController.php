@@ -39,8 +39,8 @@ class StockController extends Controller
         if ($request->filled('stock_status')) {
             match ($request->stock_status) {
                 'out'  => $query->whereHas('stock', fn($q) => $q->where('quantity', '<=', 0)),
-                'low'  => $query->whereHas('stock', fn($q) => $q->whereColumn('quantity', '<=', 'minimum_stock_alert')
-                                                                  ->where('quantity', '>', 0)),
+                'low'  => $query->whereHas('stock', fn($q) => $q->where('quantity', '>', 0)
+                                                               ->whereRaw('stocks.quantity <= products.minimum_stock_alert')),
                 'ok'   => $query->whereHas('stock', fn($q) => $q->whereColumn('quantity', '>', 'minimum_stock_alert')),
                 default => null,
             };

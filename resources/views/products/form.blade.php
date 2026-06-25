@@ -334,6 +334,9 @@
 
             function loadSubcategories(mainCategoryId, preselectedId) {
                 const subSelect = $('#sub_category_id');
+                if (subSelect.hasClass('select2-hidden-accessible')) {
+                    subSelect.select2('destroy');
+                }
                 subSelect.html('<option value="">Select Sub Category</option>');
                 subCategories
                     .filter(s => s.main_category_id == mainCategoryId)
@@ -342,8 +345,13 @@
                             `<option value="${s.id}" ${s.id == preselectedId ? 'selected' : ''}>${s.name}</option>`
                         );
                     });
+                subSelect.select2({
+                    theme: 'bootstrap-5',
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: 'Select Sub Category',
+                });
             }
-
             $('#main_category_id').on('change', function() {
                 loadSubcategories($(this).val());
             });

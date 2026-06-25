@@ -112,11 +112,11 @@ Route::middleware('auth')->group(function () {
 
     // Reports Routes
     Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/',             [ReportController::class, 'index'])      ->name('index');
-        Route::get('/sales',        [ReportController::class, 'sales'])      ->name('sales');
-        Route::get('/purchases',    [ReportController::class, 'purchases'])  ->name('purchases');
-        Route::get('/profit-loss',  [ReportController::class, 'profitLoss'])->name('profit-loss');
-        Route::get('/top-selling',  [ReportController::class, 'topSelling'])->name('top-selling');
-        Route::get('/stock-alert',  [ReportController::class, 'stockAlert'])->name('stock-alert');
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
+        Route::get('/purchases', [ReportController::class, 'purchases'])->name('purchases');
+        Route::get('/profit-loss', [ReportController::class, 'profitLoss'])->name('profit-loss');
+        Route::get('/top-selling', [ReportController::class, 'topSelling'])->name('top-selling');
+        Route::get('/stock-alert', [ReportController::class, 'stockAlert'])->name('stock-alert');
     });
 });

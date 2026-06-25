@@ -60,6 +60,197 @@
     <link href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" rel="stylesheet" />
 
+    <!-- Flatpickr CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        /* ===== Flatpickr — altInput inherits Bootstrap form-control style ===== */
+        .flatpickr-input[readonly] {
+            display: none !important;
+            /* hide original hidden input */
+        }
+
+        /* The visible altInput gets the same look as form-control */
+        input.flatpickr-input.form-control,
+        input.flatpickr-input.form-control-sm {
+            background-color: #fff !important;
+            cursor: pointer !important;
+        }
+
+        /* Calendar popup */
+        .flatpickr-calendar {
+            border-radius: 0.5rem !important;
+            box-shadow: 0 0.25rem 1.5rem rgba(161, 172, 184, 0.5) !important;
+            font-family: 'Public Sans', 'Noto Sans Gujarati', sans-serif !important;
+            font-size: 0.9rem !important;
+            border: 1px solid #d9dee3 !important;
+        }
+
+        .flatpickr-months {
+            padding: 0.4rem 0 !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month input.cur-year {
+            font-weight: 600 !important;
+            color: #566a7f !important;
+        }
+
+        .flatpickr-day {
+            border-radius: 0.375rem !important;
+            font-size: 0.85rem !important;
+            color: #697a8d !important;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
+            background: #696cff !important;
+            border-color: #696cff !important;
+            color: #fff !important;
+            border-radius: 0.375rem !important;
+        }
+
+        .flatpickr-day:hover:not(.selected):not(.disabled) {
+            background: rgba(105, 108, 255, 0.08) !important;
+            color: #696cff !important;
+        }
+
+        .flatpickr-day.today:not(.selected) {
+            border-color: #696cff !important;
+            color: #696cff !important;
+            font-weight: 600 !important;
+        }
+
+        .flatpickr-day.disabled,
+        .flatpickr-day.disabled:hover {
+            color: #c5cdd6 !important;
+        }
+
+        .flatpickr-weekday {
+            font-weight: 600 !important;
+            color: #8592a3 !important;
+            font-size: 0.78rem !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            color: #697a8d !important;
+            fill: #697a8d !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month:hover svg,
+        .flatpickr-months .flatpickr-next-month:hover svg {
+            fill: #696cff !important;
+        }
+
+        /* Footer buttons (Clear / Today) */
+        .flatpickr-innerContainer~.flatpickr-footer,
+        .flatpickr-calendar .flatpickr-footer {
+            border-top: 1px solid #e9ecef !important;
+            padding: 0.3rem 0.5rem !important;
+        }
+
+        /* ===== Dark mode ===== */
+        [data-bs-theme="dark"] .flatpickr-calendar {
+            background: #2b2c40 !important;
+            border-color: #444564 !important;
+            box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.4) !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-months .flatpickr-month,
+        [data-bs-theme="dark"] .flatpickr-current-month,
+        [data-bs-theme="dark"] .flatpickr-monthDropdown-months {
+            background: #2b2c40 !important;
+            color: #cfd3ec !important;
+            fill: #cfd3ec !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-current-month .flatpickr-monthDropdown-months,
+        [data-bs-theme="dark"] .flatpickr-current-month input.cur-year {
+            color: #cfd3ec !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-weekday {
+            background: #2b2c40 !important;
+            color: #7983bb !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-days,
+        [data-bs-theme="dark"] .dayContainer {
+            background: #2b2c40 !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-day {
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-day:hover:not(.selected):not(.disabled) {
+            background: rgba(105, 108, 255, 0.15) !important;
+            color: #696cff !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-day.today:not(.selected) {
+            border-color: #696cff !important;
+            color: #9a9dff !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-day.disabled {
+            color: #444564 !important;
+        }
+
+        [data-bs-theme="dark"] .flatpickr-months .flatpickr-prev-month,
+        [data-bs-theme="dark"] .flatpickr-months .flatpickr-next-month {
+            fill: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] input.flatpickr-input {
+            background-color: #2b2c40 !important;
+            border-color: #444564 !important;
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] input.flatpickr-input::placeholder {
+            color: #6d6f8a !important;
+        }
+
+        /* ===== Flatpickr wrapper input-group ===== */
+        .fp-wrapper {
+            flex-wrap: nowrap !important;
+        }
+
+        .fp-wrapper input.flatpickr-input {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            border-right: 0 !important;
+        }
+
+        .fp-wrapper .input-group-text {
+            border-left: 0 !important;
+            background: #fff !important;
+            border-color: #d9dee3 !important;
+        }
+
+        .fp-wrapper input.flatpickr-input:focus {
+            border-color: #696cff !important;
+            box-shadow: none !important;
+            z-index: 1 !important;
+        }
+
+        .fp-wrapper input.flatpickr-input:focus~.input-group-text {
+            border-color: #696cff !important;
+        }
+
+        [data-bs-theme="dark"] .fp-wrapper .input-group-text {
+            background: #2b2c40 !important;
+            border-color: #444564 !important;
+        }
+
+        [data-bs-theme="dark"] .fp-wrapper .input-group-text i {
+            color: #7983bb !important;
+        }
+    </style>
+
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
     <!-- DataTables Responsive CSS -->
@@ -442,6 +633,62 @@
             min-height: 48px !important;
             font-size: 1rem !important;
             padding: 0.5rem 1rem !important;
+        }
+
+        /* ===== Select2 — Small size (form-select-sm) ===== */
+        .form-select-sm+.select2-container--bootstrap-5 .select2-selection,
+        select.form-select-sm~.select2-container--bootstrap-5 .select2-selection {
+            min-height: 31px !important;
+            font-size: 0.8125rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        /* Target select2 containers next to small selects */
+        .select2-container--bootstrap-5.select2-sm .select2-selection {
+            min-height: 31px !important;
+            font-size: 0.8125rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        /* ===== Select2 — Z-index fix (above sidebar overlay) ===== */
+        .select2-container--open .select2-dropdown {
+            z-index: 99999 !important;
+        }
+
+        /* ===== Select2 — Dark mode ===== */
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection {
+            background-color: #2b2c40 !important;
+            border-color: #444564 !important;
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-dropdown {
+            background-color: #2b2c40 !important;
+            border-color: #444564 !important;
+        }
+
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-results__option {
+            color: #a3a4cc !important;
+            background-color: #2b2c40 !important;
+        }
+
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-results__option--highlighted {
+            background-color: #696cff !important;
+            color: #fff !important;
+        }
+
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+            background-color: #2b2c40 !important;
+            border-color: #444564 !important;
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection__placeholder {
+            color: #6d6f8a !important;
         }
     </style>
 

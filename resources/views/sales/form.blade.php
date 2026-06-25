@@ -18,7 +18,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Invoice Date <span class="text-danger">*</span></label>
                     <input type="date" name="invoice_date"
-                        class="form-control @error('invoice_date') is-invalid @enderror"
+                        class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
                         value="{{ old('invoice_date', $sale->invoice_date ?? date('Y-m-d')) }}" required>
                     @error('invoice_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -67,8 +67,8 @@
                         <option value="Completed"
                             {{ old('status', $sale->status ?? 'Completed') === 'Completed' ? 'selected' : '' }}>
                             Completed</option>
-                        <option value="Draft"
-                            {{ old('status', $sale->status ?? '') === 'Draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="Draft" {{ old('status', $sale->status ?? '') === 'Draft' ? 'selected' : '' }}>
+                            Draft</option>
                         <option value="Cancelled"
                             {{ old('status', $sale->status ?? '') === 'Cancelled' ? 'selected' : '' }}>Cancelled
                         </option>
@@ -305,7 +305,7 @@
                             } else {
                                 resultsContainer.html(
                                     '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
-                                    ).removeClass('d-none');
+                                ).removeClass('d-none');
                             }
                         }
                     });

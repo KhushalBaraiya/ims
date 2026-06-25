@@ -43,7 +43,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
                             <input type="date" name="return_date"
-                                class="form-control @error('return_date') is-invalid @enderror"
+                                class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 value="{{ old('return_date', $saleReturn->return_date) }}" required>
                             @error('return_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -138,7 +138,8 @@
                                                     @else
                                                         <div
                                                             class="tbl-img d-flex align-items-center justify-content-center bg-light rounded img-fallback tbl-img">
-                                                            <i class="bx bx-package text-muted"></i></div>
+                                                            <i class="bx bx-package text-muted"></i>
+                                                        </div>
                                                     @endif
                                                 </td>
                                                 <td class="fw-semibold">

@@ -48,7 +48,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
                             <input type="date" name="return_date"
-                                class="form-control @error('return_date') is-invalid @enderror"
+                                class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 value="{{ old('return_date', date('Y-m-d')) }}" required>
                             @error('return_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -194,7 +194,7 @@
                 emptyReturnMsg.addClass('d-none');
                 itemsContainer.html(
                     '<tr><td colspan="9" class="text-center py-4 text-muted"><i class="bx bx-loader-alt bx-spin me-2"></i>Loading items...</td></tr>'
-                    );
+                );
 
                 $.ajax({
                     url: `/sales/${saleId}/return-data`,
@@ -204,7 +204,7 @@
                         if (!response.success || response.items.length === 0) {
                             itemsContainer.html(
                                 '<tr><td colspan="9" class="text-center text-danger py-4">Error loading invoice data.</td></tr>'
-                                );
+                            );
                             return;
                         }
                         let rowCount = 0,
@@ -247,7 +247,7 @@
                     error: function() {
                         itemsContainer.html(
                             '<tr><td colspan="9" class="text-center text-danger py-4">Failed to fetch invoice items.</td></tr>'
-                            );
+                        );
                     }
                 });
             }

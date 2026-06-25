@@ -26,12 +26,12 @@
                 <div class="row g-3">
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">Date From</label>
-                        <input type="date" name="date_from" class="form-control form-control-sm"
+                        <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('date_from') }}">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">Date To</label>
-                        <input type="date" name="date_to" class="form-control form-control-sm"
+                        <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('date_to') }}">
                     </div>
                     <div class="col-md-3">
