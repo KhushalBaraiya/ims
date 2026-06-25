@@ -12,6 +12,7 @@ use App\Models\Sale;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -21,6 +22,7 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('dashboard.view');
         // 1. Basic Counts
         $totalProducts   = Product::count();
         $totalCategories = MainCategory::count();

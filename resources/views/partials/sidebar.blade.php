@@ -77,202 +77,245 @@
         </li>
 
         {{-- ── INVENTORY ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('messages.section_inventory') }}</span>
-        </li>
+        @canany(['main_categories.view', 'sub_categories.view', 'brands.view', 'products.view', 'stocks.view'])
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">{{ __('messages.section_inventory') }}</span>
+            </li>
+        @endcanany
 
         @php
             $catActive = request()->routeIs('main-categories.*', 'sub-categories.*');
+            $showCatMenu = auth()->user()->can('main_categories.view') || auth()->user()->can('sub_categories.view');
         @endphp
-        <li class="menu-item {{ $catActive ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-category"></i>
-                <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('main-categories.*') ? 'active' : '' }}">
-                    <a href="{{ route('main-categories.index') }}" class="menu-link">
-                        <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
-                    <a href="{{ route('sub-categories.index') }}" class="menu-link">
-                        <div class="text-truncate">{{ __('messages.menu_sub_categories') }}</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+        @if ($showCatMenu)
+            <li class="menu-item {{ $catActive ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-category"></i>
+                    <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
+                </a>
+                <ul class="menu-sub">
+                    @can('main_categories.view')
+                        <li class="menu-item {{ request()->routeIs('main-categories.*') ? 'active' : '' }}">
+                            <a href="{{ route('main-categories.index') }}" class="menu-link">
+                                <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('sub_categories.view')
+                        <li class="menu-item {{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
+                            <a href="{{ route('sub-categories.index') }}" class="menu-link">
+                                <div class="text-truncate">{{ __('messages.menu_sub_categories') }}</div>
+                            </a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endif
 
-        <li class="menu-item {{ request()->routeIs('brands.*') ? 'active' : '' }}">
-            <a href="{{ route('brands.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-award"></i>
-                <div class="text-truncate">{{ __('messages.menu_brands') }}</div>
-            </a>
-        </li>
+        @can('brands.view')
+            <li class="menu-item {{ request()->routeIs('brands.*') ? 'active' : '' }}">
+                <a href="{{ route('brands.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-award"></i>
+                    <div class="text-truncate">{{ __('messages.menu_brands') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
-            <a href="{{ route('products.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-package"></i>
-                <div class="text-truncate">{{ __('messages.menu_products') }}</div>
-            </a>
-        </li>
+        @can('products.view')
+            <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                <a href="{{ route('products.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-package"></i>
+                    <div class="text-truncate">{{ __('messages.menu_products') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active open' : '' }}">
-            <a href="javascript:void(0)" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-store-alt"></i>
-                <div class="text-truncate">{{ __('messages.menu_stock') }}</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->routeIs('stocks.index') ? 'active' : '' }}">
-                    <a href="{{ route('stocks.index') }}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-list-ul"></i>
-                        <div class="text-truncate">{{ __('messages.stock_overview') }}</div>
-                    </a>
-                </li>
-                @can('stocks.create')
-                    <li class="menu-item {{ request()->routeIs('stocks.adjust') ? 'active' : '' }}">
-                        <a href="{{ route('stocks.adjust') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-slider"></i>
-                            <div class="text-truncate">{{ __('messages.adjust_stock') }}</div>
+        @can('stocks.view')
+            <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active open' : '' }}">
+                <a href="javascript:void(0)" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-store-alt"></i>
+                    <div class="text-truncate">{{ __('messages.menu_stock') }}</div>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item {{ request()->routeIs('stocks.index') ? 'active' : '' }}">
+                        <a href="{{ route('stocks.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                            <div class="text-truncate">{{ __('messages.stock_overview') }}</div>
                         </a>
                     </li>
-                @endcan
-                <li class="menu-item {{ request()->routeIs('stocks.history') ? 'active' : '' }}">
-                    <a href="{{ route('stocks.history') }}" class="menu-link">
-                        <i class="menu-icon tf-icons bx bx-history"></i>
-                        <div class="text-truncate">{{ __('messages.stock_history') }}</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+                    @can('stocks.create')
+                        <li class="menu-item {{ request()->routeIs('stocks.adjust') ? 'active' : '' }}">
+                            <a href="{{ route('stocks.adjust') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-slider"></i>
+                                <div class="text-truncate">{{ __('messages.adjust_stock') }}</div>
+                            </a>
+                        </li>
+                    @endcan
+                    <li class="menu-item {{ request()->routeIs('stocks.history') ? 'active' : '' }}">
+                        <a href="{{ route('stocks.history') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-history"></i>
+                            <div class="text-truncate">{{ __('messages.stock_history') }}</div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endcan
 
         {{-- ── TRANSACTIONS ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('messages.section_transactions') }}</span>
-        </li>
+        @canany(['purchases.view', 'purchase_returns.view', 'sales.view', 'sale_returns.view'])
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">{{ __('messages.section_transactions') }}</span>
+            </li>
+        @endcanany
 
-        <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
-            <a href="{{ route('purchases.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-cart-download"></i>
-                <div class="text-truncate">{{ __('messages.menu_purchases') }}</div>
-            </a>
-        </li>
+        @can('purchases.view')
+            <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
+                <a href="{{ route('purchases.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                    <div class="text-truncate">{{ __('messages.menu_purchases') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('purchase-returns.*') ? 'active' : '' }}">
-            <a href="{{ route('purchase-returns.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-revision"></i>
-                <div class="text-truncate">{{ __('messages.menu_purchase_returns') }}</div>
-            </a>
-        </li>
+        @can('purchase_returns.view')
+            <li class="menu-item {{ request()->routeIs('purchase-returns.*') ? 'active' : '' }}">
+                <a href="{{ route('purchase-returns.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-revision"></i>
+                    <div class="text-truncate">{{ __('messages.menu_purchase_returns') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
-            <a href="{{ route('sales.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-cart-alt"></i>
-                <div class="text-truncate">{{ __('messages.menu_sales') }}</div>
-            </a>
-        </li>
+        @can('sales.view')
+            <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
+                <a href="{{ route('sales.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cart-alt"></i>
+                    <div class="text-truncate">{{ __('messages.menu_sales') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('sale-returns.*') ? 'active' : '' }}">
-            <a href="{{ route('sale-returns.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-transfer"></i>
-                <div class="text-truncate">{{ __('messages.menu_sale_returns') }}</div>
-            </a>
-        </li>
+        @can('sale_returns.view')
+            <li class="menu-item {{ request()->routeIs('sale-returns.*') ? 'active' : '' }}">
+                <a href="{{ route('sale-returns.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-transfer"></i>
+                    <div class="text-truncate">{{ __('messages.menu_sale_returns') }}</div>
+                </a>
+            </li>
+        @endcan
 
         {{-- ── MANAGEMENT ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('messages.section_management') }}</span>
-        </li>
+        @canany(['suppliers.view', 'customers.view', 'currencies.view', 'units.view'])
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">{{ __('messages.section_management') }}</span>
+            </li>
+        @endcanany
 
-        <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
-            <a href="{{ route('suppliers.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-group"></i>
-                <div class="text-truncate">{{ __('messages.menu_suppliers') }}</div>
-            </a>
-        </li>
+        @can('suppliers.view')
+            <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+                <a href="{{ route('suppliers.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-group"></i>
+                    <div class="text-truncate">{{ __('messages.menu_suppliers') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
-            <a href="{{ route('customers.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                <div class="text-truncate">{{ __('messages.menu_customers') }}</div>
-            </a>
-        </li>
+        @can('customers.view')
+            <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
+                <a href="{{ route('customers.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-user-circle"></i>
+                    <div class="text-truncate">{{ __('messages.menu_customers') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('currencies.*') ? 'active' : '' }}">
-            <a href="{{ route('currencies.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-money"></i>
-                <div class="text-truncate">{{ __('messages.menu_currencies') }}</div>
-            </a>
-        </li>
+        @can('currencies.view')
+            <li class="menu-item {{ request()->routeIs('currencies.*') ? 'active' : '' }}">
+                <a href="{{ route('currencies.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-money"></i>
+                    <div class="text-truncate">{{ __('messages.menu_currencies') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('units.*') ? 'active' : '' }}">
-            <a href="{{ route('units.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-ruler"></i>
-                <div class="text-truncate">{{ __('messages.menu_units') }}</div>
-            </a>
-        </li>
+        @can('units.view')
+            <li class="menu-item {{ request()->routeIs('units.*') ? 'active' : '' }}">
+                <a href="{{ route('units.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-ruler"></i>
+                    <div class="text-truncate">{{ __('messages.menu_units') }}</div>
+                </a>
+            </li>
+        @endcan
 
         {{-- ── REPORTS ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Reports</span>
-        </li>
+        @can('reports.view')
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">{{ __('messages.section_reports') }}</span>
+            </li>
 
-        @php $reportsActive = request()->routeIs('reports.*'); @endphp
-        <li class="menu-item {{ $reportsActive && request()->routeIs('reports.index') ? 'active' : '' }}">
-            <a href="{{ route('reports.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-                <div class="text-truncate">All Reports</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
-            <a href="{{ route('reports.sales') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-cart-alt"></i>
-                <div class="text-truncate">Sales Report</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
-            <a href="{{ route('reports.purchases') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-cart-download"></i>
-                <div class="text-truncate">Purchase Report</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('reports.profit-loss') ? 'active' : '' }}">
-            <a href="{{ route('reports.profit-loss') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-trending-up"></i>
-                <div class="text-truncate">Profit & Loss</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('reports.top-selling') ? 'active' : '' }}">
-            <a href="{{ route('reports.top-selling') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-trophy"></i>
-                <div class="text-truncate">Top Selling</div>
-            </a>
-        </li>
-        <li class="menu-item {{ request()->routeIs('reports.stock-alert') ? 'active' : '' }}">
-            <a href="{{ route('reports.stock-alert') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-error"></i>
-                <div class="text-truncate">Stock Alert</div>
-            </a>
-        </li>
+            @php $reportsActive = request()->routeIs('reports.*'); @endphp
+            <li class="menu-item {{ $reportsActive && request()->routeIs('reports.index') ? 'active' : '' }}">
+                <a href="{{ route('reports.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                    <div class="text-truncate">{{ __('messages.all_reports') }}</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
+                <a href="{{ route('reports.sales') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cart-alt"></i>
+                    <div class="text-truncate">{{ __('messages.sales_report') }}</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
+                <a href="{{ route('reports.purchases') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cart-download"></i>
+                    <div class="text-truncate">{{ __('messages.purchase_report') }}</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('reports.profit-loss') ? 'active' : '' }}">
+                <a href="{{ route('reports.profit-loss') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-trending-up"></i>
+                    <div class="text-truncate">{{ __('messages.profit_loss') }}</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('reports.top-selling') ? 'active' : '' }}">
+                <a href="{{ route('reports.top-selling') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-trophy"></i>
+                    <div class="text-truncate">{{ __('messages.top_selling') }}</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->routeIs('reports.stock-alert') ? 'active' : '' }}">
+                <a href="{{ route('reports.stock-alert') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-error"></i>
+                    <div class="text-truncate">{{ __('messages.stock_alert_menu') }}</div>
+                </a>
+            </li>
+        @endcan
 
         {{-- ── USERS ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('messages.section_users') }}</span>
-        </li>
+        @canany(['users.view', 'roles.view'])
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">{{ __('messages.section_users') }}</span>
+            </li>
+        @endcanany
 
-        <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-            <a href="{{ route('users.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div class="text-truncate">{{ __('messages.user_accounts') }}</div>
-            </a>
-        </li>
+        @can('users.view')
+            <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <a href="{{ route('users.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-user"></i>
+                    <div class="text-truncate">{{ __('messages.user_accounts') }}</div>
+                </a>
+            </li>
+        @endcan
 
-        <li class="menu-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
-            <a href="{{ route('roles.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-shield"></i>
-                <div class="text-truncate">{{ __('messages.menu_roles') }}</div>
-            </a>
-        </li>
+        @can('roles.view')
+            <li class="menu-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
+                <a href="{{ route('roles.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-shield"></i>
+                    <div class="text-truncate">{{ __('messages.menu_roles') }}</div>
+                </a>
+            </li>
+        @endcan
 
         {{-- ── ACCOUNT ── --}}
         <li class="menu-header small text-uppercase">

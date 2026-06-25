@@ -188,6 +188,15 @@ return [
     'section_management'    => 'प्रबंधन',
     'section_users'         => 'उपयोगकर्ता',
     'section_account'       => 'खाता',
+    'section_reports'       => 'रिपोर्ट',
+
+    // Reports sidebar labels
+    'all_reports'       => 'सभी रिपोर्ट',
+    'sales_report'      => 'बिक्री रिपोर्ट',
+    'purchase_report'   => 'खरीद रिपोर्ट',
+    'profit_loss'       => 'लाभ-हानि',
+    'top_selling'       => 'सबसे अधिक बिकने वाले',
+    'stock_alert_menu'  => 'स्टॉक चेतावनी',
 
     // Page / Card titles
     'brand_list'            => 'ब्रांड सूची',

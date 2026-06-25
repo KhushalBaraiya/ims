@@ -79,12 +79,13 @@ class RoleController extends Controller
         Gate::authorize('roles.create');
 
         $request->validate([
-            'display_name' => ['required', 'string', 'max:100', 'unique:roles,name'],
+            'display_name' => ['required', 'string', 'max:100'],
             'name'         => ['required', 'string', 'max:100', 'unique:roles,name', 'regex:/^[a-z0-9\-]+$/'],
             'permissions'  => ['nullable', 'array'],
             'permissions.*'=> ['string', 'exists:permissions,name'],
         ], [
-            'name.regex' => 'The system name may only contain lowercase letters, numbers, and hyphens.',
+            'name.regex'        => 'The system name may only contain lowercase letters, numbers, and hyphens.',
+            'name.unique'       => 'A role with this system name already exists.',
         ]);
 
         $role = Role::create([
@@ -104,6 +105,15 @@ class RoleController extends Controller
         ActivityLog::log('Role Created', "Created role: {$role->name} with " . count($request->permissions ?? []) . ' permissions');
 
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+    }
+
+    /**
+     * Display the specified role (redirects to edit).
+     */
+    public function show(Role $role): \Illuminate\Http\RedirectResponse
+    {
+        Gate::authorize('roles.view');
+        return redirect()->route('roles.edit', $role);
     }
 
     /**

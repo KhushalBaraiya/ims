@@ -120,11 +120,11 @@
                 altInputClass: classes,
                 allowInput: true,
                 disableMobile: true,
+                appendTo: document.body,
                 locale: {
                     firstDayOfWeek: 1
                 },
                 onReady: function(selectedDates, dateStr, instance) {
-                    // Add placeholder text and calendar icon to altInput
                     instance.altInput.placeholder = 'Select Date';
                     instance.altInput.style.cursor = 'pointer';
                     // Wrap in input-group to add calendar icon

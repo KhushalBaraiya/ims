@@ -194,6 +194,15 @@ return [
     'section_management' => 'Management',
     'section_users' => 'Users',
     'section_account' => 'Account',
+    'section_reports' => 'Reports',
+
+    // Reports sidebar labels
+    'all_reports'       => 'All Reports',
+    'sales_report'      => 'Sales Report',
+    'purchase_report'   => 'Purchase Report',
+    'profit_loss'       => 'Profit & Loss',
+    'top_selling'       => 'Top Selling',
+    'stock_alert_menu'  => 'Stock Alert',
 
     // Page / Card titles
     'brand_list' => 'Brand List',

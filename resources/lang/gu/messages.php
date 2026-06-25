@@ -194,6 +194,15 @@ return [
     'section_management' => 'સંચાલન',
     'section_users' => 'વપરાશકર્તા',
     'section_account' => 'ખાતું',
+    'section_reports' => 'અહેવાલ',
+
+    // Reports sidebar labels
+    'all_reports'       => 'બધા અહેવાલ',
+    'sales_report'      => 'વેચાણ અહેવાલ',
+    'purchase_report'   => 'ખરીદી અહેવાલ',
+    'profit_loss'       => 'નફો-નુકસાન',
+    'top_selling'       => 'સૌથી વધુ વેચાણ',
+    'stock_alert_menu'  => 'સ્ટૉક ચેતવણી',
 
     'brand_list' => 'બ્રાન્ડ સૂચિ',
     'brand_details' => 'બ્રાન્ડ વિગત',
