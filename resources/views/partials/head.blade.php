@@ -109,22 +109,25 @@
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            gap: 4px !important;
         }
 
-        /* Remove the ugly box around month select */
+        /* Hide the native month <select> — replaced by a plain text span via JS */
         .flatpickr-monthDropdown-months {
-            -webkit-appearance: none !important;
-            appearance: none !important;
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
+            position: absolute !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        /* Plain text month label injected by JS */
+        .fp-month-label {
             font-weight: 700 !important;
             font-size: .9rem !important;
             color: #1e293b !important;
-            cursor: pointer !important;
-            padding: 0 4px 0 0 !important;
-            margin: 0 !important;
-            box-shadow: none !important;
+            cursor: default !important;
+            line-height: 1 !important;
         }
 
         .flatpickr-current-month input.cur-year {
@@ -284,6 +287,10 @@
         [data-bs-theme="dark"] .flatpickr-current-month input.cur-year {
             color: #e2e8f0 !important;
             background: #2b2c40 !important;
+        }
+
+        [data-bs-theme="dark"] .fp-month-label {
+            color: #e2e8f0 !important;
         }
 
         [data-bs-theme="dark"] span.flatpickr-weekday {

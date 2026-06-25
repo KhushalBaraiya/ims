@@ -127,6 +127,27 @@
                 onReady: function(selectedDates, dateStr, instance) {
                     instance.altInput.placeholder = 'Select Date';
                     instance.altInput.style.cursor = 'pointer';
+
+                    // Replace native month <select> with a plain text span
+                    // so it never gets grabbed by Select2 or shows a browser dropdown
+                    var cal = instance.calendarContainer;
+                    if (cal) {
+                        var monthSel = cal.querySelector('.flatpickr-monthDropdown-months');
+                        if (monthSel) {
+                            monthSel.setAttribute('data-no-select2', '1');
+                            var mSpan = document.createElement('span');
+                            mSpan.className = 'fp-month-label';
+                            var idx = monthSel.selectedIndex;
+                            mSpan.textContent = (idx >= 0 && monthSel.options[idx]) ?
+                                monthSel.options[idx].text : '';
+                            monthSel.parentNode.insertBefore(mSpan, monthSel);
+                            monthSel.style.cssText =
+                                'position:absolute;opacity:0;pointer-events:none;width:0;height:0;';
+                            instance._fpMonthSpan = mSpan;
+                            instance._fpMonthSel = monthSel;
+                        }
+                    }
+
                     // Wrap in input-group to add calendar icon
                     var wrapper = instance.altInput.parentNode;
                     if (wrapper && !wrapper.classList.contains('fp-wrapper')) {
@@ -143,6 +164,14 @@
                             instance.open();
                         });
                         grp.appendChild(span);
+                    }
+                },
+                onMonthChange: function(selectedDates, dateStr, instance) {
+                    if (instance._fpMonthSpan && instance._fpMonthSel) {
+                        var idx = instance._fpMonthSel.selectedIndex;
+                        if (idx >= 0 && instance._fpMonthSel.options[idx]) {
+                            instance._fpMonthSpan.textContent = instance._fpMonthSel.options[idx].text;
+                        }
                     }
                 }
             };
@@ -180,6 +209,8 @@
                 .not('.dataTables_filter select')
                 .not('.dataTables_length select')
                 .not('.select2-hidden-accessible')
+                .not('.flatpickr-monthDropdown-months')
+                .not('[type="date"]')
                 .each(function() {
                     var $el = $(this);
                     var $modal = $el.closest('.modal');
