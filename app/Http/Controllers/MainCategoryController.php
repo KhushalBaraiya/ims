@@ -56,6 +56,8 @@ class MainCategoryController extends Controller
     {
         Gate::authorize('main_categories.view');
 
+        $mainCategory->load(['subCategories', 'products']);
+
         return view('main_categories.show', compact('mainCategory'));
     }
 
@@ -81,6 +83,25 @@ class MainCategoryController extends Controller
         ActivityLog::log('Category Updated', "Updated main category: {$mainCategory->name} (Code: {$mainCategory->slug})");
 
         return redirect()->route('main-categories.index')->with('success', 'Category updated successfully.');
+    }
+
+    /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(MainCategory $mainCategory): JsonResponse
+    {
+        Gate::authorize('main_categories.update');
+
+        $mainCategory->status = $mainCategory->status === 'active' ? 'inactive' : 'active';
+        $mainCategory->save();
+
+        ActivityLog::log('Category Status Changed', "Changed main category status: {$mainCategory->name} → {$mainCategory->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $mainCategory->status,
+            'message' => 'Status updated successfully.',
+        ]);
     }
 
     /**

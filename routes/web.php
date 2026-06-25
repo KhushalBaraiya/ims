@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
     // Inventory CRUD Resource Routes
     Route::resource('brands', BrandController::class);
     Route::resource('main-categories', MainCategoryController::class);
+    Route::patch('main-categories/{mainCategory}/toggle-status', [MainCategoryController::class, 'toggleStatus'])->name('main-categories.toggle-status');
     Route::resource('sub-categories', SubCategoryController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('customers', CustomerController::class);

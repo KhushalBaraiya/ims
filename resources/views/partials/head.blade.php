@@ -256,6 +256,230 @@
     <!-- DataTables Responsive CSS -->
     <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css" rel="stylesheet">
 
+    <style>
+        /* ===== Status Badge — Outlined Style (Active/Inactive) ===== */
+        .badge.rounded-pill.bg-success:not(.bg-label-success):not(.status-solid) {
+            background-color: transparent !important;
+            border: 1.5px solid #71dd37 !important;
+            color: #71dd37 !important;
+        }
+
+        .badge.rounded-pill.bg-danger:not(.bg-label-danger):not(.status-solid) {
+            background-color: transparent !important;
+            border: 1.5px solid #ff3e1d !important;
+            color: #ff3e1d !important;
+        }
+
+        .badge.rounded-pill.bg-warning:not(.bg-label-warning):not(.status-solid) {
+            background-color: transparent !important;
+            border: 1.5px solid #ffab00 !important;
+            color: #ffab00 !important;
+        }
+
+        .badge.rounded-pill.bg-info:not(.bg-label-info):not(.status-solid) {
+            background-color: transparent !important;
+            border: 1.5px solid #03c3ec !important;
+            color: #03c3ec !important;
+        }
+
+        .badge.rounded-pill.bg-primary:not(.bg-label-primary):not(.status-solid) {
+            background-color: transparent !important;
+            border: 1.5px solid #696cff !important;
+            color: #696cff !important;
+        }
+
+        .badge.rounded-pill.bg-secondary:not(.bg-label-secondary):not(.status-solid) {
+            background-color: transparent !important;
+            border: 1.5px solid #8592a3 !important;
+            color: #8592a3 !important;
+        }
+
+        /* Dark mode badge outlines */
+        [data-bs-theme="dark"] .badge.rounded-pill.bg-success:not(.bg-label-success):not(.status-solid) {
+            border-color: #71dd37 !important;
+            color: #71dd37 !important;
+        }
+
+        [data-bs-theme="dark"] .badge.rounded-pill.bg-danger:not(.bg-label-danger):not(.status-solid) {
+            border-color: #ff3e1d !important;
+            color: #ff3e1d !important;
+        }
+
+        [data-bs-theme="dark"] .badge.rounded-pill.bg-warning:not(.bg-label-warning):not(.status-solid) {
+            border-color: #ffab00 !important;
+            color: #ffab00 !important;
+        }
+
+        /* ===== DataTables — Sneat Theme Override ===== */
+
+        /* Length (Show X entries) */
+        .dataTables_length label {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.4rem !important;
+            font-size: 0.875rem !important;
+            color: #697a8d !important;
+            font-weight: 500 !important;
+        }
+
+        .dataTables_length select {
+            display: inline-block !important;
+            width: auto !important;
+            padding: 0.25rem 1.8rem 0.25rem 0.6rem !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            color: #697a8d !important;
+            background-color: #fff !important;
+            border: 1px solid #d9dee3 !important;
+            border-radius: 0.375rem !important;
+            appearance: auto !important;
+            box-shadow: none !important;
+            outline: none !important;
+            cursor: pointer !important;
+            transition: border-color .15s ease-in-out !important;
+        }
+
+        .dataTables_length select:focus {
+            border-color: #696cff !important;
+            box-shadow: 0 0 0 0.15rem rgba(105, 108, 255, .15) !important;
+        }
+
+        /* Search */
+        .dataTables_filter label {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.4rem !important;
+            font-size: 0.875rem !important;
+            color: #697a8d !important;
+            font-weight: 500 !important;
+        }
+
+        .dataTables_filter input {
+            display: inline-block !important;
+            width: 200px !important;
+            padding: 0.25rem 0.75rem !important;
+            font-size: 0.875rem !important;
+            color: #697a8d !important;
+            background-color: #fff !important;
+            border: 1px solid #d9dee3 !important;
+            border-radius: 0.375rem !important;
+            box-shadow: none !important;
+            outline: none !important;
+            transition: border-color .15s ease-in-out !important;
+        }
+
+        .dataTables_filter input:focus {
+            border-color: #696cff !important;
+            box-shadow: 0 0 0 0.15rem rgba(105, 108, 255, .15) !important;
+        }
+
+        .dataTables_filter input::placeholder {
+            color: #b4bdc6 !important;
+        }
+
+        /* Info text (Showing 1 to N of N entries) */
+        .dataTables_info {
+            font-size: 0.8125rem !important;
+            color: #8592a3 !important;
+            padding-top: 0.5rem !important;
+        }
+
+        /* Pagination */
+        .dataTables_paginate {
+            padding-top: 0.4rem !important;
+        }
+
+        .dataTables_paginate .paginate_button {
+            padding: 0.3rem 0.7rem !important;
+            margin: 0 2px !important;
+            font-size: 0.8125rem !important;
+            border-radius: 0.375rem !important;
+            border: 1px solid transparent !important;
+            color: #697a8d !important;
+            background: transparent !important;
+            cursor: pointer !important;
+        }
+
+        .dataTables_paginate .paginate_button:hover {
+            background: rgba(105, 108, 255, .08) !important;
+            color: #696cff !important;
+            border-color: transparent !important;
+        }
+
+        .dataTables_paginate .paginate_button.current,
+        .dataTables_paginate .paginate_button.current:hover {
+            background: #696cff !important;
+            color: #fff !important;
+            border-color: #696cff !important;
+        }
+
+        .dataTables_paginate .paginate_button.disabled,
+        .dataTables_paginate .paginate_button.disabled:hover {
+            color: #c5cdd6 !important;
+            cursor: default !important;
+        }
+
+        /* Table header sort icons */
+        table.dataTable thead th {
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            color: #8592a3 !important;
+            border-bottom: 1px solid #e9ecef !important;
+        }
+
+        table.dataTable thead th.sorting::after,
+        table.dataTable thead th.sorting_asc::after,
+        table.dataTable thead th.sorting_desc::after {
+            color: #696cff !important;
+        }
+
+        table.dataTable tbody tr:hover>td {
+            background: rgba(105, 108, 255, .04) !important;
+        }
+
+        /* Wrapper spacing */
+        .dataTables_wrapper .row:first-child {
+            padding: 0.75rem 1rem 0.5rem !important;
+            align-items: center !important;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .dataTables_wrapper .row:last-child {
+            padding: 0.5rem 1rem 0.75rem !important;
+            align-items: center !important;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* ===== Dark Mode — DataTables ===== */
+        [data-bs-theme="dark"] .dataTables_length label,
+        [data-bs-theme="dark"] .dataTables_filter label,
+        [data-bs-theme="dark"] .dataTables_info {
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] .dataTables_length select,
+        [data-bs-theme="dark"] .dataTables_filter input {
+            background-color: #2b2c40 !important;
+            border-color: #444564 !important;
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] .dataTables_paginate .paginate_button {
+            color: #a3a4cc !important;
+        }
+
+        [data-bs-theme="dark"] table.dataTable thead th {
+            color: #7983bb !important;
+            border-bottom-color: #444564 !important;
+        }
+
+        [data-bs-theme="dark"] table.dataTable tbody tr:hover>td {
+            background: rgba(105, 108, 255, .08) !important;
+        }
+    </style>
+
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
