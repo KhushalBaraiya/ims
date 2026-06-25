@@ -1,15 +1,16 @@
 @extends('layouts.admin')
-@section('title', 'Brand — ' . $brand->name)
+@section('title', __('messages.brand_details') . ' — ' . $brand->name)
 
 @section('content')
 
+    {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">Brand Details</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.brand_details') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('brands.index') }}">Brands</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('brands.index') }}">{{ __('messages.brands') }}</a></li>
                     <li class="breadcrumb-item active">{{ $brand->name }}</li>
                 </ol>
             </nav>
@@ -17,90 +18,137 @@
         <div class="d-flex gap-2">
             @can('brands.update')
                 <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-primary">
-                    <i class="bx bx-edit me-1"></i> Edit
+                    <i class="bx bx-edit me-1"></i> {{ __('messages.edit') }}
                 </a>
             @endcan
             <a href="{{ route('brands.index') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-arrow-back me-1"></i> Back
+                <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
             </a>
         </div>
     </div>
 
     <div class="row g-4">
 
-        {{-- Left --}}
+        {{-- Left Column --}}
         <div class="col-lg-8">
 
-            {{-- Brand Summary --}}
+            {{-- Brand Header Card --}}
             <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bx bx-award me-2 text-primary"></i>{{ __('messages.brand_details') }}
+                    </h6>
+                    <span class="badge rounded-pill {{ $brand->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                        {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                    </span>
+                </div>
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center gap-4">
-                        <div class="d-flex align-items-center justify-content-center bg-label-primary rounded-3"
-                            style="width:80px;height:80px;flex-shrink:0;">
-                            <i class="bx bx-award text-primary" style="font-size:2.2rem;"></i>
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div class="flex-shrink-0">
+                            @if ($brand->image)
+                                <img src="{{ asset('uploads/brands/' . $brand->image) }}" alt="{{ $brand->name }}"
+                                    class="rounded-circle" style="width:72px;height:72px;object-fit:cover;"
+                                    onerror="imgError(this)">
+                            @else
+                                <div class="avatar avatar-xl flex-shrink-0">
+                                    <span class="avatar-initial rounded-circle bg-label-primary"
+                                        style="width:72px;height:72px;font-size:2rem;">
+                                        <i class="bx bx-award"></i>
+                                    </span>
+                                </div>
+                            @endif
                         </div>
                         <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <h4 class="fw-bold mb-0">{{ $brand->name }}</h4>
-                                <span
-                                    class="badge rounded-pill {{ $brand->status === 'active' ? 'bg-success' : 'bg-danger' }} px-3">
-                                    {{ $brand->status }}
-                                </span>
-                            </div>
-                            <p class="text-muted small mb-1">
-                                <i class="bx bx-code me-1"></i> Code: <code>{{ $brand->slug }}</code>
-                            </p>
-                            <p class="text-muted small mb-0">
-                                <i class="bx bx-package me-1"></i> {{ $brand->products->count() }} Products
-                            </p>
-                            <p class="text-muted small mb-0">
-                                <i class="bx bx-calendar me-1"></i> {{ $brand->created_at->format('d M Y') }}
+                            <h4 class="fw-bold mb-1">{{ $brand->name }}</h4>
+                            <code class="text-primary">{{ $brand->slug }}</code>
+                            <p class="text-muted small mb-0 mt-1">
+                                <i class="bx bx-calendar me-1"></i>
+                                {{ __('messages.th_created') }}: {{ $brand->created_at->format('d M Y, h:i A') }}
                             </p>
                         </div>
                     </div>
+
+                    {{-- Stats Row --}}
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="rounded-3 p-3 text-center bg-label-primary">
+                                <div class="fw-bold fs-4 text-primary">{{ $brand->products->count() }}</div>
+                                <div class="text-muted small">{{ __('messages.total_products') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="rounded-3 p-3 text-center bg-label-success">
+                                <div class="fw-bold fs-4 text-success">
+                                    {{ $brand->products->where('status', 'active')->count() }}
+                                </div>
+                                <div class="text-muted small">{{ __('messages.active_products') }}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     @if ($brand->description)
-                        <hr class="my-3">
-                        <p class="text-muted mb-0" style="white-space:pre-line;">{{ $brand->description }}</p>
+                        <div class="border-top pt-3">
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.description_label') }}</p>
+                            <p class="mb-0">{{ $brand->description }}</p>
+                        </div>
                     @endif
                 </div>
             </div>
 
-            {{-- Products Table --}}
+            {{-- Recent Products --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-package me-2 text-info"></i>Products
+                        <i class="bx bx-package me-2 text-info"></i>{{ __('messages.recent_products') }}
                         <span class="badge bg-label-info ms-1">{{ $brand->products->count() }}</span>
                     </h6>
-                    @can('products.view')
-                        <a href="{{ route('products.index') }}" class="btn btn-sm btn-outline-info">View All</a>
-                    @endcan
+                    <a href="{{ route('products.index') }}" class="btn btn-sm btn-outline-info">
+                        {{ __('messages.view_all') }}
+                    </a>
                 </div>
                 <div class="card-body p-0">
-                    @if ($brand->products->count())
+                    @php $recentProducts = $brand->products->sortByDesc('created_at')->take(5); @endphp
+                    @if ($recentProducts->count())
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="ps-4">Product</th>
-                                        <th class="text-end">Price</th>
-                                        <th class="text-center">Status</th>
-                                        <th>Created</th>
+                                        <th class="ps-4">{{ __('messages.product') }}</th>
+                                        <th>{{ __('messages.th_code') }}</th>
+                                        <th class="text-center">{{ __('messages.th_status') }}</th>
+                                        <th class="text-center">{{ __('messages.th_actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($brand->products as $product)
+                                    @foreach ($recentProducts as $p)
                                         <tr>
-                                            <td class="ps-4 fw-semibold">{{ $product->name }}</td>
-                                            <td class="text-end text-primary fw-bold">
-                                                {{ format_currency($product->selling_price) }}</td>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    @if ($p->image)
+                                                        <img src="{{ asset('uploads/products/' . $p->image) }}"
+                                                            class="tbl-img" onerror="imgError(this)">
+                                                    @else
+                                                        <div
+                                                            class="tbl-img d-flex align-items-center justify-content-center bg-light rounded">
+                                                            <i class="bx bx-package text-muted"></i>
+                                                        </div>
+                                                    @endif
+                                                    <strong>{{ Str::limit($p->name, 35) }}</strong>
+                                                </div>
+                                            </td>
+                                            <td><code class="small text-primary">{{ $p->code }}</code></td>
                                             <td class="text-center">
                                                 <span
-                                                    class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-danger' }}">
-                                                    {{ $product->status }}
+                                                    class="badge rounded-pill {{ $p->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                                    {{ $p->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                                 </span>
                                             </td>
-                                            <td class="text-muted small">{{ $product->created_at->format('d M Y') }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('products.show', $p->id) }}"
+                                                    class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action">
+                                                    <i class="bx bx-show"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -108,8 +156,8 @@
                         </div>
                     @else
                         <div class="text-center py-5 text-muted">
-                            <i class="bx bx-package" style="font-size:3rem;opacity:.2;"></i>
-                            <p class="mt-2 mb-0">No products found for this brand.</p>
+                            <i class="bx bx-package" style="font-size:2.5rem;opacity:.3;"></i>
+                            <p class="mt-2 mb-0 small">{{ __('messages.no_records') }}</p>
                         </div>
                     @endif
                 </div>
@@ -117,56 +165,65 @@
 
         </div>
 
-        {{-- Right --}}
+        {{-- Right Column --}}
         <div class="col-lg-4">
 
+            {{-- Information Card --}}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i class="bx bx-info-circle me-2 text-primary"></i>Information</h6>
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.information') }}
+                    </h6>
                 </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                <div class="card-body p-4">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">ID</span>
                             <span class="fw-bold">#{{ $brand->id }}</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                            <span class="text-muted small fw-semibold">Name</span>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.brand_name') }}</span>
                             <span class="fw-bold">{{ $brand->name }}</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                            <span class="text-muted small fw-semibold">Code</span>
-                            <code>{{ $brand->slug }}</code>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                            <span class="text-muted small fw-semibold">Status</span>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.th_status') }}</span>
                             <span
-                                class="badge rounded-pill {{ $brand->status === 'active' ? 'bg-success' : 'bg-danger' }}">{{ $brand->status }}</span>
+                                class="badge rounded-pill {{ $brand->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                            </span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                            <span class="text-muted small fw-semibold">Total Products</span>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.total_products') }}</span>
                             <span class="badge bg-label-info">{{ $brand->products->count() }}</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                            <span class="text-muted small fw-semibold">Created</span>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.th_created') }}</span>
                             <span class="small">{{ $brand->created_at->format('d M Y') }}</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                            <span class="text-muted small fw-semibold">Updated</span>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted small fw-semibold">{{ __('messages.updated') }}</span>
                             <span class="small">{{ $brand->updated_at->format('d M Y') }}</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
+            {{-- Quick Actions --}}
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i class="bx bx-bolt-circle me-2 text-warning"></i>Quick Actions</h6>
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}
+                    </h6>
                 </div>
                 <div class="card-body p-4 d-grid gap-2">
                     @can('brands.update')
                         <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-primary">
-                            <i class="bx bx-edit me-1"></i> Edit Brand
+                            <i class="bx bx-edit me-1"></i> {{ __('messages.edit_brand') }}
+                        </a>
+                    @endcan
+                    @can('products.create')
+                        <a href="{{ route('products.create') }}" class="btn btn-outline-info">
+                            <i class="bx bx-plus me-1"></i> {{ __('messages.add_product') }}
                         </a>
                     @endcan
                     @can('brands.delete')
@@ -174,7 +231,7 @@
                             @csrf @method('DELETE')
                             <button type="button" class="btn btn-outline-danger w-100 delete-btn"
                                 data-name="{{ $brand->name }}">
-                                <i class="bx bx-trash me-1"></i> Delete Brand
+                                <i class="bx bx-trash me-1"></i> {{ __('messages.delete_brand') }}
                             </button>
                         </form>
                     @endcan
@@ -191,13 +248,14 @@
         $(document).on('click', '.delete-btn', function() {
             const name = $(this).data('name');
             Swal.fire({
-                title: 'Are you sure?',
-                text: `Delete brand "${name}"?`,
+                title: '{{ __('messages.confirm_delete') }}',
+                text: `{{ __('messages.delete') }} "${name}"?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, delete!'
+                confirmButtonText: '{{ __('messages.yes_delete') }}',
+                cancelButtonText: '{{ __('messages.cancel') }}'
             }).then((r) => {
                 if (r.isConfirmed) document.getElementById('deleteForm').submit();
             });

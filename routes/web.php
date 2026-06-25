@@ -60,14 +60,19 @@ Route::middleware('auth')->group(function () {
 
     // User Management CRUD Resource Route
     Route::resource('users', UserController::class);
+    Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
     // Inventory CRUD Resource Routes
     Route::resource('brands', BrandController::class);
+    Route::patch('brands/{brand}/toggle-status', [BrandController::class, 'toggleStatus'])->name('brands.toggle-status');
     Route::resource('main-categories', MainCategoryController::class);
     Route::patch('main-categories/{mainCategory}/toggle-status', [MainCategoryController::class, 'toggleStatus'])->name('main-categories.toggle-status');
     Route::resource('sub-categories', SubCategoryController::class);
+    Route::patch('sub-categories/{subCategory}/toggle-status', [SubCategoryController::class, 'toggleStatus'])->name('sub-categories.toggle-status');
     Route::resource('suppliers', SupplierController::class);
+    Route::patch('suppliers/{supplier}/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle-status');
     Route::resource('customers', CustomerController::class);
+    Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
     Route::resource('stocks', StockController::class);
     Route::get('/stocks-adjust', [StockController::class, 'adjust'])->name('stocks.adjust');
     Route::get('/stocks-history', [StockController::class, 'history'])->name('stocks.history');
@@ -103,6 +108,7 @@ Route::middleware('auth')->group(function () {
 
     // Units Routes
     Route::resource('units', UnitController::class);
+    Route::patch('units/{unit}/toggle-status', [UnitController::class, 'toggleStatus'])->name('units.toggle-status');
 
     // Settings Routes
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

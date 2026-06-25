@@ -42,7 +42,16 @@ class BrandController extends Controller
     {
         Gate::authorize('brands.create');
 
-        $brand = Brand::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/brands'), $filename);
+            $data['image'] = $filename;
+        }
+
+        $brand = Brand::create($data);
 
         ActivityLog::log('Brand Created', "Created brand: {$brand->name} (Code: {$brand->slug})");
 
@@ -55,6 +64,8 @@ class BrandController extends Controller
     public function show(Brand $brand): View
     {
         Gate::authorize('brands.view');
+
+        $brand->load('products');
 
         return view('brands.show', compact('brand'));
     }
@@ -76,11 +87,43 @@ class BrandController extends Controller
     {
         Gate::authorize('brands.update');
 
-        $brand->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($brand->image && file_exists(public_path('uploads/brands/' . $brand->image))) {
+                unlink(public_path('uploads/brands/' . $brand->image));
+            }
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/brands'), $filename);
+            $data['image'] = $filename;
+        }
+
+        $brand->update($data);
 
         ActivityLog::log('Brand Updated', "Updated brand: {$brand->name} (Code: {$brand->slug})");
 
         return redirect()->route('brands.index')->with('success', 'Brand updated successfully.');
+    }
+
+    /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(Brand $brand): JsonResponse
+    {
+        Gate::authorize('brands.update');
+
+        $brand->status = $brand->status === 'active' ? 'inactive' : 'active';
+        $brand->save();
+
+        ActivityLog::log('Brand Status Changed', "Changed brand status: {$brand->name} → {$brand->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $brand->status,
+            'message' => 'Status updated successfully.',
+        ]);
     }
 
     /**

@@ -22,7 +22,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
-            <div class="table-responsive p-3">
+            <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="customersTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
@@ -39,27 +39,53 @@
                         @foreach ($customers as $index => $customer)
                             <tr>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                                <td><strong>{{ $customer->name }}</strong></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar avatar-sm flex-shrink-0">
+                                            <span class="avatar-initial rounded-circle bg-label-success">
+                                                <i class="bx bx-user-circle" style="font-size:1rem;"></i>
+                                            </span>
+                                        </div>
+                                        <strong>{{ $customer->name }}</strong>
+                                    </div>
+                                </td>
                                 <td class="fw-semibold">{{ $customer->phone }}</td>
-                                <td class="text-muted">{{ $customer->email ?: '-' }}</td>
+                                <td class="text-muted">{{ $customer->email ?: '—' }}</td>
                                 <td class="text-center">
-                                    <span
-                                        class="badge rounded-pill {{ $customer->status === 'active' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $customer->status === 'active' ? __('messages.active') : __('messages.inactive') }}
-                                    </span>
+                                    @can('customers.update')
+                                        <button type="button"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1
+                                                {{ $customer->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;cursor:pointer;" data-id="{{ $customer->id }}"
+                                            data-status="{{ $customer->status }}"
+                                            title="{{ __('messages.click_to_toggle') }}">
+                                            {{ $customer->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </button>
+                                    @else
+                                        <span
+                                            class="badge rounded-pill border fw-semibold px-3 py-1
+                                            {{ $customer->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;">
+                                            {{ $customer->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </span>
+                                    @endcan
                                 </td>
                                 <td class="text-muted small">{{ $customer->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('customers.view')
                                             <a href="{{ route('customers.show', $customer->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
+                                                title="{{ __('messages.view') }}">
+                                                <i class="bx bx-show"></i>
+                                            </a>
                                         @endcan
                                         @can('customers.update')
                                             <a href="{{ route('customers.edit', $customer->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
+                                                title="{{ __('messages.edit') }}">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
                                         @endcan
                                         @can('customers.delete')
                                             <form id="delete-form-{{ $customer->id }}"
@@ -69,7 +95,9 @@
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                     data-id="{{ $customer->id }}" data-name="{{ $customer->name }}"
-                                                    title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>
+                                                    title="{{ __('messages.delete') }}">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
                                             </form>
                                         @endcan
                                     </div>
@@ -91,13 +119,64 @@
                 responsive: true,
                 pageLength: 10,
                 order: [
-                    [0, 'asc']
+                    [0, 'desc']
                 ],
                 columnDefs: [{
                     targets: 'no-sort',
                     orderable: false
-                }]
+                }],
+                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "{{ __('messages.search') }}...",
+                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    paginate: {
+                        previous: '<i class="bx bx-chevron-left"></i>',
+                        next: '<i class="bx bx-chevron-right"></i>'
+                    }
+                }
             });
+
+            $(document).on('click', '.status-toggle-btn', function() {
+                const btn = $(this),
+                    id = btn.data('id'),
+                    cur = btn.data('status');
+                $.ajax({
+                    url: `/customers/${id}/toggle-status`,
+                    type: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    beforeSend: () => btn.prop('disabled', true).html(
+                        '<span class="spinner-border spinner-border-sm"></span>'),
+                    success: (res) => {
+                        btn.prop('disabled', false);
+                        if (res.success) {
+                            btn.data('status', res.status);
+                            btn.removeClass(
+                                'border-success text-success border-danger text-danger');
+                            btn.addClass(res.status === 'active' ?
+                                'border-success text-success' : 'border-danger text-danger');
+                            btn.text(res.status === 'active' ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}');
+                            showAdminToast(res.message, 'success');
+                        } else {
+                            btn.text(cur === 'active' ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}');
+                            showAdminToast(res.message ||
+                                '{{ __('messages.error_occurred') }}', 'error');
+                        }
+                    },
+                    error: () => {
+                        btn.prop('disabled', false).text(cur === 'active' ?
+                            '{{ __('messages.active') }}' :
+                            '{{ __('messages.inactive') }}');
+                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
+                    }
+                });
+            });
+
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
                     name = $(this).data('name'),
@@ -117,19 +196,17 @@
                             url: form.attr('action'),
                             type: 'POST',
                             data: form.serialize(),
-                            success: function(res) {
+                            success: (res) => {
                                 if (res.success) Swal.fire({
                                     title: '{{ __('messages.deleted_title') }}',
                                     text: res.message,
                                     icon: 'success',
                                     confirmButtonColor: '#696cff'
-                                }).then(() => window.location.reload());
+                                }).then(() => location.reload());
                                 else showAdminToast(res.message, 'error');
                             },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
+                            error: () => showAdminToast(
+                                '{{ __('messages.error_occurred') }}', 'error')
                         });
                     }
                 });

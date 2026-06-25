@@ -136,6 +136,29 @@ class UserController extends Controller
     }
 
     /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(User $user): JsonResponse
+    {
+        Gate::authorize('users.update');
+
+        if (auth()->id() === $user->id) {
+            return response()->json(['success' => false, 'message' => 'You cannot change your own status.'], 403);
+        }
+
+        $user->status = $user->status === 'active' ? 'inactive' : 'active';
+        $user->save();
+
+        ActivityLog::log('User Status Changed', "Changed user status: {$user->name} → {$user->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $user->status,
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(User $user, Request $request): RedirectResponse|JsonResponse

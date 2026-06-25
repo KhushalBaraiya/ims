@@ -22,7 +22,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
-            <div class="table-responsive p-3">
+            <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="rolesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
@@ -34,10 +34,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($roles as $index => $role)
+                        @forelse ($roles as $index => $role)
                             <tr>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                                <td><strong>{{ $role->name }}</strong></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar avatar-sm flex-shrink-0">
+                                            <span class="avatar-initial rounded-circle bg-label-warning">
+                                                <i class="bx bx-shield" style="font-size:1rem;"></i>
+                                            </span>
+                                        </div>
+                                        <strong>{{ $role->name }}</strong>
+                                    </div>
+                                </td>
                                 <td class="text-center">
                                     <span class="badge bg-label-primary">
                                         <i class="bx bx-key me-1"></i>{{ $role->permissions_count }}
@@ -46,7 +55,7 @@
                                 </td>
                                 <td class="text-muted small">{{ $role->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('roles.update')
                                             <a href="{{ route('roles.edit', $role->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
@@ -100,14 +109,24 @@
                 columnDefs: [{
                     targets: 'no-sort',
                     orderable: false
-                }]
+                }],
+                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "{{ __('messages.search') }}...",
+                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    paginate: {
+                        previous: '<i class="bx bx-chevron-left"></i>',
+                        next: '<i class="bx bx-chevron-right"></i>'
+                    }
+                }
             });
 
             $(document).on('click', '.delete-btn', function() {
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                const form = $(`#delete-form-${id}`);
-
+                const id = $(this).data('id'),
+                    name = $(this).data('name'),
+                    form = $(`#delete-form-${id}`);
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
                     text: `{{ __('messages.delete') }} "${name}"?`,
@@ -116,29 +135,24 @@
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}',
-                }).then((result) => {
-                    if (result.isConfirmed) {
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
                         $.ajax({
                             url: form.attr('action'),
                             type: 'POST',
                             data: form.serialize(),
-                            success: function(res) {
-                                if (res.success) {
-                                    Swal.fire({
-                                        title: '{{ __('messages.deleted_title') }}',
-                                        text: res.message,
-                                        icon: 'success',
-                                        confirmButtonColor: '#696cff'
-                                    }).then(() => window.location.reload());
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
+                            success: (res) => {
+                                if (res.success) Swal.fire({
+                                    title: '{{ __('messages.deleted_title') }}',
+                                    text: res.message,
+                                    icon: 'success',
+                                    confirmButtonColor: '#696cff'
+                                }).then(() => location.reload());
+                                else showAdminToast(res.message, 'error');
                             },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
+                            error: () => showAdminToast(
+                                '{{ __('messages.error_occurred') }}', 'error')
                         });
                     }
                 });

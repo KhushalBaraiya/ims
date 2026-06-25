@@ -1,15 +1,16 @@
 @extends('layouts.admin')
-@section('title', __('messages.menu_brands'))
+@section('title', __('messages.brands'))
 
 @section('content')
 
+    {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">{{ __('messages.brand_list') }}</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.brands') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('messages.menu_brands') }}</li>
+                    <li class="breadcrumb-item active">{{ __('messages.brands') }}</li>
                 </ol>
             </nav>
         </div>
@@ -20,65 +21,92 @@
         @endcan
     </div>
 
+    {{-- Table Card --}}
     <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive p-3">
-                <table class="table table-hover align-middle mb-0" id="brandTable" style="width:100%">
-                    <thead class="table-light">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="brandsTable" style="width:100%">
+                <thead class="table-light">
+                    <tr>
+                        <th>{{ __('messages.th_no') }}</th>
+                        <th>{{ __('messages.th_image') }}</th>
+                        <th>{{ __('messages.brand_name') }}</th>
+                        <th>{{ __('messages.th_code') }}</th>
+                        <th class="text-center">{{ __('messages.th_status') }}</th>
+                        <th>{{ __('messages.th_created') }}</th>
+                        <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($brands as $index => $brand)
                         <tr>
-                            <th>{{ __('messages.th_no') }}</th>
-                            <th>{{ __('messages.menu_brands') }}</th>
-                            <th>{{ __('messages.th_code') }}</th>
-                            <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th>{{ __('messages.th_created') }}</th>
-                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($brands as $index => $brand)
-                            <tr>
-                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                                <td><strong>{{ $brand->name }}</strong></td>
-                                <td><code>{{ $brand->slug }}</code></td>
-                                <td class="text-center">
+                            <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                            <td>
+                                @if ($brand->image)
+                                    <img src="{{ asset('uploads/brands/' . $brand->image) }}" class="tbl-img-round"
+                                        onerror="imgError(this)" alt="{{ $brand->name }}">
+                                @else
+                                    <div class="avatar avatar-sm flex-shrink-0">
+                                        <span class="avatar-initial rounded-circle bg-label-primary">
+                                            <i class="bx bx-award" style="font-size:1rem;"></i>
+                                        </span>
+                                    </div>
+                                @endif
+                            </td>
+                            <td>
+                                <strong>{{ $brand->name }}</strong>
+                            </td>
+                            <td><code class="text-primary">{{ $brand->slug }}</code></td>
+                            <td class="text-center">
+                                @can('brands.update')
+                                    <button type="button"
+                                        class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                        style="background:transparent;cursor:pointer;" data-id="{{ $brand->id }}"
+                                        data-status="{{ $brand->status }}" title="{{ __('messages.click_to_toggle') }}">
+                                        {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                    </button>
+                                @else
                                     <span
-                                        class="badge rounded-pill {{ $brand->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                        class="badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                        style="background:transparent;">
                                         {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                     </span>
-                                </td>
-                                <td class="text-muted small">{{ $brand->created_at->format('d M Y') }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
-                                        @can('brands.view')
-                                            <a href="{{ route('brands.show', $brand->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
-                                        @endcan
-                                        @can('brands.update')
-                                            <a href="{{ route('brands.edit', $brand->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
-                                        @endcan
-                                        @can('brands.delete')
-                                            <form id="delete-form-{{ $brand->id }}"
-                                                action="{{ route('brands.destroy', $brand->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $brand->id }}" data-name="{{ $brand->name }}"
-                                                    title="{{ __('messages.delete') }}">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                @endcan
+                            </td>
+                            <td class="text-muted small">{{ $brand->created_at->format('d M Y') }}</td>
+                            <td class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-1">
+                                    @can('brands.view')
+                                        <a href="{{ route('brands.show', $brand->id) }}"
+                                            class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                            title="{{ __('messages.view') }}">
+                                            <i class="bx bx-show"></i>
+                                        </a>
+                                    @endcan
+                                    @can('brands.update')
+                                        <a href="{{ route('brands.edit', $brand->id) }}"
+                                            class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                            title="{{ __('messages.edit') }}">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('brands.delete')
+                                        <form id="delete-form-{{ $brand->id }}"
+                                            action="{{ route('brands.destroy', $brand->id) }}" method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button type="button"
+                                                class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                data-id="{{ $brand->id }}" data-name="{{ $brand->name }}"
+                                                title="{{ __('messages.delete') }}">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -87,7 +115,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#brandTable').DataTable({
+            const dt = $('#brandsTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 order: [
@@ -96,9 +124,69 @@
                 columnDefs: [{
                     targets: 'no-sort',
                     orderable: false
-                }]
+                }],
+                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "{{ __('messages.search') }}...",
+                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    infoEmpty: "{{ __('messages.no_entries') }}",
+                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
+                    paginate: {
+                        previous: '<i class="bx bx-chevron-left"></i>',
+                        next: '<i class="bx bx-chevron-right"></i>'
+                    }
+                }
             });
 
+            // Status toggle
+            $(document).on('click', '.status-toggle-btn', function() {
+                const btn = $(this);
+                const id = btn.data('id');
+                const currentStatus = btn.data('status');
+
+                $.ajax({
+                    url: `/brands/${id}/toggle-status`,
+                    type: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    beforeSend: function() {
+                        btn.prop('disabled', true).html(
+                            '<span class="spinner-border spinner-border-sm" role="status"></span>'
+                        );
+                    },
+                    success: function(res) {
+                        if (res.success) {
+                            const newStatus = res.status;
+                            btn.data('status', newStatus);
+                            if (newStatus === 'active') {
+                                btn.removeClass('border-danger text-danger').addClass(
+                                    'border-success text-success');
+                                btn.text('{{ __('messages.active') }}');
+                            } else {
+                                btn.removeClass('border-success text-success').addClass(
+                                    'border-danger text-danger');
+                                btn.text('{{ __('messages.inactive') }}');
+                            }
+                            showAdminToast(res.message, 'success');
+                        } else {
+                            showAdminToast(res.message ||
+                                '{{ __('messages.error_occurred') }}', 'error');
+                        }
+                        btn.prop('disabled', false);
+                    },
+                    error: function() {
+                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
+                        btn.prop('disabled', false);
+                        btn.text(currentStatus === 'active' ? '{{ __('messages.active') }}' :
+                            '{{ __('messages.inactive') }}');
+                    }
+                });
+            });
+
+            // Delete
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
                     name = $(this).data('name'),
@@ -119,13 +207,16 @@
                             type: 'POST',
                             data: form.serialize(),
                             success: function(res) {
-                                if (res.success) Swal.fire({
-                                    title: '{{ __('messages.deleted_title') }}',
-                                    text: res.message,
-                                    icon: 'success',
-                                    confirmButtonColor: '#696cff'
-                                }).then(() => window.location.reload());
-                                else showAdminToast(res.message, 'error');
+                                if (res.success) {
+                                    Swal.fire({
+                                        title: '{{ __('messages.deleted_title') }}',
+                                        text: res.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#696cff'
+                                    }).then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
                             },
                             error: function() {
                                 showAdminToast('{{ __('messages.error_occurred') }}',

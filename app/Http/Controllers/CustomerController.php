@@ -56,6 +56,8 @@ class CustomerController extends Controller
     {
         Gate::authorize('customers.view');
 
+        $customer->load(['sales', 'saleReturns']);
+
         return view('customers.show', compact('customer'));
     }
 
@@ -84,13 +86,32 @@ class CustomerController extends Controller
     }
 
     /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(Customer $customer): JsonResponse
+    {
+        Gate::authorize('customers.update');
+
+        $customer->status = $customer->status === 'active' ? 'inactive' : 'active';
+        $customer->save();
+
+        ActivityLog::log('Customer Status Changed', "Changed customer status: {$customer->name} → {$customer->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $customer->status,
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Customer $customer, Request $request): RedirectResponse|JsonResponse
     {
         Gate::authorize('customers.delete');
 
-        $customerName = $customer->name;
+        $customerName  = $customer->name;
         $customerPhone = $customer->phone;
 
         $customer->delete();

@@ -1,15 +1,16 @@
 @extends('layouts.admin')
-@section('title', __('messages.menu_units') . ' — ' . $unit->name)
+@section('title', __('messages.unit_details') . ' — ' . $unit->name)
 
 @section('content')
 
+    {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.unit_details') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('units.index') }}">{{ __('messages.menu_units') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('units.index') }}">{{ __('messages.units') }}</a></li>
                     <li class="breadcrumb-item active">{{ $unit->name }}</li>
                 </ol>
             </nav>
@@ -27,80 +28,118 @@
     </div>
 
     <div class="row g-4">
+
+        {{-- Left Column --}}
         <div class="col-lg-8">
+
+            {{-- Unit Header Card --}}
             <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bx bx-ruler me-2 text-warning"></i>{{ __('messages.unit_details') }}
+                    </h6>
+                    <span class="badge rounded-pill {{ $unit->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                        {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                    </span>
+                </div>
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center gap-4">
-                        <div class="d-flex align-items-center justify-content-center bg-label-primary rounded-3"
-                            style="width:80px;height:80px;flex-shrink:0;">
-                            <i class="bx bx-ruler text-primary" style="font-size:2.2rem;"></i>
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div class="avatar avatar-xl flex-shrink-0">
+                            <span class="avatar-initial rounded-circle bg-label-warning"
+                                style="width:72px;height:72px;font-size:2rem;">
+                                <i class="bx bx-ruler"></i>
+                            </span>
                         </div>
                         <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <h4 class="fw-bold mb-0">{{ $unit->name }}</h4>
-                                <span
-                                    class="badge rounded-pill {{ $unit->status === 'active' ? 'bg-success' : 'bg-danger' }} px-3">
-                                    {{ ucfirst($unit->status) }}
-                                </span>
+                            <h4 class="fw-bold mb-1">{{ $unit->name }}</h4>
+                            <code class="text-warning">{{ $unit->short_name }}</code>
+                            <p class="text-muted small mb-0 mt-1">
+                                <i class="bx bx-calendar me-1"></i>
+                                {{ __('messages.th_created') }}: {{ $unit->created_at->format('d M Y, h:i A') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Stats Row --}}
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="rounded-3 p-3 text-center bg-label-warning">
+                                <div class="fw-bold fs-4 text-warning">{{ $unit->short_name }}</div>
+                                <div class="text-muted small">{{ __('messages.short_name') }}</div>
                             </div>
-                            <p class="text-muted small mb-1">
-                                <i class="bx bx-code me-1"></i> {{ __('messages.short_name') }}:
-                                <code>{{ $unit->short_name }}</code>
-                            </p>
-                            <p class="text-muted small mb-0">
-                                <i class="bx bx-calendar me-1"></i> {{ $unit->created_at->format('d M Y') }}
-                            </p>
+                        </div>
+                        <div class="col-6">
+                            <div class="rounded-3 p-3 text-center bg-label-primary">
+                                <div class="fw-bold fs-4 text-primary">
+                                    {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                </div>
+                                <div class="text-muted small">{{ __('messages.th_status') }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
+        {{-- Right Column --}}
         <div class="col-lg-4">
+
+            {{-- Information Card --}}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i
-                            class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.information') }}</h6>
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.information') }}
+                    </h6>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                        <span class="text-muted small fw-semibold">ID</span>
-                        <span class="fw-bold">#{{ $unit->id }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                        <span class="text-muted small fw-semibold">{{ __('messages.unit_name') }}</span>
-                        <span class="fw-bold">{{ $unit->name }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                        <span class="text-muted small fw-semibold">{{ __('messages.short_name') }}</span>
-                        <code>{{ $unit->short_name }}</code>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                        <span class="text-muted small fw-semibold">{{ __('messages.status') }}</span>
-                        <span class="badge rounded-pill {{ $unit->status === 'active' ? 'bg-success' : 'bg-danger' }}">
-                            {{ ucfirst($unit->status) }}
-                        </span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                        <span class="text-muted small fw-semibold">{{ __('messages.th_created') }}</span>
-                        <span class="small">{{ $unit->created_at->format('d M Y') }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                        <span class="text-muted small fw-semibold">Updated</span>
-                        <span class="small">{{ $unit->updated_at->format('d M Y') }}</span>
-                    </li>
-                </ul>
+                <div class="card-body p-4">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">ID</span>
+                            <span class="fw-bold">#{{ $unit->id }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.unit_name') }}</span>
+                            <span class="fw-bold">{{ $unit->name }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.short_name') }}</span>
+                            <code class="text-warning">{{ $unit->short_name }}</code>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.th_status') }}</span>
+                            <span class="badge rounded-pill {{ $unit->status === 'active' ? 'bg-success' : 'bg-danger' }}">
+                                {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                            </span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted small fw-semibold">{{ __('messages.th_created') }}</span>
+                            <span class="small">{{ $unit->created_at->format('d M Y') }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted small fw-semibold">{{ __('messages.updated') }}</span>
+                            <span class="small">{{ $unit->updated_at->format('d M Y') }}</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
+            {{-- Quick Actions --}}
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i
-                            class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}</h6>
+                    <h6 class="mb-0 fw-semibold">
+                        <i class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}
+                    </h6>
                 </div>
                 <div class="card-body p-4 d-grid gap-2">
                     @can('units.update')
                         <a href="{{ route('units.edit', $unit->id) }}" class="btn btn-primary">
-                            <i class="bx bx-edit me-1"></i> {{ __('messages.edit') }}
+                            <i class="bx bx-edit me-1"></i> {{ __('messages.edit_unit') }}
+                        </a>
+                    @endcan
+                    @can('units.create')
+                        <a href="{{ route('units.create') }}" class="btn btn-outline-success">
+                            <i class="bx bx-plus me-1"></i> {{ __('messages.add_unit') }}
                         </a>
                     @endcan
                     @can('units.delete')
@@ -108,12 +147,13 @@
                             @csrf @method('DELETE')
                             <button type="button" class="btn btn-outline-danger w-100 delete-btn"
                                 data-name="{{ $unit->name }}">
-                                <i class="bx bx-trash me-1"></i> {{ __('messages.delete') }}
+                                <i class="bx bx-trash me-1"></i> {{ __('messages.delete_unit') }}
                             </button>
                         </form>
                     @endcan
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -130,7 +170,8 @@
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: '{{ __('messages.yes_delete') }}'
+                confirmButtonText: '{{ __('messages.yes_delete') }}',
+                cancelButtonText: '{{ __('messages.cancel') }}'
             }).then((r) => {
                 if (r.isConfirmed) document.getElementById('deleteForm').submit();
             });

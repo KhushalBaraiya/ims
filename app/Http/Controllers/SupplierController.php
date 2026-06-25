@@ -56,6 +56,8 @@ class SupplierController extends Controller
     {
         Gate::authorize('suppliers.view');
 
+        $supplier->load(['purchases', 'purchaseReturns']);
+
         return view('suppliers.show', compact('supplier'));
     }
 
@@ -84,6 +86,25 @@ class SupplierController extends Controller
     }
 
     /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(Supplier $supplier): JsonResponse
+    {
+        Gate::authorize('suppliers.update');
+
+        $supplier->status = $supplier->status === 'active' ? 'inactive' : 'active';
+        $supplier->save();
+
+        ActivityLog::log('Supplier Status Changed', "Changed supplier status: {$supplier->name} → {$supplier->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $supplier->status,
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Supplier $supplier, Request $request): RedirectResponse|JsonResponse
@@ -91,7 +112,7 @@ class SupplierController extends Controller
         Gate::authorize('suppliers.delete');
 
         $supplierName = $supplier->name;
-        $companyName = $supplier->company_name;
+        $companyName  = $supplier->company_name;
 
         $supplier->delete();
 

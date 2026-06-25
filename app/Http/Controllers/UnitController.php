@@ -65,6 +65,25 @@ class UnitController extends Controller
         return redirect()->route('units.index')->with('success', 'Unit updated successfully.');
     }
 
+    /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(Unit $unit): JsonResponse
+    {
+        Gate::authorize('units.update');
+
+        $unit->status = $unit->status === 'active' ? 'inactive' : 'active';
+        $unit->save();
+
+        ActivityLog::log('Unit Status Changed', "Changed unit status: {$unit->name} → {$unit->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $unit->status,
+            'message' => 'Status updated successfully.',
+        ]);
+    }
+
     public function destroy(Unit $unit, Request $request): RedirectResponse|JsonResponse
     {
         Gate::authorize('units.delete');

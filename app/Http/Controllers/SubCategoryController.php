@@ -59,7 +59,7 @@ class SubCategoryController extends Controller
     {
         Gate::authorize('sub_categories.view');
 
-        $subCategory->load('mainCategory');
+        $subCategory->load(['mainCategory', 'products']);
 
         return view('sub_categories.show', compact('subCategory'));
     }
@@ -88,6 +88,25 @@ class SubCategoryController extends Controller
         ActivityLog::log('Sub Category Updated', "Updated sub category: {$subCategory->name} (Code: {$subCategory->slug})");
 
         return redirect()->route('sub-categories.index')->with('success', 'Sub category updated successfully.');
+    }
+
+    /**
+     * Toggle active/inactive status via AJAX.
+     */
+    public function toggleStatus(SubCategory $subCategory): JsonResponse
+    {
+        Gate::authorize('sub_categories.update');
+
+        $subCategory->status = $subCategory->status === 'active' ? 'inactive' : 'active';
+        $subCategory->save();
+
+        ActivityLog::log('Sub Category Status Changed', "Changed sub category status: {$subCategory->name} → {$subCategory->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $subCategory->status,
+            'message' => 'Status updated successfully.',
+        ]);
     }
 
     /**

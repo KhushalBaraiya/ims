@@ -239,10 +239,36 @@ return [
 
     'add_supplier' => 'Add Supplier',
     'edit_supplier' => 'Edit Supplier',
+    'delete_supplier' => 'Delete Supplier',
+    'edit_supplier_label' => 'Edit Supplier',
     'supplier_details' => 'Supplier Details',
     'add_customer' => 'Add Customer',
     'edit_customer' => 'Edit Customer',
+    'delete_customer' => 'Delete Customer',
     'customer_details' => 'Customer Details',
+
+    // Contact / Address fields
+    'contact_person' => 'Contact Person',
+    'alt_phone' => 'Alternative Phone',
+    'pan_number' => 'PAN Number',
+    'address_label' => 'Address',
+    'address_details' => 'Address Details',
+    'city' => 'City',
+    'state' => 'State',
+    'country' => 'Country',
+    'pincode' => 'Pincode',
+    'total_sales' => 'Total Sales',
+
+    // Placeholders
+    'ph_supplier_name' => 'Enter supplier name',
+    'ph_customer_name' => 'Enter customer name',
+    'ph_company_name' => 'Enter company name',
+    'ph_contact_person' => 'Enter contact person name',
+    'ph_phone' => 'Phone Number',
+    'ph_alt_phone' => 'Alternative Phone',
+    'ph_email' => 'Email Address',
+    'ph_address' => 'Enter full address',
+    'ph_notes' => 'Additional notes...',
 
     'products_catalog' => 'Products Catalog',
     'product_profile' => 'Product Profile',
@@ -634,5 +660,46 @@ return [
     'all_users'                 => 'All Users',
     'search_activity_placeholder' => 'Search activity or description...',
     'system'                    => 'System',
+
+    // ── Missing keys added for standardized modules ──────────────────────────
+
+    // Brands
+    'delete_brand'              => 'Delete Brand',
+    'brand_name'                => 'Brand Name',
+    'brand_slug'                => 'Brand Code',
+
+    // Sub Categories
+    'delete_sub_category'       => 'Delete Sub Category',
+
+    // Units
+    'delete_unit'               => 'Delete Unit',
+    'unit_short_name'           => 'Short Name',
+
+    // Users
+    'delete_user'               => 'Delete User',
+    'leave_blank_keep'          => 'Leave blank to keep current',
+    'edit_user_label'           => 'Edit User',
+
+    // Roles
+    'role_publish_hint'         => 'Review permissions carefully before saving the role.',
+    'delete_role'               => 'Delete Role',
+
+    // Supplier / Customer shared
+    'recent_purchases'          => 'Recent Purchases',
+    'add_purchase'              => 'Add Purchase',
+    'add_sale'                  => 'Add Sale',
+    'purchase_returns'          => 'Purchase Returns',
+    'total_purchases'           => 'Total Purchases',
+
+    // Form field labels
+    'ph_brand_name'             => 'Enter brand name',
+    'ph_brand_slug'             => 'e.g. BRAND-CODE',
+    'ph_unit_name'              => 'Enter unit name',
+    'ph_unit_short'             => 'e.g. KG, PCS',
+
+    // Misc
+    'note_label'                => 'Note',
+    'address_details'           => 'Address Details',
+    'name'                      => 'Name',
 
 ];

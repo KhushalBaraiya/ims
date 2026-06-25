@@ -22,12 +22,11 @@
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
-            <div class="table-responsive p-3">
+            <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="usersTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
                             <th>{{ __('messages.th_no') }}</th>
-                            <th class="no-sort">{{ __('messages.th_photo') }}</th>
                             <th>{{ __('messages.th_name') }}</th>
                             <th>{{ __('messages.th_email') }}</th>
                             <th>{{ __('messages.th_phone') }}</th>
@@ -42,33 +41,49 @@
                             <tr>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td>
-                                    @if ($u->profile_photo)
-                                        <img src="{{ asset('uploads/profiles/' . $u->profile_photo) }}"
-                                            class="tbl-img-round" alt="{{ $u->name }}">
-                                    @else
-                                        <div
-                                            class="tbl-img-round d-flex align-items-center justify-content-center bg-label-primary">
-                                            <strong>{{ strtoupper(substr($u->name, 0, 1)) }}</strong>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar avatar-sm flex-shrink-0">
+                                            @if ($u->profile_photo)
+                                                <img src="{{ asset('uploads/profiles/' . $u->profile_photo) }}"
+                                                    class="rounded-circle" style="width:36px;height:36px;object-fit:cover;"
+                                                    onerror="imgError(this)">
+                                            @else
+                                                <span class="avatar-initial rounded-circle bg-label-primary fw-bold">
+                                                    {{ strtoupper(substr($u->name, 0, 1)) }}
+                                                </span>
+                                            @endif
                                         </div>
-                                    @endif
+                                        <strong>{{ $u->name }}</strong>
+                                    </div>
                                 </td>
-                                <td><strong>{{ $u->name }}</strong></td>
                                 <td class="text-muted">{{ $u->email }}</td>
-                                <td class="text-muted">{{ $u->phone ?: '-' }}</td>
+                                <td class="text-muted">{{ $u->phone ?: '—' }}</td>
                                 <td>
                                     <span class="badge bg-label-primary">
-                                        {{ $u->roles->pluck('name')->implode(', ') ?: 'Staff' }}
+                                        {{ $u->roles->pluck('name')->implode(', ') ?: 'No Role' }}
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span
-                                        class="badge rounded-pill {{ $u->status === 'active' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $u->status === 'active' ? __('messages.active') : __('messages.inactive') }}
-                                    </span>
+                                    @can('users.update')
+                                        <button type="button"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1
+                                                {{ $u->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;cursor:pointer;" data-id="{{ $u->id }}"
+                                            data-status="{{ $u->status }}" title="{{ __('messages.click_to_toggle') }}">
+                                            {{ $u->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </button>
+                                    @else
+                                        <span
+                                            class="badge rounded-pill border fw-semibold px-3 py-1
+                                            {{ $u->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;">
+                                            {{ $u->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </span>
+                                    @endcan
                                 </td>
                                 <td class="text-muted small">{{ $u->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('users.view')
                                             <a href="{{ route('users.show', $u->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
@@ -117,19 +132,70 @@
                 responsive: true,
                 pageLength: 10,
                 order: [
-                    [0, 'asc']
+                    [0, 'desc']
                 ],
                 columnDefs: [{
                     targets: 'no-sort',
                     orderable: false
-                }]
+                }],
+                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "{{ __('messages.search') }}...",
+                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    paginate: {
+                        previous: '<i class="bx bx-chevron-left"></i>',
+                        next: '<i class="bx bx-chevron-right"></i>'
+                    }
+                }
             });
 
-            $(document).on('click', '.delete-btn', function() {
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                const form = $(`#delete-form-${id}`);
+            // Status toggle
+            $(document).on('click', '.status-toggle-btn', function() {
+                const btn = $(this),
+                    id = btn.data('id'),
+                    cur = btn.data('status');
+                $.ajax({
+                    url: `/users/${id}/toggle-status`,
+                    type: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    beforeSend: () => btn.prop('disabled', true).html(
+                        '<span class="spinner-border spinner-border-sm"></span>'),
+                    success: (res) => {
+                        btn.prop('disabled', false);
+                        if (res.success) {
+                            btn.data('status', res.status);
+                            btn.removeClass(
+                                'border-success text-success border-danger text-danger');
+                            btn.addClass(res.status === 'active' ?
+                                'border-success text-success' : 'border-danger text-danger');
+                            btn.text(res.status === 'active' ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}');
+                            showAdminToast(res.message, 'success');
+                        } else {
+                            btn.text(cur === 'active' ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}');
+                            showAdminToast(res.message ||
+                                '{{ __('messages.error_occurred') }}', 'error');
+                        }
+                    },
+                    error: () => {
+                        btn.prop('disabled', false).text(cur === 'active' ?
+                            '{{ __('messages.active') }}' :
+                            '{{ __('messages.inactive') }}');
+                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
+                    }
+                });
+            });
 
+            // Delete
+            $(document).on('click', '.delete-btn', function() {
+                const id = $(this).data('id'),
+                    name = $(this).data('name'),
+                    form = $(`#delete-form-${id}`);
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
                     text: `{{ __('messages.delete') }} "${name}"?`,
@@ -138,30 +204,24 @@
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}',
-                }).then((result) => {
-                    if (result.isConfirmed) {
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
                         $.ajax({
                             url: form.attr('action'),
                             type: 'POST',
                             data: form.serialize(),
-                            success: function(res) {
-                                if (res.success) {
-                                    Swal.fire({
-                                            title: '{{ __('messages.deleted_title') }}',
-                                            text: res.message,
-                                            icon: 'success',
-                                            confirmButtonColor: '#696cff'
-                                        })
-                                        .then(() => window.location.reload());
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
+                            success: (res) => {
+                                if (res.success) Swal.fire({
+                                    title: '{{ __('messages.deleted_title') }}',
+                                    text: res.message,
+                                    icon: 'success',
+                                    confirmButtonColor: '#696cff'
+                                }).then(() => location.reload());
+                                else showAdminToast(res.message, 'error');
                             },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
+                            error: () => showAdminToast(
+                                '{{ __('messages.error_occurred') }}', 'error')
                         });
                     }
                 });

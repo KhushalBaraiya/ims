@@ -232,10 +232,35 @@ return [
     'updated' => 'અપડેટ',
     'add_supplier' => 'સપ્લાયર ઉમેરો',
     'edit_supplier' => 'સપ્લાયર સુધારો',
+    'delete_supplier' => 'સપ્લાયર કાઢી નાખો',
     'supplier_details' => 'સપ્લાયર વિગત',
     'add_customer' => 'ગ્રાહક ઉમેરો',
     'edit_customer' => 'ગ્રાહક સુધારો',
+    'delete_customer' => 'ગ્રાહક કાઢી નાખો',
     'customer_details' => 'ગ્રાહક વિગત',
+
+    // Contact / Address fields
+    'contact_person' => 'સંપર્ક વ્યક્તિ',
+    'alt_phone' => 'વૈકલ્પિક ફોન',
+    'pan_number' => 'PAN નંબર',
+    'address_label' => 'સરનામું',
+    'address_details' => 'સરનામાની વિગત',
+    'city' => 'શહેર',
+    'state' => 'રાજ્ય',
+    'country' => 'દેશ',
+    'pincode' => 'પિનકોડ',
+    'total_sales' => 'કુલ વેચાણ',
+
+    // Placeholders
+    'ph_supplier_name' => 'સપ્લાયરનું નામ દાખલ કરો',
+    'ph_customer_name' => 'ગ્રાહકનું નામ દાખલ કરો',
+    'ph_company_name' => 'કંપનીનું નામ દાખલ કરો',
+    'ph_contact_person' => 'સંપર્ક વ્યક્તિનું નામ',
+    'ph_phone' => 'ફોન નંબર',
+    'ph_alt_phone' => 'વૈકલ્પિક ફોન',
+    'ph_email' => 'ઇ-મેઇલ સરનામું',
+    'ph_address' => 'સંપૂર્ણ સરનામું દાખલ કરો',
+    'ph_notes' => 'વધારાની નોંધ...',
     'products_catalog' => 'ઉત્પાદ સૂચિ',
     'product_profile' => 'ઉત્પાદ પ્રોફાઇલ',
     'create_product' => 'ઉત્પાદ બનાવો',
@@ -611,5 +636,46 @@ return [
 
     // Stock overview extra
     'stock_overview'            => 'સ્ટૉક ઓવરવ્યૂ',
+
+    // ── Missing keys for standardized modules ──────────────────────────────
+
+    // Brands
+    'delete_brand'              => 'બ્રાન્ડ કાઢી નાખો',
+    'brand_name'                => 'બ્રાન્ડ નામ',
+    'brand_slug'                => 'બ્રાન્ડ કોડ',
+
+    // Sub Categories
+    'delete_sub_category'       => 'પેટા-શ્રેણી કાઢી નાખો',
+
+    // Units
+    'delete_unit'               => 'એકમ કાઢી નાખો',
+    'unit_short_name'           => 'ટૂંકું નામ',
+
+    // Users
+    'delete_user'               => 'વપરાશકર્તા કાઢી નાખો',
+    'leave_blank_keep'          => 'ખાલી છોડો - વર્તમાન રાખો',
+    'edit_user_label'           => 'વપરાશકર્તા સુધારો',
+
+    // Roles
+    'role_publish_hint'         => 'ભૂમિકા સાચવતા પહેલા પરવાનગીઓ ચકાસો.',
+    'delete_role'               => 'ભૂમિકા કાઢી નાખો',
+
+    // Supplier / Customer shared
+    'recent_purchases'          => 'તાજેતરની ખરીદીઓ',
+    'add_purchase'              => 'ખરીદી ઉમેરો',
+    'add_sale'                  => 'વેચાણ ઉમેરો',
+    'purchase_returns'          => 'ખરીદી પરત',
+    'total_purchases'           => 'કુલ ખરીદી',
+
+    // Placeholders
+    'ph_brand_name'             => 'બ્રાન્ડ નામ દાખલ કરો',
+    'ph_brand_slug'             => 'દા.ત. BRAND-CODE',
+    'ph_unit_name'              => 'એકમ નામ દાખલ કરો',
+    'ph_unit_short'             => 'દા.ત. KG, PCS',
+
+    // Misc
+    'note_label'                => 'નોંધ',
+    'address_details'           => 'સરનામાની વિગત',
+    'name'                      => 'નામ',
 
 ];
