@@ -1,4 +1,4 @@
-﻿<head>
+<head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
         name="viewport" />
@@ -81,8 +81,8 @@
             font-family: 'Public Sans', 'Noto Sans Gujarati', sans-serif !important;
             font-size: .875rem !important;
             border: 1px solid #e2e8f0 !important;
-            padding: .75rem !important;
-            width: 310px !important;
+            padding: .5rem .6rem !important;
+            width: 307px !important;
         }
 
         /* Month nav */
@@ -172,29 +172,31 @@
             background: transparent !important;
         }
 
-        /* Day container — full width */
+        /* Day container — use flatpickr default sizing */
         .dayContainer {
-            width: 100% !important;
-            min-width: 100% !important;
-            max-width: 100% !important;
+            width: 307px !important;
+            min-width: 307px !important;
+            max-width: 307px !important;
+            padding: 0 !important;
         }
 
         .flatpickr-days {
-            width: 100% !important;
+            width: 307px !important;
         }
 
         /* Day cells — perfect circles */
         .flatpickr-day {
             border-radius: 50% !important;
-            height: 34px !important;
-            width: 34px !important;
-            line-height: 34px !important;
-            font-size: .85rem !important;
+            height: 39px !important;
+            width: 39px !important;
+            max-width: 39px !important;
+            flex-basis: 14.2857% !important;
+            line-height: 39px !important;
+            font-size: .875rem !important;
             color: #334155 !important;
             font-weight: 500 !important;
             border: none !important;
-            max-width: 34px !important;
-            flex-basis: 34px !important;
+            margin: 0 !important;
         }
 
         /* Today — solid purple */

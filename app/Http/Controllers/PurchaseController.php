@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PurchaseRequest;
-use App\Models\Purchase;
-use App\Models\PurchaseItem;
-use App\Models\Product;
-use App\Models\Supplier;
 use App\Models\ActivityLog;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Product;
+use App\Models\Purchase;
+use App\Models\Supplier;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class PurchaseController extends Controller
@@ -24,7 +23,7 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.view');
 
-        $query = Purchase::with(['supplier', 'user', 'items'])->latest();
+        $query = Purchase::with(['supplier', 'user', 'items', 'returns'])->latest();
 
         if ($request->filled('purchase_no')) {
             $query->where('purchase_no', 'like', "%{$request->purchase_no}%");
@@ -71,54 +70,54 @@ class PurchaseController extends Controller
 
             $subTotal = 0;
             foreach ($request->items as $item) {
-                $subTotal += ((float)$item['quantity'] * (float)$item['purchase_price']);
+                $subTotal += ((float) $item['quantity'] * (float) $item['purchase_price']);
             }
 
-            $taxAmount      = (float) ($request->tax_amount ?? 0);
+            $taxAmount = (float) ($request->tax_amount ?? 0);
             $discountAmount = (float) ($request->discount_amount ?? 0);
             $shippingAmount = (float) ($request->shipping_amount ?? 0);
-            $grandTotal     = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
-            $paidAmount     = (float) ($request->paid_amount ?? 0);
-            $dueAmount      = max(0.00, $grandTotal - $paidAmount);
+            $grandTotal = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
+            $paidAmount = (float) ($request->paid_amount ?? 0);
+            $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
             $purchase = Purchase::create([
-                'purchase_no'    => $purchaseNo,
-                'purchase_date'  => $request->purchase_date,
-                'supplier_id'    => $request->supplier_id,
-                'reference_no'   => $request->reference_no,
-                'sub_total'      => $subTotal,
-                'tax_amount'     => $taxAmount,
+                'purchase_no' => $purchaseNo,
+                'purchase_date' => $request->purchase_date,
+                'supplier_id' => $request->supplier_id,
+                'reference_no' => $request->reference_no,
+                'sub_total' => $subTotal,
+                'tax_amount' => $taxAmount,
                 'discount_amount' => $discountAmount,
                 'shipping_amount' => $shippingAmount,
-                'grand_total'    => $grandTotal,
-                'paid_amount'    => $paidAmount,
-                'due_amount'     => $dueAmount,
+                'grand_total' => $grandTotal,
+                'paid_amount' => $paidAmount,
+                'due_amount' => $dueAmount,
                 'payment_method' => $request->payment_method,
-                'notes'          => $request->notes,
-                'status'         => $request->status,
-                'user_id'        => auth()->id(),
+                'notes' => $request->notes,
+                'status' => $request->status,
+                'user_id' => auth()->id(),
             ]);
 
             foreach ($request->items as $item) {
-                $qty       = (float) $item['quantity'];
-                $price     = (float) $item['purchase_price'];
-                $itemDisc  = (float) ($item['discount_amount'] ?? 0);
-                $itemTax   = (float) ($item['tax_amount'] ?? 0);
+                $qty = (float) $item['quantity'];
+                $price = (float) $item['purchase_price'];
+                $itemDisc = (float) ($item['discount_amount'] ?? 0);
+                $itemTax = (float) ($item['tax_amount'] ?? 0);
                 $itemTotal = ($qty * $price) + $itemTax - $itemDisc;
 
                 $purchase->items()->create([
-                    'product_id'      => $item['product_id'],
-                    'quantity'        => $qty,
-                    'purchase_price'  => $price,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $qty,
+                    'purchase_price' => $price,
                     'discount_amount' => $itemDisc,
-                    'tax_amount'      => $itemTax,
-                    'total_amount'    => $itemTotal,
+                    'tax_amount' => $itemTax,
+                    'total_amount' => $itemTotal,
                 ]);
 
                 // Only add stock for Completed purchases
                 if ($request->status === 'Completed') {
                     $product = Product::with('stock')->findOrFail($item['product_id']);
-                    $stock   = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                    $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
                     $stock->increment('quantity', $qty);
                 }
             }
@@ -132,6 +131,7 @@ class PurchaseController extends Controller
             return redirect()->route('purchases.index')->with('success', 'Purchase order created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
@@ -143,6 +143,7 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.view');
         $purchase->load(['supplier', 'user', 'items.product.stock']);
+
         return view('purchases.show', compact('purchase'));
     }
 
@@ -163,7 +164,10 @@ class PurchaseController extends Controller
      * Update the specified purchase in storage.
      *
      * Stock logic:
-     *  - If old status was Completed → first CHECK all items won't go negative, then reverse stock.
+     *  - Only if old status was Completed: check net stock change per product.
+     *    If (current_stock - old_qty + new_qty) < 0 → reject with a stock error.
+     *    This means we only block when the net result goes negative — increasing
+     *    qty is always fine, decreasing is only blocked if it would cause negative stock.
      *  - Re-create items with new quantities.
      *  - If new status is Completed → add new stock quantities.
      */
@@ -176,22 +180,35 @@ class PurchaseController extends Controller
             $oldStatus = $purchase->status;
             $newStatus = $request->status;
 
-            // ── STEP 1: Pre-check — will reversing old stock cause negative qty? ──
+            // Build a map of product_id => new_qty from the incoming request
+            $newQtyMap = [];
+            foreach ($request->items as $item) {
+                $newQtyMap[(int) $item['product_id']] = (float) $item['quantity'];
+            }
+
+            // ── STEP 1: Pre-check — only fail when stock would go net-negative ──
+            // net = current_stock - old_qty + new_qty
+            // We only care when old status was Completed (stock was previously added).
             if ($oldStatus === 'Completed') {
                 foreach ($purchase->items as $oldItem) {
                     $currentQty = $oldItem->product->stock->quantity ?? 0;
-                    $afterReversal = $currentQty - $oldItem->quantity;
-                    if ($afterReversal < 0) {
+                    $oldQty = $oldItem->quantity;
+                    $newQty = $newQtyMap[$oldItem->product_id] ?? 0;
+                    $netStock = $currentQty - $oldQty + $newQty;
+
+                    // Only block if net result is negative (i.e. reducing qty causes issue)
+                    if ($netStock < 0) {
                         DB::rollBack();
-                        $msg = "Cannot edit purchase: reversing stock for \"{$oldItem->product->name}\" "
-                             . "would result in negative stock ({$afterReversal}). "
-                             . "Current stock: {$currentQty}, purchase qty: {$oldItem->quantity}.";
+                        $msg = "Cannot update purchase: stock for \"{$oldItem->product->name}\" "
+                             .'would go negative. '
+                             ."Current stock: {$currentQty}, old purchase qty: {$oldQty}, new qty: {$newQty}.";
+
                         return back()->withInput()->withErrors(['stock_error' => $msg]);
                     }
                 }
             }
 
-            // ── STEP 2: Reverse old stock (safe — already validated above) ──
+            // ── STEP 2: Reverse old stock ──
             if ($oldStatus === 'Completed') {
                 foreach ($purchase->items as $oldItem) {
                     $oldItem->product->stock->decrement('quantity', $oldItem->quantity);
@@ -204,50 +221,50 @@ class PurchaseController extends Controller
             // ── STEP 4: Create new items and apply new stock ──
             $subTotal = 0;
             foreach ($request->items as $item) {
-                $qty       = (float) $item['quantity'];
-                $price     = (float) $item['purchase_price'];
-                $itemDisc  = (float) ($item['discount_amount'] ?? 0);
-                $itemTax   = (float) ($item['tax_amount'] ?? 0);
+                $qty = (float) $item['quantity'];
+                $price = (float) $item['purchase_price'];
+                $itemDisc = (float) ($item['discount_amount'] ?? 0);
+                $itemTax = (float) ($item['tax_amount'] ?? 0);
                 $itemTotal = ($qty * $price) + $itemTax - $itemDisc;
                 $subTotal += ($qty * $price);
 
                 $purchase->items()->create([
-                    'product_id'      => $item['product_id'],
-                    'quantity'        => $qty,
-                    'purchase_price'  => $price,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $qty,
+                    'purchase_price' => $price,
                     'discount_amount' => $itemDisc,
-                    'tax_amount'      => $itemTax,
-                    'total_amount'    => $itemTotal,
+                    'tax_amount' => $itemTax,
+                    'total_amount' => $itemTotal,
                 ]);
 
                 if ($newStatus === 'Completed') {
                     $product = Product::with('stock')->findOrFail($item['product_id']);
-                    $stock   = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                    $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
                     $stock->increment('quantity', $qty);
                 }
             }
 
-            $taxAmount      = (float) ($request->tax_amount ?? 0);
+            $taxAmount = (float) ($request->tax_amount ?? 0);
             $discountAmount = (float) ($request->discount_amount ?? 0);
             $shippingAmount = (float) ($request->shipping_amount ?? 0);
-            $grandTotal     = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
-            $paidAmount     = (float) ($request->paid_amount ?? 0);
-            $dueAmount      = max(0.00, $grandTotal - $paidAmount);
+            $grandTotal = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
+            $paidAmount = (float) ($request->paid_amount ?? 0);
+            $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
             $purchase->update([
-                'purchase_date'   => $request->purchase_date,
-                'supplier_id'     => $request->supplier_id,
-                'reference_no'    => $request->reference_no,
-                'sub_total'       => $subTotal,
-                'tax_amount'      => $taxAmount,
+                'purchase_date' => $request->purchase_date,
+                'supplier_id' => $request->supplier_id,
+                'reference_no' => $request->reference_no,
+                'sub_total' => $subTotal,
+                'tax_amount' => $taxAmount,
                 'discount_amount' => $discountAmount,
                 'shipping_amount' => $shippingAmount,
-                'grand_total'     => $grandTotal,
-                'paid_amount'     => $paidAmount,
-                'due_amount'      => $dueAmount,
-                'payment_method'  => $request->payment_method,
-                'notes'           => $request->notes,
-                'status'          => $newStatus,
+                'grand_total' => $grandTotal,
+                'paid_amount' => $paidAmount,
+                'due_amount' => $dueAmount,
+                'payment_method' => $request->payment_method,
+                'notes' => $request->notes,
+                'status' => $newStatus,
             ]);
 
             DB::commit();
@@ -256,6 +273,7 @@ class PurchaseController extends Controller
             return redirect()->route('purchases.index')->with('success', 'Purchase order updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
@@ -276,17 +294,18 @@ class PurchaseController extends Controller
             // ── Pre-check: will reversing stock go negative? ──
             if ($purchase->status === 'Completed') {
                 foreach ($purchase->items as $item) {
-                    $currentQty    = $item->product->stock->quantity ?? 0;
+                    $currentQty = $item->product->stock->quantity ?? 0;
                     $afterReversal = $currentQty - $item->quantity;
                     if ($afterReversal < 0) {
                         DB::rollBack();
                         $msg = "Cannot delete purchase: reversing stock for \"{$item->product->name}\" "
-                             . "would result in negative stock ({$afterReversal}). "
-                             . "Current stock: {$currentQty}, purchase qty: {$item->quantity}.";
+                             ."would result in negative stock ({$afterReversal}). "
+                             ."Current stock: {$currentQty}, purchase qty: {$item->quantity}.";
 
                         if ($request->ajax() || $request->wantsJson()) {
                             return response()->json(['success' => false, 'message' => $msg], 422);
                         }
+
                         return back()->withErrors(['stock_error' => $msg]);
                     }
                 }
@@ -313,6 +332,7 @@ class PurchaseController extends Controller
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
             }
+
             return back()->withErrors($e->getMessage());
         }
     }
@@ -325,6 +345,7 @@ class PurchaseController extends Controller
         Gate::authorize('purchases.view');
         $purchase->load(['supplier', 'user', 'items.product']);
         ActivityLog::log('Purchase Printed', "Printed purchase order: {$purchase->purchase_no}");
+
         return view('purchases.print', compact('purchase'));
     }
 
@@ -342,34 +363,34 @@ class PurchaseController extends Controller
             ->where('status', 'active')
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('code', 'like', "%{$query}%")
-                  ->orWhere('barcode', 'like', "%{$query}%");
+                    ->orWhere('code', 'like', "%{$query}%")
+                    ->orWhere('barcode', 'like', "%{$query}%");
             })
             ->limit(10)
             ->get();
 
         $activeCurrency = current_currency();
-        $rate   = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;
+        $rate = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;
         $symbol = $activeCurrency ? $activeCurrency->symbol : '₹';
 
         $results = [];
         foreach ($products as $p) {
             $purchasePrice = $rate > 0 ? ($p->purchase_price / $rate) : $p->purchase_price;
-            $sellingPrice  = $rate > 0 ? ($p->selling_price / $rate)  : $p->selling_price;
+            $sellingPrice = $rate > 0 ? ($p->selling_price / $rate) : $p->selling_price;
             $results[] = [
-                'id'              => $p->id,
-                'name'            => $p->name,
-                'sku'             => $p->code,
-                'barcode'         => $p->barcode,
-                'stock'           => $p->stock->quantity ?? 0,
-                'purchase_price'  => $purchasePrice,
-                'selling_price'   => $sellingPrice,
-                'tax'             => $p->tax_percentage,
-                'discount'        => $p->discount_percentage,
-                'unit'            => $p->unit_code ?? 'PCS',
+                'id' => $p->id,
+                'name' => $p->name,
+                'sku' => $p->code,
+                'barcode' => $p->barcode,
+                'stock' => $p->stock->quantity ?? 0,
+                'purchase_price' => $purchasePrice,
+                'selling_price' => $sellingPrice,
+                'tax' => $p->tax_percentage,
+                'discount' => $p->discount_percentage,
+                'unit' => $p->unit_code ?? 'PCS',
                 'currency_symbol' => $symbol,
-                'image_url'       => $p->image
-                    ? asset('uploads/products/' . $p->image)
+                'image_url' => $p->image
+                    ? asset('uploads/products/'.$p->image)
                     : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image',
             ];
         }
@@ -383,13 +404,14 @@ class PurchaseController extends Controller
     private function generatePurchaseNo(): string
     {
         for ($i = 0; $i < 10; $i++) {
-            $latest  = Purchase::withTrashed()->orderBy('id', 'desc')->first();
+            $latest = Purchase::withTrashed()->orderBy('id', 'desc')->first();
             $nextNum = $latest ? ((int) substr($latest->purchase_no, -5)) + 1 : 1;
-            $no      = 'PUR-' . date('Ymd') . '-' . str_pad($nextNum, 5, '0', STR_PAD_LEFT);
-            if (!Purchase::where('purchase_no', $no)->exists()) {
+            $no = 'PUR-'.date('Ymd').'-'.str_pad($nextNum, 5, '0', STR_PAD_LEFT);
+            if (! Purchase::where('purchase_no', $no)->exists()) {
                 return $no;
             }
         }
-        return 'PUR-' . date('Ymd') . '-' . uniqid();
+
+        return 'PUR-'.date('Ymd').'-'.uniqid();
     }
 }

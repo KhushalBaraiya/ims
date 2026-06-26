@@ -100,14 +100,13 @@
                             <th class="text-end">{{ __('messages.th_paid') }}</th>
                             <th class="text-end">{{ __('messages.th_due') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th>{{ __('messages.th_created_by') }}</th>
                             <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($purchases as $index => $purchase)
                             <tr>
-                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                <td class="text-muted fw-semibold">{{ $purchase->id }}</td>
                                 <td><code class="fw-bold">{{ $purchase->purchase_no }}</code></td>
                                 <td class="text-muted">{{ $purchase->purchase_date }}</td>
                                 <td><strong>{{ $purchase->supplier->name ?? '-' }}</strong></td>
@@ -128,33 +127,97 @@
                                         <span class="badge rounded-pill bg-danger">{{ __('messages.cancelled') }}</span>
                                     @endif
                                 </td>
-                                <td class="text-muted small">{{ $purchase->user->name ?? '-' }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('purchases.view')
-                                            <a href="{{ route('purchases.show', $purchase->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
-                                            <a href="{{ route('purchases.print', $purchase->id) }}" target="_blank"
-                                                class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action"
-                                                title="{{ __('messages.print') }}"><i class="bx bx-printer"></i></a>
-                                        @endcan
-                                        @can('purchases.update')
-                                            <a href="{{ route('purchases.edit', $purchase->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
-                                        @endcan
-                                        @can('purchases.delete')
-                                            <form id="delete-form-{{ $purchase->id }}"
-                                                action="{{ route('purchases.destroy', $purchase->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
-                                                    title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>
-                                            </form>
-                                        @endcan
+                                    {{-- 3-dot dropdown menu --}}
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            title="More options" style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:180px;border-radius:10px;">
+                                            {{-- Create Return OR Edit Return (not both) --}}
+                                            @if ($purchase->status === 'Completed')
+                                                @if ($purchase->returns->count() > 0)
+                                                    @can('purchase_returns.update')
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                                href="{{ route('purchase-returns.edit', $purchase->returns->first()->id) }}">
+                                                                <i class="bx bx-edit-alt text-warning"
+                                                                    style="font-size:1rem;"></i>
+                                                                <span>Edit Return</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <hr class="dropdown-divider my-1">
+                                                        </li>
+                                                    @endcan
+                                                @else
+                                                    @can('purchase_returns.create')
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                                href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}">
+                                                                <i class="bx bx-undo text-warning"
+                                                                    style="font-size:1rem;"></i>
+                                                                <span>Create Return</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <hr class="dropdown-divider my-1">
+                                                        </li>
+                                                    @endcan
+                                                @endif
+                                            @endif
+                                            {{-- View --}}
+                                            @can('purchases.view')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('purchases.show', $purchase->id) }}">
+                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.view') }}</span>
+                                                    </a>
+                                                </li>
+                                                {{-- Print --}}
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('purchases.print', $purchase->id) }}" target="_blank">
+                                                        <i class="bx bx-printer text-success" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.print') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            {{-- Edit --}}
+                                            @can('purchases.update')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('purchases.edit', $purchase->id) }}">
+                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.edit') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            {{-- Delete --}}
+                                            @can('purchases.delete')
+                                                <li>
+                                                    <hr class="dropdown-divider my-1">
+                                                </li>
+                                                <li>
+                                                    <form id="delete-form-{{ $purchase->id }}"
+                                                        action="{{ route('purchases.destroy', $purchase->id) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button"
+                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
+                                                            data-id="{{ $purchase->id }}"
+                                                            data-no="{{ $purchase->purchase_no }}">
+                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                            <span>{{ __('messages.delete') }}</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endcan
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
@@ -213,17 +276,19 @@
                             type: 'POST',
                             data: form.serialize(),
                             success: function(res) {
-                                if (res.success) Swal.fire({
-                                    title: '{{ __('messages.deleted_title') }}',
-                                    text: res.message,
-                                    icon: 'success',
-                                    confirmButtonColor: '#696cff'
-                                }).then(() => window.location.reload());
-                                else showAdminToast(res.message, 'error');
+                                if (res.success) {
+                                    showAdminToast(res.message, 'success');
+                                    setTimeout(() => window.location.reload(), 1200);
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
                             },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
+                            error: function(xhr) {
+                                let msg = '{{ __('messages.error_occurred') }}';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
+                                showAdminToast(msg, 'error');
                             }
                         });
                     }

@@ -35,7 +35,7 @@ class SaleRequest extends FormRequest
             // Item details validation
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_price' => 'required|numeric|min:0',
             'items.*.discount_amount' => 'nullable|numeric|min:0',
             'items.*.tax_amount' => 'nullable|numeric|min:0',
@@ -74,7 +74,7 @@ class SaleRequest extends FormRequest
         return [
             'items.required' => 'You must add at least one product to the invoice.',
             'items.min' => 'You must add at least one product to the invoice.',
-            'items.*.quantity.min' => 'Quantity must be greater than zero.',
+            'items.*.quantity.min' => 'Quantity must be at least 1.',
         ];
     }
 }

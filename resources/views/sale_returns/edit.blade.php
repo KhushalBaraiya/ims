@@ -21,6 +21,25 @@
 
     <form method="POST" action="{{ route('sale-returns.update', $saleReturn->id) }}" id="returnForm" novalidate>
         @csrf @method('PUT')
+
+        {{-- Flash error (qty / stock validation from controller) --}}
+        @if (session('error'))
+            <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0 mt-1"></i>
+                <ul class="mb-0 ps-2">
+                    @foreach ($errors->all() as $e)
+                        <li>{{ $e }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="row g-4">
 
             <div class="col-lg-3">
@@ -124,10 +143,10 @@
                                                 ->where('product_id', $item->product_id)
                                                 ->first();
                                             $currentQty = $currentReturnedItem
-                                                ? (float) $currentReturnedItem->quantity
-                                                : 0.0;
+                                                ? (int) $currentReturnedItem->quantity
+                                                : 0;
                                             $currentReason = $currentReturnedItem ? $currentReturnedItem->reason : '';
-                                            $maxReturnable = max(0.0, $item->quantity - $otherReturned);
+                                            $maxReturnable = max(0, (int) ($item->quantity - $otherReturned));
                                         @endphp
                                         @if ($maxReturnable > 0 || $currentQty > 0)
                                             <tr class="item-row" data-product-id="{{ $item->product_id }}">
@@ -147,21 +166,19 @@
                                                     <input type="hidden" name="items[{{ $rowCount }}][product_id]"
                                                         value="{{ $item->product_id }}">
                                                 </td>
-                                                <td class="text-center text-muted">{{ number_format($item->quantity, 2) }}
-                                                </td>
-                                                <td class="text-center text-muted">{{ number_format($otherReturned, 2) }}
-                                                </td>
+                                                <td class="text-center text-muted">{{ (int) $item->quantity }}</td>
+                                                <td class="text-center text-muted">{{ (int) $otherReturned }}</td>
                                                 <td class="text-center price-cell fw-semibold"
                                                     data-price="{{ $item->unit_price }}">
                                                     ₹{{ number_format($item->unit_price, 2) }}</td>
                                                 <td class="text-center fw-bold text-success max-returnable-cell"
                                                     data-max="{{ $maxReturnable }}">
-                                                    {{ number_format($maxReturnable, 2) }}</td>
+                                                    {{ $maxReturnable }}</td>
                                                 <td class="text-center">
-                                                    <input type="number" step="0.01" min="0"
+                                                    <input type="number" step="1" min="0"
                                                         max="{{ $maxReturnable }}"
                                                         name="items[{{ $rowCount }}][quantity]"
-                                                        value="{{ number_format($currentQty, 2) }}"
+                                                        value="{{ old("items.{$rowCount}.quantity", $currentQty) }}"
                                                         class="qty-input form-control form-control-sm text-center"
                                                         style="width:90px;margin:auto;">
                                                 </td>
@@ -239,11 +256,11 @@
             const refundedInput = $('#refunded_amount');
 
             $(document).on('input change', '.qty-input', function() {
-                const qtyVal = parseFloat($(this).val()) || 0;
-                const maxVal = parseFloat($(this).closest('tr').find('.max-returnable-cell').data('max'));
+                const qtyVal = parseInt($(this).val()) || 0;
+                const maxVal = parseInt($(this).closest('tr').find('.max-returnable-cell').data('max'));
                 if (qtyVal > maxVal) {
-                    $(this).val(maxVal.toFixed(2));
-                    showAdminToast(`Max returnable: ${maxVal.toFixed(2)} units.`, 'error');
+                    $(this).val(maxVal);
+                    showAdminToast(`Max returnable: ${maxVal} units.`, 'error');
                 }
                 if (qtyVal < 0) {
                     $(this).val(0);
@@ -258,7 +275,7 @@
             function calculateRefundTotals() {
                 let refundSubtotal = 0;
                 $('#returnItemsContainer tr.item-row').each(function() {
-                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const qty = parseInt($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-cell').data('price')) || 0;
                     const rowSub = price * qty;
                     $(this).find('.subtotal-cell').text('₹' + rowSub.toFixed(2));
@@ -276,7 +293,7 @@
             $('#returnForm').on('submit', function(e) {
                 let total = 0;
                 $('.qty-input').each(function() {
-                    total += parseFloat($(this).val()) || 0;
+                    total += parseInt($(this).val()) || 0;
                 });
                 if (total <= 0) {
                     e.preventDefault();

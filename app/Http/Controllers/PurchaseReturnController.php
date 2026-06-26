@@ -72,35 +72,56 @@ class PurchaseReturnController extends Controller
         try {
             $purchase = Purchase::findOrFail($request->purchase_id);
 
-            // Calculate already returned quantities for this purchase
             $alreadyReturnedMap = $this->getAlreadyReturnedMap($purchase->id);
 
-            // Validate return quantities and calculate sub-total
+            // ── STEP 1: Validate quantities & check stock before touching anything ──
             $subTotal = 0;
+            $itemsToProcess = [];
             foreach ($request->items as $item) {
-                $qty = (float) $item['quantity'];
+                $qty = (int) $item['quantity'];
                 if ($qty <= 0) continue;
 
-                // Get original purchase item for this product
                 $purchaseItem = $purchase->items()->where('product_id', $item['product_id'])->first();
                 if (!$purchaseItem) {
                     throw new \Exception("Product ID {$item['product_id']} was not part of original purchase.");
                 }
 
-                $alreadyReturned = $alreadyReturnedMap->get($item['product_id'], 0);
+                $alreadyReturned = $alreadyReturnedMap->get((int) $item['product_id'], 0);
                 $maxReturnable   = $purchaseItem->quantity - $alreadyReturned;
 
                 if ($qty > $maxReturnable) {
-                    throw new \Exception("Cannot return more than {$maxReturnable} units for product: {$purchaseItem->product->name}.");
+                    DB::rollBack();
+                    return back()->withInput()->with('error',
+                        "Cannot return {$qty} unit(s) for \"{$purchaseItem->product->name}\". Max returnable: {$maxReturnable}.");
+                }
+
+                // Pre-check stock availability if Completed
+                if ($request->status === 'Completed') {
+                    $currentStock = $purchaseItem->product->stock->quantity ?? 0;
+                    if ($currentStock < $qty) {
+                        DB::rollBack();
+                        return back()->withInput()->with('error',
+                            "Insufficient stock to return \"{$purchaseItem->product->name}\". Current stock: {$currentStock}, trying to return: {$qty}.");
+                    }
                 }
 
                 $subTotal += ($qty * $purchaseItem->purchase_price);
+                $itemsToProcess[] = [
+                    'product_id'     => $item['product_id'],
+                    'quantity'       => $qty,
+                    'purchase_price' => $purchaseItem->purchase_price,
+                    'total_amount'   => $qty * $purchaseItem->purchase_price,
+                    'reason'         => $item['reason'] ?? null,
+                ];
             }
 
-            // Generate unique return number
-            $returnNo = $this->generateReturnNo();
+            if (empty($itemsToProcess)) {
+                DB::rollBack();
+                return back()->withInput()->with('error', 'Please specify a return quantity of at least 1 for one or more items.');
+            }
 
-            // Create the Purchase Return record
+            // ── STEP 2: Create the Purchase Return record ──
+            $returnNo = $this->generateReturnNo();
             $return = PurchaseReturn::create([
                 'return_no'       => $returnNo,
                 'return_date'     => $request->return_date,
@@ -117,28 +138,13 @@ class PurchaseReturnController extends Controller
                 'user_id'         => auth()->id(),
             ]);
 
-            // Create line items and decrement stock if status is Completed
-            foreach ($request->items as $item) {
-                $qty = (float) $item['quantity'];
-                if ($qty <= 0) continue;
+            // ── STEP 3: Create items and decrement stock ──
+            foreach ($itemsToProcess as $item) {
+                $return->items()->create($item);
 
-                $purchaseItem = $purchase->items()->where('product_id', $item['product_id'])->first();
-
-                $return->items()->create([
-                    'product_id'   => $item['product_id'],
-                    'quantity'     => $qty,
-                    'purchase_price' => $purchaseItem->purchase_price,
-                    'total_amount' => $qty * $purchaseItem->purchase_price,
-                    'reason'       => $item['reason'] ?? null,
-                ]);
-
-                // Decrease stock: returning items to supplier reduces our inventory
                 if ($request->status === 'Completed') {
                     $product = Product::findOrFail($item['product_id']);
-                    $product->stock->decrement('quantity', $qty);
-                    if ($product->stock->quantity < 0) {
-                        throw new \Exception("Insufficient stock after return for product: {$product->name}. Cannot return more than current stock.");
-                    }
+                    $product->stock->decrement('quantity', $item['quantity']);
                 }
             }
 
@@ -185,42 +191,72 @@ class PurchaseReturnController extends Controller
             $oldStatus = $purchaseReturn->status;
             $newStatus = $request->status;
 
-            // 1. Reverse previous stock adjustments
+            // ── STEP 1: Pre-check quantities & stock before touching anything ──
+            $alreadyReturnedMap = $this->getAlreadyReturnedMap($purchase->id);
+
+            $itemsToProcess = [];
+            $subTotal = 0;
+            foreach ($request->items as $item) {
+                $qty = (int) $item['quantity'];
+                if ($qty <= 0) continue;
+
+                $purchaseItem = $purchase->items()->where('product_id', $item['product_id'])->first();
+                if (!$purchaseItem) continue;
+
+                // Max returnable = original qty - already returned by OTHER returns (not this one)
+                $alreadyByOthers = PurchaseReturnItem::whereHas('purchaseReturn', function ($q) use ($purchase, $purchaseReturn) {
+                    $q->where('purchase_id', $purchase->id)
+                      ->where('id', '!=', $purchaseReturn->id)
+                      ->where('status', 'Completed');
+                })->where('product_id', $item['product_id'])->sum('quantity');
+
+                $maxReturnable = $purchaseItem->quantity - $alreadyByOthers;
+
+                if ($qty > $maxReturnable) {
+                    DB::rollBack();
+                    return back()->withInput()->with('error',
+                        "Cannot return {$qty} unit(s) for \"{$purchaseItem->product->name}\". Max returnable: {$maxReturnable}.");
+                }
+
+                // If new status is Completed, check stock after reversing old return
+                if ($newStatus === 'Completed') {
+                    $oldReturnedQty = $purchaseReturn->items->where('product_id', $item['product_id'])->sum('quantity');
+                    $stockAfterReversal = ($purchaseItem->product->stock->quantity ?? 0) + ($oldStatus === 'Completed' ? $oldReturnedQty : 0);
+                    if ($stockAfterReversal < $qty) {
+                        DB::rollBack();
+                        return back()->withInput()->with('error',
+                            "Insufficient stock for \"{$purchaseItem->product->name}\". Available after reversal: {$stockAfterReversal}, trying to return: {$qty}.");
+                    }
+                }
+
+                $itemTotal = $qty * $purchaseItem->purchase_price;
+                $subTotal += $itemTotal;
+                $itemsToProcess[] = [
+                    'product_id'     => $item['product_id'],
+                    'quantity'       => $qty,
+                    'purchase_price' => $purchaseItem->purchase_price,
+                    'total_amount'   => $itemTotal,
+                    'reason'         => $item['reason'] ?? null,
+                ];
+            }
+
+            // ── STEP 2: Reverse previous stock ──
             if ($oldStatus === 'Completed') {
                 foreach ($purchaseReturn->items as $oldItem) {
                     $oldItem->product->stock->increment('quantity', $oldItem->quantity);
                 }
             }
 
-            // 2. Delete old items
+            // ── STEP 3: Delete old items ──
             $purchaseReturn->items()->delete();
 
-            // 3. Recalculate totals, create new items, adjust stock
-            $subTotal = 0;
-            foreach ($request->items as $item) {
-                $qty = (float) $item['quantity'];
-                if ($qty <= 0) continue;
-
-                $purchaseItem = $purchase->items()->where('product_id', $item['product_id'])->first();
-                if (!$purchaseItem) continue;
-
-                $itemTotal = $qty * $purchaseItem->purchase_price;
-                $subTotal += $itemTotal;
-
-                $purchaseReturn->items()->create([
-                    'product_id'     => $item['product_id'],
-                    'quantity'       => $qty,
-                    'purchase_price' => $purchaseItem->purchase_price,
-                    'total_amount'   => $itemTotal,
-                    'reason'         => $item['reason'] ?? null,
-                ]);
+            // ── STEP 4: Create new items and apply new stock ──
+            foreach ($itemsToProcess as $item) {
+                $purchaseReturn->items()->create($item);
 
                 if ($newStatus === 'Completed') {
                     $product = Product::findOrFail($item['product_id']);
-                    $product->stock->decrement('quantity', $qty);
-                    if ($product->stock->quantity < 0) {
-                        throw new \Exception("Insufficient stock for product: {$product->name}.");
-                    }
+                    $product->stock->decrement('quantity', $item['quantity']);
                 }
             }
 

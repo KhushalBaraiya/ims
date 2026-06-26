@@ -254,7 +254,7 @@
                         tax: parseFloat("{{ $item->tax_amount }}") / parseFloat("{{ $item->quantity }}"),
                         discount: parseFloat("{{ $item->discount_amount }}") / parseFloat(
                             "{{ $item->quantity }}"),
-                        qty: parseFloat("{{ $item->quantity }}"),
+                        qty: parseInt("{{ $item->quantity }}"),
                         unit: "{{ $item->product->unit->short_name ?? 'PCS' }}",
                         image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
                     });
@@ -360,8 +360,8 @@
                     <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
                 </td>
                 <td><code class="small">${p.sku}</code></td>
-                <td class="stock-cell fw-semibold text-muted" data-max="${p.stock}">${parseFloat(p.stock).toFixed(2)}</td>
-                <td class="text-center"><input type="number" step="0.01" min="0.01" name="items[${rowCount}][quantity]" value="${p.qty}" class="qty-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
+                <td class="stock-cell fw-semibold text-muted" data-max="${p.stock}">${parseInt(p.stock)}</td>
+                <td class="text-center"><input type="number" step="1" min="1" name="items[${rowCount}][quantity]" value="${parseInt(p.qty || 1)}" class="qty-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
                 <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][unit_price]" value="${p.price.toFixed(2)}" class="price-input form-control form-control-sm text-center" style="width:100px;margin:auto;"></td>
                 <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][discount_amount]" value="${itemDisc.toFixed(2)}" class="discount-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
                 <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][tax_amount]" value="${itemTax.toFixed(2)}" class="tax-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
@@ -381,15 +381,15 @@
             $(document).on('input change', '.qty-input, .price-input, .discount-input, .tax-input', function() {
                 const row = $(this).closest('tr');
                 const qtyInput = row.find('.qty-input');
-                let qty = parseFloat(qtyInput.val()) || 0;
-                const maxStock = parseFloat(row.find('.stock-cell').data('max'));
+                let qty = parseInt(qtyInput.val()) || 0;
+                const maxStock = parseInt(row.find('.stock-cell').data('max'));
                 if (qty > maxStock) {
                     qtyInput.val(maxStock);
                     qty = maxStock;
-                    showAdminToast(`Cannot sell more than stock (${maxStock.toFixed(2)}).`, 'error');
+                    showAdminToast(`Cannot sell more than stock (${maxStock}).`, 'error');
                 }
                 if (qty <= 0) {
-                    qtyInput.val(0.01);
+                    qtyInput.val(1);
                 }
                 calculateTotals();
             });

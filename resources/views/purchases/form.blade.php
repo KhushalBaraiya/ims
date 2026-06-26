@@ -2,12 +2,21 @@
 
 {{-- Show stock errors prominently --}}
 @if ($errors->has('stock_error'))
-    <div class="alert alert-danger d-flex align-items-start gap-2 mb-4">
-        <i class="bx bx-error-circle fs-5 mt-1 flex-shrink-0"></i>
-        <div>
-            <strong>Stock Error — Cannot save purchase.</strong><br>
-            {{ $errors->first('stock_error') }}
-        </div>
+    <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
+        <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+        <span>{{ $errors->first('stock_error') }}</span>
+    </div>
+@endif
+
+{{-- Show general validation errors summary --}}
+@if ($errors->any() && !$errors->has('stock_error'))
+    <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3" id="validationErrorsSummary">
+        <i class="bx bx-error-circle fs-5 flex-shrink-0 mt-1"></i>
+        <ul class="mb-0 ps-2">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
 @endif
 
@@ -58,7 +67,8 @@
                 </div>
                 <div class="mb-0">
                     <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                    <select name="status" class="form-select" required>
+                    <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+                        <option value="">Select Status</option>
                         <option value="Completed"
                             {{ old('status', $purchase->status ?? 'Completed') === 'Completed' ? 'selected' : '' }}>
                             Completed</option>
@@ -69,6 +79,9 @@
                             {{ old('status', $purchase->status ?? '') === 'Cancelled' ? 'selected' : '' }}>
                             Cancelled</option>
                     </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
         </div>
@@ -80,7 +93,9 @@
             <div class="card-body p-4">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Payment Method <span class="text-danger">*</span></label>
-                    <select name="payment_method" class="form-select" required>
+                    <select name="payment_method" class="form-select @error('payment_method') is-invalid @enderror"
+                        required>
+                        <option value="">Select Payment Method</option>
                         <option value="Cash"
                             {{ old('payment_method', $purchase->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}>
                             Cash</option>
@@ -97,6 +112,9 @@
                             {{ old('payment_method', $purchase->payment_method ?? '') === 'Cheque' ? 'selected' : '' }}>
                             Cheque</option>
                     </select>
+                    @error('payment_method')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-0">
                     <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
@@ -120,6 +138,14 @@
                 <h6 class="mb-0 fw-semibold"><i class="bx bx-search me-2 text-primary"></i>Add Products to Order</h6>
             </div>
             <div class="card-body p-4">
+                {{-- Products validation error --}}
+                @error('items')
+                    <div class="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2">
+                        <i class="bx bx-error-circle"></i>
+                        <span>{{ $message }}</span>
+                    </div>
+                @enderror
+
                 <div class="position-relative mb-4">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
@@ -240,7 +266,41 @@
         $(document).ready(function() {
             let rowCount = 0;
 
-            @if (isset($purchase) && $purchase->items->count() > 0)
+            // ── Active currency symbol from server ───────────────────────────
+            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+
+            // ── Helper: format a number with the active currency symbol ──────
+            function fmtCurrency(amount) {
+                return currencySymbol + parseFloat(amount).toFixed(2);
+            }
+
+            // ── Restore old products after validation failure ────────────────
+            @if (old('items'))
+                @foreach (old('items', []) as $oldIndex => $oldItem)
+                    @php
+                        $oldProduct = \App\Models\Product::with(['stock'])->find($oldItem['product_id'] ?? null);
+                    @endphp
+                    @if ($oldProduct)
+                        addProductRow({
+                            id: "{{ $oldProduct->id }}",
+                            name: "{{ addslashes($oldProduct->name) }}",
+                            sku: "{{ $oldProduct->code }}",
+                            purchase_price: parseFloat(
+                                "{{ old('items.' . $oldIndex . '.purchase_price', $oldProduct->purchase_price) }}"
+                            ),
+                            tax: 0,
+                            discount: 0,
+                            qty: parseInt("{{ old('items.' . $oldIndex . '.quantity', 1) }}"),
+                            unit: "{{ $oldProduct->unit_code ?? 'PCS' }}",
+                            image_url: "{{ $oldProduct->image ? asset('uploads/products/' . $oldProduct->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}",
+                            discount_amount_raw: parseFloat(
+                                "{{ old('items.' . $oldIndex . '.discount_amount', 0) }}"),
+                            tax_amount_raw: parseFloat(
+                                "{{ old('items.' . $oldIndex . '.tax_amount', 0) }}")
+                        });
+                    @endif
+                @endforeach
+            @elseif (isset($purchase) && $purchase->items->count() > 0)
                 @foreach ($purchase->items as $item)
                     addProductRow({
                         id: "{{ $item->product_id }}",
@@ -252,7 +312,7 @@
                         discount: parseFloat(
                             "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
                         ),
-                        qty: parseFloat("{{ $item->quantity }}"),
+                        qty: parseInt("{{ $item->quantity }}"),
                         unit: "{{ $item->product->unit_code ?? 'PCS' }}",
                         image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
                     });
@@ -281,6 +341,8 @@
                             resultsContainer.empty();
                             if (data.length > 0) {
                                 data.forEach(p => {
+                                    const sym = p.currency_symbol ||
+                                        currencySymbol;
                                     resultsContainer.append(`
                                     <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom"
                                          style="cursor:pointer;"
@@ -295,7 +357,7 @@
                                             </div>
                                         </div>
                                         <div class="text-end">
-                                            <div class="fw-bold text-primary small">${p.currency_symbol}${parseFloat(p.purchase_price).toFixed(2)}</div>
+                                            <div class="fw-bold text-primary small">${sym}${parseFloat(p.purchase_price).toFixed(2)}</div>
                                             <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
                                         </div>
                                     </div>`);
@@ -348,8 +410,15 @@
 
             function addProductRow(p) {
                 $('#emptyTableMsg').addClass('d-none');
-                const itemTax = (p.tax / 100) * p.purchase_price;
-                const itemDisc = (p.discount / 100) * p.purchase_price;
+                // Support both percentage-based tax/discount and raw amount (for old-input restore)
+                let itemTax, itemDisc;
+                if (typeof p.discount_amount_raw !== 'undefined') {
+                    itemDisc = p.discount_amount_raw;
+                    itemTax = p.tax_amount_raw;
+                } else {
+                    itemTax = (p.tax / 100) * p.purchase_price;
+                    itemDisc = (p.discount / 100) * p.purchase_price;
+                }
                 const price = p.purchase_price || 0;
                 $('#purchaseItemsContainer').append(`
                 <tr class="item-row" data-product-id="${p.id}">
@@ -360,8 +429,8 @@
                     </td>
                     <td><code class="small">${p.sku}</code></td>
                     <td class="text-center">
-                        <input type="number" step="0.01" min="0.01" name="items[${rowCount}][quantity]"
-                               value="${p.qty}" class="qty-input form-control form-control-sm text-center"
+                        <input type="number" step="1" min="1" name="items[${rowCount}][quantity]"
+                               value="${parseInt(p.qty || 1)}" class="qty-input form-control form-control-sm text-center"
                                style="width:80px;margin:auto;">
                     </td>
                     <td class="text-center">
@@ -379,7 +448,7 @@
                                value="${itemTax.toFixed(2)}" class="tax-input form-control form-control-sm text-center"
                                style="width:80px;margin:auto;">
                     </td>
-                    <td class="text-end fw-bold subtotal-cell">₹0.00</td>
+                    <td class="text-end fw-bold subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
                                 style="width:28px;height:28px;padding:0;">
@@ -412,23 +481,26 @@
                     const disc = parseFloat(row.find('.discount-input').val()) || 0;
                     const tax = parseFloat(row.find('.tax-input').val()) || 0;
                     const rowTotal = (price + tax - disc) * qty;
-                    row.find('.subtotal-cell').text('₹' + rowTotal.toFixed(2));
+                    row.find('.subtotal-cell').text(fmtCurrency(rowTotal));
                     totalSubtotal += price * qty;
                     sumItemTax += tax * qty;
                     sumItemDiscount += disc * qty;
                 });
-                $('#sum_subtotal').text('₹' + totalSubtotal.toFixed(2));
+                $('#sum_subtotal').text(fmtCurrency(totalSubtotal));
                 $('#discount_amount').val(sumItemDiscount.toFixed(2));
                 $('#tax_amount').val(sumItemTax.toFixed(2));
                 const globalDisc = parseFloat($('#discount_amount').val()) || 0;
                 const globalTax = parseFloat($('#tax_amount').val()) || 0;
                 const shipping = parseFloat($('#shipping_amount').val()) || 0;
                 const grandTotal = totalSubtotal + globalTax + shipping - globalDisc;
-                $('#sum_grandtotal').text('₹' + grandTotal.toFixed(2));
+                $('#sum_grandtotal').text(fmtCurrency(grandTotal));
                 const paid = parseFloat($('#paid_amount').val()) || 0;
-                $('#sum_due').text('₹' + Math.max(0, grandTotal - paid).toFixed(2));
-                $('#sum_change').text('₹' + Math.max(0, paid - grandTotal).toFixed(2));
+                $('#sum_due').text(fmtCurrency(Math.max(0, grandTotal - paid)));
+                $('#sum_change').text(fmtCurrency(Math.max(0, paid - grandTotal)));
             }
+
+            // Initial calculation after any old items are loaded
+            calculateTotals();
         });
     </script>
 @endpush

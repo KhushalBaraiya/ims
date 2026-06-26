@@ -22,6 +22,7 @@
     </div>
 
     {{-- Table Card --}}
+    {{--  --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">

@@ -21,6 +21,25 @@
 
     <form method="POST" action="{{ route('purchase-returns.update', $purchaseReturn->id) }}" id="returnForm" novalidate>
         @csrf @method('PUT')
+
+        {{-- Flash error (qty / stock validation from controller) --}}
+        @if (session('error'))
+            <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0 mt-1"></i>
+                <ul class="mb-0 ps-2">
+                    @foreach ($errors->all() as $e)
+                        <li>{{ $e }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="row g-4">
 
             <div class="col-lg-3">
@@ -110,12 +129,12 @@
                                                     value="{{ $item->product_id }}">
                                             </td>
                                             <td class="text-center text-muted fw-semibold">
-                                                {{ number_format($item->quantity, 2) }}</td>
+                                                {{ (int) $item->quantity }}</td>
                                             <td class="text-center">
-                                                <input type="number" step="0.01" min="0"
+                                                <input type="number" step="1" min="0"
                                                     name="items[{{ $index }}][quantity]"
-                                                    value="{{ old("items.{$index}.quantity", $item->quantity) }}"
-                                                    class="form-control form-control-sm text-center"
+                                                    value="{{ old("items.{$index}.quantity", (int) $item->quantity) }}"
+                                                    class="qty-input form-control form-control-sm text-center"
                                                     style="width:90px;margin:auto;">
                                             </td>
                                             <td>
@@ -171,3 +190,25 @@
     </form>
 
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $(document).on('input change', '.qty-input', function() {
+                const val = parseInt($(this).val()) || 0;
+                if (val < 0) $(this).val(0);
+            });
+
+            $('#returnForm').on('submit', function(e) {
+                let total = 0;
+                $('.qty-input').each(function() {
+                    total += parseInt($(this).val()) || 0;
+                });
+                if (total <= 0) {
+                    e.preventDefault();
+                    showAdminToast('Please specify return quantity for at least one item.', 'error');
+                }
+            });
+        });
+    </script>
+@endpush

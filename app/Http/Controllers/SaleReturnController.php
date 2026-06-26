@@ -73,10 +73,12 @@ class SaleReturnController extends Controller
         DB::beginTransaction();
         try {
             $sale = Sale::findOrFail($request->sale_id);
-            
-            // Validate return quantities against available (sold - already returned)
+
+            // ── STEP 1: Validate all quantities before touching stock ──
+            $itemsToProcess = [];
+            $subTotal = 0;
             foreach ($request->items as $item) {
-                $qty = (float)$item['quantity'];
+                $qty = (int) $item['quantity'];
                 if ($qty <= 0) continue;
 
                 $saleItem = $sale->items()->where('product_id', $item['product_id'])->first();
@@ -84,79 +86,60 @@ class SaleReturnController extends Controller
                     throw new \Exception("Product ID {$item['product_id']} was not part of original sale.");
                 }
 
-                // Sum already returned items for this sale
-                $alreadyReturned = SaleReturnItem::whereHas('saleReturn', function($q) use ($sale) {
+                $alreadyReturned = SaleReturnItem::whereHas('saleReturn', function ($q) use ($sale) {
                     $q->where('sale_id', $sale->id)->where('status', 'Completed');
                 })->where('product_id', $item['product_id'])->sum('quantity');
 
-                $availableReturn = max(0.00, $saleItem->quantity - $alreadyReturned);
+                $availableReturn = max(0, (int)($saleItem->quantity - $alreadyReturned));
 
                 if ($qty > $availableReturn) {
-                    throw new \Exception("Cannot return more than available quantity for product: {$saleItem->product->name}. Max returnable: {$availableReturn}.");
+                    DB::rollBack();
+                    return back()->withInput()->with('error',
+                        "Cannot return {$qty} unit(s) for \"{$saleItem->product->name}\". Max returnable: {$availableReturn}.");
                 }
+
+                $subTotal += $qty * $saleItem->unit_price;
+                $itemsToProcess[] = [
+                    'product_id'   => $item['product_id'],
+                    'quantity'     => $qty,
+                    'unit_price'   => $saleItem->unit_price,
+                    'tax_amount'   => 0.00,
+                    'total_amount' => $qty * $saleItem->unit_price,
+                    'reason'       => $item['reason'] ?? null,
+                ];
             }
 
-            // Generate Return Number
+            if (empty($itemsToProcess)) {
+                DB::rollBack();
+                return back()->withInput()->with('error', 'Please specify a return quantity of at least 1 for one or more items.');
+            }
+
+            // ── STEP 2: Create the Sale Return record ──
             $returnNo = $this->generateReturnNo();
-
-            // Adjust stock level if status is Completed
-            if ($request->status === 'Completed') {
-                foreach ($request->items as $item) {
-                    $qty = (float)$item['quantity'];
-                    if ($qty <= 0) continue;
-
-                    $product = Product::findOrFail($item['product_id']);
-                    $product->stock->increment('quantity', $qty);
-                }
-            }
-
-            // Calculate return totals in PHP
-            $subTotal = 0;
-            foreach ($request->items as $item) {
-                $qty = (float)$item['quantity'];
-                if ($qty <= 0) continue;
-
-                $saleItem = $sale->items()->where('product_id', $item['product_id'])->first();
-                $subTotal += ($qty * $saleItem->unit_price);
-            }
-
-            // Simple tax and discount ratios based on original sale ratios if desired, or simple 0.00
-            // We'll calculate refund grand total
-            $grandTotal = $subTotal; // Simply sum of unit prices of returned items
-            $refundedAmount = (float)($request->refunded_amount ?? 0.00);
-
-            // Create Sale Return record
             $saleReturn = SaleReturn::create([
-                'return_no' => $returnNo,
-                'return_date' => $request->return_date,
-                'sale_id' => $sale->id,
-                'customer_id' => $sale->customer_id,
-                'reference_no' => $request->reference_no,
-                'sub_total' => $subTotal,
-                'tax_amount' => 0.00,
+                'return_no'       => $returnNo,
+                'return_date'     => $request->return_date,
+                'sale_id'         => $sale->id,
+                'customer_id'     => $sale->customer_id,
+                'reference_no'    => $request->reference_no,
+                'sub_total'       => $subTotal,
+                'tax_amount'      => 0.00,
                 'discount_amount' => 0.00,
-                'grand_total' => $grandTotal,
-                'refunded_amount' => $refundedAmount,
-                'notes' => $request->notes,
-                'status' => $request->status,
-                'user_id' => auth()->id(),
+                'grand_total'     => $subTotal,
+                'refunded_amount' => (float) ($request->refunded_amount ?? 0.00),
+                'notes'           => $request->notes,
+                'status'          => $request->status,
+                'user_id'         => auth()->id(),
             ]);
 
-            // Create return items
-            foreach ($request->items as $item) {
-                $qty = (float)$item['quantity'];
-                if ($qty <= 0) continue;
+            // ── STEP 3: Create items and increment stock ──
+            foreach ($itemsToProcess as $item) {
+                $saleReturn->items()->create($item);
 
-                $saleItem = $sale->items()->where('product_id', $item['product_id'])->first();
-
-                $saleReturn->items()->create([
-                    'product_id' => $item['product_id'],
-                    'quantity' => $qty,
-                    'unit_price' => $saleItem->unit_price,
-                    'tax_amount' => 0.00,
-                    'total_amount' => $qty * $saleItem->unit_price,
-                    'reason' => $item['reason'] ?? null,
-                ]);
+                if ($request->status === 'Completed') {
+                    $product = Product::findOrFail($item['product_id']);
+                    $product->stock->increment('quantity', $item['quantity']);
+                }
             }
 
             DB::commit();
@@ -198,21 +181,15 @@ class SaleReturnController extends Controller
 
         DB::beginTransaction();
         try {
-            $sale = $saleReturn->sale;
+            $sale      = $saleReturn->sale;
             $oldStatus = $saleReturn->status;
             $newStatus = $request->status;
 
-            // 1. Revert previous stock changes if previous status was 'Completed'
-            if ($oldStatus === 'Completed') {
-                foreach ($saleReturn->items as $oldItem) {
-                    $product = $oldItem->product;
-                    $product->stock->decrement('quantity', $oldItem->quantity);
-                }
-            }
-
-            // 2. Validate return quantities against available (excluding current return record)
+            // ── STEP 1: Validate quantities BEFORE touching any stock ──
+            $itemsToProcess = [];
+            $subTotal = 0;
             foreach ($request->items as $item) {
-                $qty = (float)$item['quantity'];
+                $qty = (int) $item['quantity'];
                 if ($qty <= 0) continue;
 
                 $saleItem = $sale->items()->where('product_id', $item['product_id'])->first();
@@ -220,63 +197,59 @@ class SaleReturnController extends Controller
                     throw new \Exception("Product ID {$item['product_id']} was not part of original sale.");
                 }
 
-                // Sum returned items excluding current return
-                $alreadyReturned = SaleReturnItem::whereHas('saleReturn', function($q) use ($sale, $saleReturn) {
-                    $q->where('sale_id', $sale->id)->where('id', '!=', $saleReturn->id)->where('status', 'Completed');
+                $alreadyReturned = SaleReturnItem::whereHas('saleReturn', function ($q) use ($sale, $saleReturn) {
+                    $q->where('sale_id', $sale->id)
+                      ->where('id', '!=', $saleReturn->id)
+                      ->where('status', 'Completed');
                 })->where('product_id', $item['product_id'])->sum('quantity');
 
-                $availableReturn = max(0.00, $saleItem->quantity - $alreadyReturned);
+                $availableReturn = max(0, (int)($saleItem->quantity - $alreadyReturned));
 
                 if ($qty > $availableReturn) {
-                    throw new \Exception("Cannot return more than available quantity for product: {$saleItem->product->name}. Max returnable: {$availableReturn}.");
+                    DB::rollBack();
+                    return back()->withInput()->with('error',
+                        "Cannot return {$qty} unit(s) for \"{$saleItem->product->name}\". Max returnable: {$availableReturn}.");
+                }
+
+                $subTotal += $qty * $saleItem->unit_price;
+                $itemsToProcess[] = [
+                    'product_id'   => $item['product_id'],
+                    'quantity'     => $qty,
+                    'unit_price'   => $saleItem->unit_price,
+                    'tax_amount'   => 0.00,
+                    'total_amount' => $qty * $saleItem->unit_price,
+                    'reason'       => $item['reason'] ?? null,
+                ];
+            }
+
+            // ── STEP 2: Revert previous stock if old status was Completed ──
+            if ($oldStatus === 'Completed') {
+                foreach ($saleReturn->items as $oldItem) {
+                    $oldItem->product->stock->decrement('quantity', $oldItem->quantity);
                 }
             }
 
-            // 3. Delete old items
+            // ── STEP 3: Delete old items ──
             $saleReturn->items()->delete();
 
-            // 4. Update stock if new status is 'Completed'
-            if ($newStatus === 'Completed') {
-                foreach ($request->items as $item) {
-                    $qty = (float)$item['quantity'];
-                    if ($qty <= 0) continue;
+            // ── STEP 4: Create new items and apply new stock ──
+            foreach ($itemsToProcess as $item) {
+                $saleReturn->items()->create($item);
 
+                if ($newStatus === 'Completed') {
                     $product = Product::findOrFail($item['product_id']);
-                    $product->stock->increment('quantity', $qty);
+                    $product->stock->increment('quantity', $item['quantity']);
                 }
             }
 
-            // 5. Recalculate totals and write items
-            $subTotal = 0;
-            foreach ($request->items as $item) {
-                $qty = (float)$item['quantity'];
-                if ($qty <= 0) continue;
-
-                $saleItem = $sale->items()->where('product_id', $item['product_id'])->first();
-                $subTotal += ($qty * $saleItem->unit_price);
-
-                $saleReturn->items()->create([
-                    'product_id' => $item['product_id'],
-                    'quantity' => $qty,
-                    'unit_price' => $saleItem->unit_price,
-                    'tax_amount' => 0.00,
-                    'total_amount' => $qty * $saleItem->unit_price,
-                    'reason' => $item['reason'] ?? null,
-                ]);
-            }
-
-            $grandTotal = $subTotal;
-            $refundedAmount = (float)($request->refunded_amount ?? 0.00);
-
-            // 6. Save update
             $saleReturn->update([
-                'return_date' => $request->return_date,
-                'reference_no' => $request->reference_no,
-                'sub_total' => $subTotal,
-                'grand_total' => $grandTotal,
-                'refunded_amount' => $refundedAmount,
-                'notes' => $request->notes,
-                'status' => $newStatus,
+                'return_date'     => $request->return_date,
+                'reference_no'    => $request->reference_no,
+                'sub_total'       => $subTotal,
+                'grand_total'     => $subTotal,
+                'refunded_amount' => (float) ($request->refunded_amount ?? 0.00),
+                'notes'           => $request->notes,
+                'status'          => $newStatus,
             ]);
 
             DB::commit();

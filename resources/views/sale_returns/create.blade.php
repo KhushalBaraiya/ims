@@ -21,6 +21,25 @@
 
     <form method="POST" action="{{ route('sale-returns.store') }}" id="returnForm" novalidate>
         @csrf
+
+        {{-- Flash error (qty / stock validation from controller) --}}
+        @if (session('error'))
+            <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0 mt-1"></i>
+                <ul class="mb-0 ps-2">
+                    @foreach ($errors->all() as $e)
+                        <li>{{ $e }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="row g-4">
 
             <div class="col-lg-3">
@@ -212,6 +231,7 @@
                         response.items.forEach(item => {
                             if (item.available_quantity > 0) {
                                 hasReturnable = true;
+                                const maxInt = parseInt(item.available_quantity);
                                 itemsContainer.append(`
                             <tr class="item-row" data-product-id="${item.product_id}">
                                 <td><img src="${item.image_url}" class="tbl-img rounded" onerror="imgError(this)"></td>
@@ -219,14 +239,14 @@
                                     ${item.name}
                                     <input type="hidden" name="items[${rowCount}][product_id]" value="${item.product_id}">
                                 </td>
-                                <td class="text-center text-muted">${item.sold_quantity.toFixed(2)} ${item.unit}</td>
-                                <td class="text-center text-muted">${item.returned_quantity.toFixed(2)} ${item.unit}</td>
+                                <td class="text-center text-muted">${parseInt(item.sold_quantity)} ${item.unit}</td>
+                                <td class="text-center text-muted">${parseInt(item.returned_quantity)} ${item.unit}</td>
                                 <td class="text-center price-cell fw-semibold" data-price="${item.unit_price}">₹${item.unit_price.toFixed(2)}</td>
-                                <td class="text-center fw-bold text-success max-returnable-cell" data-max="${item.available_quantity}">
-                                    ${item.available_quantity.toFixed(2)} ${item.unit}
+                                <td class="text-center fw-bold text-success max-returnable-cell" data-max="${maxInt}">
+                                    ${maxInt} ${item.unit}
                                 </td>
                                 <td class="text-center">
-                                    <input type="number" step="0.01" min="0" max="${item.available_quantity}" name="items[${rowCount}][quantity]" value="0.00" class="qty-input form-control form-control-sm text-center" style="width:90px;margin:auto;">
+                                    <input type="number" step="1" min="0" max="${maxInt}" name="items[${rowCount}][quantity]" value="0" class="qty-input form-control form-control-sm text-center" style="width:90px;margin:auto;">
                                 </td>
                                 <td>
                                     <input type="text" name="items[${rowCount}][reason]" class="form-control form-control-sm" placeholder="Reason...">
@@ -258,11 +278,11 @@
             if (saleIdSelect.val()) loadSaleItems(saleIdSelect.val());
 
             $(document).on('input change', '.qty-input', function() {
-                const qtyVal = parseFloat($(this).val()) || 0;
-                const maxVal = parseFloat($(this).closest('tr').find('.max-returnable-cell').data('max'));
+                const qtyVal = parseInt($(this).val()) || 0;
+                const maxVal = parseInt($(this).closest('tr').find('.max-returnable-cell').data('max'));
                 if (qtyVal > maxVal) {
-                    $(this).val(maxVal.toFixed(2));
-                    showAdminToast(`Cannot return more than ${maxVal.toFixed(2)} units.`, 'error');
+                    $(this).val(maxVal);
+                    showAdminToast(`Cannot return more than ${maxVal} units.`, 'error');
                 }
                 if (qtyVal < 0) {
                     $(this).val(0);
@@ -277,7 +297,7 @@
             function calculateRefundTotals() {
                 let refundSubtotal = 0;
                 $('#returnItemsContainer tr.item-row').each(function() {
-                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const qty = parseInt($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-cell').data('price')) || 0;
                     const rowSub = price * qty;
                     $(this).find('.subtotal-cell').text('₹' + rowSub.toFixed(2));
@@ -295,7 +315,7 @@
             $('#returnForm').on('submit', function(e) {
                 let total = 0;
                 $('.qty-input').each(function() {
-                    total += parseFloat($(this).val()) || 0;
+                    total += parseInt($(this).val()) || 0;
                 });
                 if (total <= 0) {
                     e.preventDefault();
