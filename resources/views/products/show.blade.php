@@ -139,11 +139,15 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between px-4 py-3">
                                     <span class="text-muted small">Current Stock</span>
-                                    <span
-                                        class="fw-bold {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-danger' : 'text-success' }}">
-                                        {{ number_format($product->stock->quantity ?? 0, 2) }}
-                                        {{ $product->unit_code ?? 'Units' }}
-                                    </span>
+                                    @if ($product->hasTransactions())
+                                        <span
+                                            class="fw-bold {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-danger' : 'text-success' }}">
+                                            {{ number_format($product->stock->quantity ?? 0, 2) }}
+                                            {{ $product->unit_code ?? 'Units' }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted small">No transactions logged</span>
+                                    @endif
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between px-4 py-3"><span
                                         class="text-muted small">Min Alert Qty</span><span

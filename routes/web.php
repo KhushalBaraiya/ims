@@ -75,6 +75,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
     Route::resource('stocks', StockController::class);
     Route::get('/stocks-adjust', [StockController::class, 'adjust'])->name('stocks.adjust');
+    Route::post('/stocks-adjust', [StockController::class, 'store'])->name('stocks.store_adjustment');
+    Route::get('/stocks-adjust/{voucher_no}/edit', [StockController::class, 'edit_adjustment'])->name('stocks.edit_adjustment');
+    Route::put('/stocks-adjust/{voucher_no}', [StockController::class, 'update_adjustment'])->name('stocks.update_adjustment');
+    Route::delete('/stocks-adjust/{voucher_no}', [StockController::class, 'destroy_adjustment'])->name('stocks.destroy_adjustment');
     Route::get('/stocks-history', [StockController::class, 'history'])->name('stocks.history');
 
     // Currencies Routes (with status toggle and switcher)

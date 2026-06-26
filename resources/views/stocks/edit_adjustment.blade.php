@@ -6,13 +6,13 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">Create Stock Adjustment</h4>
+            <h4 class="fw-bold mb-1">Edit Stock Adjustment</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('stocks.index') }}">{{ __('messages.stock_overview') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('stocks.history') }}">{{ __('messages.stock_history') }}</a></li>
-                    <li class="breadcrumb-item active">New Adjustment</li>
+                    <li class="breadcrumb-item active">Edit Adjustment</li>
                 </ol>
             </nav>
         </div>
@@ -41,8 +41,9 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('stocks.store_adjustment') }}">
+    <form method="POST" action="{{ route('stocks.update_adjustment', $voucherNo) }}">
         @csrf
+        @method('PUT')
 
         <div class="row g-4">
             {{-- Left Side: Voucher Info --}}
@@ -56,18 +57,18 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Voucher No</label>
-                            <input type="text" class="form-control bg-light fw-bold" value="AUTO-GENERATED" readonly>
+                            <input type="text" class="form-control bg-light fw-bold" value="{{ $voucherNo }}" readonly>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Transaction Date <span class="text-danger">*</span></label>
-                            <input type="date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date', date('Y-m-d')) }}" required>
+                            <input type="date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date', $transactionDate) }}" required>
                             @error('transaction_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Global Remarks / Notes</label>
-                            <textarea name="notes" rows="4" class="form-control @error('notes') is-invalid @enderror" placeholder="Reason for adjustment, e.g. Year-end inventory audit...">{{ old('notes') }}</textarea>
+                            <textarea name="notes" rows="4" class="form-control @error('notes') is-invalid @enderror" placeholder="Reason for adjustment, e.g. Year-end inventory audit...">{{ old('notes', $notes) }}</textarea>
                             @error('notes')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -124,7 +125,7 @@
                                     {{-- Rows appended dynamically --}}
                                 </tbody>
                             </table>
-                            <div id="emptyTableMsg" class="text-center py-5 text-muted">
+                            <div id="emptyTableMsg" class="text-center py-5 text-muted d-none">
                                 <i class="bx bx-package" style="font-size:2.5rem;opacity:.3;"></i>
                                 <p class="mt-2 mb-0">No products added yet. Select a product above to add.</p>
                             </div>
@@ -138,7 +139,7 @@
                         <i class="bx bx-x me-1"></i> Cancel
                     </a>
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="bx bx-save me-1"></i> Save Stock Adjustment
+                        <i class="bx bx-save me-1"></i> Update Stock Adjustment
                     </button>
                 </div>
             </div>
@@ -252,8 +253,26 @@
                 }
             });
 
-            // Populate old items on validation failure (if any)
-            @if (old('items'))
+            // Populate existing rows from controller load
+            @if (!old('items'))
+                @foreach ($adjustments as $adj)
+                    @php
+                        $qty = abs($adj->quantity_change);
+                        $type = $adj->quantity_change >= 0 ? 'Plus' : 'Minus';
+                    @endphp
+                    addProductRow({
+                        id: "{{ $adj->product_id }}",
+                        name: "{{ addslashes($adj->product->name) }}",
+                        sku: "{{ $adj->product->code }}",
+                        stock: parseFloat("{{ ($adj->product->stock->quantity ?? 0) - $adj->quantity_change }}"),
+                        unit: "{{ $adj->product->unit_code ?? 'Units' }}",
+                        image: "{{ $adj->product->image ? asset('uploads/products/' . $adj->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}",
+                        qty: parseFloat("{{ $qty }}"),
+                        type: "{{ $type }}"
+                    });
+                @endforeach
+            @else
+                // Populate old items on validation failure (if any)
                 @foreach (old('items') as $oldItem)
                     @php
                         $oldProd = \App\Models\Product::with('stock')->find($oldItem['product_id'] ?? null);

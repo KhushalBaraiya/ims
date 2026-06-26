@@ -11,6 +11,8 @@ class StockAdjustment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'voucher_no',
+        'transaction_date',
         'product_id',
         'quantity_change',
         'adjustment_type',

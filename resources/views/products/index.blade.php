@@ -163,10 +163,14 @@
                                 <td class="text-end fw-bold text-primary">
                                     {{ format_currency($product->selling_price) }}
                                 </td>
-                                <td
-                                    class="text-end fw-bold
-                                    {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-danger' : 'text-success' }}">
-                                    {{ number_format($product->stock->quantity ?? 0, 2) }}
+                                <td class="text-end">
+                                    @if ($product->hasTransactions())
+                                        <span class="fw-bold {{ ($product->stock->quantity ?? 0) <= $product->minimum_stock_alert ? 'text-danger' : 'text-success' }}">
+                                            {{ number_format($product->stock->quantity ?? 0, 2) }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted small">—</span>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <span

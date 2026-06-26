@@ -75,4 +75,31 @@ class Product extends Model
     {
         return $this->hasMany(SaleItem::class);
     }
+
+    public function stockAdjustments(): HasMany
+    {
+        return $this->hasMany(StockAdjustment::class);
+    }
+
+    public function purchaseReturnItems(): HasMany
+    {
+        return $this->hasMany(PurchaseReturnItem::class);
+    }
+
+    public function saleReturnItems(): HasMany
+    {
+        return $this->hasMany(SaleReturnItem::class);
+    }
+
+    /**
+     * Determine if the product has any completed transaction logged.
+     */
+    public function hasTransactions(): bool
+    {
+        return $this->purchaseItems()->whereHas('purchase', fn($q) => $q->where('status', 'Completed'))->exists()
+            || $this->saleItems()->whereHas('sale', fn($q) => $q->where('status', 'Completed'))->exists()
+            || $this->purchaseReturnItems()->exists()
+            || $this->saleReturnItems()->exists()
+            || $this->stockAdjustments()->exists();
+    }
 }

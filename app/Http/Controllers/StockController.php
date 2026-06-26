@@ -64,6 +64,9 @@ class StockController extends Controller
     // ──────────────────────────────────────────────────
     //  2. ADJUSTMENT FORM PAGE
     // ──────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────
+    //  2. ADJUSTMENT FORM PAGE
+    // ──────────────────────────────────────────────────
     public function adjust(Request $request): View
     {
         Gate::authorize('stocks.create');
@@ -82,54 +85,209 @@ class StockController extends Controller
         Gate::authorize('stocks.create');
 
         $validated = $request->validate([
-            'product_id'      => 'required|exists:products,id',
-            'adjustment_type' => 'required|in:Restock,Damage,Return,Write-Off,Correction,Other',
-            'quantity_change' => 'required|numeric|not_in:0',
-            'notes'           => 'nullable|string|max:500',
+            'transaction_date' => 'required|date',
+            'notes'            => 'nullable|string|max:500',
+            'items'            => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.type'       => 'required|in:Plus,Minus',
+            'items.*.quantity'   => 'required|numeric|min:0.01',
         ]);
 
         DB::beginTransaction();
         try {
-            $product = Product::with('stock')->findOrFail($validated['product_id']);
-            $change  = (float) $validated['quantity_change'];
-            $stock   = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+            $today = date('Ymd');
+            $count = StockAdjustment::where('voucher_no', 'like', "ADJ-{$today}-%")->distinct()->count('voucher_no');
+            $voucherNo = 'ADJ-' . $today . '-' . str_pad($count + 1, 4, '0', STR_PAD_LEFT);
 
-            $newQty  = $stock->quantity + $change;
-            if ($newQty < 0) {
-                return back()->withInput()
-                    ->withErrors(['quantity_change' =>
-                        "Adjustment would result in negative stock ({$newQty}) for \"{$product->name}\". "
-                        . "Current stock: {$stock->quantity}."]);
+            $adjustedProductsLog = [];
+
+            foreach ($validated['items'] as $item) {
+                $product = Product::with('stock')->findOrFail($item['product_id']);
+                $qty = (float) $item['quantity'];
+                $change = $item['type'] === 'Minus' ? -$qty : $qty;
+
+                $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                $newQty = $stock->quantity + $change;
+
+                if ($newQty < 0) {
+                    throw new \Exception("Adjustment would result in negative stock ({$newQty}) for \"{$product->name}\". Current stock: {$stock->quantity}.");
+                }
+
+                $stock->update(['quantity' => $newQty]);
+
+                StockAdjustment::create([
+                    'voucher_no'       => $voucherNo,
+                    'transaction_date' => $validated['transaction_date'],
+                    'product_id'       => $product->id,
+                    'quantity_change'  => $change,
+                    'adjustment_type'  => $item['type'],
+                    'notes'            => $validated['notes'] ?? null,
+                    'user_id'          => auth()->id(),
+                    'created_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                    'updated_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                ]);
+
+                $sign = $change > 0 ? '+' : '';
+                $adjustedProductsLog[] = "{$product->name} ({$sign}{$qty})";
             }
 
-            $stock->update(['quantity' => $newQty]);
-
-            StockAdjustment::create([
-                'product_id'      => $product->id,
-                'quantity_change' => $change,
-                'adjustment_type' => $validated['adjustment_type'],
-                'notes'           => $validated['notes'] ?? null,
-                'user_id'         => auth()->id(),
-            ]);
-
-            $sign = $change > 0 ? '+' : '';
             ActivityLog::log(
                 'Stock Adjusted',
-                "Adjusted stock for \"{$product->name}\" (SKU: {$product->code}): "
-                . "{$sign}{$change} [{$validated['adjustment_type']}]. New qty: {$newQty}."
+                "Created stock adjustment voucher: {$voucherNo}. Adjusted products: " . implode(', ', $adjustedProductsLog)
             );
 
             DB::commit();
-            return redirect()->route('stocks.index')
-                ->with('success', "Stock adjusted for \"{$product->name}\" → new qty: {$newQty}.");
+            return redirect()->route('stocks.history')
+                ->with('success', "Stock adjustment voucher \"{$voucherNo}\" created successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors($e->getMessage())->withInput();
+            return back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
 
     // ──────────────────────────────────────────────────
-    //  4. HISTORY PAGE
+    //  4. EDIT ADJUSTMENT
+    // ──────────────────────────────────────────────────
+    public function edit_adjustment($voucherNo): View
+    {
+        Gate::authorize('stocks.create');
+
+        $adjustments = StockAdjustment::with('product.stock')->where('voucher_no', $voucherNo)->get();
+        if ($adjustments->isEmpty()) {
+            abort(404);
+       }
+
+       $allProducts = Product::with('stock')->where('status', 'active')->orderBy('name')->get();
+       $notes = $adjustments->first()->notes;
+       $transactionDate = $adjustments->first()->transaction_date ?: $adjustments->first()->created_at->format('Y-m-d');
+
+       return view('stocks.edit_adjustment', compact('adjustments', 'voucherNo', 'allProducts', 'notes', 'transactionDate'));
+    }
+
+    // ──────────────────────────────────────────────────
+    //  5. UPDATE ADJUSTMENT
+    // ──────────────────────────────────────────────────
+    public function update_adjustment(Request $request, $voucherNo): RedirectResponse
+    {
+        Gate::authorize('stocks.create');
+
+        $validated = $request->validate([
+            'transaction_date' => 'required|date',
+            'notes'            => 'nullable|string|max:500',
+            'items'            => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.type'       => 'required|in:Plus,Minus',
+            'items.*.quantity'   => 'required|numeric|min:0.01',
+        ]);
+
+        $oldAdjustments = StockAdjustment::where('voucher_no', $voucherNo)->get();
+        if ($oldAdjustments->isEmpty()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Revert old changes
+            foreach ($oldAdjustments as $oldAdj) {
+                $product = Product::with('stock')->findOrFail($oldAdj->product_id);
+                $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                $stock->update(['quantity' => $stock->quantity - $oldAdj->quantity_change]);
+            }
+
+            // Verify new changes are valid (don't result in negative stock)
+            foreach ($validated['items'] as $item) {
+                $product = Product::with('stock')->findOrFail($item['product_id']);
+                $qty = (float) $item['quantity'];
+                $change = $item['type'] === 'Minus' ? -$qty : $qty;
+
+                $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                $newQty = $stock->quantity + $change;
+
+                if ($newQty < 0) {
+                    throw new \Exception("Adjustment would result in negative stock ({$newQty}) for \"{$product->name}\". Current stock (before adjustment): {$stock->quantity}.");
+                }
+            }
+
+            // Re-apply stocks and delete old entries
+            StockAdjustment::where('voucher_no', $voucherNo)->delete();
+            $adjustedProductsLog = [];
+
+            foreach ($validated['items'] as $item) {
+                $product = Product::with('stock')->findOrFail($item['product_id']);
+                $qty = (float) $item['quantity'];
+                $change = $item['type'] === 'Minus' ? -$qty : $qty;
+
+                $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                $stock->update(['quantity' => $stock->quantity + $change]);
+
+                StockAdjustment::create([
+                    'voucher_no'       => $voucherNo,
+                    'transaction_date' => $validated['transaction_date'],
+                    'product_id'       => $product->id,
+                    'quantity_change'  => $change,
+                    'adjustment_type'  => $item['type'],
+                    'notes'            => $validated['notes'] ?? null,
+                    'user_id'          => auth()->id(),
+                    'created_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                    'updated_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                ]);
+
+                $sign = $change > 0 ? '+' : '';
+                $adjustedProductsLog[] = "{$product->name} ({$sign}{$qty})";
+            }
+
+            ActivityLog::log(
+                'Stock Adjusted',
+                "Updated stock adjustment voucher: {$voucherNo}. Adjusted products: " . implode(', ', $adjustedProductsLog)
+            );
+
+            DB::commit();
+            return redirect()->route('stocks.history')
+                ->with('success', "Stock adjustment voucher \"{$voucherNo}\" updated successfully.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    // ──────────────────────────────────────────────────
+    //  6. DELETE ADJUSTMENT
+    // ──────────────────────────────────────────────────
+    public function destroy_adjustment($voucherNo): RedirectResponse
+    {
+        Gate::authorize('stocks.create');
+
+        $oldAdjustments = StockAdjustment::where('voucher_no', $voucherNo)->get();
+        if ($oldAdjustments->isEmpty()) {
+            abort(404);
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($oldAdjustments as $oldAdj) {
+                $product = Product::with('stock')->findOrFail($oldAdj->product_id);
+                $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                $stock->update(['quantity' => $stock->quantity - $oldAdj->quantity_change]);
+            }
+
+            StockAdjustment::where('voucher_no', $voucherNo)->delete();
+
+            ActivityLog::log(
+                'Stock Adjusted',
+                "Deleted stock adjustment voucher: {$voucherNo} (reverted stock changes)."
+            );
+
+            DB::commit();
+            return redirect()->route('stocks.history')
+                ->with('success', "Stock adjustment voucher \"{$voucherNo}\" deleted and stock reverted successfully.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    // ──────────────────────────────────────────────────
+    //  7. HISTORY PAGE
     // ──────────────────────────────────────────────────
     public function history(Request $request): View
     {
@@ -145,17 +303,18 @@ class StockController extends Controller
         }
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween(
-                DB::raw('DATE(created_at)'),
+                DB::raw('DATE(transaction_date)'),
                 [$request->start_date, $request->end_date]
             );
         }
 
-        $adjustments = $query->get();
+        $allAdjustments = $query->get();
+        $adjustmentsGrouped = $allAdjustments->groupBy('voucher_no');
+
         $allProducts = Product::orderBy('name')->get(['id', 'name', 'code']);
+        $types = ['Plus', 'Minus'];
 
-        $types = ['Restock', 'Damage', 'Return', 'Write-Off', 'Correction', 'Other'];
-
-        return view('stocks.history', compact('adjustments', 'allProducts', 'types'));
+        return view('stocks.history', compact('adjustmentsGrouped', 'allProducts', 'types'));
     }
 
     // ──────────────────────────────────────────────────

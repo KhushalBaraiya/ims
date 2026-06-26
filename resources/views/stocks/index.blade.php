@@ -183,22 +183,37 @@
                                 <td><code class="small">{{ $product->code }}</code></td>
                                 <td class="text-muted small">{{ $product->mainCategory->name ?? '-' }}</td>
                                 <td class="text-muted small">{{ $product->unit_code ?? '-' }}</td>
-                                <td
-                                    class="text-end fw-bold {{ $isOut ? 'text-danger' : ($isLow ? 'text-warning' : 'text-success') }}">
-                                    {{ number_format($qty, 2) }}
+                                <td class="text-end">
+                                    @if ($product->hasTransactions())
+                                        <span class="fw-bold {{ $isOut ? 'text-danger' : ($isLow ? 'text-warning' : 'text-success') }}">
+                                            {{ number_format($qty, 2) }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted small">—</span>
+                                    @endif
                                 </td>
                                 <td class="text-end text-muted small">{{ number_format($alert, 2) }}</td>
                                 <td class="text-end fw-semibold">{{ format_currency($product->purchase_price) }}</td>
-                                <td class="text-end fw-bold">{{ format_currency($invVal) }}</td>
-                                <td class="text-center">
-                                    @if ($isOut)
-                                        <span
-                                            class="badge rounded-pill bg-danger">{{ __('messages.out_of_stock') }}</span>
-                                    @elseif($isLow)
-                                        <span
-                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.low_stock_badge') }}</span>
+                                <td class="text-end">
+                                    @if ($product->hasTransactions())
+                                        <span class="fw-bold">{{ format_currency($invVal) }}</span>
                                     @else
-                                        <span class="badge rounded-pill bg-success">{{ __('messages.in_stock') }}</span>
+                                        <span class="text-muted small">—</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if ($product->hasTransactions())
+                                        @if ($isOut)
+                                            <span
+                                                class="badge rounded-pill bg-danger">{{ __('messages.out_of_stock') }}</span>
+                                        @elseif($isLow)
+                                            <span
+                                                class="badge rounded-pill bg-warning text-dark">{{ __('messages.low_stock_badge') }}</span>
+                                        @else
+                                            <span class="badge rounded-pill bg-success">{{ __('messages.in_stock') }}</span>
+                                        @endif
+                                    @else
+                                        <span class="badge rounded-pill bg-secondary bg-opacity-75">N/A</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
