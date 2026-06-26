@@ -20,6 +20,70 @@
         @endcan
     </div>
 
+    {{-- Summary Stats --}}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-group"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-primary">{{ $users->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.th_total') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-success flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-success">{{ $users->where('status', 'active')->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-danger flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-x-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $users->where('status', 'inactive')->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-warning flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-shield"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-warning">
+                            <a href="{{ route('roles.index') }}" class="text-warning text-decoration-none">
+                                {{ \Spatie\Permission\Models\Role::count() }}
+                            </a>
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.menu_roles') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">

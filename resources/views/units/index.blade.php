@@ -21,86 +21,135 @@
         @endcan
     </div>
 
+    {{-- Summary Stats --}}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-warning flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-ruler"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-warning">{{ $units->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.th_total') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-success flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-success">{{ $units->where('status', 'active')->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-danger flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-x-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $units->where('status', 'inactive')->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Table Card --}}
     <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="unitsTable" style="width:100%">
-                <thead class="table-light">
-                    <tr>
-                        <th>{{ __('messages.th_no') }}</th>
-                        <th>{{ __('messages.unit_name') }}</th>
-                        <th>{{ __('messages.short_name') }}</th>
-                        <th class="text-center">{{ __('messages.th_status') }}</th>
-                        <th>{{ __('messages.th_created') }}</th>
-                        <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($units as $index => $unit)
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="unitsTable" style="width:100%">
+                    <thead class="table-light">
                         <tr>
-                            <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="avatar avatar-sm flex-shrink-0">
-                                        <span class="avatar-initial rounded-circle bg-label-warning">
-                                            <i class="bx bx-ruler" style="font-size:1rem;"></i>
-                                        </span>
-                                    </div>
-                                    <strong>{{ $unit->name }}</strong>
-                                </div>
-                            </td>
-                            <td><code class="text-warning">{{ $unit->short_name }}</code></td>
-                            <td class="text-center">
-                                @can('units.update')
-                                    <button type="button"
-                                        class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $unit->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                        style="background:transparent;cursor:pointer;" data-id="{{ $unit->id }}"
-                                        data-status="{{ $unit->status }}" title="{{ __('messages.click_to_toggle') }}">
-                                        {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
-                                    </button>
-                                @else
-                                    <span
-                                        class="badge rounded-pill border fw-semibold px-3 py-1 {{ $unit->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                        style="background:transparent;">
-                                        {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
-                                    </span>
-                                @endcan
-                            </td>
-                            <td class="text-muted small">{{ $unit->created_at->format('d M Y') }}</td>
-                            <td class="text-center">
-                                <div class="d-flex align-items-center justify-content-center gap-1">
-                                    @can('units.view')
-                                        <a href="{{ route('units.show', $unit->id) }}"
-                                            class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                            title="{{ __('messages.view') }}">
-                                            <i class="bx bx-show"></i>
-                                        </a>
-                                    @endcan
-                                    @can('units.update')
-                                        <a href="{{ route('units.edit', $unit->id) }}"
-                                            class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                            title="{{ __('messages.edit') }}">
-                                            <i class="bx bx-edit"></i>
-                                        </a>
-                                    @endcan
-                                    @can('units.delete')
-                                        <form id="delete-form-{{ $unit->id }}"
-                                            action="{{ route('units.destroy', $unit->id) }}" method="POST" class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button type="button"
-                                                class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                data-id="{{ $unit->id }}" data-name="{{ $unit->name }}"
-                                                title="{{ __('messages.delete') }}">
-                                                <i class="bx bx-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endcan
-                                </div>
-                            </td>
+                            <th>{{ __('messages.th_no') }}</th>
+                            <th>{{ __('messages.unit_name') }}</th>
+                            <th>{{ __('messages.short_name') }}</th>
+                            <th class="text-center">{{ __('messages.th_status') }}</th>
+                            <th>{{ __('messages.th_created') }}</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($units as $index => $unit)
+                            <tr>
+                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar avatar-sm flex-shrink-0">
+                                            <span class="avatar-initial rounded-circle bg-label-warning">
+                                                <i class="bx bx-ruler" style="font-size:1rem;"></i>
+                                            </span>
+                                        </div>
+                                        <strong>{{ $unit->name }}</strong>
+                                    </div>
+                                </td>
+                                <td><code class="text-warning">{{ $unit->short_name }}</code></td>
+                                <td class="text-center">
+                                    @can('units.update')
+                                        <button type="button"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $unit->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;cursor:pointer;" data-id="{{ $unit->id }}"
+                                            data-status="{{ $unit->status }}" title="{{ __('messages.click_to_toggle') }}">
+                                            {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </button>
+                                    @else
+                                        <span
+                                            class="badge rounded-pill border fw-semibold px-3 py-1 {{ $unit->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;">
+                                            {{ $unit->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </span>
+                                    @endcan
+                                </td>
+                                <td class="text-muted small">{{ $unit->created_at->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('units.view')
+                                            <a href="{{ route('units.show', $unit->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}">
+                                                <i class="bx bx-show"></i>
+                                            </a>
+                                        @endcan
+                                        @can('units.update')
+                                            <a href="{{ route('units.edit', $unit->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('units.delete')
+                                            <form id="delete-form-{{ $unit->id }}"
+                                                action="{{ route('units.destroy', $unit->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $unit->id }}" data-name="{{ $unit->name }}"
+                                                    title="{{ __('messages.delete') }}">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

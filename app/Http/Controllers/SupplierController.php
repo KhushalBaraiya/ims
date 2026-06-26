@@ -20,7 +20,7 @@ class SupplierController extends Controller
     {
         Gate::authorize('suppliers.view');
 
-        $suppliers = Supplier::latest()->get();
+        $suppliers = Supplier::with('purchases')->latest()->get();
 
         return view('suppliers.index', compact('suppliers'));
     }

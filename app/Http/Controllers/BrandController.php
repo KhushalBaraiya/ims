@@ -20,7 +20,7 @@ class BrandController extends Controller
     {
         Gate::authorize('brands.view');
 
-        $brands = Brand::latest()->get();
+        $brands = Brand::with('products')->latest()->get();
 
         return view('brands.index', compact('brands'));
     }

@@ -21,92 +21,169 @@
         @endcan
     </div>
 
+    {{-- Summary Stats --}}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-award"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-primary">{{ $brands->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.th_total') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-success flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-success">{{ $brands->where('status', 'active')->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-danger flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-x-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $brands->where('status', 'inactive')->count() }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-info flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-package"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-info">
+                            {{ $brands->sum(fn($b) => $b->products->count()) }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.total_products') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Table Card --}}
     <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="brandsTable" style="width:100%">
-                <thead class="table-light">
-                    <tr>
-                        <th>{{ __('messages.th_no') }}</th>
-                        <th>{{ __('messages.th_image') }}</th>
-                        <th>{{ __('messages.brand_name') }}</th>
-                        <th>{{ __('messages.th_code') }}</th>
-                        <th class="text-center">{{ __('messages.th_status') }}</th>
-                        <th>{{ __('messages.th_created') }}</th>
-                        <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($brands as $index => $brand)
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="brandsTable" style="width:100%">
+                    <thead class="table-light">
                         <tr>
-                            <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                            <td>
-                                @if ($brand->image)
-                                    <img src="{{ asset('uploads/brands/' . $brand->image) }}" class="tbl-img-round"
-                                        onerror="imgError(this)" alt="{{ $brand->name }}">
-                                @else
-                                    <div class="avatar avatar-sm flex-shrink-0">
-                                        <span class="avatar-initial rounded-circle bg-label-primary">
-                                            <i class="bx bx-award" style="font-size:1rem;"></i>
-                                        </span>
-                                    </div>
-                                @endif
-                            </td>
-                            <td>
-                                <strong>{{ $brand->name }}</strong>
-                            </td>
-                            <td><code class="text-primary">{{ $brand->slug }}</code></td>
-                            <td class="text-center">
-                                @can('brands.update')
-                                    <button type="button"
-                                        class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                        style="background:transparent;cursor:pointer;" data-id="{{ $brand->id }}"
-                                        data-status="{{ $brand->status }}" title="{{ __('messages.click_to_toggle') }}">
-                                        {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
-                                    </button>
-                                @else
-                                    <span
-                                        class="badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                        style="background:transparent;">
-                                        {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
-                                    </span>
-                                @endcan
-                            </td>
-                            <td class="text-muted small">{{ $brand->created_at->format('d M Y') }}</td>
-                            <td class="text-center">
-                                <div class="d-flex align-items-center justify-content-center gap-1">
-                                    @can('brands.view')
-                                        <a href="{{ route('brands.show', $brand->id) }}"
-                                            class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                            title="{{ __('messages.view') }}">
-                                            <i class="bx bx-show"></i>
-                                        </a>
-                                    @endcan
-                                    @can('brands.update')
-                                        <a href="{{ route('brands.edit', $brand->id) }}"
-                                            class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                            title="{{ __('messages.edit') }}">
-                                            <i class="bx bx-edit"></i>
-                                        </a>
-                                    @endcan
-                                    @can('brands.delete')
-                                        <form id="delete-form-{{ $brand->id }}"
-                                            action="{{ route('brands.destroy', $brand->id) }}" method="POST" class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button type="button"
-                                                class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                data-id="{{ $brand->id }}" data-name="{{ $brand->name }}"
-                                                title="{{ __('messages.delete') }}">
-                                                <i class="bx bx-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endcan
-                                </div>
-                            </td>
+                            <th>{{ __('messages.th_no') }}</th>
+                            <th>{{ __('messages.th_image') }}</th>
+                            <th>{{ __('messages.brand_name') }}</th>
+                            <th>{{ __('messages.th_code') }}</th>
+                            <th class="text-center">{{ __('messages.total_products') }}</th>
+                            <th class="text-center">{{ __('messages.th_status') }}</th>
+                            <th>{{ __('messages.th_created') }}</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($brands as $index => $brand)
+                            <tr>
+                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                <td>
+                                    @if ($brand->image)
+                                        <img src="{{ asset('uploads/brands/' . $brand->image) }}" class="tbl-img-round"
+                                            onerror="imgError(this)" alt="{{ $brand->name }}">
+                                    @else
+                                        <div class="avatar avatar-sm flex-shrink-0">
+                                            <span class="avatar-initial rounded-circle bg-label-primary">
+                                                <i class="bx bx-award" style="font-size:1rem;"></i>
+                                            </span>
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong>{{ $brand->name }}</strong>
+                                        @if ($brand->description)
+                                            <small class="d-block text-muted text-truncate" style="max-width:180px;">
+                                                {{ $brand->description }}
+                                            </small>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td><code class="text-primary">{{ $brand->slug }}</code></td>
+                                <td class="text-center">
+                                    <span class="badge bg-label-info">{{ $brand->products->count() }}</span>
+                                </td>
+                                <td class="text-center">
+                                    @can('brands.update')
+                                        <button type="button"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;cursor:pointer;" data-id="{{ $brand->id }}"
+                                            data-status="{{ $brand->status }}" title="{{ __('messages.click_to_toggle') }}">
+                                            {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </button>
+                                    @else
+                                        <span
+                                            class="badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;">
+                                            {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                        </span>
+                                    @endcan
+                                </td>
+                                <td class="text-muted small">{{ $brand->created_at->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('brands.view')
+                                            <a href="{{ route('brands.show', $brand->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}">
+                                                <i class="bx bx-show"></i>
+                                            </a>
+                                        @endcan
+                                        @can('brands.update')
+                                            <a href="{{ route('brands.edit', $brand->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('brands.delete')
+                                            <form id="delete-form-{{ $brand->id }}"
+                                                action="{{ route('brands.destroy', $brand->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $brand->id }}" data-name="{{ $brand->name }}"
+                                                    title="{{ __('messages.delete') }}">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

@@ -21,8 +21,71 @@
         @endcan
     </div>
 
+    {{-- Summary Stats --}}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-warning flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-store"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-warning">{{ $suppliers->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.th_total') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-success flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-success">{{ $suppliers->where('status', 'active')->count() }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-danger flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-x-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $suppliers->where('status', 'inactive')->count() }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-info flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-cart-download"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-info">
+                            {{ $suppliers->sum(fn($s) => $s->purchases->count()) }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.total_purchases') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Table Card --}}
-    {{--  --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -33,6 +96,7 @@
                             <th>{{ __('messages.th_name') }}</th>
                             <th>{{ __('messages.th_phone') }}</th>
                             <th>{{ __('messages.th_email') }}</th>
+                            <th class="text-center">{{ __('messages.total_purchases') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
                             <th>{{ __('messages.th_created') }}</th>
                             <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
@@ -59,6 +123,9 @@
                                 </td>
                                 <td class="fw-semibold">{{ $supplier->phone }}</td>
                                 <td class="text-muted">{{ $supplier->email ?: '—' }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-label-info">{{ $supplier->purchases->count() }}</span>
+                                </td>
                                 <td class="text-center">
                                     @can('suppliers.update')
                                         <button type="button"

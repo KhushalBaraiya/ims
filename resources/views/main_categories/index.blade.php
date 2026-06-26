@@ -21,6 +21,72 @@
         @endcan
     </div>
 
+    {{-- Summary Stats --}}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-primary flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-category"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-primary">{{ $categories->count() }}</div>
+                        <div class="text-muted small mt-1">{{ __('messages.th_total') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-success flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-success">{{ $categories->where('status', 'active')->count() }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-danger flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-x-circle"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $categories->where('status', 'inactive')->count() }}
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex align-items-center gap-3 py-3">
+                    <span class="avatar-initial rounded-circle bg-label-info flex-shrink-0"
+                        style="width:44px;height:44px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-sitemap"></i>
+                    </span>
+                    <div>
+                        <div class="fw-bold fs-4 lh-1 text-info">
+                            <a href="{{ route('sub-categories.index') }}" class="text-info text-decoration-none">
+                                {{ \App\Models\SubCategory::count() }}
+                            </a>
+                        </div>
+                        <div class="text-muted small mt-1">{{ __('messages.sub_categories') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Table Card --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
@@ -31,6 +97,7 @@
                             <th>{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.category_name') }}</th>
                             <th>{{ __('messages.th_code') }}</th>
+                            <th class="text-center">{{ __('messages.sub_categories') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
                             <th>{{ __('messages.th_created') }}</th>
                             <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
@@ -47,10 +114,20 @@
                                                 <i class="bx bx-category" style="font-size:1rem;"></i>
                                             </span>
                                         </div>
-                                        <strong>{{ $category->name }}</strong>
+                                        <div>
+                                            <strong>{{ $category->name }}</strong>
+                                            @if ($category->description)
+                                                <small class="d-block text-muted text-truncate" style="max-width:200px;">
+                                                    {{ $category->description }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
                                 <td><code class="text-primary">{{ $category->slug }}</code></td>
+                                <td class="text-center">
+                                    <span class="badge bg-label-success">{{ $category->subCategories->count() }}</span>
+                                </td>
                                 <td class="text-center">
                                     @can('main_categories.update')
                                         <button type="button"

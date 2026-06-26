@@ -20,7 +20,7 @@ class MainCategoryController extends Controller
     {
         Gate::authorize('main_categories.view');
 
-        $categories = MainCategory::latest()->get();
+        $categories = MainCategory::withCount('subCategories')->with('subCategories')->latest()->get();
 
         return view('main_categories.index', compact('categories'));
     }

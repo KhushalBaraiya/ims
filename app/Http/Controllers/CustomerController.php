@@ -20,7 +20,7 @@ class CustomerController extends Controller
     {
         Gate::authorize('customers.view');
 
-        $customers = Customer::latest()->get();
+        $customers = Customer::with('sales')->latest()->get();
 
         return view('customers.index', compact('customers'));
     }
