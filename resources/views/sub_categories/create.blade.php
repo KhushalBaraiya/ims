@@ -21,7 +21,7 @@
         </a>
     </div>
 
-    <form id="subCategoryForm" method="POST" action="{{ route('sub-categories.store') }}">
+    <form id="subCategoryForm" method="POST" action="{{ route('sub-categories.store') }}" data-validate="true">
         @csrf
         <div class="row g-4">
 

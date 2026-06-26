@@ -198,6 +198,71 @@
 {{-- ─── Page-specific scripts ──────────────────────────────────────────────── --}}
 @stack('scripts')
 
+{{-- ─── Global jQuery Validate Setup ─────────────────────────────────────── --}}
+<script>
+    // Configure jQuery Validate defaults globally so every form benefits
+    $.validator.setDefaults({
+        errorElement: 'div',
+        errorClass: 'invalid-feedback d-block',
+        validClass: '',
+        ignore: ':hidden:not([class*="select2"]):not(.flatpickr-input)',
+        highlight: function(element) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element).closest(
+                    '.mb-3, .mb-4, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-12, .col')
+                .find('.select2-container').addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid');
+            $(element).closest(
+                    '.mb-3, .mb-4, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-12, .col')
+                .find('.select2-container').removeClass('is-invalid');
+        },
+        errorPlacement: function(error, element) {
+            // Select2
+            var s2 = element.next('.select2-container');
+            if (s2.length) {
+                error.insertAfter(s2);
+                return;
+            }
+            // Input group (flatpickr wrapper etc.)
+            var ig = element.closest('.input-group, .fp-wrapper');
+            if (ig.length) {
+                error.insertAfter(ig);
+                return;
+            }
+            // Radio / checkbox
+            if (element.is(':radio') || element.is(':checkbox')) {
+                error.insertAfter(element.closest('.form-check, #typeButtons') || element);
+                return;
+            }
+            error.insertAfter(element);
+        }
+    });
+
+    // Custom: value must not equal 0
+    $.validator.addMethod('not_zero', function(value) {
+        return parseFloat(value) !== 0;
+    }, 'Value cannot be zero.');
+
+    // Custom: alpha_dash — letters, numbers, dashes, underscores only
+    $.validator.addMethod('alpha_dash', function(value) {
+        return /^[a-zA-Z0-9_\-]+$/.test(value);
+    }, 'Only letters, numbers, dashes, and underscores are allowed.');
+
+    // Custom: minVal for numeric
+    $.validator.addMethod('minVal', function(value, element, param) {
+        return parseFloat(value) >= parseFloat(param);
+    }, $.validator.format('Please enter a value of at least {0}.'));
+
+    // Auto-init validation on any form with data-validate="true"
+    $(document).ready(function() {
+        $('form[data-validate="true"]').each(function() {
+            $(this).validate();
+        });
+    });
+</script>
+
 {{-- ─── Global Select2 Auto-Init ─────────────────────────────────────────── --}}
 <script>
     $(document).ready(function() {

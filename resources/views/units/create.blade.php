@@ -20,7 +20,7 @@
         </a>
     </div>
 
-    <form id="unitForm" method="POST" action="{{ route('units.store') }}">
+    <form id="unitForm" method="POST" action="{{ route('units.store') }}" data-validate="true">
         @csrf
         <div class="row g-4">
 

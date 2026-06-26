@@ -19,7 +19,8 @@
         </a>
     </div>
 
-    <form id="userForm" method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data">
+    <form id="userForm" method="POST" action="{{ route('users.store') }}" enctype="multipart/form-data"
+        data-validate="true">
         @csrf
         <div class="row g-4">
 

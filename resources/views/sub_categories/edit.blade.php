@@ -21,7 +21,8 @@
         </a>
     </div>
 
-    <form id="subCategoryForm" method="POST" action="{{ route('sub-categories.update', $subCategory->id) }}">
+    <form id="subCategoryForm" method="POST" action="{{ route('sub-categories.update', $subCategory->id) }}"
+        data-validate="true">
         @csrf @method('PUT')
         <div class="row g-4">
 

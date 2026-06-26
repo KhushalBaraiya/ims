@@ -20,7 +20,8 @@
         </a>
     </div>
 
-    <form id="brandForm" method="POST" action="{{ route('brands.store') }}" enctype="multipart/form-data">
+    <form id="brandForm" method="POST" action="{{ route('brands.store') }}" enctype="multipart/form-data"
+        data-validate="true">
         @csrf
         <div class="row g-4">
 

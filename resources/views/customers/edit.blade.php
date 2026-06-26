@@ -20,7 +20,7 @@
         </a>
     </div>
 
-    <form id="customerForm" method="POST" action="{{ route('customers.update', $customer->id) }}">
+    <form id="customerForm" method="POST" action="{{ route('customers.update', $customer->id) }}" data-validate="true">
         @csrf @method('PUT')
         <div class="row g-4">
 
