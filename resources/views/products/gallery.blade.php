@@ -184,6 +184,9 @@
             <a href="{{ route('products.index') }}" class="btn btn-outline-secondary btn-sm">
                 <i class="bx bx-list-ul me-1"></i> List View
             </a>
+            <a href="{{ route('products.by-category') }}" class="btn btn-outline-success btn-sm">
+                <i class="bx bx-category me-1"></i> By Category
+            </a>
             @can('products.create')
                 <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
                     <i class="bx bx-plus me-1"></i> Add Product

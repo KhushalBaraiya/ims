@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
 
     // Products Routes
     Route::get('/products/gallery', [ProductController::class, 'gallery'])->name('products.gallery');
+    Route::get('/products/by-category', [ProductController::class, 'byCategory'])->name('products.by-category');
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
     Route::get('/products/{product}/copy', [ProductController::class, 'copy'])->name('products.copy');
     Route::resource('products', ProductController::class);

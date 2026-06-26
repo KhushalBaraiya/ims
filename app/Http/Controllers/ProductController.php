@@ -23,6 +23,73 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
     /**
+     * Category-wise Products — products grouped by main category with sub-category tabs.
+     */
+    public function byCategory(Request $request): View
+    {
+        Gate::authorize('products.view');
+
+        $search       = $request->input('search', '');
+        $statusFilter = $request->input('status', '');
+        $stockFilter  = $request->input('stock_filter', '');
+
+        // Load all active main categories with their sub-categories and products
+        $categoriesQuery = MainCategory::with([
+            'subCategories' => fn ($q) => $q->where('status', 'active')->orderBy('name'),
+            'products' => function ($q) use ($search, $statusFilter, $stockFilter) {
+                $q->with(['brand', 'subCategory', 'stock']);
+                if ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%")
+                           ->orWhere('code', 'like', "%{$search}%");
+                    });
+                }
+                if ($statusFilter) {
+                    $q->where('status', $statusFilter);
+                }
+                if ($stockFilter === 'out') {
+                    $q->where(function ($sq) {
+                        $sq->whereHas('stock', fn ($s) => $s->where('quantity', '<=', 0))
+                           ->orWhereDoesntHave('stock');
+                    });
+                } elseif ($stockFilter === 'low') {
+                    $q->whereHas('stock', fn ($s) => $s->where('quantity', '>', 0)
+                        ->whereRaw('stocks.quantity <= products.minimum_stock_alert'));
+                } elseif ($stockFilter === 'ok') {
+                    $q->whereHas('stock', fn ($s) => $s->whereRaw('stocks.quantity > products.minimum_stock_alert'));
+                }
+                $q->orderBy('name');
+            },
+        ])->where('status', 'active')->orderBy('name');
+
+        $categories = $categoriesQuery->get();
+
+        // Also get products with no category (uncategorized)
+        $uncategorizedQuery = Product::with(['brand', 'mainCategory', 'subCategory', 'stock'])
+            ->whereNull('main_category_id');
+        if ($search) {
+            $uncategorizedQuery->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%");
+            });
+        }
+        if ($statusFilter) {
+            $uncategorizedQuery->where('status', $statusFilter);
+        }
+        $uncategorized = $uncategorizedQuery->orderBy('name')->get();
+
+        // Summary stats
+        $totalProducts   = Product::count();
+        $totalCategories = MainCategory::where('status', 'active')->count();
+
+        return view('products.by_category', compact(
+            'categories', 'uncategorized',
+            'totalProducts', 'totalCategories',
+            'search', 'statusFilter', 'stockFilter'
+        ));
+    }
+
+    /**
      * Product Gallery — visual card grid with filters, sorting, and pagination.
      */
     public function gallery(Request $request): View

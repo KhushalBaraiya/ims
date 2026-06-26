@@ -122,11 +122,34 @@
         @endcan
 
         @can('products.view')
-            <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
-                <a href="{{ route('products.index') }}" class="menu-link">
+            @php
+                $productsActive = request()->routeIs('products.*');
+            @endphp
+            <li class="menu-item {{ $productsActive ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-package"></i>
                     <div class="text-truncate">{{ __('messages.menu_products') }}</div>
                 </a>
+                <ul class="menu-sub">
+                    <li class="menu-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
+                        <a href="{{ route('products.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                            <div class="text-truncate">List View</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('products.gallery') ? 'active' : '' }}">
+                        <a href="{{ route('products.gallery') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-grid-alt"></i>
+                            <div class="text-truncate">Gallery View</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('products.by-category') ? 'active' : '' }}">
+                        <a href="{{ route('products.by-category') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-category-alt"></i>
+                            <div class="text-truncate">By Category</div>
+                        </a>
+                    </li>
+                </ul>
             </li>
         @endcan
 
