@@ -387,6 +387,20 @@
     @endif
 
     {{-- ── Categories Loop ─────────────────────────────── --}}
+    @php
+        $totalShown = $categories->sum(fn($c) => $c->products->count()) + $uncategorized->count();
+    @endphp
+
+    @if ($totalShown === 0)
+        <div class="text-center py-5 text-muted">
+            <i class="bx bx-package" style="font-size:4rem;opacity:.15;display:block;"></i>
+            <p class="mt-3 fw-semibold mb-1">No products found.</p>
+            <p class="small mb-3">Try adjusting your filters or add products to a category.</p>
+            <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bx bx-reset me-1"></i>Clear Filters
+            </a>
+        </div>
+    @else
     @forelse($categories as $cat)
         @php $catProducts = $cat->products; @endphp
         @if ($catProducts->count() === 0)
@@ -447,16 +461,8 @@
         </div>
     @empty
         {{-- No categories found --}}
-        @if ($uncategorized->count() === 0)
-            <div class="text-center py-5 text-muted">
-                <i class="bx bx-category" style="font-size:4rem;opacity:.15;display:block;"></i>
-                <p class="mt-3 fw-semibold">No products found matching your filters.</p>
-                <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary btn-sm mt-2">
-                    <i class="bx bx-reset me-1"></i>Clear Filters
-                </a>
-            </div>
-        @endif
     @endforelse
+    @endif {{-- end totalShown check --}}
 
     {{-- ── Uncategorized ───────────────────────────────── --}}
     @if ($uncategorized->count() > 0)

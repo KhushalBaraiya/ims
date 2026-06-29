@@ -268,12 +268,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($products as $i => $product)
+                        @forelse ($products as $i => $product)
                             @php
                                 $sq = (float) ($product->stock->quantity ?? 0);
                                 $sal = (float) ($product->minimum_stock_alert ?? 0);
                                 $sOut = $sq <= 0;
-                                $sLow = !$sOut && $sq <= $sal;
+                                $sLow = !$sOut && $sal > 0 && $sq <= $sal;
                                 $sCls = $sOut ? 'text-danger' : ($sLow ? 'text-warning' : 'text-success');
                                 $sBg = $sOut
                                     ? 'rgba(234,84,85,.1)'
@@ -282,7 +282,7 @@
                                         : 'rgba(40,199,111,.1)');
                             @endphp
                             <tr>
-                                <td class="text-muted small fw-semibold">{{ $i + 1 }}</td>
+                                <td class="text-muted small fw-semibold">{{ $products->firstItem() + $i }}</td>
                                 <td>
                                     <div class="prod-img-cell">
                                         @if ($product->image)
@@ -365,7 +365,69 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="10">
+                                    <div class="text-center py-5">
+                                        <div class="mb-3"
+                                            style="width:72px;height:72px;border-radius:50%;background:rgba(105,108,255,.08);display:inline-flex;align-items:center;justify-content:center;">
+                                            <i class="bx bx-package text-primary" style="font-size:2rem;opacity:.5;"></i>
+                                        </div>
+                                        <h6 class="fw-bold mb-1 text-body">
+                                            @if (request()->hasAny([
+                                                    'search',
+                                                    'brand_id',
+                                                    'main_category_id',
+                                                    'sub_category_id',
+                                                    'status',
+                                                    'price_min',
+                                                    'price_max',
+                                                ]))
+                                                No products match your filters
+                                            @else
+                                                No products yet
+                                            @endif
+                                        </h6>
+                                        <p class="text-muted small mb-3">
+                                            @if (request()->hasAny([
+                                                    'search',
+                                                    'brand_id',
+                                                    'main_category_id',
+                                                    'sub_category_id',
+                                                    'status',
+                                                    'price_min',
+                                                    'price_max',
+                                                ]))
+                                                Try adjusting or clearing your filters to find what you're looking for.
+                                            @else
+                                                Get started by adding your first product to the catalog.
+                                            @endif
+                                        </p>
+                                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                            @if (request()->hasAny([
+                                                    'search',
+                                                    'brand_id',
+                                                    'main_category_id',
+                                                    'sub_category_id',
+                                                    'status',
+                                                    'price_min',
+                                                    'price_max',
+                                                ]))
+                                                <a href="{{ route('products.index') }}"
+                                                    class="btn btn-outline-secondary btn-sm">
+                                                    <i class="bx bx-reset me-1"></i> Clear Filters
+                                                </a>
+                                            @endif
+                                            @can('products.create')
+                                                <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
+                                                    <i class="bx bx-plus me-1"></i> Add Product
+                                                </a>
+                                            @endcan
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -373,7 +435,7 @@
     </div>
 
     {{-- Pagination --}}
-    @if ($products->hasPages())
+    @if ($products->hasPages() && $products->total() > 0)
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
             <p class="text-muted small mb-0">
                 Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} products
@@ -419,7 +481,7 @@
                 }
                 subs.filter(s => s.main_category_id == catId).forEach(s => {
                     $s.append(
-                    `<option value="${s.id}" ${s.id == pre ? 'selected' : ''}>${s.name}</option>`);
+                        `<option value="${s.id}" ${s.id == pre ? 'selected' : ''}>${s.name}</option>`);
                 });
                 $s.select2({
                     theme: 'bootstrap-5',

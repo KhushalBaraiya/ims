@@ -99,7 +99,7 @@
                             <th>{{ __('messages.th_code') }}</th>
                             <th class="text-center">{{ __('messages.sub_categories') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th>{{ __('messages.th_created') }}</th>
+                            {{-- <th>{{ __('messages.th_created') }}</th> --}}
                             <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
@@ -145,7 +145,7 @@
                                         </span>
                                     @endcan
                                 </td>
-                                <td class="text-muted small">{{ $category->created_at->format('d M Y') }}</td>
+                                {{-- <td class="text-muted small">{{ $category->created_at->format('d M Y') }}</td> --}}
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('main_categories.view')
