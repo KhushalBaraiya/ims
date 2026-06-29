@@ -28,7 +28,7 @@ class ProductRequest extends FormRequest
             ],
             'brand_id'          => 'required|exists:brands,id',
             'main_category_id'  => 'required|exists:main_categories,id',
-            'sub_category_id'   => 'required|exists:sub_categories,id',
+            'sub_category_id'   => 'nullable|exists:sub_categories,id',
             'unit_name'         => 'required|string|max:255',
             'unit_code'         => 'required|string|max:50',
 
