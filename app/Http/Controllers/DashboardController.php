@@ -9,9 +9,11 @@ use App\Models\MainCategory;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
+use App\Models\SaleItem;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -63,6 +65,48 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 7. This Week Sales & Purchases (last 7 days, grouped by date)
+        $weekStart = now()->subDays(6)->startOfDay();
+        $weekSalesByDay = Sale::selectRaw('DATE(invoice_date) as date, SUM(grand_total) as total')
+            ->where('invoice_date', '>=', $weekStart)
+            ->groupByRaw('DATE(invoice_date)')
+            ->pluck('total', 'date');
+        $weekPurchasesByDay = Purchase::selectRaw('DATE(purchase_date) as date, SUM(grand_total) as total')
+            ->where('purchase_date', '>=', $weekStart)
+            ->groupByRaw('DATE(purchase_date)')
+            ->pluck('total', 'date');
+
+        $weekDates = [];
+        $weekSalesData = [];
+        $weekPurchasesData = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $d = now()->subDays($i)->format('Y-m-d');
+            $weekDates[]        = $d;
+            $weekSalesData[]    = (float) ($weekSalesByDay[$d] ?? 0);
+            $weekPurchasesData[] = (float) ($weekPurchasesByDay[$d] ?? 0);
+        }
+
+        // 8. Top Selling Products this month (by quantity sold)
+        $monthStart = now()->startOfMonth();
+        $topProducts = SaleItem::with('product')
+            ->whereHas('sale', fn($q) => $q->where('status', 'Completed')
+                ->where('invoice_date', '>=', $monthStart))
+            ->select('product_id', DB::raw('SUM(quantity) as total_qty'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_qty')
+            ->take(6)
+            ->get();
+
+        // 9. Top 5 Customers this month (by grand_total)
+        $topCustomers = Sale::with('customer')
+            ->where('status', 'Completed')
+            ->where('invoice_date', '>=', $monthStart)
+            ->select('customer_id', DB::raw('SUM(grand_total) as total_spent'))
+            ->groupBy('customer_id')
+            ->orderByDesc('total_spent')
+            ->take(5)
+            ->get();
+
         return view('dashboard', compact(
             'totalProducts',
             'totalCategories',
@@ -77,7 +121,12 @@ class DashboardController extends Controller
             'totalPurchases',
             'lowStockProducts',
             'recentSales',
-            'recentActivities'
+            'recentActivities',
+            'weekDates',
+            'weekSalesData',
+            'weekPurchasesData',
+            'topProducts',
+            'topCustomers'
         ));
     }
 }
