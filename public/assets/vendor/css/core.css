@@ -26122,20 +26122,11 @@ li:not(:first-child) .dropdown-item, .dropdown-menu .dropdown-item:not(:first-ch
   position: relative;
   margin-block: 1rem 0.5rem;
   margin-inline: 0;
-  padding-block: 0.625rem;
-  padding-inline: 1.9996875rem;
+  /* padding-block: 0.625rem;
+  padding-inline: 1.9996875rem; */
+  padding: 15px 10px 3px 20px;
 }
-.menu-vertical .menu-header::before {
-  position: absolute;
-  background-color: var(--bs-gray-200);
-  block-size: 1px;
-  content: "";
-  inline-size: 1rem;
-  inset-block-start: 50%;
-  inset-inline-start: 0;
-  -webkit-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-}
+
 .menu-vertical .menu-item .menu-link {
   font-size: 0.9375rem;
   min-block-size: 2.625rem;

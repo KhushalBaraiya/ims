@@ -54,11 +54,6 @@ class RolePermissionSeeder extends Seeder
             'customers.update',
             'customers.delete',
 
-            'units.view',
-            'units.create',
-            'units.update',
-            'units.delete',
-
             'currencies.view',
             'currencies.create',
             'currencies.update',
@@ -127,7 +122,6 @@ class RolePermissionSeeder extends Seeder
                 'sub_categories.',
                 'suppliers.',
                 'customers.',
-                'units.',
                 'currencies.',
                 'products.',
                 'purchases.',

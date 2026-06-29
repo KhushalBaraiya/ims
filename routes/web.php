@@ -22,7 +22,6 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -110,10 +109,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchases/{purchase}/return-data', [PurchaseReturnController::class, 'getPurchaseReturnData'])->name('purchases.return-data');
     Route::get('/purchase-returns/{purchase_return}/print', [PurchaseReturnController::class, 'printReturn'])->name('purchase-returns.print');
     Route::resource('purchase-returns', PurchaseReturnController::class);
-
-    // Units Routes
-    Route::resource('units', UnitController::class);
-    Route::patch('units/{unit}/toggle-status', [UnitController::class, 'toggleStatus'])->name('units.toggle-status');
 
     // Settings Routes
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

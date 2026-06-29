@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
-    {{-- Brand --}}
+    {{-- ── Brand / Logo ── --}}
     <div class="app-brand demo">
         <a href="{{ route('dashboard') }}" class="app-brand-link">
             <span class="app-brand-logo demo">
@@ -35,40 +35,13 @@
     </div>
 
     <div class="menu-divider mt-0"></div>
-
-    {{-- Logged-in user --}}
-    {{-- <div class="px-3 py-3">
-        <a href="{{ route('profile.show') }}"
-            class="d-flex align-items-center gap-3 text-decoration-none sidebar-user-card rounded-3 px-2 py-2"
-            style="transition:background .18s;">
-            @if (Auth::user()->profile_photo)
-                <img src="{{ asset('uploads/profiles/' . Auth::user()->profile_photo) }}"
-                    class="rounded-circle flex-shrink-0"
-                    style="width:38px;height:38px;object-fit:cover;border:2px solid rgba(105,108,255,.3);">
-            @else
-                <div class="rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center fw-bold"
-                    style="width:38px;height:38px;background:rgba(105,108,255,.15);color:#696cff;font-size:1rem;">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-            @endif
-            <div class="overflow-hidden">
-                <div class="fw-semibold text-truncate" style="font-size:.88rem;max-width:140px;">
-                    {{ Auth::user()->name }}</div>
-                <div class="text-truncate" style="font-size:.75rem;opacity:.6;max-width:140px;">
-                    {{ Auth::user()->email }}</div>
-            </div>
-        </a>
-    </div> --}}
-
-    <div class="menu-divider my-0"></div>
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
 
-        {{-- ── MAIN ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('messages.section_main') }}</span>
-        </li>
+        {{-- ════════════════════════════════════════
+             1. DASHBOARD  (flat, non-collapsible)
+             ════════════════════════════════════════ --}}
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-dashboard"></i>
@@ -76,13 +49,20 @@
             </a>
         </li>
 
-        {{-- ── INVENTORY ── --}}
-        @canany(['main_categories.view', 'sub_categories.view', 'brands.view', 'products.view', 'stocks.view'])
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">{{ __('messages.section_inventory') }}</span>
+        {{-- ════════════════════════════════════════
+             2. INVENTORY  (non-collapsible group)
+             Sub-items: Categories → Brands → Products
+             ════════════════════════════════════════ --}}
+        @canany(['main_categories.view', 'sub_categories.view', 'brands.view', 'products.view'])
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-3">
+                    <i class="bx bx-box" style="font-size:20px;"></i>
+                    {{ __('messages.section_inventory') }}
+                </span>
             </li>
         @endcanany
 
+        {{-- Categories --}}
         @php
             $catActive = request()->routeIs('main-categories.*', 'sub-categories.*');
             $showCatMenu = auth()->user()->can('main_categories.view') || auth()->user()->can('sub_categories.view');
@@ -112,6 +92,7 @@
             </li>
         @endif
 
+        {{-- Brands --}}
         @can('brands.view')
             <li class="menu-item {{ request()->routeIs('brands.*') ? 'active' : '' }}">
                 <a href="{{ route('brands.index') }}" class="menu-link">
@@ -121,10 +102,9 @@
             </li>
         @endcan
 
+        {{-- Products --}}
         @can('products.view')
-            @php
-                $productsActive = request()->routeIs('products.*');
-            @endphp
+            @php $productsActive = request()->routeIs('products.*'); @endphp
             <li class="menu-item {{ $productsActive ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-package"></i>
@@ -153,41 +133,16 @@
             </li>
         @endcan
 
-        @can('stocks.view')
-            <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active open' : '' }}">
-                <a href="javascript:void(0)" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-store-alt"></i>
-                    <div class="text-truncate">{{ __('messages.menu_stock') }}</div>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item {{ request()->routeIs('stocks.index') ? 'active' : '' }}">
-                        <a href="{{ route('stocks.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
-                            <div class="text-truncate">{{ __('messages.stock_overview') }}</div>
-                        </a>
-                    </li>
-                    @can('stocks.create')
-                        <li class="menu-item {{ request()->routeIs('stocks.adjust') ? 'active' : '' }}">
-                            <a href="{{ route('stocks.adjust') }}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-slider"></i>
-                                <div class="text-truncate">{{ __('messages.adjust_stock') }}</div>
-                            </a>
-                        </li>
-                    @endcan
-                    <li class="menu-item {{ request()->routeIs('stocks.history') ? 'active' : '' }}">
-                        <a href="{{ route('stocks.history') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-history"></i>
-                            <div class="text-truncate">{{ __('messages.stock_history') }}</div>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        @endcan
-
-        {{-- ── TRANSACTIONS ── --}}
-        @canany(['purchases.view', 'purchase_returns.view', 'sales.view', 'sale_returns.view'])
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">{{ __('messages.section_transactions') }}</span>
+        {{-- ════════════════════════════════════════
+             3. STOCK IN  (group)
+             Sub-items: Purchase → Purchase Return
+             ════════════════════════════════════════ --}}
+        @canany(['purchases.view', 'purchase_returns.view'])
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-cart-download" style="font-size:20px;"></i>
+                    Stock In
+                </span>
             </li>
         @endcanany
 
@@ -209,6 +164,19 @@
             </li>
         @endcan
 
+        {{-- ════════════════════════════════════════
+             4. STOCK OUT  (group)
+             Sub-items: Sale → Sale Return
+             ════════════════════════════════════════ --}}
+        @canany(['sales.view', 'sale_returns.view'])
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-cart-alt" style="font-size:20px;"></i>
+                    Stock Out
+                </span>
+            </li>
+        @endcanany
+
         @can('sales.view')
             <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
                 <a href="{{ route('sales.index') }}" class="menu-link">
@@ -227,17 +195,23 @@
             </li>
         @endcan
 
-        {{-- ── MANAGEMENT ── --}}
-        @canany(['suppliers.view', 'customers.view', 'currencies.view', 'units.view'])
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">{{ __('messages.section_management') }}</span>
+        {{-- ════════════════════════════════════════
+             5. PEOPLES  (group)
+             Sub-items: Supplier → Customer → Users
+             ════════════════════════════════════════ --}}
+        @canany(['suppliers.view', 'customers.view', 'users.view'])
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-group" style="font-size:20px;"></i>
+                    Peoples
+                </span>
             </li>
         @endcanany
 
         @can('suppliers.view')
             <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
                 <a href="{{ route('suppliers.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-group"></i>
+                    <i class="menu-icon tf-icons bx bx-store"></i>
                     <div class="text-truncate">{{ __('messages.menu_suppliers') }}</div>
                 </a>
             </li>
@@ -252,32 +226,27 @@
             </li>
         @endcan
 
-        @can('currencies.view')
-            <li class="menu-item {{ request()->routeIs('currencies.*') ? 'active' : '' }}">
-                <a href="{{ route('currencies.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-money"></i>
-                    <div class="text-truncate">{{ __('messages.menu_currencies') }}</div>
+        @can('users.view')
+            <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <a href="{{ route('users.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-user"></i>
+                    <div class="text-truncate">{{ __('messages.user_accounts') }}</div>
                 </a>
             </li>
         @endcan
 
-        @can('units.view')
-            <li class="menu-item {{ request()->routeIs('units.*') ? 'active' : '' }}">
-                <a href="{{ route('units.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-ruler"></i>
-                    <div class="text-truncate">{{ __('messages.menu_units') }}</div>
-                </a>
-            </li>
-        @endcan
-
-        {{-- ── REPORTS ── --}}
+        {{-- ════════════════════════════════════════
+             6. REPORTS  (group)
+             ════════════════════════════════════════ --}}
         @can('reports.view')
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">{{ __('messages.section_reports') }}</span>
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-bar-chart-alt-2" style="font-size:20px;"></i>
+                    {{ __('messages.section_reports') }}
+                </span>
             </li>
 
-            @php $reportsActive = request()->routeIs('reports.*'); @endphp
-            <li class="menu-item {{ $reportsActive && request()->routeIs('reports.index') ? 'active' : '' }}">
+            <li class="menu-item {{ request()->routeIs('reports.index') ? 'active' : '' }}">
                 <a href="{{ route('reports.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
                     <div class="text-truncate">{{ __('messages.all_reports') }}</div>
@@ -315,41 +284,24 @@
             </li>
         @endcan
 
-        {{-- ── USERS ── --}}
-        @canany(['users.view', 'roles.view'])
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">{{ __('messages.section_users') }}</span>
+        {{-- ════════════════════════════════════════
+             7. MANAGEMENT & SETTINGS  (bottom group)
+             Sub-items: Roles & Permissions → Activity Logs → Settings
+             ════════════════════════════════════════ --}}
+        @canany(['roles.view', 'activity_logs.view', 'settings.view', 'currencies.view'])
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-cog" style="font-size:20px;"></i>
+                    Management &amp; Settings
+                </span>
             </li>
         @endcanany
-
-        @can('users.view')
-            <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                <a href="{{ route('users.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-user"></i>
-                    <div class="text-truncate">{{ __('messages.user_accounts') }}</div>
-                </a>
-            </li>
-        @endcan
 
         @can('roles.view')
             <li class="menu-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
                 <a href="{{ route('roles.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-shield"></i>
                     <div class="text-truncate">{{ __('messages.menu_roles') }}</div>
-                </a>
-            </li>
-        @endcan
-
-        {{-- ── ACCOUNT ── --}}
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">{{ __('messages.section_account') }}</span>
-        </li>
-
-        @can('settings.view')
-            <li class="menu-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
-                <a href="{{ route('settings.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-cog"></i>
-                    <div class="text-truncate">{{ __('messages.menu_settings') }}</div>
                 </a>
             </li>
         @endcan
@@ -363,31 +315,200 @@
             </li>
         @endcan
 
-        <li class="menu-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
-            <a href="{{ route('profile.show') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                <div class="text-truncate">{{ __('messages.profile') }}</div>
-            </a>
+        @can('currencies.view')
+            <li class="menu-item {{ request()->routeIs('currencies.*') ? 'active' : '' }}">
+                <a href="{{ route('currencies.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-money"></i>
+                    <div class="text-truncate">{{ __('messages.menu_currencies') }}</div>
+                </a>
+            </li>
+        @endcan
+
+        @can('settings.view')
+            <li class="menu-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                <a href="{{ route('settings.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cog"></i>
+                    <div class="text-truncate">{{ __('messages.menu_settings') }}</div>
+                </a>
+            </li>
+        @endcan
+
+        {{-- ════════════════════════════════════════
+             8. USER PROFILE  (bottom-most)
+             ════════════════════════════════════════ --}}
+        <li class="menu-header small text-uppercase mt-1">
+            <span class="menu-header-text d-flex align-items-center gap-2">
+                <i class="bx bx-user-circle" style="font-size:20px;"></i>
+                Account
+            </span>
         </li>
 
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link"
-                onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
-                <i class="menu-icon tf-icons bx bx-power-off text-danger"></i>
-                <div class="text-truncate text-danger">{{ __('messages.logout') }}</div>
+        {{-- Profile card with dropdown --}}
+        <li
+            class="menu-item nav-item dropdown sidebar-user-dropdown {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+            <a href="javascript:void(0);"
+                class="menu-link d-flex align-items-center gap-2 px-3 py-2 sidebar-profile-trigger"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{-- Avatar --}}
+                @if (Auth::user()->profile_photo)
+                    <img src="{{ asset('uploads/profiles/' . Auth::user()->profile_photo) }}"
+                        class="rounded-circle flex-shrink-0 sidebar-avatar" alt="{{ Auth::user()->name }}"
+                        style="width:32px;height:32px;object-fit:cover;">
+                @else
+                    <div class="rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center sidebar-avatar-placeholder"
+                        style="width:32px;height:32px;">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                @endif
+                {{-- Name + caret --}}
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="fw-semibold text-truncate sidebar-user-name"
+                        style="font-size:.87rem;max-width:120px;">
+                        {{ Auth::user()->name }}
+                    </div>
+                    <div class="text-truncate sidebar-user-role" style="font-size:.73rem;max-width:120px;">
+                        {{ Auth::user()->getRoleNames()->first() ?? 'User' }}
+                    </div>
+                </div>
+                <i class="bx bx-chevron-right sidebar-user-caret ms-auto flex-shrink-0" style="font-size:1rem;"></i>
             </a>
+
+            <ul class="dropdown-menu dropdown-menu-end sidebar-profile-dropdown">
+                <li>
+                    <div class="px-3 py-2 border-bottom sidebar-profile-header">
+                        <div class="fw-semibold" style="font-size:.88rem;">{{ Auth::user()->name }}</div>
+                        <div class="text-muted" style="font-size:.75rem;">{{ Auth::user()->email }}</div>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.show') }}">
+                        <i class="bx bx-user"></i>
+                        {{ __('messages.profile') }}
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                        href="{{ route('profile.show') }}#edit-profile">
+                        <i class="bx bx-edit"></i>
+                        Edit Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                        href="{{ route('profile.show') }}#change-password">
+                        <i class="bx bx-lock-alt"></i>
+                        Change Password
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider my-1">
+                </li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}" id="sidebar-profile-logout">
+                        @csrf
+                        <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
+                            <i class="bx bx-power-off"></i>
+                            {{ __('messages.logout') }}
+                        </button>
+                    </form>
+                </li>
+            </ul>
         </li>
 
     </ul>
 
+    {{-- Hidden logout form kept for any legacy references --}}
     <form id="sidebar-logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">@csrf</form>
 
 </aside>
 
 @push('styles')
     <style>
-        .sidebar-user-card:hover {
-            background: rgba(105, 108, 255, .08) !important;
+        /* ── Sidebar section header icons ───────────────────────── */
+        .menu-header-text {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .menu-header-text .bx {
+            opacity: .65;
+        }
+
+        /* ── User profile trigger ───────────────────────────────── */
+        .sidebar-profile-trigger {
+            border-radius: 8px !important;
+            transition: background .15s;
+            cursor: pointer;
+        }
+
+        .sidebar-profile-trigger:hover {
+            background: rgba(105, 108, 255, .09) !important;
+        }
+
+        /* Avatar placeholder circle */
+        .sidebar-avatar-placeholder {
+            background: rgba(105, 108, 255, .15);
+            color: #696cff;
+            font-size: .88rem;
+            font-weight: 700;
+            border: 2px solid rgba(105, 108, 255, .25);
+        }
+
+        .sidebar-avatar {
+            border: 2px solid rgba(105, 108, 255, .25);
+        }
+
+        /* Name / role text */
+        .sidebar-user-name {
+            color: inherit;
+            line-height: 1.2;
+        }
+
+        .sidebar-user-role {
+            opacity: .6;
+            line-height: 1.2;
+        }
+
+        /* Caret rotation when open */
+        .sidebar-profile-trigger[aria-expanded="true"] .sidebar-user-caret {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-user-caret {
+            transition: transform .2s;
+            opacity: .5;
+        }
+
+        /* Profile dropdown */
+        .sidebar-profile-dropdown {
+            min-width: 210px !important;
+            border-radius: 10px !important;
+            border: 1px solid rgba(0, 0, 0, .08) !important;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .13) !important;
+            padding: 4px 0 !important;
+        }
+
+        [data-bs-theme="dark"] .sidebar-profile-dropdown {
+            border-color: rgba(255, 255, 255, .1) !important;
+        }
+
+        .sidebar-profile-header {
+            line-height: 1.3;
+        }
+
+        .sidebar-profile-dropdown .dropdown-item {
+            font-size: .9rem;
+            gap: 8px;
+        }
+
+        .sidebar-profile-dropdown .dropdown-item:hover {
+            background: rgba(105, 108, 255, .07) !important;
+        }
+
+        .sidebar-profile-dropdown .dropdown-item .bx {
+            font-size: 1rem;
+            opacity: .75;
         }
     </style>
 @endpush
