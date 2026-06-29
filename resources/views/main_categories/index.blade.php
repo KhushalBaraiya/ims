@@ -45,7 +45,7 @@
                         <i class="bx bx-check-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-success">{{ $categories->where('status', 'active')->count() }}
+                        <div class="fw-bold fs-4 lh-1 text-success" id="statActiveCount">{{ $categories->where('status', 'active')->count() }}
                         </div>
                         <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
                     </div>
@@ -60,7 +60,7 @@
                         <i class="bx bx-x-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $categories->where('status', 'inactive')->count() }}
+                        <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">{{ $categories->where('status', 'inactive')->count() }}
                         </div>
                         <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
                     </div>
@@ -246,6 +246,9 @@
                                 btn.text('{{ __('messages.inactive') }}');
                             }
                             showAdminToast(res.message, 'success');
+                            // ── Update stat cards live ──────────────────
+                            $('#statActiveCount').text($('.status-toggle-btn.border-success').length);
+                            $('#statInactiveCount').text($('.status-toggle-btn.border-danger').length);
                         } else {
                             showAdminToast(res.message ||
                                 '{{ __('messages.error_occurred') }}',

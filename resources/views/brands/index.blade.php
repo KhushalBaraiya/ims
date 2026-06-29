@@ -45,7 +45,7 @@
                         <i class="bx bx-check-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-success">{{ $brands->where('status', 'active')->count() }}</div>
+                        <div class="fw-bold fs-4 lh-1 text-success" id="statActiveCount">{{ $brands->where('status', 'active')->count() }}</div>
                         <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                         <i class="bx bx-x-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-danger">{{ $brands->where('status', 'inactive')->count() }}
+                        <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">{{ $brands->where('status', 'inactive')->count() }}
                         </div>
                         <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
                     </div>
@@ -253,6 +253,11 @@
                                 '{{ __('messages.error_occurred') }}', 'error');
                         }
                         btn.prop('disabled', false);
+                            // ── Update stat cards live ──────────────────
+                            const activeCount = $('.status-toggle-btn.border-success').length;
+                            const inactiveCount = $('.status-toggle-btn.border-danger').length;
+                            $('#statActiveCount').text(activeCount);
+                            $('#statInactiveCount').text(inactiveCount);
                     },
                     error: function() {
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');
