@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProductRequest extends FormRequest
 {
@@ -20,11 +21,15 @@ class ProductRequest extends FormRequest
             'name' => 'required|string|max:255',
             'code' => [
                 'required', 'string', 'max:50', 'alpha_dash',
-                'unique:products,code,' . $productId,
+                Rule::unique('products', 'code')
+                    ->ignore($productId)
+                    ->whereNull('deleted_at'),
             ],
             'barcode' => [
                 'nullable', 'string', 'max:50',
-                'unique:products,barcode,' . $productId,
+                Rule::unique('products', 'barcode')
+                    ->ignore($productId)
+                    ->whereNull('deleted_at'),
             ],
             'brand_id'          => 'required|exists:brands,id',
             'main_category_id'  => 'required|exists:main_categories,id',

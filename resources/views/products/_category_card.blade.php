@@ -13,7 +13,7 @@
 @endphp
 
 <div class="col pc-item" data-subcat="{{ $product->sub_category_id ?? '' }}">
-    <div class="card pc-card shadow-sm {{ $inactive ? 'opacity-70' : '' }}"
+    <div class="card pc-card shadow-sm {{ $inactive ? 'opacity-75' : '' }}"
         onclick="window.location='{{ route('products.show', $product->id) }}'">
 
         {{-- Image --}}

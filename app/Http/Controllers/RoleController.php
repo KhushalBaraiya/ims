@@ -80,16 +80,16 @@ class RoleController extends Controller
 
         $request->validate([
             'display_name' => ['required', 'string', 'max:100'],
-            'name'         => ['required', 'string', 'max:100', 'unique:roles,name', 'regex:/^[a-z0-9\-]+$/'],
-            'permissions'  => ['nullable', 'array'],
-            'permissions.*'=> ['string', 'exists:permissions,name'],
+            'name' => ['required', 'string', 'max:100', 'unique:roles,name', 'regex:/^[a-z0-9\-]+$/'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string', 'exists:permissions,name'],
         ], [
-            'name.regex'        => 'The system name may only contain lowercase letters, numbers, and hyphens.',
-            'name.unique'       => 'A role with this system name already exists.',
+            'name.regex' => 'The system name may only contain lowercase letters, numbers, and hyphens.',
+            'name.unique' => 'A role with this system name already exists.',
         ]);
 
         $role = Role::create([
-            'name'       => $request->name,
+            'name' => $request->name,
             'guard_name' => 'web',
         ]);
 
@@ -102,7 +102,7 @@ class RoleController extends Controller
             $role->syncPermissions($request->permissions);
         }
 
-        ActivityLog::log('Role Created', "Created role: {$role->name} with " . count($request->permissions ?? []) . ' permissions');
+        ActivityLog::log('Role Created', "Created role: {$role->name} with ".count($request->permissions ?? []).' permissions');
 
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
@@ -110,9 +110,10 @@ class RoleController extends Controller
     /**
      * Display the specified role (redirects to edit).
      */
-    public function show(Role $role): \Illuminate\Http\RedirectResponse
+    public function show(Role $role): RedirectResponse
     {
         Gate::authorize('roles.view');
+
         return redirect()->route('roles.edit', $role);
     }
 
@@ -123,7 +124,7 @@ class RoleController extends Controller
     {
         Gate::authorize('roles.update');
 
-        $crudPermissions    = $this->buildPermissionsMatrix();
+        $crudPermissions = $this->buildPermissionsMatrix();
         $selectedPermissions = $role->permissions->pluck('name')->toArray();
 
         return view('roles.edit', compact('role', 'crudPermissions', 'selectedPermissions'));
@@ -138,9 +139,9 @@ class RoleController extends Controller
 
         $request->validate([
             'display_name' => ['required', 'string', 'max:100'],
-            'name'         => ['required', 'string', 'max:100', 'regex:/^[a-z0-9\-]+$/', "unique:roles,name,{$role->id}"],
-            'permissions'  => ['nullable', 'array'],
-            'permissions.*'=> ['string', 'exists:permissions,name'],
+            'name' => ['required', 'string', 'max:100', 'regex:/^[a-z0-9\-]+$/', "unique:roles,name,{$role->id}"],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['string', 'exists:permissions,name'],
         ], [
             'name.regex' => 'The system name may only contain lowercase letters, numbers, and hyphens.',
         ]);
@@ -149,7 +150,7 @@ class RoleController extends Controller
 
         $role->syncPermissions($request->permissions ?? []);
 
-        ActivityLog::log('Role Updated', "Updated role: {$role->name} — synced " . count($request->permissions ?? []) . ' permissions');
+        ActivityLog::log('Role Updated', "Updated role: {$role->name} — synced ".count($request->permissions ?? []).' permissions');
 
         return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
     }

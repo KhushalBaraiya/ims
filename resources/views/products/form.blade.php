@@ -202,7 +202,7 @@
 </div>
 
 {{-- ══ SECTION 3 : Opening Stock (CREATE / COPY only) ═════════════════════════ --}}
-@if (!isset($product) || isset($isCopy))
+@if (!$product->exists || isset($isCopy))
     <div class="form-section">
         <div class="form-section-header">
             <div class="sec-icon bg-label-warning"><i class="bx bx-box text-warning"></i></div>
@@ -221,11 +221,12 @@
             </div>
 
             <div id="openingStockBox" class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3">
-                <div class="row g-3">
+                <div class="row g-3 align-items-end">
                     {{-- Supplier --}}
                     <div class="col-md-5">
-                        <label class="form-label fw-semibold small" for="supplier_id">Supplier <span
-                                class="text-danger">*</span></label>
+                        <label class="form-label fw-semibold small" for="supplier_id">
+                            Supplier <span class="text-danger">*</span>
+                        </label>
                         <select name="supplier_id" id="supplier_id"
                             class="form-select @error('supplier_id') is-invalid @enderror">
                             <option value="">Select Supplier</option>
@@ -241,16 +242,29 @@
                     </div>
 
                     {{-- Opening Qty --}}
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold small" for="initial_qty">Opening Qty <span
-                                class="text-danger">*</span></label>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small" for="initial_qty">
+                            Opening Qty <span class="text-danger">*</span>
+                        </label>
                         <input type="number" step="0.01" min="0.01" name="initial_qty" id="initial_qty"
                             class="form-control @error('initial_qty') is-invalid @enderror"
                             value="{{ old('initial_qty', '') }}" placeholder="e.g. 10">
-                        <div class="form-text">A purchase entry will be created automatically.</div>
                         @error('initial_qty')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    {{-- Live total preview --}}
+                    <div class="col-md-4">
+                        <div class="alert alert-info mb-0 py-2 px-3 d-flex align-items-center gap-2">
+                            <i class="bx bx-calculator text-info fs-5"></i>
+                            <div>
+                                <div class="small fw-semibold text-info">Purchase Total</div>
+                                <div class="fw-bold" id="openingStockTotal">—</div>
+                                <div class="form-text mb-0">Qty × Purchase Price. A Purchase record is auto-created.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -500,6 +514,23 @@
             if ($('#addOpeningStock').is(':checked')) {
                 syncOpeningStockRequired(true);
             }
+
+            // ── Opening stock live total preview ─────────────────────────────────────
+            function updateOpeningTotal() {
+                const qty = parseFloat($('#initial_qty').val()) || 0;
+                const price = parseFloat($('#purchase_price').val()) || 0;
+                if (qty > 0 && price > 0) {
+                    const total = (qty * price).toFixed(2);
+                    $('#openingStockTotal').text('₹' + parseFloat(total).toLocaleString('en-IN', {
+                        minimumFractionDigits: 2
+                    }));
+                } else {
+                    $('#openingStockTotal').text('—');
+                }
+            }
+
+            $('#initial_qty, #purchase_price').on('input', updateOpeningTotal);
+            updateOpeningTotal();
 
             // ── Primary image upload ──────────────────────────────────────────────────
             $('#triggerImageBtn').on('click', () => $('#imageInput').trigger('click'));

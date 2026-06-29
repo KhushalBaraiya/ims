@@ -113,15 +113,16 @@
     {{-- Summary Stats --}}
     <div class="row g-3 mb-4">
         @php
-            $total = $products->count();
-            $active = $products->where('status', 'active')->count();
-            $inactive = $products->where('status', 'inactive')->count();
-            $lowStock = $products
-                ->filter(
-                    fn($p) => $p->stock && $p->stock->quantity > 0 && $p->stock->quantity <= $p->minimum_stock_alert,
-                )
-                ->count();
-            $outStock = $products->filter(fn($p) => !$p->stock || $p->stock->quantity <= 0)->count();
+            // Use DB aggregates — $products is now paginated, not a full collection
+            $total = \App\Models\Product::count();
+            $active = \App\Models\Product::where('status', 'active')->count();
+            $lowStock = \App\Models\Product::whereHas(
+                'stock',
+                fn($q) => $q->where('quantity', '>', 0)->whereRaw('stocks.quantity <= products.minimum_stock_alert'),
+            )->count();
+            $outStock = \App\Models\Product::where(
+                fn($q) => $q->whereHas('stock', fn($sq) => $sq->where('quantity', '<=', 0))->orWhereDoesntHave('stock'),
+            )->count();
         @endphp
         <div class="col-6 col-xl-3">
             <div class="card shadow-sm border-0 h-100">
@@ -310,7 +311,7 @@
                                 <td class="text-end fw-bold text-primary">{{ format_currency($product->selling_price) }}
                                 </td>
                                 <td class="text-center">
-                                    @if ($product->hasTransactions())
+                                    @if ($sq > 0 || $product->stock)
                                         <span class="stock-pill" style="background:{{ $sBg }};">
                                             <i class="bx bx-cube {{ $sCls }}" style="font-size:.8rem;"></i>
                                             <span class="{{ $sCls }}">{{ number_format($sq, 0) }}</span>
@@ -370,34 +371,24 @@
             </div>
         </div>
     </div>
+
+    {{-- Pagination --}}
+    @if ($products->hasPages())
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+            <p class="text-muted small mb-0">
+                Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} products
+            </p>
+            {{ $products->appends(request()->query())->links() }}
+        </div>
+    @endif
+
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#productsTable').DataTable({
-                responsive: true,
-                pageLength: 15,
-                order: [
-                    [0, 'asc']
-                ],
-                columnDefs: [{
-                    targets: 'no-sort',
-                    orderable: false
-                }],
-                dom: '<"row px-3 py-3"<"col-sm-6"l><"col-sm-6"f>>rt<"row px-3 py-2"<"col-sm-6"i><"col-sm-6"p>>',
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search…",
-                    lengthMenu: "Show _MENU_",
-                    paginate: {
-                        previous: '<i class="bx bx-chevron-left"></i>',
-                        next: '<i class="bx bx-chevron-right"></i>'
-                    }
-                }
-            });
 
-            // Filter toggle
+            // ── Filter toggle ─────────────────────────────────────────────────
             let open = localStorage.getItem('prod_filters_open') === 'true';
             if (open) {
                 $('#filtersCard').removeClass('d-none');
@@ -411,7 +402,7 @@
                 localStorage.setItem('prod_filters_open', isOpen);
             });
 
-            // Sub-category filter
+            // ── Sub-category filter ───────────────────────────────────────────
             const subs = @json($subCategories);
             const selSub = "{{ request('sub_category_id') }}";
 
@@ -427,7 +418,8 @@
                     return;
                 }
                 subs.filter(s => s.main_category_id == catId).forEach(s => {
-                    $s.append(`<option value="${s.id}" ${s.id==pre?'selected':''}>${s.name}</option>`);
+                    $s.append(
+                    `<option value="${s.id}" ${s.id == pre ? 'selected' : ''}>${s.name}</option>`);
                 });
                 $s.select2({
                     theme: 'bootstrap-5',
@@ -436,17 +428,30 @@
                     placeholder: 'All Sub-cats'
                 });
             }
+
             $('#filter_main_category_id').on('change', function() {
                 loadSubs($(this).val());
             });
-            const initCat = $('#filter_main_category_id').val();
-            if (initCat) loadSubs(initCat, selSub);
 
-            // Delete
+            // On page load: if sub_category_id is pre-selected, also infer main cat to populate dropdown
+            const initCat = "{{ request('main_category_id') }}";
+            if (initCat) loadSubs(initCat, selSub);
+            else if (selSub) {
+                // sub selected but no main selected — find the matching main and pre-load
+                const matchedSub = subs.find(s => s.id == selSub);
+                if (matchedSub) {
+                    // Set main category dropdown value then load subs
+                    $('#filter_main_category_id').val(matchedSub.main_category_id).trigger('change');
+                    loadSubs(matchedSub.main_category_id, selSub);
+                }
+            }
+
+            // ── AJAX Delete with SweetAlert2 ──────────────────────────────────
             $(document).on('click', '.delete-btn', function() {
-                const id = $(this).data('id'),
-                    name = $(this).data('name'),
-                    form = $(`#del-${id}`);
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const form = $(`#del-${id}`);
+
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
                     text: `Delete "${name}"?`,
@@ -470,7 +475,9 @@
                                         icon: 'success',
                                         confirmButtonColor: '#696cff'
                                     }).then(() => location.reload());
-                                } else showAdminToast(res.message, 'error');
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
                             },
                             error: () => showAdminToast(
                                 '{{ __('messages.error_occurred') }}', 'error')

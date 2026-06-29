@@ -99,31 +99,36 @@ class ProductController extends Controller
         $perPage = (int) $request->input('per_page', 24);
         $perPage = in_array($perPage, [12, 24, 48, 96]) ? $perPage : 24;
 
-        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'stock']);
+        $query = Product::with(['brand', 'mainCategory', 'subCategory', 'stock'])
+            ->select('products.*');
+
+        // Always left-join stocks once (used by both stock_filter and stock sort)
+        $needsStockJoin = $request->filled('stock_filter')
+            || in_array($request->input('sort'), ['stock_asc', 'stock_desc']);
+        if ($needsStockJoin) {
+            $query->leftJoin('stocks', 'stocks.product_id', '=', 'products.id');
+        }
 
         // Filters
         if ($request->filled('search')) {
             $s = $request->search;
             $query->where(function ($q) use ($s) {
-                $q->where('name', 'like', "%{$s}%")
-                  ->orWhere('code', 'like', "%{$s}%")
-                  ->orWhere('barcode', 'like', "%{$s}%");
+                $q->where('products.name', 'like', "%{$s}%")
+                  ->orWhere('products.code', 'like', "%{$s}%")
+                  ->orWhere('products.barcode', 'like', "%{$s}%");
             });
         }
         if ($request->filled('brand_id')) {
-            $query->where('brand_id', $request->brand_id);
+            $query->where('products.brand_id', $request->brand_id);
         }
         if ($request->filled('main_category_id')) {
-            $query->where('main_category_id', $request->main_category_id);
+            $query->where('products.main_category_id', $request->main_category_id);
         }
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('products.status', $request->status);
         }
 
-        // Stock filter — join stocks table
         if ($request->filled('stock_filter')) {
-            $query->leftJoin('stocks', 'stocks.product_id', '=', 'products.id')
-                  ->select('products.*');
             match ($request->stock_filter) {
                 'out' => $query->where(function ($q) {
                     $q->whereNull('stocks.quantity')->orWhere('stocks.quantity', '<=', 0);
@@ -139,17 +144,13 @@ class ProductController extends Controller
 
         // Sorting
         switch ($request->input('sort', 'latest')) {
-            case 'name_asc':    $query->orderBy('products.name', 'asc');          break;
-            case 'name_desc':   $query->orderBy('products.name', 'desc');         break;
-            case 'price_asc':   $query->orderBy('selling_price', 'asc');          break;
-            case 'price_desc':  $query->orderBy('selling_price', 'desc');         break;
-            case 'stock_asc':   $query->leftJoin('stocks as st2', 'st2.product_id', '=', 'products.id')
-                                      ->select('products.*')
-                                      ->orderBy('st2.quantity', 'asc');           break;
-            case 'stock_desc':  $query->leftJoin('stocks as st3', 'st3.product_id', '=', 'products.id')
-                                      ->select('products.*')
-                                      ->orderBy('st3.quantity', 'desc');          break;
-            default:            $query->latest('products.created_at');            break;
+            case 'name_asc':   $query->orderBy('products.name', 'asc');         break;
+            case 'name_desc':  $query->orderBy('products.name', 'desc');        break;
+            case 'price_asc':  $query->orderBy('products.selling_price', 'asc'); break;
+            case 'price_desc': $query->orderBy('products.selling_price', 'desc'); break;
+            case 'stock_asc':  $query->orderBy('stocks.quantity', 'asc');       break;
+            case 'stock_desc': $query->orderBy('stocks.quantity', 'desc');      break;
+            default:           $query->orderBy('products.created_at', 'desc');  break;
         }
 
         $products = $query->paginate($perPage)->withQueryString();
@@ -210,7 +211,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->get();
+        $products = $query->paginate(20)->withQueryString();
 
         $brands        = Brand::where('status', 'active')->orderBy('name')->get();
         $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
@@ -230,8 +231,10 @@ class ProductController extends Controller
         $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
         $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
+        // Pass an empty Product so form.blade.php never crashes on $product->xxx ?? ''
+        $product       = new Product();
 
-        return view('products.create', compact('brands', 'categories', 'subCategories', 'suppliers'));
+        return view('products.create', compact('brands', 'categories', 'subCategories', 'suppliers', 'product'));
     }
 
     /**
@@ -322,11 +325,13 @@ class ProductController extends Controller
                 ]);
 
                 StockAdjustment::create([
-                    'product_id'      => $product->id,
-                    'quantity_change' => $initialQty,
-                    'adjustment_type' => 'Restock',
-                    'notes'           => "Opening stock added on product creation (Purchase: {$purchaseNo}).",
-                    'user_id'         => auth()->id(),
+                    'product_id'       => $product->id,
+                    'voucher_no'       => $purchaseNo,
+                    'transaction_date' => now()->toDateString(),
+                    'quantity_change'  => $initialQty,
+                    'adjustment_type'  => 'Restock',
+                    'notes'            => "Opening stock added on product creation (Purchase: {$purchaseNo}).",
+                    'user_id'          => auth()->id(),
                 ]);
             }
 
@@ -352,7 +357,17 @@ class ProductController extends Controller
     {
         Gate::authorize('products.view');
 
-        $product->load(['brand', 'mainCategory', 'subCategory', 'stock']);
+        $product->load([
+            'brand',
+            'mainCategory',
+            'subCategory',
+            'stock',
+            'purchaseItems.purchase.supplier',
+            'saleItems.sale.customer',
+            'stockAdjustments.user',
+            'purchaseReturnItems.purchaseReturn',
+            'saleReturnItems.saleReturn',
+        ]);
 
         return view('products.show', compact('product'));
     }
@@ -447,7 +462,7 @@ class ProductController extends Controller
         $product->update($validated);
 
         // Ensure a stock row exists (do NOT overwrite current live quantity)
-        $product->stock()->firstOrCreate(['product_id' => $product->id], ['quantity' => 0]);
+        $product->stock()->firstOrCreate([], ['quantity' => 0]);
 
         ActivityLog::log('Product Updated', "Updated product: {$product->name} (SKU: {$product->code})");
 
@@ -467,7 +482,10 @@ class ProductController extends Controller
         $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
         $copy = $product->replicate(['code', 'barcode', 'image', 'gallery', 'slug']);
-        $copy->code    = strtoupper($product->code) . '-COPY-' . strtoupper(\Illuminate\Support\Str::random(4));
+        $suffix    = '-COPY-' . strtoupper(\Illuminate\Support\Str::random(4));
+        $baseCode  = strtoupper($product->code);
+        $maxBase   = 50 - strlen($suffix);
+        $copy->code    = substr($baseCode, 0, $maxBase) . $suffix;
         $copy->barcode = null;
         $copy->image   = null;
         $copy->gallery = [];
@@ -485,6 +503,7 @@ class ProductController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Warns (but still allows) deletion of products with transactions via soft-delete.
      */
     public function destroy(Product $product, Request $request): RedirectResponse|JsonResponse
     {
@@ -494,6 +513,11 @@ class ProductController extends Controller
         $productSku  = $product->code;
 
         $product->delete();
+
+        // Soft-delete the related stock row so it won't confuse stock reports
+        if ($product->stock) {
+            $product->stock()->delete();
+        }
 
         ActivityLog::log('Product Deleted', "Deleted product: {$productName} (SKU: {$productSku})");
 
