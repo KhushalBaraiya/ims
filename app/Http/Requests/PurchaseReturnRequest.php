@@ -20,18 +20,20 @@ class PurchaseReturnRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'purchase_id' => 'required|exists:purchases,id',
-            'return_date' => 'required|date',
-            'reference_no' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-            'refunded_amount' => 'required|numeric|min:0',
-            'status' => 'required|in:Completed,Pending',
-            
+            // purchase_id is optional: present only when coming from the Purchases table
+            'purchase_id'        => 'nullable|exists:purchases,id',
+            'return_date'        => 'required|date',
+            'reference_no'       => 'nullable|string|max:255',
+            'notes'              => 'nullable|string',
+            'refunded_amount'    => 'required|numeric|min:0',
+            'status'             => 'required|in:Completed,Pending',
+
             // Return items
-            'items' => 'required|array|min:1',
+            'items'              => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:0',
-            'items.*.reason' => 'nullable|string|max:255',
+            'items.*.quantity'   => 'required|integer|min:0',
+            'items.*.unit_price' => 'nullable|numeric|min:0',
+            'items.*.reason'     => 'nullable|string|max:255',
         ];
     }
 
@@ -41,14 +43,15 @@ class PurchaseReturnRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'purchase_id' => 'Purchase Invoice',
-            'return_date' => 'Return Date',
-            'refunded_amount' => 'Refunded Amount',
-            'status' => 'Status',
-            'items' => 'Returned Items',
+            'purchase_id'        => 'Purchase Invoice',
+            'return_date'        => 'Return Date',
+            'refunded_amount'    => 'Refunded Amount',
+            'status'             => 'Status',
+            'items'              => 'Returned Items',
             'items.*.product_id' => 'Product ID',
-            'items.*.quantity' => 'Return Quantity',
-            'items.*.reason' => 'Return Reason',
+            'items.*.quantity'   => 'Return Quantity',
+            'items.*.unit_price' => 'Unit Price',
+            'items.*.reason'     => 'Return Reason',
         ];
     }
 
@@ -59,7 +62,7 @@ class PurchaseReturnRequest extends FormRequest
     {
         return [
             'items.required' => 'At least one item must be returned.',
-            'items.min' => 'At least one item must be returned.',
+            'items.min'      => 'At least one item must be returned.',
             'items.*.quantity.min' => 'Return quantity cannot be negative.',
         ];
     }

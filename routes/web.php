@@ -107,6 +107,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('purchases', PurchaseController::class);
 
     // Purchase Return Routes
+    Route::get('/purchase-returns/search-products', [PurchaseReturnController::class, 'searchProducts'])->name('purchase-returns.search-products');
     Route::get('/purchases/{purchase}/return-data', [PurchaseReturnController::class, 'getPurchaseReturnData'])->name('purchases.return-data');
     Route::get('/purchase-returns/{purchase_return}/print', [PurchaseReturnController::class, 'printReturn'])->name('purchase-returns.print');
     Route::resource('purchase-returns', PurchaseReturnController::class);
