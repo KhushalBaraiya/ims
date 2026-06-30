@@ -269,16 +269,16 @@
         </div>
         <div class="d-flex gap-2 flex-wrap">
             @can('products.create')
-                <a href="{{ route('products.copy', $product->id) }}" class="btn btn-outline-warning btn-sm">
+                <a href="{{ route('products.copy', $product->id) }}" class="btn btn-outline-secondary">
                     <i class="bx bx-copy me-1"></i> Copy
                 </a>
             @endcan
             @can('products.update')
-                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary">
                     <i class="bx bx-edit me-1"></i> Edit
                 </a>
             @endcan
-            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-arrow-back me-1"></i> Back
             </a>
         </div>
@@ -650,7 +650,7 @@
                                                     <td class="text-center">
                                                         @if ($pur)
                                                             <a href="{{ route('purchases.show', $pur->id) }}"
-                                                                class="btn btn-sm btn-outline-primary py-0 px-2"
+                                                                class="btn btn-outline-primary py-0 px-2"
                                                                 style="font-size:.7rem;">
                                                                 <i class="bx bx-show"></i>
                                                             </a>
@@ -721,7 +721,7 @@
                                                     <td class="text-center">
                                                         @if ($sale)
                                                             <a href="{{ route('sales.show', $sale->id) }}"
-                                                                class="btn btn-sm btn-outline-success py-0 px-2"
+                                                                class="btn btn-outline-success py-0 px-2"
                                                                 style="font-size:.7rem;">
                                                                 <i class="bx bx-show"></i>
                                                             </a>

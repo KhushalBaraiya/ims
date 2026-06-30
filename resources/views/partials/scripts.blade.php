@@ -89,6 +89,12 @@
                     icon.style.fontSize = '1.2rem';
                 }
             }
+            // ── Sync SweetAlert2 theme ──────────────────────────────────────
+            if (typeof Swal !== 'undefined') {
+                Swal.mixin({
+                    background: safeTheme === 'dark' ? '#2b2c40' : '#fff'
+                });
+            }
             try {
                 localStorage.setItem('admin-theme', safeTheme);
             } catch (e) {}
@@ -100,6 +106,57 @@
             });
         }
     })();
+</script>
+
+{{-- ─── Global Price Field: clear 0.00 on focus, restore on blur ─────────── --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function bindPriceField(el) {
+            if (el._priceBound) return;
+            el._priceBound = true;
+
+            el.addEventListener('focus', function() {
+                if (parseFloat(this.value) === 0) {
+                    this.value = '';
+                }
+                this.select();
+            });
+
+            el.addEventListener('blur', function() {
+                if (this.value.trim() === '' || isNaN(parseFloat(this.value))) {
+                    this.value = '0.00';
+                } else {
+                    // keep decimal places consistent with step
+                    var step = parseFloat(this.getAttribute('step') || '0.01');
+                    var decimals = (step.toString().split('.')[1] || '').length;
+                    this.value = parseFloat(this.value).toFixed(decimals);
+                }
+            });
+        }
+
+        // Init on all existing number inputs with step="0.01"
+        document.querySelectorAll('input[type="number"][step="0.01"]').forEach(bindPriceField);
+
+        // Also catch dynamically added rows (purchase/sale line items)
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(m) {
+                m.addedNodes.forEach(function(node) {
+                    if (node.nodeType !== 1) return;
+                    var inputs = node.querySelectorAll ?
+                        node.querySelectorAll('input[type="number"][step="0.01"]') : [];
+                    inputs.forEach(bindPriceField);
+                    if (node.matches && node.matches(
+                            'input[type="number"][step="0.01"]')) {
+                        bindPriceField(node);
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
 </script>
 
 {{-- ─── Global Flatpickr Auto-Init ───────────────────────────────────────── --}}
@@ -328,6 +385,116 @@
 
     });
 </script>
+
+{{-- ─── Global SweetAlert2 Dark Mode Defaults ─────────────────────────── --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof Swal === 'undefined') return;
+
+        function applySwalTheme() {
+            var isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            // Override Swal defaults for current theme
+            var defaults = isDark ? {
+                background: '#2b2c40',
+                color: '#cfd3ec',
+                customClass: {
+                    popup: 'swal2-dark-popup',
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2',
+                    title: 'swal2-dark-title',
+                    htmlContainer: 'swal2-dark-html',
+                }
+            } : {
+                background: '#fff',
+                color: '#566a7f',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2',
+                }
+            };
+            Swal.mixin(defaults);
+            window._swalDefaults = defaults;
+        }
+
+        applySwalTheme();
+
+        // Re-apply when theme toggle is clicked
+        var toggle = document.getElementById('adminThemeToggle');
+        if (toggle) {
+            toggle.addEventListener('click', function() {
+                setTimeout(applySwalTheme, 50);
+            });
+        }
+
+        // Patch all Swal.fire calls to auto-inject theme defaults
+        var _origFire = Swal.fire.bind(Swal);
+        Swal.fire = function(opts) {
+            var isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            var base = isDark ? {
+                background: '#2b2c40',
+                color: '#cfd3ec',
+                customClass: {
+                    popup: 'swal2-dark-popup',
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2',
+                }
+            } : {
+                background: '#fff',
+                color: '#566a7f',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2',
+                }
+            };
+
+            if (typeof opts === 'object') {
+                // Merge customClass carefully
+                var merged = Object.assign({}, base, opts);
+                if (opts.customClass || base.customClass) {
+                    merged.customClass = Object.assign({}, base.customClass, opts.customClass || {});
+                }
+                return _origFire(merged);
+            }
+            return _origFire.apply(this, arguments);
+        };
+    });
+</script>
+
+<style>
+    /* SweetAlert2 dark mode styles */
+    .swal2-dark-popup {
+        background: #2b2c40 !important;
+        color: #cfd3ec !important;
+        border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .swal2-dark-popup .swal2-title {
+        color: #cfd3ec !important;
+    }
+
+    .swal2-dark-popup .swal2-html-container {
+        color: #a3adc2 !important;
+    }
+
+    .swal2-dark-popup .swal2-icon.swal2-warning {
+        border-color: #ffab00 !important;
+        color: #ffab00 !important;
+    }
+
+    .swal2-dark-popup .swal2-icon.swal2-success {
+        border-color: #71dd37 !important;
+        color: #71dd37 !important;
+    }
+
+    .swal2-dark-popup .swal2-icon.swal2-error {
+        border-color: #ff3e1d !important;
+        color: #ff3e1d !important;
+    }
+
+    .swal2-dark-popup .swal2-actions .btn {
+        min-width: 100px;
+    }
+</style>
 
 {{-- ─── Session flash toasts ──────────────────────────────────────────────── --}}
 @if (session('success'))

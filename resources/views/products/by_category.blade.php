@@ -245,14 +245,14 @@
             </nav>
         </div>
         <div class="d-flex gap-2 flex-wrap">
-            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-list-ul me-1"></i> List View
             </a>
-            <a href="{{ route('products.gallery') }}" class="btn btn-outline-info btn-sm">
+            <a href="{{ route('products.gallery') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-grid-alt me-1"></i> Gallery View
             </a>
             @can('products.create')
-                <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('products.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-1"></i> Add Product
                 </a>
             @endcan
@@ -349,10 +349,10 @@
                             </select>
                         </div>
                         <div class="col-12 col-md-4 d-flex gap-2 justify-content-md-end">
-                            <button type="submit" class="btn btn-primary btn-sm px-3">
+                            <button type="submit" class="btn btn-primary px-3">
                                 <i class="bx bx-search me-1"></i>Apply
                             </button>
-                            <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary btn-sm px-3">
+                            <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary px-3">
                                 <i class="bx bx-reset me-1"></i>Reset
                             </a>
                         </div>
@@ -368,7 +368,7 @@
             <span class="text-muted small fw-semibold me-1"><i class="bx bx-link-alt me-1"></i>Jump to:</span>
             @foreach ($categories as $cat)
                 @if ($cat->products->count() > 0)
-                    <a href="#cat-{{ $cat->id }}" class="btn btn-outline-primary btn-sm rounded-pill py-0 px-2"
+                    <a href="#cat-{{ $cat->id }}" class="btn btn-outline-primary rounded-pill py-0 px-2"
                         style="font-size:.72rem;">
                         {{ $cat->name }}
                         <span class="badge bg-primary ms-1" style="font-size:.6rem;">{{ $cat->products->count() }}</span>
@@ -376,7 +376,7 @@
                 @endif
             @endforeach
             @if ($uncategorized->count() > 0)
-                <a href="#cat-uncategorized" class="btn btn-outline-warning btn-sm rounded-pill py-0 px-2"
+                <a href="#cat-uncategorized" class="btn btn-outline-warning rounded-pill py-0 px-2"
                     style="font-size:.72rem;">
                     Uncategorized
                     <span class="badge bg-warning text-dark ms-1"
@@ -396,72 +396,72 @@
             <i class="bx bx-package" style="font-size:4rem;opacity:.15;display:block;"></i>
             <p class="mt-3 fw-semibold mb-1">No products found.</p>
             <p class="small mb-3">Try adjusting your filters or add products to a category.</p>
-            <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-reset me-1"></i>Clear Filters
             </a>
         </div>
     @else
-    @forelse($categories as $cat)
-        @php $catProducts = $cat->products; @endphp
-        @if ($catProducts->count() === 0)
-            @continue
-        @endif
-
-        <div class="cat-section" id="cat-{{ $cat->id }}">
-
-            {{-- Category Header --}}
-            <div class="cat-section-header">
-                <div class="cat-title">
-                    <i class="bx bx-category" style="font-size:1.1rem;opacity:.85;"></i>
-                    {{ $cat->name }}
-                </div>
-                <div class="cat-meta">
-                    <span class="badge bg-white bg-opacity-25 text-white" style="font-size:.72rem;">
-                        {{ $catProducts->count() }} Product{{ $catProducts->count() !== 1 ? 's' : '' }}
-                    </span>
-                    @if ($cat->description)
-                        <span class="text-white opacity-75" style="font-size:.72rem;">
-                            {{ Str::limit($cat->description, 60) }}
-                        </span>
-                    @endif
-                </div>
-            </div>
-
-            {{-- Sub-category filter tabs --}}
-            @if ($cat->subCategories->count() > 0)
-                <div class="subcat-tabs" id="subcat-tabs-{{ $cat->id }}">
-                    <button class="subcat-tab-btn active" data-cat="{{ $cat->id }}" data-subcat="all"
-                        onclick="filterSubcat({{ $cat->id }}, 'all', this)">
-                        All
-                        <span style="opacity:.7;">({{ $catProducts->count() }})</span>
-                    </button>
-                    @foreach ($cat->subCategories as $sub)
-                        @php $subCount = $catProducts->where('sub_category_id', $sub->id)->count(); @endphp
-                        @if ($subCount > 0)
-                            <button class="subcat-tab-btn" data-cat="{{ $cat->id }}"
-                                data-subcat="{{ $sub->id }}"
-                                onclick="filterSubcat({{ $cat->id }}, {{ $sub->id }}, this)">
-                                {{ $sub->name }}
-                                <span style="opacity:.7;">({{ $subCount }})</span>
-                            </button>
-                        @endif
-                    @endforeach
-                </div>
+        @forelse($categories as $cat)
+            @php $catProducts = $cat->products; @endphp
+            @if ($catProducts->count() === 0)
+                @continue
             @endif
 
-            {{-- Products Grid --}}
-            <div class="cat-products-wrap">
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3"
-                    id="cat-grid-{{ $cat->id }}">
-                    @foreach ($catProducts as $product)
-                        @include('products._category_card', ['product' => $product])
-                    @endforeach
+            <div class="cat-section" id="cat-{{ $cat->id }}">
+
+                {{-- Category Header --}}
+                <div class="cat-section-header">
+                    <div class="cat-title">
+                        <i class="bx bx-category" style="font-size:1.1rem;opacity:.85;"></i>
+                        {{ $cat->name }}
+                    </div>
+                    <div class="cat-meta">
+                        <span class="badge bg-white bg-opacity-25 text-white" style="font-size:.72rem;">
+                            {{ $catProducts->count() }} Product{{ $catProducts->count() !== 1 ? 's' : '' }}
+                        </span>
+                        @if ($cat->description)
+                            <span class="text-white opacity-75" style="font-size:.72rem;">
+                                {{ Str::limit($cat->description, 60) }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Sub-category filter tabs --}}
+                @if ($cat->subCategories->count() > 0)
+                    <div class="subcat-tabs" id="subcat-tabs-{{ $cat->id }}">
+                        <button class="subcat-tab-btn active" data-cat="{{ $cat->id }}" data-subcat="all"
+                            onclick="filterSubcat({{ $cat->id }}, 'all', this)">
+                            All
+                            <span style="opacity:.7;">({{ $catProducts->count() }})</span>
+                        </button>
+                        @foreach ($cat->subCategories as $sub)
+                            @php $subCount = $catProducts->where('sub_category_id', $sub->id)->count(); @endphp
+                            @if ($subCount > 0)
+                                <button class="subcat-tab-btn" data-cat="{{ $cat->id }}"
+                                    data-subcat="{{ $sub->id }}"
+                                    onclick="filterSubcat({{ $cat->id }}, {{ $sub->id }}, this)">
+                                    {{ $sub->name }}
+                                    <span style="opacity:.7;">({{ $subCount }})</span>
+                                </button>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
+                {{-- Products Grid --}}
+                <div class="cat-products-wrap">
+                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3"
+                        id="cat-grid-{{ $cat->id }}">
+                        @foreach ($catProducts as $product)
+                            @include('products._category_card', ['product' => $product])
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-    @empty
-        {{-- No categories found --}}
-    @endforelse
+        @empty
+            {{-- No categories found --}}
+        @endforelse
     @endif {{-- end totalShown check --}}
 
     {{-- ── Uncategorized ───────────────────────────────── --}}

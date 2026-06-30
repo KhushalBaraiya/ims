@@ -75,6 +75,26 @@
             font-size: .73rem;
             font-weight: 600;
         }
+
+        /* Hide Laravel pagination "Showing X to Y of Z results" text */
+        nav[role="navigation"]>div:first-child {
+            display: none !important;
+        }
+
+        /* Pagination alignment — keep numbers vertically centered */
+        nav[role="navigation"] {
+            display: flex;
+            align-items: center;
+        }
+
+        nav[role="navigation"]>div:last-child {
+            margin: 0 !important;
+        }
+
+        nav[role="navigation"] .pagination {
+            margin-bottom: 0 !important;
+            align-items: center;
+        }
     </style>
 @endpush
 
@@ -91,20 +111,21 @@
                 </ol>
             </nav>
         </div>
-        <div class="d-flex gap-2 flex-wrap">
-            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-filter-alt me-1"></i>{{ __('messages.filters') }}
-                <i id="filtersChevron" class="bx bx-chevron-down ms-1"></i>
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-filter-alt"></i>
+                {{ __('messages.filters') }}
+                <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
-            <a href="{{ route('products.gallery') }}" class="btn btn-outline-info btn-sm">
-                <i class="bx bx-grid-alt me-1"></i> Gallery
+            <a href="{{ route('products.gallery') }}" class="btn btn-outline-info d-flex align-items-center gap-1">
+                <i class="bx bx-grid-alt"></i> Gallery
             </a>
-            <a href="{{ route('products.by-category') }}" class="btn btn-outline-success btn-sm">
-                <i class="bx bx-category me-1"></i> By Category
+            <a href="{{ route('products.by-category') }}" class="btn btn-outline-success d-flex align-items-center gap-1">
+                <i class="bx bx-category"></i> By Category
             </a>
             @can('products.create')
-                <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
-                    <i class="bx bx-plus me-1"></i> {{ __('messages.add_product') }}
+                <a href="{{ route('products.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                    <i class="bx bx-plus"></i> {{ __('messages.add_product') }}
                 </a>
             @endcan
         </div>
@@ -239,8 +260,8 @@
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
                         <a href="{{ route('products.index') }}"
-                            class="btn btn-outline-secondary btn-sm">{{ __('messages.reset') }}</a>
-                        <button type="submit" class="btn btn-primary btn-sm"><i
+                            class="btn btn-outline-secondary">{{ __('messages.reset') }}</a>
+                        <button type="submit" class="btn btn-primary"><i
                                 class="bx bx-search me-1"></i>{{ __('messages.apply') }}</button>
                     </div>
                 </form>
@@ -255,7 +276,8 @@
             {{-- DataTable-style controls row --}}
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-bottom">
                 {{-- Show entries --}}
-                <form method="GET" action="{{ route('products.index') }}" id="perPageForm" class="d-flex align-items-center gap-2 mb-0">
+                <form method="GET" action="{{ route('products.index') }}" id="perPageForm"
+                    class="d-flex align-items-center gap-2 mb-0">
                     @foreach (request()->except('per_page', 'page') as $key => $val)
                         <input type="hidden" name="{{ $key }}" value="{{ $val }}">
                     @endforeach
@@ -263,7 +285,8 @@
                     <select name="per_page" class="form-select form-select-sm" style="width:75px;" data-no-select2
                         onchange="document.getElementById('perPageForm').submit()">
                         @foreach ([10, 20, 50, 100] as $n)
-                            <option value="{{ $n }}" {{ request('per_page', 10) == $n ? 'selected' : '' }}>{{ $n }}</option>
+                            <option value="{{ $n }}" {{ request('per_page', 10) == $n ? 'selected' : '' }}>
+                                {{ $n }}</option>
                         @endforeach
                     </select>
                     <span class="text-muted small">{{ __('messages.entries') }}</span>
@@ -279,11 +302,10 @@
                             <i class="bx bx-search text-muted"></i>
                         </span>
                         <input type="text" name="search" class="form-control border-start-0 ps-0"
-                            placeholder="{{ __('messages.search') }}..."
-                            value="{{ request('search') }}">
-                        @if(request('search'))
-                            <a href="{{ route('products.index', request()->except('search','page')) }}"
-                               class="btn btn-outline-secondary btn-sm" title="Clear search">
+                            placeholder="{{ __('messages.search') }}..." value="{{ request('search') }}">
+                        @if (request('search'))
+                            <a href="{{ route('products.index', request()->except('search', 'page')) }}"
+                                class="btn btn-outline-secondary" title="Clear search">
                                 <i class="bx bx-x"></i>
                             </a>
                         @endif
@@ -364,14 +386,13 @@
                                     @can('products.update')
                                         <button type="button"
                                             class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $product->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                            style="background:transparent;cursor:pointer;"
-                                            data-id="{{ $product->id }}"
-                                            data-status="{{ $product->status }}"
-                                            title="Click to toggle status">
+                                            style="background:transparent;cursor:pointer;" data-id="{{ $product->id }}"
+                                            data-status="{{ $product->status }}" title="Click to toggle status">
                                             {{ ucfirst($product->status) }}
                                         </button>
                                     @else
-                                        <span class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
+                                        <span
+                                            class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
                                             {{ ucfirst($product->status) }}
                                         </span>
                                     @endcan
@@ -380,21 +401,21 @@
                                     <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('products.view')
                                             <a href="{{ route('products.show', $product->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                class="btn btn-icon btn-outline-info rounded-circle btn-action"
                                                 title="View">
                                                 <i class="bx bx-show"></i>
                                             </a>
                                         @endcan
                                         @can('products.update')
                                             <a href="{{ route('products.edit', $product->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                class="btn btn-icon btn-outline-primary rounded-circle btn-action"
                                                 title="Edit">
                                                 <i class="bx bx-edit"></i>
                                             </a>
                                         @endcan
                                         @can('products.create')
                                             <a href="{{ route('products.copy', $product->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
+                                                class="btn btn-icon btn-outline-warning rounded-circle btn-action"
                                                 title="Copy">
                                                 <i class="bx bx-copy"></i>
                                             </a>
@@ -405,7 +426,7 @@
                                                 class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    class="btn btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                     data-id="{{ $product->id }}" data-name="{{ $product->name }}"
                                                     title="Delete">
                                                     <i class="bx bx-trash"></i>
@@ -464,12 +485,12 @@
                                                     'price_max',
                                                 ]))
                                                 <a href="{{ route('products.index') }}"
-                                                    class="btn btn-outline-secondary btn-sm">
+                                                    class="btn btn-outline-secondary">
                                                     <i class="bx bx-reset me-1"></i> Clear Filters
                                                 </a>
                                             @endif
                                             @can('products.create')
-                                                <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
+                                                <a href="{{ route('products.create') }}" class="btn btn-primary">
                                                     <i class="bx bx-plus me-1"></i> Add Product
                                                 </a>
                                             @endcan
@@ -481,21 +502,21 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
 
-    {{-- Pagination footer --}}
-    <div class=\"d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3\">
-        <p class=\"text-muted small mb-0\">
-            @if ($products->total() > 0)
-                {{ __('messages.showing') }} <strong>{{ $products->firstItem() }}</strong>
-                to <strong>{{ $products->lastItem() }}</strong>
-                of <strong>{{ $products->total() }}</strong> {{ __('messages.entries') }}
-            @else
-                {{ __('messages.no_entries') }}
-            @endif
-        </p>
-        {{ $products->appends(request()->query())->links() }}
+            {{-- Pagination footer inside card --}}
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-top">
+                <p class="text-muted small mb-0">
+                    @if ($products->total() > 0)
+                        Showing <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                        of <strong>{{ $products->total() }}</strong> results
+                    @else
+                        No results found
+                    @endif
+                </p>
+                {{ $products->appends(request()->query())->links() }}
+            </div>
+
+        </div>
     </div>
 
 @endsection
@@ -570,27 +591,33 @@
                 $.ajax({
                     url: `/products/${id}/toggle-status`,
                     type: 'PATCH',
-                    data: { _token: '{{ csrf_token() }}' },
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
                     beforeSend: () => btn.prop('disabled', true).html(
                         '<span class="spinner-border spinner-border-sm"></span>'),
                     success: (res) => {
                         btn.prop('disabled', false);
                         if (res.success) {
                             btn.data('status', res.status);
-                            btn.removeClass('border-success text-success border-danger text-danger');
+                            btn.removeClass(
+                                'border-success text-success border-danger text-danger');
                             btn.addClass(res.status === 'active' ?
                                 'border-success text-success' : 'border-danger text-danger');
                             btn.text(res.status === 'active' ? 'Active' : 'Inactive');
                             showAdminToast(res.message, 'success');
                             // ── Update Active stat card live ──────────────
-                            $('#statActiveCount').text($('.status-toggle-btn.border-success').length);
+                            $('#statActiveCount').text($('.status-toggle-btn.border-success')
+                                .length);
                         } else {
                             btn.text(cur === 'active' ? 'Active' : 'Inactive');
-                            showAdminToast(res.message || '{{ __('messages.error_occurred') }}', 'error');
+                            showAdminToast(res.message ||
+                                '{{ __('messages.error_occurred') }}', 'error');
                         }
                     },
                     error: () => {
-                        btn.prop('disabled', false).text(cur === 'active' ? 'Active' : 'Inactive');
+                        btn.prop('disabled', false).text(cur === 'active' ? 'Active' :
+                            'Inactive');
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }
                 });
