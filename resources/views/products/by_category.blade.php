@@ -214,7 +214,70 @@
             background: linear-gradient(135deg, #25264a, #2e1a44);
         }
 
-        /* ── Sticky search bar ────────────────────────── */
+        /* ── Jump to pills ────────────────────────────── */
+        .jump-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            text-decoration: none;
+            padding: .3rem .85rem;
+            border-radius: 99px;
+            border: 1.5px solid rgba(105, 108, 255, .3);
+            background: rgba(105, 108, 255, .07);
+            color: #696cff;
+            font-size: .75rem;
+            font-weight: 600;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+
+        .jump-pill:hover {
+            background: linear-gradient(135deg, #696cff, #9c3fe4);
+            border-color: transparent;
+            color: #fff !important;
+        }
+
+        .jump-pill:hover .jump-pill-badge {
+            background: rgba(255, 255, 255, .25) !important;
+            color: #fff !important;
+        }
+
+        .jump-pill-badge {
+            background: rgba(105, 108, 255, .18);
+            color: #696cff;
+            font-size: .65rem;
+            padding: .18em .5em;
+            border-radius: 99px;
+            font-weight: 700;
+            transition: all .15s;
+        }
+
+        .jump-pill-warning {
+            border-color: rgba(253, 159, 60, .3);
+            background: rgba(253, 159, 60, .07);
+            color: #fd9f3c;
+        }
+
+        .jump-pill-warning:hover {
+            background: linear-gradient(135deg, #fd9f3c, #e57c1b);
+        }
+
+        .jump-pill-warning .jump-pill-badge {
+            background: rgba(253, 159, 60, .18);
+            color: #fd9f3c;
+        }
+
+        [data-bs-theme="dark"] .jump-pill {
+            background: rgba(105, 108, 255, .12);
+            border-color: rgba(105, 108, 255, .25);
+            color: #9b9fff;
+        }
+
+        [data-bs-theme="dark"] .jump-pill-warning {
+            background: rgba(253, 159, 60, .12);
+            border-color: rgba(253, 159, 60, .25);
+            color: #ffb74d;
+        }
     </style>
 @endpush
 
@@ -365,30 +428,16 @@
             </span>
             @foreach ($categories as $cat)
                 @if ($cat->products->count() > 0)
-                    <a href="#cat-{{ $cat->id }}"
-                        class="d-inline-flex align-items-center gap-1 text-decoration-none px-3 py-1 rounded-pill border"
-                        style="font-size:.75rem;font-weight:600;color:#696cff;border-color:rgba(105,108,255,.35);background:rgba(105,108,255,.06);transition:all .15s;"
-                        onmouseover="this.style.background='linear-gradient(135deg,#696cff,#9c3fe4)';this.style.color='#fff';this.style.borderColor='transparent';"
-                        onmouseout="this.style.background='rgba(105,108,255,.06)';this.style.color='#696cff';this.style.borderColor='rgba(105,108,255,.35)';">
+                    <a href="#cat-{{ $cat->id }}" class="jump-pill">
                         {{ $cat->name }}
-                        <span class="badge rounded-pill"
-                            style="background:rgba(105,108,255,.18);color:#696cff;font-size:.65rem;padding:.2em .5em;">
-                            {{ $cat->products->count() }}
-                        </span>
+                        <span class="jump-pill-badge">{{ $cat->products->count() }}</span>
                     </a>
                 @endif
             @endforeach
             @if ($uncategorized->count() > 0)
-                <a href="#cat-uncategorized"
-                    class="d-inline-flex align-items-center gap-1 text-decoration-none px-3 py-1 rounded-pill border"
-                    style="font-size:.75rem;font-weight:600;color:#fd9f3c;border-color:rgba(253,159,60,.35);background:rgba(253,159,60,.06);transition:all .15s;"
-                    onmouseover="this.style.background='linear-gradient(135deg,#fd9f3c,#e57c1b)';this.style.color='#fff';this.style.borderColor='transparent';"
-                    onmouseout="this.style.background='rgba(253,159,60,.06)';this.style.color='#fd9f3c';this.style.borderColor='rgba(253,159,60,.35)';">
+                <a href="#cat-uncategorized" class="jump-pill jump-pill-warning">
                     Uncategorized
-                    <span class="badge rounded-pill"
-                        style="background:rgba(253,159,60,.18);color:#fd9f3c;font-size:.65rem;padding:.2em .5em;">
-                        {{ $uncategorized->count() }}
-                    </span>
+                    <span class="jump-pill-badge">{{ $uncategorized->count() }}</span>
                 </a>
             @endif
         </div>

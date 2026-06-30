@@ -161,7 +161,7 @@
                     <table class="table table-hover align-middle mb-0" id="purchaseItemsTable">
                         <thead class="table-light">
                             <tr>
-                                <th>Image</th>
+                                <th style="width:50px">Image</th>
                                 <th>Product</th>
                                 <th>SKU</th>
                                 <th class="text-center">Qty</th>
@@ -174,10 +174,10 @@
                         </thead>
                         <tbody id="purchaseItemsContainer"></tbody>
                     </table>
-                    <div id="emptyTableMsg" class="text-center py-5 text-muted">
-                        <i class="bx bx-package" style="font-size:2.5rem;opacity:.3;"></i>
-                        <p class="mt-2 mb-0">No products added yet.</p>
-                    </div>
+                </div>
+                <div id="emptyTableMsg" class="text-center py-5 text-muted">
+                    <i class="bx bx-package d-block mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                    <p class="mb-0 small">No products added yet. Search above to add products.</p>
                 </div>
             </div>
         </div>

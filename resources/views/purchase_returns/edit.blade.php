@@ -8,15 +8,26 @@
             <h4 class="fw-bold mb-1">Edit Purchase Return</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('purchase-returns.index') }}">Purchase Returns</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('purchase-returns.index') }}">{{ __('messages.purchase_returns') }}</a></li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('purchase-returns.show', $purchaseReturn->id) }}">{{ $purchaseReturn->return_no }}</a>
+                    </li>
                     <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
-            <i class="bx bx-arrow-back me-1"></i> Back
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('purchase-returns.show', $purchaseReturn->id) }}"
+                class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-show"></i> View
+            </a>
+            <a href="{{ route('purchase-returns.index') }}"
+                class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-arrow-back"></i> {{ __('messages.back') }}
+            </a>
+        </div>
     </div>
 
     <form method="POST" action="{{ route('purchase-returns.update', $purchaseReturn->id) }}" id="returnForm" novalidate>
@@ -66,7 +77,7 @@
                                 <div>
                                     <div class="fw-semibold small">Linked Purchase</div>
                                     <div class="small">{{ $purchaseReturn->purchase->purchase_no ?? '-' }}
-                                        @if($purchaseReturn->purchase?->supplier)
+                                        @if ($purchaseReturn->purchase?->supplier)
                                             ({{ $purchaseReturn->purchase->supplier->name }})
                                         @endif
                                     </div>
@@ -92,8 +103,12 @@
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
                             <select name="status" class="form-select" required>
-                                <option value="Completed" {{ old('status', $purchaseReturn->status) === 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Pending"   {{ old('status', $purchaseReturn->status) === 'Pending'   ? 'selected' : '' }}>Pending</option>
+                                <option value="Completed"
+                                    {{ old('status', $purchaseReturn->status) === 'Completed' ? 'selected' : '' }}>
+                                    Completed</option>
+                                <option value="Pending"
+                                    {{ old('status', $purchaseReturn->status) === 'Pending' ? 'selected' : '' }}>Pending
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -177,8 +192,7 @@
                                 <h6 class="mb-0 fw-semibold">Notes</h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea name="notes" rows="5" class="form-control"
-                                    placeholder="Return reason, conditions...">{{ old('notes', $purchaseReturn->notes ?? '') }}</textarea>
+                                <textarea name="notes" rows="5" class="form-control" placeholder="Return reason, conditions...">{{ old('notes', $purchaseReturn->notes ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -190,15 +204,17 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between border-bottom py-2">
                                     <span class="text-muted small fw-semibold">Return Subtotal</span>
-                                    <span class="fw-bold text-dark" id="sum_subtotal">₹0.00 (0 units)</span>
+                                    <span class="fw-bold" id="sum_subtotal">₹0.00 (0 units)</span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom py-2">
                                     <span class="fw-bold">Grand Refund Total</span>
-                                    <span class="fw-bold text-primary" id="sum_grandtotal">₹0.00</span>
+                                    <span class="fw-bold text-primary fs-6" id="sum_grandtotal">₹0.00</span>
                                 </div>
-                                <div class="bg-light rounded p-3 mt-3 d-flex justify-content-between align-items-center">
+                                <div class="rounded p-3 mt-3 d-flex justify-content-between align-items-center"
+                                    style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
                                     <span class="text-muted small fw-semibold">Refunded Amount</span>
-                                    <span class="fw-bold text-success" id="summary_refunded">₹{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
+                                    <span class="fw-bold text-success fs-6"
+                                        id="summary_refunded">₹{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -220,141 +236,165 @@
 @endsection
 
 @push('scripts')
-<script>
-$(document).ready(function () {
+    <script>
+        $(document).ready(function() {
 
-    const IS_LINKED      = {{ $purchaseReturn->purchase_id ? 'true' : 'false' }};
-    const PURCHASE_ID    = {{ $purchaseReturn->purchase_id ?? 'null' }};
-    const RETURN_ID      = {{ $purchaseReturn->id }};
-    const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? "₹") }}';
+            const IS_LINKED = {{ $purchaseReturn->purchase_id ? 'true' : 'false' }};
+            const PURCHASE_ID = {{ $purchaseReturn->purchase_id ?? 'null' }};
+            const RETURN_ID = {{ $purchaseReturn->id }};
+            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
 
-    const searchInput      = $('#productSearchInput');
-    const resultsContainer = $('#autocompleteResults');
-    const itemsContainer   = $('#returnItemsContainer');
-    const noItemsMsg       = $('#noItemsMsg');
-    const submitBtn        = $('#submitBtn');
-    const refundedInput    = $('#refunded_amount');
+            const searchInput = $('#productSearchInput');
+            const resultsContainer = $('#autocompleteResults');
+            const itemsContainer = $('#returnItemsContainer');
+            const noItemsMsg = $('#noItemsMsg');
+            const submitBtn = $('#submitBtn');
+            const refundedInput = $('#refunded_amount');
 
-    let purchaseItemsMap = {};
-    let rowCount = 0;
+            let purchaseItemsMap = {};
+            let rowCount = 0;
 
-    function fmt(amount) {
-        return currencySymbol + parseFloat(amount).toFixed(2);
-    }
-
-    // ── Existing items to pre-populate ────────────────────────────────────
-    // PHP-side: merge old() with saved items
-    @php
-        $restoreItems = old('items') ? old('items') : null;
-    @endphp
-
-    @if ($restoreItems !== null)
-        const existingItems = [
-            @foreach ($restoreItems as $index => $oi)
-                @if (!empty($oi['product_id']))
-                    { product_id: {{ $oi['product_id'] }}, quantity: {{ (int)($oi['quantity'] ?? 0) }}, reason: "{{ addslashes($oi['reason'] ?? '') }}", unit_price: {{ (float)($oi['unit_price'] ?? 0) }} },
-                @endif
-            @endforeach
-        ];
-    @else
-        const existingItems = [
-            @foreach ($purchaseReturn->items as $item)
-                { product_id: {{ $item->product_id }}, quantity: {{ (int)$item->quantity }}, reason: "{{ addslashes($item->reason ?? '') }}", unit_price: {{ (float)$item->purchase_price }} },
-            @endforeach
-        ];
-    @endif
-
-    // ── Startup: load purchase map (linked mode) or seed free items directly
-    if (IS_LINKED) {
-        $.ajax({
-            url: `/purchases/${PURCHASE_ID}/return-data?exclude_return_id=${RETURN_ID}`,
-            type: 'GET',
-            success: function (data) {
-                data.forEach(item => { purchaseItemsMap[item.product_id] = item; });
-                populateExistingItems();
-            },
-            error: function () {
-                alert('Failed to load purchase data.');
+            function fmt(amount) {
+                return currencySymbol + parseFloat(amount).toFixed(2);
             }
-        });
-    } else {
-        // Free mode: populate existing items directly (no map needed)
-        populateExistingItemsFree();
-    }
 
-    function populateExistingItems() {
-        existingItems.forEach(ei => {
-            const item = purchaseItemsMap[ei.product_id];
-            if (item) {
-                // Restore max_returnable as if we still own our returned qty back
-                const origMaxR = parseInt(item.max_returnable) + ei.quantity; // add back current return qty
-                const fakeItem = Object.assign({}, item, { max_returnable: origMaxR });
-                addReturnItemRow(fakeItem, ei.quantity, ei.reason, true);
-            }
-        });
-    }
+            // ── Existing items to pre-populate ────────────────────────────────────
+            // PHP-side: merge old() with saved items
+            @php
+                $restoreItems = old('items') ? old('items') : null;
+            @endphp
 
-    function populateExistingItemsFree() {
-        @foreach ($purchaseReturn->items as $item)
-            @php $p = $item->product; @endphp
-            @if($p)
-                addReturnItemRow({
-                    product_id:    {{ $p->id }},
-                    name:          "{{ addslashes($p->name) }}",
-                    sku:           "{{ $p->code }}",
-                    unit_price:    {{ (float)$item->purchase_price }},
-                    stock:         {{ (float)($p->stock->quantity ?? 0) }},
-                    purchased_qty: null,
-                    already_returned: null,
-                    max_returnable: {{ (float)(($p->stock->quantity ?? 0) + $item->quantity) }},
-                }, {{ (int)$item->quantity }}, "{{ addslashes($item->reason ?? '') }}", false);
+            @if ($restoreItems !== null)
+                const existingItems = [
+                    @foreach ($restoreItems as $index => $oi)
+                        @if (!empty($oi['product_id']))
+                            {
+                                product_id: {{ $oi['product_id'] }},
+                                quantity: {{ (int) ($oi['quantity'] ?? 0) }},
+                                reason: "{{ addslashes($oi['reason'] ?? '') }}",
+                                unit_price: {{ (float) ($oi['unit_price'] ?? 0) }}
+                            },
+                        @endif
+                    @endforeach
+                ];
+            @else
+                const existingItems = [
+                    @foreach ($purchaseReturn->items as $item)
+                        {
+                            product_id: {{ $item->product_id }},
+                            quantity: {{ (int) $item->quantity }},
+                            reason: "{{ addslashes($item->reason ?? '') }}",
+                            unit_price: {{ (float) $item->purchase_price }}
+                        },
+                    @endforeach
+                ];
             @endif
-        @endforeach
-    }
 
-    // ── Product search ────────────────────────────────────────────────────
-    let searchTimeout = null;
-
-    searchInput.on('input', function () {
-        clearTimeout(searchTimeout);
-        const query = $(this).val().trim();
-        resultsContainer.addClass('d-none').empty();
-        if (query.length < 1) return;
-
-        if (IS_LINKED) {
-            const q = query.toLowerCase();
-            const matches = Object.values(purchaseItemsMap).filter(item =>
-                item.name.toLowerCase().includes(q) || (item.sku || '').toLowerCase().includes(q)
-            );
-            renderResults(matches, 'purchase');
-        } else {
-            searchTimeout = setTimeout(function () {
+            // ── Startup: load purchase map (linked mode) or seed free items directly
+            if (IS_LINKED) {
                 $.ajax({
-                    url: '{{ route("purchase-returns.search-products") }}',
+                    url: `/purchases/${PURCHASE_ID}/return-data?exclude_return_id=${RETURN_ID}`,
                     type: 'GET',
-                    data: { query: query },
-                    success: function (data) { renderResults(data, 'free'); }
+                    success: function(data) {
+                        data.forEach(item => {
+                            purchaseItemsMap[item.product_id] = item;
+                        });
+                        populateExistingItems();
+                    },
+                    error: function() {
+                        alert('Failed to load purchase data.');
+                    }
                 });
-            }, 250);
-        }
-    });
+            } else {
+                // Free mode: populate existing items directly (no map needed)
+                populateExistingItemsFree();
+            }
 
-    function renderResults(items, mode) {
-        resultsContainer.empty();
-        if (!items || items.length === 0) {
-            resultsContainer.html('<div class="px-3 py-3 text-muted small text-center">No products found.</div>').removeClass('d-none');
-            return;
-        }
-        items.forEach(item => {
-            const id    = mode === 'purchase' ? item.product_id : item.id;
-            const price = mode === 'purchase' ? item.unit_price  : item.purchase_price;
-            const maxR  = mode === 'purchase' ? parseInt(item.max_returnable) : null;
-            const stock = mode === 'purchase' ? item.stock : item.stock;
-            const badge = mode === 'purchase'
-                ? (maxR > 0 ? `<div style="font-size:11px;" class="text-muted">Max Returnable: ${maxR}</div>` : `<div style="font-size:11px;" class="text-danger">Fully returned</div>`)
-                : `<div style="font-size:11px;" class="text-muted">Stock: ${parseFloat(stock).toFixed(0)}</div>`;
+            function populateExistingItems() {
+                existingItems.forEach(ei => {
+                    const item = purchaseItemsMap[ei.product_id];
+                    if (item) {
+                        // Restore max_returnable as if we still own our returned qty back
+                        const origMaxR = parseInt(item.max_returnable) + ei
+                            .quantity; // add back current return qty
+                        const fakeItem = Object.assign({}, item, {
+                            max_returnable: origMaxR
+                        });
+                        addReturnItemRow(fakeItem, ei.quantity, ei.reason, true);
+                    }
+                });
+            }
 
-            resultsContainer.append(`
+            function populateExistingItemsFree() {
+                @foreach ($purchaseReturn->items as $item)
+                    @php $p = $item->product; @endphp
+                    @if ($p)
+                        addReturnItemRow({
+                            product_id: {{ $p->id }},
+                            name: "{{ addslashes($p->name) }}",
+                            sku: "{{ $p->code }}",
+                            unit_price: {{ (float) $item->purchase_price }},
+                            stock: {{ (float) ($p->stock->quantity ?? 0) }},
+                            purchased_qty: null,
+                            already_returned: null,
+                            max_returnable: {{ (float) (($p->stock->quantity ?? 0) + $item->quantity) }},
+                        }, {{ (int) $item->quantity }}, "{{ addslashes($item->reason ?? '') }}", false);
+                    @endif
+                @endforeach
+            }
+
+            // ── Product search ────────────────────────────────────────────────────
+            let searchTimeout = null;
+
+            searchInput.on('input', function() {
+                clearTimeout(searchTimeout);
+                const query = $(this).val().trim();
+                resultsContainer.addClass('d-none').empty();
+                if (query.length < 1) return;
+
+                if (IS_LINKED) {
+                    const q = query.toLowerCase();
+                    const matches = Object.values(purchaseItemsMap).filter(item =>
+                        item.name.toLowerCase().includes(q) || (item.sku || '').toLowerCase().includes(
+                            q)
+                    );
+                    renderResults(matches, 'purchase');
+                } else {
+                    searchTimeout = setTimeout(function() {
+                        $.ajax({
+                            url: '{{ route('purchase-returns.search-products') }}',
+                            type: 'GET',
+                            data: {
+                                query: query
+                            },
+                            success: function(data) {
+                                renderResults(data, 'free');
+                            }
+                        });
+                    }, 250);
+                }
+            });
+
+            function renderResults(items, mode) {
+                resultsContainer.empty();
+                if (!items || items.length === 0) {
+                    resultsContainer.html(
+                            '<div class="px-3 py-3 text-muted small text-center">No products found.</div>')
+                        .removeClass('d-none');
+                    return;
+                }
+                items.forEach(item => {
+                    const id = mode === 'purchase' ? item.product_id : item.id;
+                    const price = mode === 'purchase' ? item.unit_price : item.purchase_price;
+                    const maxR = mode === 'purchase' ? parseInt(item.max_returnable) : null;
+                    const stock = mode === 'purchase' ? item.stock : item.stock;
+                    const badge = mode === 'purchase' ?
+                        (maxR > 0 ?
+                            `<div style="font-size:11px;" class="text-muted">Max Returnable: ${maxR}</div>` :
+                            `<div style="font-size:11px;" class="text-danger">Fully returned</div>`) :
+                        `<div style="font-size:11px;" class="text-muted">Stock: ${parseFloat(stock).toFixed(0)}</div>`;
+
+                    resultsContainer.append(`
                 <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom"
                      style="cursor:pointer;" data-id="${id}" data-mode="${mode}">
                     <div>
@@ -367,71 +407,81 @@ $(document).ready(function () {
                     </div>
                 </div>
             `);
-        });
-        resultsContainer.removeClass('d-none');
-    }
-
-    $(document).on('click', function (e) {
-        if (!$(e.target).closest('#productSearchInput, #autocompleteResults').length)
-            resultsContainer.addClass('d-none');
-    });
-
-    $(document).on('click', '.autocomplete-item', function () {
-        const id   = $(this).data('id');
-        const mode = $(this).data('mode');
-
-        // Dupe check
-        let isDupe = false;
-        itemsContainer.find('tr.item-row').each(function () {
-            if ($(this).data('product-id') == id) { isDupe = true; return false; }
-        });
-        if (isDupe) {
-            showAdminToast('Product already in the return list.', 'warning');
-            resultsContainer.addClass('d-none').empty(); searchInput.val(''); return;
-        }
-
-        if (mode === 'purchase') {
-            const item = purchaseItemsMap[id];
-            if (!item || parseInt(item.max_returnable) <= 0) {
-                showAdminToast('This product has already been fully returned.', 'error');
-                resultsContainer.addClass('d-none').empty(); searchInput.val(''); return;
+                });
+                resultsContainer.removeClass('d-none');
             }
-            addReturnItemRow(item, 1, '', true);
-        } else {
-            const priceText = $(this).find('.fw-bold.text-primary.small').text().replace(/[^0-9.]/g, '');
-            const stockText = $(this).find('[style*="font-size"]').last().text().replace(/[^0-9.]/g, '');
-            addReturnItemRow({
-                product_id:    id,
-                name:          $(this).find('.fw-semibold.small').text().trim(),
-                sku:           $(this).find('.text-muted').first().text().replace('SKU: ', '').trim(),
-                unit_price:    parseFloat(priceText) || 0,
-                stock:         parseFloat(stockText) || 0,
-                max_returnable: parseFloat(stockText) || 99999,
-                purchased_qty: null, already_returned: null,
-            }, 1, '', false);
-        }
-        resultsContainer.addClass('d-none').empty();
-        searchInput.val('');
-    });
 
-    // ── Add row ───────────────────────────────────────────────────────────
-    function addReturnItemRow(item, qty, reason, isLinked) {
-        noItemsMsg.addClass('d-none');
-        const maxInt = item.max_returnable !== null ? parseInt(item.max_returnable) : 99999;
-        const price  = parseFloat(item.unit_price) || 0;
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#productSearchInput, #autocompleteResults').length)
+                    resultsContainer.addClass('d-none');
+            });
 
-        let extraCols = '';
-        if (isLinked) {
-            extraCols = `
+            $(document).on('click', '.autocomplete-item', function() {
+                const id = $(this).data('id');
+                const mode = $(this).data('mode');
+
+                // Dupe check
+                let isDupe = false;
+                itemsContainer.find('tr.item-row').each(function() {
+                    if ($(this).data('product-id') == id) {
+                        isDupe = true;
+                        return false;
+                    }
+                });
+                if (isDupe) {
+                    showAdminToast('Product already in the return list.', 'warning');
+                    resultsContainer.addClass('d-none').empty();
+                    searchInput.val('');
+                    return;
+                }
+
+                if (mode === 'purchase') {
+                    const item = purchaseItemsMap[id];
+                    if (!item || parseInt(item.max_returnable) <= 0) {
+                        showAdminToast('This product has already been fully returned.', 'error');
+                        resultsContainer.addClass('d-none').empty();
+                        searchInput.val('');
+                        return;
+                    }
+                    addReturnItemRow(item, 1, '', true);
+                } else {
+                    const priceText = $(this).find('.fw-bold.text-primary.small').text().replace(/[^0-9.]/g,
+                        '');
+                    const stockText = $(this).find('[style*="font-size"]').last().text().replace(/[^0-9.]/g,
+                        '');
+                    addReturnItemRow({
+                        product_id: id,
+                        name: $(this).find('.fw-semibold.small').text().trim(),
+                        sku: $(this).find('.text-muted').first().text().replace('SKU: ', '').trim(),
+                        unit_price: parseFloat(priceText) || 0,
+                        stock: parseFloat(stockText) || 0,
+                        max_returnable: parseFloat(stockText) || 99999,
+                        purchased_qty: null,
+                        already_returned: null,
+                    }, 1, '', false);
+                }
+                resultsContainer.addClass('d-none').empty();
+                searchInput.val('');
+            });
+
+            // ── Add row ───────────────────────────────────────────────────────────
+            function addReturnItemRow(item, qty, reason, isLinked) {
+                noItemsMsg.addClass('d-none');
+                const maxInt = item.max_returnable !== null ? parseInt(item.max_returnable) : 99999;
+                const price = parseFloat(item.unit_price) || 0;
+
+                let extraCols = '';
+                if (isLinked) {
+                    extraCols = `
                 <td class="text-center text-muted">${parseInt(item.purchased_qty)}</td>
                 <td class="text-center text-warning">${parseInt(item.already_returned)}</td>
                 <td class="text-center fw-bold text-success max-returnable-cell" data-max="${maxInt}">${maxInt}</td>
             `;
-        } else {
-            extraCols = `<td class="text-center text-muted">${parseInt(item.stock)}</td>`;
-        }
+                } else {
+                    extraCols = `<td class="text-center text-muted">${parseInt(item.stock)}</td>`;
+                }
 
-        itemsContainer.append(`
+                itemsContainer.append(`
             <tr class="item-row" data-product-id="${item.product_id}">
                 <td class="ps-3 fw-semibold">
                     ${item.name}
@@ -458,54 +508,62 @@ $(document).ready(function () {
                 </td>
             </tr>
         `);
-        rowCount++;
-        calculateTotals();
-    }
+                rowCount++;
+                calculateTotals();
+            }
 
-    $(document).on('click', '.remove-row-btn', function () {
-        $(this).closest('tr').remove();
-        if (itemsContainer.find('tr.item-row').length === 0) noItemsMsg.removeClass('d-none');
-        calculateTotals();
-    });
+            $(document).on('click', '.remove-row-btn', function() {
+                $(this).closest('tr').remove();
+                if (itemsContainer.find('tr.item-row').length === 0) noItemsMsg.removeClass('d-none');
+                calculateTotals();
+            });
 
-    $(document).on('input change', '.qty-input', function () {
-        let val = parseInt($(this).val()) || 0;
-        const maxCell = $(this).closest('tr').find('.max-returnable-cell');
-        if (maxCell.length) {
-            const max = parseInt(maxCell.data('max'));
-            if (val > max) { $(this).val(max); showAdminToast(`Max returnable: ${max}`, 'error'); val = max; }
-        }
-        if (val < 1) $(this).val(1);
-        calculateTotals();
-    });
+            $(document).on('input change', '.qty-input', function() {
+                let val = parseInt($(this).val()) || 0;
+                const maxCell = $(this).closest('tr').find('.max-returnable-cell');
+                if (maxCell.length) {
+                    const max = parseInt(maxCell.data('max'));
+                    if (val > max) {
+                        $(this).val(max);
+                        showAdminToast(`Max returnable: ${max}`, 'error');
+                        val = max;
+                    }
+                }
+                if (val < 1) $(this).val(1);
+                calculateTotals();
+            });
 
-    refundedInput.on('input change', function () {
-        $('#summary_refunded').text(fmt(parseFloat($(this).val()) || 0));
-    });
+            refundedInput.on('input change', function() {
+                $('#summary_refunded').text(fmt(parseFloat($(this).val()) || 0));
+            });
 
-    function calculateTotals() {
-        let totalAmt = 0, totalQty = 0;
-        itemsContainer.find('tr.item-row').each(function () {
-            const qty   = parseInt($(this).find('.qty-input').val()) || 0;
-            const price = parseFloat($(this).find('.unit-price-cell').data('price')) || 0;
-            const sub   = price * qty;
-            $(this).find('.subtotal-cell').text(fmt(sub));
-            totalAmt += sub; totalQty += qty;
+            function calculateTotals() {
+                let totalAmt = 0,
+                    totalQty = 0;
+                itemsContainer.find('tr.item-row').each(function() {
+                    const qty = parseInt($(this).find('.qty-input').val()) || 0;
+                    const price = parseFloat($(this).find('.unit-price-cell').data('price')) || 0;
+                    const sub = price * qty;
+                    $(this).find('.subtotal-cell').text(fmt(sub));
+                    totalAmt += sub;
+                    totalQty += qty;
+                });
+                $('#sum_subtotal').text(fmt(totalAmt) + ' (' + totalQty + ' units)');
+                $('#sum_grandtotal').text(fmt(totalAmt));
+                $('#summary_refunded').text(fmt(parseFloat(refundedInput.val()) || 0));
+                // Button always enabled — validated on submit
+            }
+
+            $('#returnForm').on('submit', function(e) {
+                let total = 0;
+                $('.qty-input').each(function() {
+                    total += parseInt($(this).val()) || 0;
+                });
+                if (total <= 0) {
+                    e.preventDefault();
+                    showAdminToast('Please add at least one product with a return quantity.', 'error');
+                }
+            });
         });
-        $('#sum_subtotal').text(fmt(totalAmt) + ' (' + totalQty + ' units)');
-        $('#sum_grandtotal').text(fmt(totalAmt));
-        $('#summary_refunded').text(fmt(parseFloat(refundedInput.val()) || 0));
-        submitBtn.attr('disabled', totalQty <= 0);
-    }
-
-    $('#returnForm').on('submit', function (e) {
-        let total = 0;
-        $('.qty-input').each(function () { total += parseInt($(this).val()) || 0; });
-        if (total <= 0) {
-            e.preventDefault();
-            showAdminToast('Please add at least one product with a return quantity.', 'error');
-        }
-    });
-});
-</script>
+    </script>
 @endpush

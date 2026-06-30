@@ -13,40 +13,103 @@
                 </ol>
             </nav>
         </div>
-        <div class="d-flex gap-2">
-            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-filter-alt me-1"></i> {{ __('messages.filters') }} <i id="filtersChevron"
-                    class="bx bx-chevron-down ms-1"></i>
+        <div class="d-flex gap-2 align-items-center">
+            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
+                <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             @can('sale_returns.create')
-                <a href="{{ route('sale-returns.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-1"></i> {{ __('messages.new_return') }}
+                <a href="{{ route('sale-returns.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                    <i class="bx bx-plus"></i> {{ __('messages.new_return') }}
                 </a>
             @endcan
+        </div>
+    </div>
+
+    {{-- Summary Stats --}}
+    @php
+        use App\Models\SaleReturn;
+        $totalSaleReturns = SaleReturn::count();
+        $completedSaleReturns = SaleReturn::where('status', 'Completed')->count();
+        $pendingSaleReturns = SaleReturn::where('status', 'Pending')->count();
+        $totalSaleRefunded = SaleReturn::where('status', 'Completed')->sum('refunded_amount');
+    @endphp
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">{{ __('messages.th_total') }}</p>
+                        <h4 class="mb-0 fw-bold text-primary">{{ $totalSaleReturns }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-undo"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">{{ __('messages.completed') }}</p>
+                        <h4 class="mb-0 fw-bold text-success">{{ $completedSaleReturns }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">{{ __('messages.pending') }}</p>
+                        <h4 class="mb-0 fw-bold text-warning">{{ $pendingSaleReturns }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-time-five"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">Total Refunded</p>
+                        <h4 class="mb-0 fw-bold text-info">{{ format_currency($totalSaleRefunded) }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-rupee"></i>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2"></i>{{ __('messages.filter_sale_returns') }}
-                </h6>
+                <h6 class="mb-0 fw-semibold"><i
+                        class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_sale_returns') }}</h6>
             </div>
             <div class="card-body p-4">
                 <form method="GET" action="{{ route('sale-returns.index') }}">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ __('messages.return_no_label') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.return_no_label') }}</label>
                             <input type="text" name="return_no" class="form-control form-control-sm"
                                 value="{{ request('return_no') }}" placeholder="RET-YYYYMMDD-XXXXX">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ __('messages.sale_invoice_no') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.sale_invoice_no') }}</label>
                             <input type="text" name="sale_invoice" class="form-control form-control-sm"
                                 value="{{ request('sale_invoice') }}" placeholder="INV-YYYYMMDD-XXXXX">
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ __('messages.customer') }}</label>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">{{ __('messages.customer') }}</label>
                             <select name="customer_id" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_customers') }}</option>
                                 @foreach ($customers as $c)
@@ -57,21 +120,21 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold">{{ __('messages.date_from') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
                             <input type="date" name="start_date"
                                 class="form-control form-control-sm flatpickr-filter-date"
                                 value="{{ request('start_date') }}">
                         </div>
-                        <div class="col-md-1">
-                            <label class="form-label fw-semibold">{{ __('messages.date_to') }}</label>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
                             <input type="date" name="end_date" class="form-control form-control-sm flatpickr-filter-date"
                                 value="{{ request('end_date') }}">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="{{ route('sale-returns.index') }}"
-                            class="btn btn-outline-secondary btn-sm">{{ __('messages.reset') }}</a>
-                        <button type="submit" class="btn btn-primary btn-sm"><i class="bx bx-search me-1"></i>
+                        <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary"><i
+                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
+                        <button type="submit" class="btn btn-primary"><i class="bx bx-search me-1"></i>
                             {{ __('messages.apply') }}</button>
                     </div>
                 </form>
@@ -126,31 +189,59 @@
                                 </td>
                                 <td class="text-muted small">{{ $ret->user->name ?? '-' }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('sale_returns.view')
-                                            <a href="{{ route('sale-returns.show', $ret->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}"><i class="bx bx-show"></i></a>
-                                            <a href="{{ route('sale-returns.print', $ret->id) }}" target="_blank"
-                                                class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action"
-                                                title="{{ __('messages.print') }}"><i class="bx bx-printer"></i></a>
-                                        @endcan
-                                        @can('sale_returns.update')
-                                            <a href="{{ route('sale-returns.edit', $ret->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></a>
-                                        @endcan
-                                        @can('sale_returns.delete')
-                                            <form id="delete-form-{{ $ret->id }}"
-                                                action="{{ route('sale-returns.destroy', $ret->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $ret->id }}" data-return="{{ $ret->return_no }}"
-                                                    title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>
-                                            </form>
-                                        @endcan
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:180px;border-radius:10px;">
+                                            @can('sale_returns.view')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('sale-returns.show', $ret->id) }}">
+                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.view') }}</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('sale-returns.print', $ret->id) }}" target="_blank">
+                                                        <i class="bx bx-printer text-success" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.print') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('sale_returns.update')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('sale-returns.edit', $ret->id) }}">
+                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.edit') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('sale_returns.delete')
+                                                <li>
+                                                    <hr class="dropdown-divider my-1">
+                                                </li>
+                                                <li>
+                                                    <form id="delete-form-{{ $ret->id }}"
+                                                        action="{{ route('sale-returns.destroy', $ret->id) }}" method="POST"
+                                                        class="d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button"
+                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
+                                                            data-id="{{ $ret->id }}"
+                                                            data-return="{{ $ret->return_no }}">
+                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                            <span>{{ __('messages.delete') }}</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endcan
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>

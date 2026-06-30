@@ -13,34 +13,101 @@
                 </ol>
             </nav>
         </div>
-        <div class="d-flex gap-2">
-            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-filter-alt me-1"></i> {{ __('messages.filters') }} <i id="filtersChevron"
-                    class="bx bx-chevron-down ms-1"></i>
+        <div class="d-flex gap-2 align-items-center">
+            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
+                <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             @can('purchases.create')
-                <a href="{{ route('purchases.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-1"></i> {{ __('messages.add_purchase') }}
+                <a href="{{ route('purchases.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                    <i class="bx bx-plus"></i> {{ __('messages.add_purchase') }}
                 </a>
             @endcan
+        </div>
+    </div>
+
+    {{-- Summary Stats --}}
+    @php
+        use App\Models\Purchase;
+        $totalPurchases = Purchase::count();
+        $completedPurchases = Purchase::where('status', 'Completed')->count();
+        $draftPurchases = Purchase::where('status', 'Draft')->count();
+        $cancelledPurchases = Purchase::where('status', 'Cancelled')->count();
+        $totalAmount = Purchase::where('status', 'Completed')->sum('grand_total');
+        $totalDue = Purchase::where('status', 'Completed')->sum('due_amount');
+    @endphp
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">{{ __('messages.th_total') }}</p>
+                        <h4 class="mb-0 fw-bold text-primary">{{ $totalPurchases }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-cart"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">{{ __('messages.completed') }}</p>
+                        <h4 class="mb-0 fw-bold text-success">{{ $completedPurchases }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-check-circle"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">Total Amount</p>
+                        <h4 class="mb-0 fw-bold text-info">{{ format_currency($totalAmount) }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-rupee"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0 text-muted small">Total Due</p>
+                        <h4 class="mb-0 fw-bold {{ $totalDue > 0 ? 'text-danger' : 'text-success' }}">
+                            {{ format_currency($totalDue) }}</h4>
+                    </div>
+                    <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1.1rem;">
+                        <i class="bx bx-time-five"></i>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2"></i>{{ __('messages.filter_purchases') }}</h6>
+                <h6 class="mb-0 fw-semibold"><i
+                        class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_purchases') }}</h6>
             </div>
             <div class="card-body p-4">
                 <form method="GET" action="{{ route('purchases.index') }}" id="filterForm">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ __('messages.purchase_no_label') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.purchase_no_label') }}</label>
                             <input type="text" name="purchase_no" class="form-control form-control-sm"
                                 value="{{ request('purchase_no') }}" placeholder="PUR-YYYYMMDD-XXXXX">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold">{{ __('messages.supplier') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.supplier') }}</label>
                             <select name="supplier_id" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_suppliers') }}</option>
                                 @foreach ($suppliers as $s)
@@ -51,7 +118,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold">{{ __('messages.status') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select name="status" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>
@@ -63,21 +130,21 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold">{{ __('messages.date_from') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
                             <input type="date" name="start_date"
                                 class="form-control form-control-sm flatpickr-filter-date"
                                 value="{{ request('start_date') }}">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold">{{ __('messages.date_to') }}</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
                             <input type="date" name="end_date" class="form-control form-control-sm flatpickr-filter-date"
                                 value="{{ request('end_date') }}">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="{{ route('purchases.index') }}"
-                            class="btn btn-outline-secondary btn-sm">{{ __('messages.reset') }}</a>
-                        <button type="submit" class="btn btn-primary btn-sm"><i
+                        <a href="{{ route('purchases.index') }}" class="btn btn-outline-secondary"><i
+                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
+                        <button type="submit" class="btn btn-primary"><i
                                 class="bx bx-search me-1"></i>{{ __('messages.apply_filters') }}</button>
                     </div>
                 </form>
@@ -113,7 +180,8 @@
                                 <td class="text-muted">{{ $purchase->items->count() }} {{ __('messages.items_count') }}
                                 </td>
                                 <td class="text-end fw-bold">{{ format_currency($purchase->grand_total) }}</td>
-                                <td class="text-end text-success fw-semibold">{{ format_currency($purchase->paid_amount) }}
+                                <td class="text-end text-success fw-semibold">
+                                    {{ format_currency($purchase->paid_amount) }}
                                 </td>
                                 <td class="text-end text-danger fw-semibold">{{ format_currency($purchase->due_amount) }}
                                 </td>
@@ -128,96 +196,62 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    {{-- 3-dot dropdown menu --}}
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                            title="More options" style="width:32px;height:32px;padding:0;">
-                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
-                                            style="min-width:180px;border-radius:10px;">
-                                            {{-- Create Return OR Edit Return (not both) --}}
-                                            @if ($purchase->status === 'Completed')
-                                                @if ($purchase->returns->count() > 0)
-                                                    @can('purchase_returns.update')
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                href="{{ route('purchase-returns.edit', $purchase->returns->first()->id) }}">
-                                                                <i class="bx bx-edit-alt text-warning"
-                                                                    style="font-size:1rem;"></i>
-                                                                <span>Edit Return</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <hr class="dropdown-divider my-1">
-                                                        </li>
-                                                    @endcan
-                                                @else
-                                                    @can('purchase_returns.create')
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                                href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}">
-                                                                <i class="bx bx-undo text-warning"
-                                                                    style="font-size:1rem;"></i>
-                                                                <span>Create Return</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <hr class="dropdown-divider my-1">
-                                                        </li>
-                                                    @endcan
-                                                @endif
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        {{-- View --}}
+                                        @can('purchases.view')
+                                            <a href="{{ route('purchases.show', $purchase->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}">
+                                                <i class="bx bx-show"></i>
+                                            </a>
+                                            <a href="{{ route('purchases.print', $purchase->id) }}" target="_blank"
+                                                class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action"
+                                                title="{{ __('messages.print') }}">
+                                                <i class="bx bx-printer"></i>
+                                            </a>
+                                        @endcan
+                                        {{-- Create/Edit Return --}}
+                                        @if ($purchase->status === 'Completed')
+                                            @if ($purchase->returns->count() > 0)
+                                                @can('purchase_returns.update')
+                                                    <a href="{{ route('purchase-returns.edit', $purchase->returns->first()->id) }}"
+                                                        class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
+                                                        title="Edit Return">
+                                                        <i class="bx bx-undo"></i>
+                                                    </a>
+                                                @endcan
+                                            @else
+                                                @can('purchase_returns.create')
+                                                    <a href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}"
+                                                        class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
+                                                        title="Create Return">
+                                                        <i class="bx bx-undo"></i>
+                                                    </a>
+                                                @endcan
                                             @endif
-                                            {{-- View --}}
-                                            @can('purchases.view')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('purchases.show', $purchase->id) }}">
-                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.view') }}</span>
-                                                    </a>
-                                                </li>
-                                                {{-- Print --}}
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('purchases.print', $purchase->id) }}" target="_blank">
-                                                        <i class="bx bx-printer text-success" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.print') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            {{-- Edit --}}
-                                            @can('purchases.update')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('purchases.edit', $purchase->id) }}">
-                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.edit') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            {{-- Delete --}}
-                                            @can('purchases.delete')
-                                                <li>
-                                                    <hr class="dropdown-divider my-1">
-                                                </li>
-                                                <li>
-                                                    <form id="delete-form-{{ $purchase->id }}"
-                                                        action="{{ route('purchases.destroy', $purchase->id) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf @method('DELETE')
-                                                        <button type="button"
-                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
-                                                            data-id="{{ $purchase->id }}"
-                                                            data-no="{{ $purchase->purchase_no }}">
-                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
-                                                            <span>{{ __('messages.delete') }}</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            @endcan
-                                        </ul>
+                                        @endif
+                                        {{-- Edit --}}
+                                        @can('purchases.update')
+                                            <a href="{{ route('purchases.edit', $purchase->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
+                                        @endcan
+                                        {{-- Delete --}}
+                                        @can('purchases.delete')
+                                            <form id="delete-form-{{ $purchase->id }}"
+                                                action="{{ route('purchases.destroy', $purchase->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
+                                                    title="{{ __('messages.delete') }}">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
