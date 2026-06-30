@@ -149,36 +149,54 @@
                                 </td>
                                 <td class="text-muted small">{{ $u->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('users.view')
-                                            <a href="{{ route('users.show', $u->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}">
-                                                <i class="bx bx-show"></i>
-                                            </a>
-                                        @endcan
-                                        @can('users.update')
-                                            <a href="{{ route('users.edit', $u->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}">
-                                                <i class="bx bx-edit"></i>
-                                            </a>
-                                        @endcan
-                                        @can('users.delete')
-                                            @if (auth()->id() !== $u->id)
-                                                <form id="delete-form-{{ $u->id }}"
-                                                    action="{{ route('users.destroy', $u->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                        data-id="{{ $u->id }}" data-name="{{ $u->name }}"
-                                                        title="{{ __('messages.delete') }}">
-                                                        <i class="bx bx-trash"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        @endcan
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:160px;border-radius:10px;">
+                                            @can('users.view')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('users.show', $u->id) }}">
+                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.view') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('users.update')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('users.edit', $u->id) }}">
+                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.edit') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('users.delete')
+                                                @if (auth()->id() !== $u->id)
+                                                    <li>
+                                                        <hr class="dropdown-divider my-1">
+                                                    </li>
+                                                    <li>
+                                                        <form id="delete-form-{{ $u->id }}"
+                                                            action="{{ route('users.destroy', $u->id) }}" method="POST"
+                                                            class="d-inline">
+                                                            @csrf @method('DELETE')
+                                                            <button type="button"
+                                                                class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
+                                                                data-id="{{ $u->id }}"
+                                                                data-name="{{ $u->name }}">
+                                                                <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                                <span>{{ __('messages.delete') }}</span>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                @endif
+                                            @endcan
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>

@@ -185,7 +185,8 @@
                                 <td class="text-muted small">{{ $product->unit_code ?? '-' }}</td>
                                 <td class="text-end">
                                     @if ($product->hasTransactions())
-                                        <span class="fw-bold {{ $isOut ? 'text-danger' : ($isLow ? 'text-warning' : 'text-success') }}">
+                                        <span
+                                            class="fw-bold {{ $isOut ? 'text-danger' : ($isLow ? 'text-warning' : 'text-success') }}">
                                             {{ number_format($qty, 2) }}
                                         </span>
                                     @else
@@ -210,20 +211,33 @@
                                             <span
                                                 class="badge rounded-pill bg-warning text-dark">{{ __('messages.low_stock_badge') }}</span>
                                         @else
-                                            <span class="badge rounded-pill bg-success">{{ __('messages.in_stock') }}</span>
+                                            <span
+                                                class="badge rounded-pill bg-success">{{ __('messages.in_stock') }}</span>
                                         @endif
                                     @else
                                         <span class="badge rounded-pill bg-secondary bg-opacity-75">N/A</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @can('stocks.create')
-                                        <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
-                                            class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                            title="Adjust Stock">
-                                            <i class="bx bx-slider"></i>
-                                        </a>
-                                    @endcan
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:160px;border-radius:10px;">
+                                            @can('stocks.create')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}">
+                                                        <i class="bx bx-slider text-primary" style="font-size:1rem;"></i>
+                                                        <span>Adjust Stock</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

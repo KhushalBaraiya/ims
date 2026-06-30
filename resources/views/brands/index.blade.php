@@ -45,7 +45,8 @@
                         <i class="bx bx-check-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-success" id="statActiveCount">{{ $brands->where('status', 'active')->count() }}</div>
+                        <div class="fw-bold fs-4 lh-1 text-success" id="statActiveCount">
+                            {{ $brands->where('status', 'active')->count() }}</div>
                         <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
                     </div>
                 </div>
@@ -59,7 +60,8 @@
                         <i class="bx bx-x-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">{{ $brands->where('status', 'inactive')->count() }}
+                        <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">
+                            {{ $brands->where('status', 'inactive')->count() }}
                         </div>
                         <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
                     </div>
@@ -149,34 +151,51 @@
                                 </td>
                                 <td class="text-muted small">{{ $brand->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('brands.view')
-                                            <a href="{{ route('brands.show', $brand->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}">
-                                                <i class="bx bx-show"></i>
-                                            </a>
-                                        @endcan
-                                        @can('brands.update')
-                                            <a href="{{ route('brands.edit', $brand->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}">
-                                                <i class="bx bx-edit"></i>
-                                            </a>
-                                        @endcan
-                                        @can('brands.delete')
-                                            <form id="delete-form-{{ $brand->id }}"
-                                                action="{{ route('brands.destroy', $brand->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $brand->id }}" data-name="{{ $brand->name }}"
-                                                    title="{{ __('messages.delete') }}">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:160px;border-radius:10px;">
+                                            @can('brands.view')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('brands.show', $brand->id) }}">
+                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.view') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('brands.update')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('brands.edit', $brand->id) }}">
+                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.edit') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('brands.delete')
+                                                <li>
+                                                    <hr class="dropdown-divider my-1">
+                                                </li>
+                                                <li>
+                                                    <form id="delete-form-{{ $brand->id }}"
+                                                        action="{{ route('brands.destroy', $brand->id) }}" method="POST"
+                                                        class="d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button"
+                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
+                                                            data-id="{{ $brand->id }}" data-name="{{ $brand->name }}">
+                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                            <span>{{ __('messages.delete') }}</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endcan
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
@@ -253,11 +272,11 @@
                                 '{{ __('messages.error_occurred') }}', 'error');
                         }
                         btn.prop('disabled', false);
-                            // ── Update stat cards live ──────────────────
-                            const activeCount = $('.status-toggle-btn.border-success').length;
-                            const inactiveCount = $('.status-toggle-btn.border-danger').length;
-                            $('#statActiveCount').text(activeCount);
-                            $('#statInactiveCount').text(inactiveCount);
+                        // ── Update stat cards live ──────────────────
+                        const activeCount = $('.status-toggle-btn.border-success').length;
+                        const inactiveCount = $('.status-toggle-btn.border-danger').length;
+                        $('#statActiveCount').text(activeCount);
+                        $('#statInactiveCount').text(inactiveCount);
                     },
                     error: function() {
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');

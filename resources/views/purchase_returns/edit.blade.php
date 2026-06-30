@@ -3,6 +3,7 @@
 
 @section('content')
 
+    {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <h4 class="fw-bold mb-1">Edit Purchase Return</h4>
@@ -19,13 +20,11 @@
             </nav>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('purchase-returns.show', $purchaseReturn->id) }}"
-                class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bx bx-show"></i> View
+            <a href="{{ route('purchase-returns.show', $purchaseReturn->id) }}" class="btn btn-outline-secondary">
+                <i class="bx bx-show me-1"></i> View
             </a>
-            <a href="{{ route('purchase-returns.index') }}"
-                class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bx bx-arrow-back"></i> {{ __('messages.back') }}
+            <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+                <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
             </a>
         </div>
     </div>
@@ -33,12 +32,11 @@
     <form method="POST" action="{{ route('purchase-returns.update', $purchaseReturn->id) }}" id="returnForm" novalidate>
         @csrf @method('PUT')
 
-        {{-- purchase_id hidden only when linked --}}
         @if ($purchaseReturn->purchase_id)
             <input type="hidden" name="purchase_id" value="{{ $purchaseReturn->purchase_id }}">
         @endif
 
-        {{-- Flash / validation errors --}}
+        {{-- Alerts --}}
         @if (session('error'))
             <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
                 <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
@@ -58,13 +56,16 @@
 
         <div class="row g-4">
 
-            {{-- Left: Return Details --}}
+            {{-- ══ LEFT COLUMN ══ --}}
             <div class="col-lg-3">
+
+                {{-- Return Details Card --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold"><i class="bx bx-info-circle me-2 text-primary"></i>Return Details</h6>
                     </div>
                     <div class="card-body p-4">
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Return No</label>
                             <input type="text" class="form-control bg-light fw-bold"
@@ -72,13 +73,13 @@
                         </div>
 
                         @if ($purchaseReturn->purchase_id)
-                            <div class="alert alert-info py-2 px-3 mb-3 d-flex align-items-center gap-2">
+                            <div class="alert alert-primary py-2 px-3 mb-3 d-flex align-items-center gap-2">
                                 <i class="bx bx-link-alt flex-shrink-0"></i>
                                 <div>
                                     <div class="fw-semibold small">Linked Purchase</div>
                                     <div class="small">{{ $purchaseReturn->purchase->purchase_no ?? '-' }}
                                         @if ($purchaseReturn->purchase?->supplier)
-                                            ({{ $purchaseReturn->purchase->supplier->name }})
+                                            &bull; {{ $purchaseReturn->purchase->supplier->name }}
                                         @endif
                                     </div>
                                 </div>
@@ -94,18 +95,21 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Reference No</label>
                             <input type="text" name="reference_no" class="form-control"
                                 value="{{ old('reference_no', $purchaseReturn->reference_no ?? '') }}"
                                 placeholder="Optional...">
                         </div>
+
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
                             <select name="status" class="form-select" required>
                                 <option value="Completed"
                                     {{ old('status', $purchaseReturn->status) === 'Completed' ? 'selected' : '' }}>
-                                    Completed</option>
+                                    Completed
+                                </option>
                                 <option value="Pending"
                                     {{ old('status', $purchaseReturn->status) === 'Pending' ? 'selected' : '' }}>Pending
                                 </option>
@@ -114,27 +118,34 @@
                     </div>
                 </div>
 
+                {{-- Refund Details Card --}}
                 <div class="card shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold"><i class="bx bx-money me-2 text-success"></i>Refund Details</h6>
                     </div>
                     <div class="card-body p-4">
-                        <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
-                        <input type="number" step="0.01" name="refunded_amount" id="refunded_amount"
-                            class="form-control @error('refunded_amount') is-invalid @enderror"
-                            value="{{ old('refunded_amount', $purchaseReturn->refunded_amount) }}" required>
-                        @error('refunded_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" min="0" name="refunded_amount" id="refunded_amount"
+                                class="form-control @error('refunded_amount') is-invalid @enderror"
+                                value="{{ old('refunded_amount', $purchaseReturn->refunded_amount) }}" required>
+                            @error('refunded_amount')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Right: Items --}}
+            </div>{{-- /col-lg-3 --}}
+
+            {{-- ══ RIGHT COLUMN ══ --}}
             <div class="col-lg-9">
+
+                {{-- Search / Products Card --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold"><i class="bx bx-search me-2 text-primary"></i>
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bx bx-search me-2 text-primary"></i>
                             @if ($purchaseReturn->purchase_id)
                                 Products from Purchase #{{ $purchaseReturn->purchase->purchase_no ?? '' }}
                             @else
@@ -148,7 +159,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bx bx-search"></i></span>
                                 <input type="text" id="productSearchInput" class="form-control"
-                                    placeholder="Type Product Name, SKU, or Scan Barcode...">
+                                    placeholder="Type Product Name, SKU, or Scan Barcode..." autocomplete="off">
                             </div>
                             <div id="autocompleteResults"
                                 class="position-absolute w-100 bg-white border rounded shadow-lg d-none"
@@ -168,69 +179,78 @@
                                         @else
                                             <th class="text-center">In Stock</th>
                                         @endif
-                                        <th class="text-center" style="width:110px">Return Qty</th>
+                                        <th class="text-center" style="width:110px;">Return Qty</th>
                                         <th>Reason</th>
                                         <th class="text-end">Subtotal</th>
-                                        <th></th>
+                                        <th style="width:40px;"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="returnItemsContainer"></tbody>
                             </table>
                         </div>
+
                         <div id="noItemsMsg" class="text-center py-5 text-muted d-none">
-                            <i class="bx bx-search-alt" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="mt-2 mb-0">No products in return list.</p>
+                            <i class="bx bx-search-alt d-block mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                            <p class="mb-0 small">No products in return list.</p>
                         </div>
 
                     </div>
                 </div>
 
+                {{-- Notes + Refund Summary --}}
                 <div class="row g-4">
                     <div class="col-md-6">
                         <div class="card shadow-sm h-100">
                             <div class="card-header bg-white py-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold">Notes</h6>
+                                <h6 class="mb-0 fw-semibold"><i class="bx bx-note me-2 text-warning"></i>Return Notes</h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea name="notes" rows="5" class="form-control" placeholder="Return reason, conditions...">{{ old('notes', $purchaseReturn->notes ?? '') }}</textarea>
+                                <textarea name="notes" rows="5" class="form-control"
+                                    placeholder="Describe return reason, item conditions..." style="resize:vertical;">{{ old('notes', $purchaseReturn->notes ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card shadow-sm h-100">
                             <div class="card-header bg-white py-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold">Refund Summary</h6>
+                                <h6 class="mb-0 fw-semibold"><i class="bx bx-receipt me-2 text-info"></i>Refund Summary
+                                </h6>
                             </div>
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between border-bottom py-2">
                                     <span class="text-muted small fw-semibold">Return Subtotal</span>
-                                    <span class="fw-bold" id="sum_subtotal">₹0.00 (0 units)</span>
+                                    <span class="fw-bold"
+                                        id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00 <span
+                                            class="text-muted fw-normal small">(0 units)</span></span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom py-2">
                                     <span class="fw-bold">Grand Refund Total</span>
-                                    <span class="fw-bold text-primary fs-6" id="sum_grandtotal">₹0.00</span>
+                                    <span class="fw-bold text-primary fs-6"
+                                        id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                                 </div>
                                 <div class="rounded p-3 mt-3 d-flex justify-content-between align-items-center"
                                     style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
-                                    <span class="text-muted small fw-semibold">Refunded Amount</span>
+                                    <span class="text-muted small fw-semibold">Refunded to Company</span>
                                     <span class="fw-bold text-success fs-6"
-                                        id="summary_refunded">₹{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
+                                        id="summary_refunded">{{ optional(current_currency())->symbol ?? '₹' }}{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                {{-- Action Buttons --}}
                 <div class="d-flex justify-content-end gap-2 mt-4">
                     <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
-                        <i class="bx bx-x me-1"></i> Cancel
+                        <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
                     <button type="submit" class="btn btn-primary" id="submitBtn">
                         <i class="bx bx-save me-1"></i> Update Return
                     </button>
                 </div>
-            </div>
-        </div>
+
+            </div>{{-- /col-lg-9 --}}
+        </div>{{-- /row --}}
     </form>
 
 @endsection
@@ -245,28 +265,21 @@
             const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
 
             const searchInput = $('#productSearchInput');
-            const resultsContainer = $('#autocompleteResults');
+            const resultsBox = $('#autocompleteResults');
             const itemsContainer = $('#returnItemsContainer');
             const noItemsMsg = $('#noItemsMsg');
-            const submitBtn = $('#submitBtn');
             const refundedInput = $('#refunded_amount');
 
             let purchaseItemsMap = {};
             let rowCount = 0;
 
-            function fmt(amount) {
-                return currencySymbol + parseFloat(amount).toFixed(2);
-            }
+            const fmt = v => currencySymbol + parseFloat(v).toFixed(2);
 
-            // ── Existing items to pre-populate ────────────────────────────────────
-            // PHP-side: merge old() with saved items
-            @php
-                $restoreItems = old('items') ? old('items') : null;
-            @endphp
-
+            // ── Existing items to pre-populate ───────────────────────────────
+            @php $restoreItems = old('items') ?: null; @endphp
             @if ($restoreItems !== null)
                 const existingItems = [
-                    @foreach ($restoreItems as $index => $oi)
+                    @foreach ($restoreItems as $oi)
                         @if (!empty($oi['product_id']))
                             {
                                 product_id: {{ $oi['product_id'] }},
@@ -290,46 +303,42 @@
                 ];
             @endif
 
-            // ── Startup: load purchase map (linked mode) or seed free items directly
+            // ── Startup ───────────────────────────────────────────────────────
             if (IS_LINKED) {
                 $.ajax({
-                    url: `/purchases/${PURCHASE_ID}/return-data?exclude_return_id=${RETURN_ID}`,
+                    url: '/purchases/' + PURCHASE_ID + '/return-data?exclude_return_id=' + RETURN_ID,
                     type: 'GET',
                     success: function(data) {
-                        data.forEach(item => {
-                            purchaseItemsMap[item.product_id] = item;
+                        data.forEach(function(i) {
+                            purchaseItemsMap[i.product_id] = i;
                         });
-                        populateExistingItems();
+                        populateExisting();
                     },
                     error: function() {
                         alert('Failed to load purchase data.');
                     }
                 });
             } else {
-                // Free mode: populate existing items directly (no map needed)
-                populateExistingItemsFree();
+                populateExistingFree();
             }
 
-            function populateExistingItems() {
-                existingItems.forEach(ei => {
-                    const item = purchaseItemsMap[ei.product_id];
+            function populateExisting() {
+                existingItems.forEach(function(ei) {
+                    var item = purchaseItemsMap[ei.product_id];
                     if (item) {
-                        // Restore max_returnable as if we still own our returned qty back
-                        const origMaxR = parseInt(item.max_returnable) + ei
-                            .quantity; // add back current return qty
-                        const fakeItem = Object.assign({}, item, {
-                            max_returnable: origMaxR
+                        var fakeItem = Object.assign({}, item, {
+                            max_returnable: parseInt(item.max_returnable) + ei.quantity
                         });
-                        addReturnItemRow(fakeItem, ei.quantity, ei.reason, true);
+                        addRow(fakeItem, ei.quantity, ei.reason, true);
                     }
                 });
             }
 
-            function populateExistingItemsFree() {
+            function populateExistingFree() {
                 @foreach ($purchaseReturn->items as $item)
                     @php $p = $item->product; @endphp
                     @if ($p)
-                        addReturnItemRow({
+                        addRow({
                             product_id: {{ $p->id }},
                             name: "{{ addslashes($p->name) }}",
                             sku: "{{ $p->code }}",
@@ -343,32 +352,31 @@
                 @endforeach
             }
 
-            // ── Product search ────────────────────────────────────────────────────
-            let searchTimeout = null;
-
+            // ── Product search ────────────────────────────────────────────────
+            var searchTimer = null;
             searchInput.on('input', function() {
-                clearTimeout(searchTimeout);
-                const query = $(this).val().trim();
-                resultsContainer.addClass('d-none').empty();
-                if (query.length < 1) return;
+                clearTimeout(searchTimer);
+                var q = $(this).val().trim();
+                resultsBox.addClass('d-none').empty();
+                if (q.length < 1) return;
 
                 if (IS_LINKED) {
-                    const q = query.toLowerCase();
-                    const matches = Object.values(purchaseItemsMap).filter(item =>
-                        item.name.toLowerCase().includes(q) || (item.sku || '').toLowerCase().includes(
-                            q)
-                    );
-                    renderResults(matches, 'purchase');
+                    var ql = q.toLowerCase();
+                    renderResults(
+                        Object.values(purchaseItemsMap).filter(function(i) {
+                            return i.name.toLowerCase().indexOf(ql) >= 0 || (i.sku || '')
+                                .toLowerCase().indexOf(ql) >= 0;
+                        }), 'purchase');
                 } else {
-                    searchTimeout = setTimeout(function() {
+                    searchTimer = setTimeout(function() {
                         $.ajax({
                             url: '{{ route('purchase-returns.search-products') }}',
                             type: 'GET',
                             data: {
-                                query: query
+                                query: q
                             },
-                            success: function(data) {
-                                renderResults(data, 'free');
+                            success: function(d) {
+                                renderResults(d, 'free');
                             }
                         });
                     }, 250);
@@ -376,52 +384,50 @@
             });
 
             function renderResults(items, mode) {
-                resultsContainer.empty();
+                resultsBox.empty();
                 if (!items || items.length === 0) {
-                    resultsContainer.html(
-                            '<div class="px-3 py-3 text-muted small text-center">No products found.</div>')
+                    resultsBox.html('<div class="px-3 py-3 text-muted small text-center">No products found.</div>')
                         .removeClass('d-none');
                     return;
                 }
-                items.forEach(item => {
-                    const id = mode === 'purchase' ? item.product_id : item.id;
-                    const price = mode === 'purchase' ? item.unit_price : item.purchase_price;
-                    const maxR = mode === 'purchase' ? parseInt(item.max_returnable) : null;
-                    const stock = mode === 'purchase' ? item.stock : item.stock;
-                    const badge = mode === 'purchase' ?
+                items.forEach(function(item) {
+                    var id = mode === 'purchase' ? item.product_id : item.id;
+                    var price = mode === 'purchase' ? item.unit_price : item.purchase_price;
+                    var maxR = mode === 'purchase' ? parseInt(item.max_returnable) : null;
+                    var stock = parseFloat(item.stock || 0);
+                    var sku = item.sku || '-';
+                    var badge = mode === 'purchase' ?
                         (maxR > 0 ?
-                            `<div style="font-size:11px;" class="text-muted">Max Returnable: ${maxR}</div>` :
-                            `<div style="font-size:11px;" class="text-danger">Fully returned</div>`) :
-                        `<div style="font-size:11px;" class="text-muted">Stock: ${parseFloat(stock).toFixed(0)}</div>`;
+                            '<div class="text-muted" style="font-size:11px;">Max Returnable: ' + maxR +
+                            '</div>' :
+                            '<div class="text-danger" style="font-size:11px;">Already fully returned</div>'
+                            ) :
+                        '<div class="text-muted" style="font-size:11px;">Stock: ' + stock.toFixed(0) +
+                        '</div>';
 
-                    resultsContainer.append(`
-                <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom"
-                     style="cursor:pointer;" data-id="${id}" data-mode="${mode}">
-                    <div>
-                        <div class="fw-semibold small">${item.name}</div>
-                        <div class="text-muted" style="font-size:11px;">SKU: ${item.sku || '-'}</div>
-                    </div>
-                    <div class="text-end">
-                        <div class="fw-bold text-primary small">${fmt(price)}</div>
-                        ${badge}
-                    </div>
-                </div>
-            `);
+                    resultsBox.append(
+                        '<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;" data-id="' +
+                        id + '" data-mode="' + mode + '">' +
+                        '<div><div class="fw-semibold small">' + item.name +
+                        '</div><div class="text-muted" style="font-size:11px;">SKU: ' + sku +
+                        '</div></div>' +
+                        '<div class="text-end"><div class="fw-bold text-primary small">' + fmt(price) +
+                        '</div>' + badge + '</div>' +
+                        '</div>'
+                    );
                 });
-                resultsContainer.removeClass('d-none');
+                resultsBox.removeClass('d-none');
             }
 
             $(document).on('click', function(e) {
                 if (!$(e.target).closest('#productSearchInput, #autocompleteResults').length)
-                    resultsContainer.addClass('d-none');
+                    resultsBox.addClass('d-none');
             });
 
             $(document).on('click', '.autocomplete-item', function() {
-                const id = $(this).data('id');
-                const mode = $(this).data('mode');
-
-                // Dupe check
-                let isDupe = false;
+                var id = $(this).data('id');
+                var mode = $(this).data('mode');
+                var isDupe = false;
                 itemsContainer.find('tr.item-row').each(function() {
                     if ($(this).data('product-id') == id) {
                         isDupe = true;
@@ -429,133 +435,124 @@
                     }
                 });
                 if (isDupe) {
-                    showAdminToast('Product already in the return list.', 'warning');
-                    resultsContainer.addClass('d-none').empty();
+                    showAdminToast('Product already in return list.', 'warning');
+                    resultsBox.addClass('d-none').empty();
                     searchInput.val('');
                     return;
                 }
 
                 if (mode === 'purchase') {
-                    const item = purchaseItemsMap[id];
+                    var item = purchaseItemsMap[id];
                     if (!item || parseInt(item.max_returnable) <= 0) {
                         showAdminToast('This product has already been fully returned.', 'error');
-                        resultsContainer.addClass('d-none').empty();
+                        resultsBox.addClass('d-none').empty();
                         searchInput.val('');
                         return;
                     }
-                    addReturnItemRow(item, 1, '', true);
+                    addRow(item, 1, '', true);
                 } else {
-                    const priceText = $(this).find('.fw-bold.text-primary.small').text().replace(/[^0-9.]/g,
+                    var priceText = $(this).find('.fw-bold.text-primary.small').text().replace(/[^0-9.]/g,
                         '');
-                    const stockText = $(this).find('[style*="font-size"]').last().text().replace(/[^0-9.]/g,
-                        '');
-                    addReturnItemRow({
+                    var stockText = $(this).find('.text-muted[style]').last().text().replace(/[^0-9.]/g,
+                    '');
+                    addRow({
                         product_id: id,
                         name: $(this).find('.fw-semibold.small').text().trim(),
                         sku: $(this).find('.text-muted').first().text().replace('SKU: ', '').trim(),
                         unit_price: parseFloat(priceText) || 0,
                         stock: parseFloat(stockText) || 0,
-                        max_returnable: parseFloat(stockText) || 99999,
                         purchased_qty: null,
                         already_returned: null,
+                        max_returnable: parseFloat(stockText) || 99999,
                     }, 1, '', false);
                 }
-                resultsContainer.addClass('d-none').empty();
+                resultsBox.addClass('d-none').empty();
                 searchInput.val('');
             });
 
-            // ── Add row ───────────────────────────────────────────────────────────
-            function addReturnItemRow(item, qty, reason, isLinked) {
+            // ── Add row ───────────────────────────────────────────────────────
+            function addRow(item, qty, reason, isLinked) {
                 noItemsMsg.addClass('d-none');
-                const maxInt = item.max_returnable !== null ? parseInt(item.max_returnable) : 99999;
-                const price = parseFloat(item.unit_price) || 0;
-
-                let extraCols = '';
+                var maxInt = item.max_returnable !== null ? parseInt(item.max_returnable) : 99999;
+                var price = parseFloat(item.unit_price) || 0;
+                var extraCols = '';
                 if (isLinked) {
-                    extraCols = `
-                <td class="text-center text-muted">${parseInt(item.purchased_qty)}</td>
-                <td class="text-center text-warning">${parseInt(item.already_returned)}</td>
-                <td class="text-center fw-bold text-success max-returnable-cell" data-max="${maxInt}">${maxInt}</td>
-            `;
+                    extraCols =
+                        '<td class="text-center text-muted">' + parseInt(item.purchased_qty) + '</td>' +
+                        '<td class="text-center text-warning">' + parseInt(item.already_returned) + '</td>' +
+                        '<td class="text-center fw-bold text-success max-returnable-cell" data-max="' + maxInt +
+                        '">' + maxInt + '</td>';
                 } else {
-                    extraCols = `<td class="text-center text-muted">${parseInt(item.stock)}</td>`;
+                    extraCols = '<td class="text-center text-muted">' + parseInt(item.stock) + '</td>';
                 }
-
-                itemsContainer.append(`
-            <tr class="item-row" data-product-id="${item.product_id}">
-                <td class="ps-3 fw-semibold">
-                    ${item.name}
-                    <input type="hidden" name="items[${rowCount}][product_id]" value="${item.product_id}">
-                    <input type="hidden" name="items[${rowCount}][unit_price]" value="${price.toFixed(2)}">
-                </td>
-                <td class="text-center text-primary fw-bold unit-price-cell" data-price="${price}">${fmt(price)}</td>
-                ${extraCols}
-                <td class="text-center">
-                    <input type="number" step="1" min="1" max="${maxInt}"
-                           name="items[${rowCount}][quantity]" value="${qty}"
-                           class="qty-input form-control form-control-sm text-center" style="width:90px;margin:auto;">
-                </td>
-                <td>
-                    <input type="text" name="items[${rowCount}][reason]" value="${reason}"
-                           class="form-control form-control-sm" placeholder="Reason...">
-                </td>
-                <td class="text-end fw-bold subtotal-cell">${fmt(price * qty)}</td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                            style="width:28px;height:28px;padding:0;">
-                        <i class="bx bx-trash" style="font-size:13px;"></i>
-                    </button>
-                </td>
-            </tr>
-        `);
+                itemsContainer.append(
+                    '<tr class="item-row" data-product-id="' + item.product_id + '">' +
+                    '<td class="ps-3 fw-semibold">' + item.name +
+                    '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item
+                    .product_id + '">' +
+                    '<input type="hidden" name="items[' + rowCount + '][unit_price]" value="' + price.toFixed(
+                    2) + '">' +
+                    '</td>' +
+                    '<td class="text-center text-primary fw-bold unit-price-cell" data-price="' + price + '">' +
+                    fmt(price) + '</td>' +
+                    extraCols +
+                    '<td class="text-center"><input type="number" step="1" min="1" max="' + maxInt +
+                    '" name="items[' + rowCount + '][quantity]" value="' + qty +
+                    '" class="qty-input form-control form-control-sm text-center" style="width:88px;margin:auto;"></td>' +
+                    '<td><input type="text" name="items[' + rowCount + '][reason]" value="' + reason +
+                    '" class="form-control form-control-sm" placeholder="Reason..."></td>' +
+                    '<td class="text-end fw-bold subtotal-cell">' + fmt(price * qty) + '</td>' +
+                    '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button></td>' +
+                    '</tr>'
+                );
                 rowCount++;
-                calculateTotals();
+                calcTotals();
             }
 
             $(document).on('click', '.remove-row-btn', function() {
                 $(this).closest('tr').remove();
                 if (itemsContainer.find('tr.item-row').length === 0) noItemsMsg.removeClass('d-none');
-                calculateTotals();
+                calcTotals();
             });
 
             $(document).on('input change', '.qty-input', function() {
-                let val = parseInt($(this).val()) || 0;
-                const maxCell = $(this).closest('tr').find('.max-returnable-cell');
+                var val = parseInt($(this).val()) || 0;
+                var maxCell = $(this).closest('tr').find('.max-returnable-cell');
                 if (maxCell.length) {
-                    const max = parseInt(maxCell.data('max'));
+                    var max = parseInt(maxCell.data('max'));
                     if (val > max) {
                         $(this).val(max);
-                        showAdminToast(`Max returnable: ${max}`, 'error');
+                        showAdminToast('Max returnable: ' + max, 'error');
                         val = max;
                     }
                 }
                 if (val < 1) $(this).val(1);
-                calculateTotals();
+                calcTotals();
             });
 
             refundedInput.on('input change', function() {
                 $('#summary_refunded').text(fmt(parseFloat($(this).val()) || 0));
             });
 
-            function calculateTotals() {
-                let totalAmt = 0,
-                    totalQty = 0;
+            function calcTotals() {
+                var amt = 0,
+                    qty = 0;
                 itemsContainer.find('tr.item-row').each(function() {
-                    const qty = parseInt($(this).find('.qty-input').val()) || 0;
-                    const price = parseFloat($(this).find('.unit-price-cell').data('price')) || 0;
-                    const sub = price * qty;
-                    $(this).find('.subtotal-cell').text(fmt(sub));
-                    totalAmt += sub;
-                    totalQty += qty;
+                    var q = parseInt($(this).find('.qty-input').val()) || 0;
+                    var p = parseFloat($(this).find('.unit-price-cell').data('price')) || 0;
+                    var s = p * q;
+                    $(this).find('.subtotal-cell').text(fmt(s));
+                    amt += s;
+                    qty += q;
                 });
-                $('#sum_subtotal').text(fmt(totalAmt) + ' (' + totalQty + ' units)');
-                $('#sum_grandtotal').text(fmt(totalAmt));
+                $('#sum_subtotal').html(fmt(amt) + ' <span class="text-muted fw-normal small">(' + qty +
+                    ' units)</span>');
+                $('#sum_grandtotal').text(fmt(amt));
                 $('#summary_refunded').text(fmt(parseFloat(refundedInput.val()) || 0));
-                // Button always enabled — validated on submit
             }
 
             $('#returnForm').on('submit', function(e) {
-                let total = 0;
+                var total = 0;
                 $('.qty-input').each(function() {
                     total += parseInt($(this).val()) || 0;
                 });
@@ -564,6 +561,7 @@
                     showAdminToast('Please add at least one product with a return quantity.', 'error');
                 }
             });
+
         });
     </script>
 @endpush

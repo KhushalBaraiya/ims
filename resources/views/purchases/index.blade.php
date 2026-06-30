@@ -196,62 +196,84 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        {{-- View --}}
-                                        @can('purchases.view')
-                                            <a href="{{ route('purchases.show', $purchase->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}">
-                                                <i class="bx bx-show"></i>
-                                            </a>
-                                            <a href="{{ route('purchases.print', $purchase->id) }}" target="_blank"
-                                                class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action"
-                                                title="{{ __('messages.print') }}">
-                                                <i class="bx bx-printer"></i>
-                                            </a>
-                                        @endcan
-                                        {{-- Create/Edit Return --}}
-                                        @if ($purchase->status === 'Completed')
-                                            @if ($purchase->returns->count() > 0)
-                                                @can('purchase_returns.update')
-                                                    <a href="{{ route('purchase-returns.edit', $purchase->returns->first()->id) }}"
-                                                        class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
-                                                        title="Edit Return">
-                                                        <i class="bx bx-undo"></i>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:180px;border-radius:10px;">
+                                            @can('purchases.view')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('purchases.show', $purchase->id) }}">
+                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.view') }}</span>
                                                     </a>
-                                                @endcan
-                                            @else
-                                                @can('purchase_returns.create')
-                                                    <a href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}"
-                                                        class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
-                                                        title="Create Return">
-                                                        <i class="bx bx-undo"></i>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('purchases.print', $purchase->id) }}" target="_blank">
+                                                        <i class="bx bx-printer text-success" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.print') }}</span>
                                                     </a>
-                                                @endcan
+                                                </li>
+                                            @endcan
+                                            @if ($purchase->status === 'Completed')
+                                                @if ($purchase->returns->count() > 0)
+                                                    @can('purchase_returns.update')
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                                href="{{ route('purchase-returns.edit', $purchase->returns->first()->id) }}">
+                                                                <i class="bx bx-undo text-warning"
+                                                                    style="font-size:1rem;"></i>
+                                                                <span>Edit Return</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                @else
+                                                    @can('purchase_returns.create')
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                                href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}">
+                                                                <i class="bx bx-undo text-warning"
+                                                                    style="font-size:1rem;"></i>
+                                                                <span>Create Return</span>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                @endif
                                             @endif
-                                        @endif
-                                        {{-- Edit --}}
-                                        @can('purchases.update')
-                                            <a href="{{ route('purchases.edit', $purchase->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}">
-                                                <i class="bx bx-edit"></i>
-                                            </a>
-                                        @endcan
-                                        {{-- Delete --}}
-                                        @can('purchases.delete')
-                                            <form id="delete-form-{{ $purchase->id }}"
-                                                action="{{ route('purchases.destroy', $purchase->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
-                                                    title="{{ __('messages.delete') }}">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
+                                            @can('purchases.update')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('purchases.edit', $purchase->id) }}">
+                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.edit') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('purchases.delete')
+                                                <li>
+                                                    <hr class="dropdown-divider my-1">
+                                                </li>
+                                                <li>
+                                                    <form id="delete-form-{{ $purchase->id }}"
+                                                        action="{{ route('purchases.destroy', $purchase->id) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button"
+                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
+                                                            data-id="{{ $purchase->id }}"
+                                                            data-no="{{ $purchase->purchase_no }}">
+                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                            <span>{{ __('messages.delete') }}</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endcan
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>

@@ -89,11 +89,13 @@
         </div>
     </div>
 
+    {{-- Filters --}}
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i
-                        class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_pur_returns') }}</h6>
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_pur_returns') }}
+                </h6>
             </div>
             <div class="card-body p-4">
                 <form method="GET" action="{{ route('purchase-returns.index') }}">
@@ -109,7 +111,8 @@
                                 <option value="">{{ __('messages.all_suppliers') }}</option>
                                 @foreach ($suppliers as $s)
                                     <option value="{{ $s->id }}"
-                                        {{ request('supplier_id') == $s->id ? 'selected' : '' }}>{{ $s->name }}
+                                        {{ request('supplier_id') == $s->id ? 'selected' : '' }}>
+                                        {{ $s->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -137,16 +140,19 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary"><i
-                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
-                        <button type="submit" class="btn btn-primary"><i class="bx bx-search me-1"></i>
-                            {{ __('messages.apply') }}</button>
+                        <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+                            <i class="bx bx-reset me-1"></i>{{ __('messages.reset') }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    {{-- Table --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive p-3">
@@ -171,7 +177,15 @@
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td><code class="fw-bold">{{ $return->return_no }}</code></td>
                                 <td class="text-muted">{{ $return->return_date }}</td>
-                                <td><code class="text-muted">{{ $return->purchase->purchase_no ?? '-' }}</code></td>
+                                <td>
+                                    @if ($return->purchase)
+                                        <a href="{{ route('purchases.show', $return->purchase_id) }}" class="text-muted">
+                                            <code>{{ $return->purchase->purchase_no }}</code>
+                                        </a>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
                                 <td><strong>{{ $return->supplier->name ?? '-' }}</strong></td>
                                 <td class="text-end fw-bold">{{ format_currency($return->grand_total) }}</td>
                                 <td class="text-end text-success fw-semibold">
@@ -279,6 +293,8 @@
                     }
                 }
             });
+
+            // Filters toggle — persist state
             let filtersOpen = localStorage.getItem('pur_returns_filters_open') === 'true';
             if (filtersOpen) {
                 $('#filtersCard').removeClass('d-none');
@@ -291,10 +307,12 @@
                     isOpen);
                 localStorage.setItem('pur_returns_filters_open', isOpen);
             });
+
+            // Delete with AJAX
             $(document).on('click', '.delete-btn', function() {
-                const id = $(this).data('id'),
-                    no = $(this).data('no'),
-                    form = $(`#delete-form-${id}`);
+                const id = $(this).data('id');
+                const no = $(this).data('no');
+                const form = $(`#delete-form-${id}`);
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
                     text: `{{ __('messages.delete') }} "${no}"?`,
@@ -305,7 +323,29 @@
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
-                    if (r.isConfirmed) form[0].submit();
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                        title: '{{ __('messages.deleted_title') }}',
+                                        text: res.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#696cff'
+                                    }).then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                    'error');
+                            }
+                        });
+                    }
                 });
             });
         });

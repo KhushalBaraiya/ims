@@ -149,34 +149,51 @@
                                 </td>
                                 <td class="text-muted small">{{ $supplier->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('suppliers.view')
-                                            <a href="{{ route('suppliers.show', $supplier->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}">
-                                                <i class="bx bx-show"></i>
-                                            </a>
-                                        @endcan
-                                        @can('suppliers.update')
-                                            <a href="{{ route('suppliers.edit', $supplier->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}">
-                                                <i class="bx bx-edit"></i>
-                                            </a>
-                                        @endcan
-                                        @can('suppliers.delete')
-                                            <form id="delete-form-{{ $supplier->id }}"
-                                                action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $supplier->id }}" data-name="{{ $supplier->name }}"
-                                                    title="{{ __('messages.delete') }}">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="width:32px;height:32px;padding:0;">
+                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
+                                            style="min-width:160px;border-radius:10px;">
+                                            @can('suppliers.view')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('suppliers.show', $supplier->id) }}">
+                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.view') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('suppliers.update')
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                                        href="{{ route('suppliers.edit', $supplier->id) }}">
+                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
+                                                        <span>{{ __('messages.edit') }}</span>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('suppliers.delete')
+                                                <li>
+                                                    <hr class="dropdown-divider my-1">
+                                                </li>
+                                                <li>
+                                                    <form id="delete-form-{{ $supplier->id }}"
+                                                        action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST"
+                                                        class="d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button"
+                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
+                                                            data-id="{{ $supplier->id }}" data-name="{{ $supplier->name }}">
+                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                            <span>{{ __('messages.delete') }}</span>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endcan
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
