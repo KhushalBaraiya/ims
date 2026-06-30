@@ -134,6 +134,19 @@
                     targets: 'no-sort',
                     orderable: false
                 }],
+                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "{{ __('messages.search') }}...",
+                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    infoEmpty: "{{ __('messages.no_entries') }}",
+                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
+                    paginate: {
+                        previous: '<i class="bx bx-chevron-left"></i>',
+                        next: '<i class="bx bx-chevron-right"></i>'
+                    }
+                },
                 columns: [{
                         data: null,
                         render: (d, t, r, m) => m.row + 1

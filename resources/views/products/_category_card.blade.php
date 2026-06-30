@@ -119,14 +119,14 @@
             {{-- Action buttons --}}
             <div class="d-flex gap-1 mt-auto" onclick="event.stopPropagation()">
                 @can('products.view')
-                    <a href="{{ route('products.show', $product->id) }}"
-                        class="btn btn-sm btn-outline-info rounded-pill flex-fill py-1" style="font-size:.67rem;">
+                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-secondary flex-fill"
+                        style="font-size:.72rem;padding:.3rem .5rem;">
                         <i class="bx bx-show me-1"></i>View
                     </a>
                 @endcan
                 @can('products.update')
-                    <a href="{{ route('products.edit', $product->id) }}"
-                        class="btn btn-sm btn-outline-primary rounded-pill flex-fill py-1" style="font-size:.67rem;">
+                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-primary flex-fill"
+                        style="font-size:.72rem;padding:.3rem .5rem;">
                         <i class="bx bx-edit me-1"></i>Edit
                     </a>
                 @endcan

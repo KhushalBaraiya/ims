@@ -215,18 +215,6 @@
         }
 
         /* ── Sticky search bar ────────────────────────── */
-        .search-sticky {
-            position: sticky;
-            top: 64px;
-            z-index: 100;
-            background: #f5f5f9;
-            padding: .5rem 0;
-            margin-bottom: 1.5rem;
-        }
-
-        [data-bs-theme="dark"] .search-sticky {
-            background: #232333;
-        }
     </style>
 @endpush
 
@@ -244,16 +232,20 @@
                 </ol>
             </nav>
         </div>
-        <div class="d-flex gap-2 flex-wrap">
-            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-list-ul me-1"></i> List View
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+            <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
+                <i id="filtersChevron" class="bx bx-chevron-down"></i>
+            </button>
+            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-list-ul"></i> List View
             </a>
-            <a href="{{ route('products.gallery') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-grid-alt me-1"></i> Gallery View
+            <a href="{{ route('products.gallery') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bx bx-grid-alt"></i> Gallery View
             </a>
             @can('products.create')
-                <a href="{{ route('products.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-1"></i> Add Product
+                <a href="{{ route('products.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                    <i class="bx bx-plus"></i> Add Product
                 </a>
             @endcan
         </div>
@@ -318,29 +310,33 @@
     </div>
 
     {{-- ── Sticky Search / Filter Bar ─────────────────── --}}
-    <div class="search-sticky">
-        <form method="GET" action="{{ route('products.by-category') }}">
-            <div class="card shadow-sm border-0 mb-0">
-                <div class="card-body py-2 px-3">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-12 col-sm-5 col-md-4">
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-text bg-transparent border-end-0">
-                                    <i class="bx bx-search text-muted"></i>
-                                </span>
-                                <input type="text" name="search" class="form-control border-start-0 ps-0"
-                                    placeholder="Search product name or SKU…" value="{{ $search }}">
-                            </div>
+    <div id="filtersCard" class="{{ $search || $statusFilter || $stockFilter ? '' : 'd-none' }} mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_products') }}
+                </h6>
+            </div>
+            <div class="card-body p-4">
+                <form method="GET" action="{{ route('products.by-category') }}">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
+                            <input type="text" name="search" class="form-control form-control-sm"
+                                placeholder="Search product name or SKU…" value="{{ $search }}">
                         </div>
-                        <div class="col-6 col-sm-3 col-md-2">
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">{{ __('messages.th_status') }}</label>
                             <select name="status" class="form-select form-select-sm">
                                 <option value="">All Status</option>
-                                <option value="active" {{ $statusFilter === 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ $statusFilter === 'inactive' ? 'selected' : '' }}>Inactive
-                                </option>
+                                <option value="active" {{ $statusFilter === 'active' ? 'selected' : '' }}>
+                                    {{ __('messages.active') }}</option>
+                                <option value="inactive" {{ $statusFilter === 'inactive' ? 'selected' : '' }}>
+                                    {{ __('messages.inactive') }}</option>
                             </select>
                         </div>
-                        <div class="col-6 col-sm-3 col-md-2">
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">Stock</label>
                             <select name="stock_filter" class="form-select form-select-sm">
                                 <option value="">All Stock</option>
                                 <option value="ok" {{ $stockFilter === 'ok' ? 'selected' : '' }}>In Stock</option>
@@ -348,39 +344,51 @@
                                 <option value="out" {{ $stockFilter === 'out' ? 'selected' : '' }}>Out of Stock</option>
                             </select>
                         </div>
-                        <div class="col-12 col-md-4 d-flex gap-2 justify-content-md-end">
-                            <button type="submit" class="btn btn-primary px-3">
-                                <i class="bx bx-search me-1"></i>Apply
-                            </button>
-                            <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary px-3">
-                                <i class="bx bx-reset me-1"></i>Reset
-                            </a>
-                        </div>
                     </div>
-                </div>
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+                        <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary"><i
+                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     {{-- ── Category Quick-Jump ─────────────────────────── --}}
-    @if ($categories->count() > 3)
-        <div class="d-flex gap-2 flex-wrap mb-3 align-items-center">
-            <span class="text-muted small fw-semibold me-1"><i class="bx bx-link-alt me-1"></i>Jump to:</span>
+    @if ($categories->count() > 2)
+        <div class="d-flex gap-2 flex-wrap mb-4 align-items-center">
+            <span class="text-muted small fw-semibold d-flex align-items-center gap-1 me-1">
+                <i class="bx bx-link-alt"></i> Jump to:
+            </span>
             @foreach ($categories as $cat)
                 @if ($cat->products->count() > 0)
-                    <a href="#cat-{{ $cat->id }}" class="btn btn-outline-primary rounded-pill py-0 px-2"
-                        style="font-size:.72rem;">
+                    <a href="#cat-{{ $cat->id }}"
+                        class="d-inline-flex align-items-center gap-1 text-decoration-none px-3 py-1 rounded-pill border"
+                        style="font-size:.75rem;font-weight:600;color:#696cff;border-color:rgba(105,108,255,.35);background:rgba(105,108,255,.06);transition:all .15s;"
+                        onmouseover="this.style.background='linear-gradient(135deg,#696cff,#9c3fe4)';this.style.color='#fff';this.style.borderColor='transparent';"
+                        onmouseout="this.style.background='rgba(105,108,255,.06)';this.style.color='#696cff';this.style.borderColor='rgba(105,108,255,.35)';">
                         {{ $cat->name }}
-                        <span class="badge bg-primary ms-1" style="font-size:.6rem;">{{ $cat->products->count() }}</span>
+                        <span class="badge rounded-pill"
+                            style="background:rgba(105,108,255,.18);color:#696cff;font-size:.65rem;padding:.2em .5em;">
+                            {{ $cat->products->count() }}
+                        </span>
                     </a>
                 @endif
             @endforeach
             @if ($uncategorized->count() > 0)
-                <a href="#cat-uncategorized" class="btn btn-outline-warning rounded-pill py-0 px-2"
-                    style="font-size:.72rem;">
+                <a href="#cat-uncategorized"
+                    class="d-inline-flex align-items-center gap-1 text-decoration-none px-3 py-1 rounded-pill border"
+                    style="font-size:.75rem;font-weight:600;color:#fd9f3c;border-color:rgba(253,159,60,.35);background:rgba(253,159,60,.06);transition:all .15s;"
+                    onmouseover="this.style.background='linear-gradient(135deg,#fd9f3c,#e57c1b)';this.style.color='#fff';this.style.borderColor='transparent';"
+                    onmouseout="this.style.background='rgba(253,159,60,.06)';this.style.color='#fd9f3c';this.style.borderColor='rgba(253,159,60,.35)';">
                     Uncategorized
-                    <span class="badge bg-warning text-dark ms-1"
-                        style="font-size:.6rem;">{{ $uncategorized->count() }}</span>
+                    <span class="badge rounded-pill"
+                        style="background:rgba(253,159,60,.18);color:#fd9f3c;font-size:.65rem;padding:.2em .5em;">
+                        {{ $uncategorized->count() }}
+                    </span>
                 </a>
             @endif
         </div>
@@ -416,7 +424,8 @@
                         {{ $cat->name }}
                     </div>
                     <div class="cat-meta">
-                        <span class="badge bg-white bg-opacity-25 text-white" style="font-size:.72rem;">
+                        <span class="badge text-white border border-white border-opacity-50"
+                            style="font-size:.72rem;background:rgba(255,255,255,.2);">
                             {{ $catProducts->count() }} Product{{ $catProducts->count() !== 1 ? 's' : '' }}
                         </span>
                         @if ($cat->description)
@@ -492,6 +501,21 @@
 
 @push('scripts')
     <script>
+        // ── Filters toggle ────────────────────────────────────────────────
+        $(document).ready(function() {
+            // Auto-open chevron if filter is active
+            @if ($search || $statusFilter || $stockFilter)
+                $('#filtersChevron').removeClass('bx-chevron-down').addClass('bx-chevron-up');
+            @endif
+
+            $('#toggleFiltersBtn').on('click', function() {
+                const $card = $('#filtersCard');
+                const $chevron = $('#filtersChevron');
+                $card.toggleClass('d-none');
+                const hidden = $card.hasClass('d-none');
+                $chevron.toggleClass('bx-chevron-down', hidden).toggleClass('bx-chevron-up', !hidden);
+            });
+        });
         /**
          * Sub-category tab filter — show/hide product cards within a category section.
          */

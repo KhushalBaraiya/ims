@@ -75,26 +75,6 @@
             font-size: .73rem;
             font-weight: 600;
         }
-
-        /* Hide Laravel pagination "Showing X to Y of Z results" text */
-        nav[role="navigation"]>div:first-child {
-            display: none !important;
-        }
-
-        /* Pagination alignment — keep numbers vertically centered */
-        nav[role="navigation"] {
-            display: flex;
-            align-items: center;
-        }
-
-        nav[role="navigation"]>div:last-child {
-            margin: 0 !important;
-        }
-
-        nav[role="navigation"] .pagination {
-            margin-bottom: 0 !important;
-            align-items: center;
-        }
     </style>
 @endpush
 
@@ -259,8 +239,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="{{ route('products.index') }}"
-                            class="btn btn-outline-secondary">{{ __('messages.reset') }}</a>
+                        <a href="{{ route('products.index') }}" class="btn btn-outline-secondary"><i
+                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
                         <button type="submit" class="btn btn-primary"><i
                                 class="bx bx-search me-1"></i>{{ __('messages.apply') }}</button>
                     </div>

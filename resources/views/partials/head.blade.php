@@ -485,6 +485,64 @@
             padding-top: 0.4rem !important;
         }
 
+        /* Laravel pagination — global alignment & spacing fix */
+        nav[role="navigation"] {
+            display: flex;
+            align-items: center;
+        }
+
+        nav[role="navigation"]>div:first-child {
+            display: none !important;
+        }
+
+        nav[role="navigation"]>div:last-child {
+            margin: 0 !important;
+        }
+
+        nav[role="navigation"] .pagination {
+            margin-bottom: 0 !important;
+            align-items: center;
+            gap: 3px;
+        }
+
+        nav[role="navigation"] .pagination .page-item .page-link {
+            border-radius: 8px !important;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.82rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #697a8d;
+            border-color: #dee2e6;
+        }
+
+        nav[role="navigation"] .pagination .page-item.active .page-link {
+            background: linear-gradient(135deg, #696cff, #9c3fe4);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(105, 108, 255, .35);
+        }
+
+        nav[role="navigation"] .pagination .page-item:not(.active) .page-link:hover {
+            background: rgba(105, 108, 255, .08);
+            border-color: rgba(105, 108, 255, .3);
+            color: #696cff;
+        }
+
+        nav[role="navigation"] .pagination .page-item.disabled .page-link {
+            opacity: .45;
+        }
+
+        [data-bs-theme="dark"] nav[role="navigation"] .pagination .page-item .page-link {
+            background: #2b2c40;
+            border-color: rgba(255, 255, 255, .1);
+            color: #a3adc2;
+        }
+
+        [data-bs-theme="dark"] nav[role="navigation"] .pagination .page-item:not(.active) .page-link:hover {
+            background: rgba(105, 108, 255, .15);
+            color: #696cff;
+        }
+
         .dataTables_paginate .paginate_button {
             padding: 0.3rem 0.7rem !important;
             margin: 0 2px !important;

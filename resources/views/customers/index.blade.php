@@ -45,7 +45,8 @@
                         <i class="bx bx-check-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-primary" id="statActiveCount">{{ $customers->where('status', 'active')->count() }}
+                        <div class="fw-bold fs-4 lh-1 text-primary" id="statActiveCount">
+                            {{ $customers->where('status', 'active')->count() }}
                         </div>
                         <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
                     </div>
@@ -60,7 +61,8 @@
                         <i class="bx bx-x-circle"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">{{ $customers->where('status', 'inactive')->count() }}
+                        <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">
+                            {{ $customers->where('status', 'inactive')->count() }}
                         </div>
                         <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
                     </div>
@@ -201,6 +203,8 @@
                     searchPlaceholder: "{{ __('messages.search') }}...",
                     lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
                     info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    infoEmpty: "{{ __('messages.no_entries') }}",
+                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
                     paginate: {
                         previous: '<i class="bx bx-chevron-left"></i>',
                         next: '<i class="bx bx-chevron-right"></i>'
@@ -232,8 +236,10 @@
                                 '{{ __('messages.inactive') }}');
                             showAdminToast(res.message, 'success');
                             // ── Update stat cards live ──────────────────
-                            $('#statActiveCount').text($('.status-toggle-btn.border-success').length);
-                            $('#statInactiveCount').text($('.status-toggle-btn.border-danger').length);
+                            $('#statActiveCount').text($('.status-toggle-btn.border-success')
+                                .length);
+                            $('#statInactiveCount').text($('.status-toggle-btn.border-danger')
+                                .length);
                         } else {
                             btn.text(cur === 'active' ? '{{ __('messages.active') }}' :
                                 '{{ __('messages.inactive') }}');

@@ -266,17 +266,22 @@
     {{-- ── Collapsible Filters ──────────────────────────────────── --}}
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
-            <div class="card-body p-3">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_products') }}
+                </h6>
+            </div>
+            <div class="card-body p-4">
                 <form method="GET" action="{{ route('products.gallery') }}">
-                    <div class="row g-2 align-items-end">
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <label class="form-label small fw-semibold mb-1">{{ __('messages.search') }}</label>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                             <input type="text" name="search" class="form-control form-control-sm"
-                                placeholder="{{ __('messages.search') }}…" value="{{ request('search') }}">
+                                placeholder="Name, SKU…" value="{{ request('search') }}">
                         </div>
-                        <div class="col-6 col-sm-3 col-lg-2">
-                            <label class="form-label small fw-semibold mb-1">Brand</label>
-                            <select name="brand_id" class="form-select form-select-sm" data-no-select2>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
+                            <select name="brand_id" class="form-select form-select-sm">
                                 <option value="">All Brands</option>
                                 @foreach ($brands as $b)
                                     <option value="{{ $b->id }}"
@@ -285,9 +290,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-6 col-sm-3 col-lg-2">
-                            <label class="form-label small fw-semibold mb-1">Category</label>
-                            <select name="main_category_id" class="form-select form-select-sm" data-no-select2>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">{{ __('messages.category') }}</label>
+                            <select name="main_category_id" class="form-select form-select-sm">
                                 <option value="">All Categories</option>
                                 @foreach ($categories as $c)
                                     <option value="{{ $c->id }}"
@@ -296,9 +301,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-6 col-sm-3 col-lg-2">
-                            <label class="form-label small fw-semibold mb-1">Stock</label>
-                            <select name="stock_filter" class="form-select form-select-sm" data-no-select2>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">Stock</label>
+                            <select name="stock_filter" class="form-select form-select-sm">
                                 <option value="">All Stock</option>
                                 <option value="ok" {{ request('stock_filter') === 'ok' ? 'selected' : '' }}>In Stock
                                 </option>
@@ -308,24 +313,23 @@
                                     Stock</option>
                             </select>
                         </div>
-                        <div class="col-6 col-sm-3 col-lg-2">
-                            <label class="form-label small fw-semibold mb-1">{{ __('messages.th_status') }}</label>
-                            <select name="status" class="form-select form-select-sm" data-no-select2>
-                                <option value="">All Status</option>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">{{ __('messages.th_status') }}</label>
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="">All</option>
                                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>
                                     {{ __('messages.active') }}</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>
                                     {{ __('messages.inactive') }}</option>
                             </select>
                         </div>
-                        <div class="col-12 col-lg-1 d-flex gap-1 align-items-end">
-                            <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                                <i class="bx bx-search"></i>
-                            </button>
-                            <a href="{{ route('products.gallery') }}" class="btn btn-outline-secondary btn-sm">
-                                <i class="bx bx-reset"></i>
-                            </a>
-                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+                        <a href="{{ route('products.gallery') }}" class="btn btn-outline-secondary"><i
+                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -525,10 +529,10 @@
 
         {{-- ── Pagination ───────────────────────────────────────── --}}
         @if ($products->hasPages())
-            <div class="d-flex flex-column align-items-center gap-2 py-3 pg-pagination">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-1 py-3 mt-2 border-top">
                 <p class="text-muted small mb-0">
-                    Showing {{ $products->firstItem() }}–{{ $products->lastItem() }}
-                    of {{ $products->total() }} products
+                    Showing <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                    of <strong>{{ $products->total() }}</strong> products
                     &nbsp;·&nbsp; Page {{ $products->currentPage() }} of {{ $products->lastPage() }}
                 </p>
                 {{ $products->appends(request()->query())->links() }}

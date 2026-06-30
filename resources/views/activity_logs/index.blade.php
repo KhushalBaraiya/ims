@@ -127,7 +127,11 @@
             </div>
         </div>
         @if ($logs->hasPages())
-            <div class="card-footer bg-white py-3">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-top">
+                <p class="text-muted small mb-0">
+                    Showing <strong>{{ $logs->firstItem() }}</strong>–<strong>{{ $logs->lastItem() }}</strong>
+                    of <strong>{{ $logs->total() }}</strong> results
+                </p>
                 {{ $logs->links() }}
             </div>
         @endif

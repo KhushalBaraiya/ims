@@ -116,6 +116,8 @@
                     searchPlaceholder: "{{ __('messages.search') }}...",
                     lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
                     info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                    infoEmpty: "{{ __('messages.no_entries') }}",
+                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
                     paginate: {
                         previous: '<i class="bx bx-chevron-left"></i>',
                         next: '<i class="bx bx-chevron-right"></i>'
