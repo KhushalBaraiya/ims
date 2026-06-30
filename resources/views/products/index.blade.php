@@ -141,7 +141,7 @@
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
                         <p class="mb-0 text-muted small">Active</p>
-                        <h4 class="mb-0 fw-bold text-success">{{ $active }}</h4>
+                        <h4 class="mb-0 fw-bold text-success" id="statActiveCount">{{ $active }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;"><i
                             class="bx bx-check-circle"></i></span>
@@ -251,6 +251,46 @@
     {{-- Table --}}
     <div class="card shadow-sm">
         <div class="card-body p-0">
+
+            {{-- DataTable-style controls row --}}
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-bottom">
+                {{-- Show entries --}}
+                <form method="GET" action="{{ route('products.index') }}" id="perPageForm" class="d-flex align-items-center gap-2 mb-0">
+                    @foreach (request()->except('per_page', 'page') as $key => $val)
+                        <input type="hidden" name="{{ $key }}" value="{{ $val }}">
+                    @endforeach
+                    <label class="text-muted small mb-0">{{ __('messages.show') }}</label>
+                    <select name="per_page" class="form-select form-select-sm" style="width:75px;" data-no-select2
+                        onchange="document.getElementById('perPageForm').submit()">
+                        @foreach ([10, 20, 50, 100] as $n)
+                            <option value="{{ $n }}" {{ request('per_page', 10) == $n ? 'selected' : '' }}>{{ $n }}</option>
+                        @endforeach
+                    </select>
+                    <span class="text-muted small">{{ __('messages.entries') }}</span>
+                </form>
+
+                {{-- Quick Search --}}
+                <form method="GET" action="{{ route('products.index') }}" class="d-flex align-items-center gap-1">
+                    @foreach (request()->except('search', 'page') as $key => $val)
+                        <input type="hidden" name="{{ $key }}" value="{{ $val }}">
+                    @endforeach
+                    <div class="input-group input-group-sm" style="width:220px;">
+                        <span class="input-group-text bg-transparent border-end-0">
+                            <i class="bx bx-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control border-start-0 ps-0"
+                            placeholder="{{ __('messages.search') }}..."
+                            value="{{ request('search') }}">
+                        @if(request('search'))
+                            <a href="{{ route('products.index', request()->except('search','page')) }}"
+                               class="btn btn-outline-secondary btn-sm" title="Clear search">
+                                <i class="bx bx-x"></i>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="productsTable" style="width:100%">
                     <thead class="table-light">
@@ -321,10 +361,20 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <span
-                                        class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
-                                        {{ ucfirst($product->status) }}
-                                    </span>
+                                    @can('products.update')
+                                        <button type="button"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $product->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            style="background:transparent;cursor:pointer;"
+                                            data-id="{{ $product->id }}"
+                                            data-status="{{ $product->status }}"
+                                            title="Click to toggle status">
+                                            {{ ucfirst($product->status) }}
+                                        </button>
+                                    @else
+                                        <span class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
+                                            {{ ucfirst($product->status) }}
+                                        </span>
+                                    @endcan
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
@@ -434,15 +484,19 @@
         </div>
     </div>
 
-    {{-- Pagination --}}
-    @if ($products->hasPages() && $products->total() > 0)
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
-            <p class="text-muted small mb-0">
-                Showing {{ $products->firstItem() }}–{{ $products->lastItem() }} of {{ $products->total() }} products
-            </p>
-            {{ $products->appends(request()->query())->links() }}
-        </div>
-    @endif
+    {{-- Pagination footer --}}
+    <div class=\"d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3\">
+        <p class=\"text-muted small mb-0\">
+            @if ($products->total() > 0)
+                {{ __('messages.showing') }} <strong>{{ $products->firstItem() }}</strong>
+                to <strong>{{ $products->lastItem() }}</strong>
+                of <strong>{{ $products->total() }}</strong> {{ __('messages.entries') }}
+            @else
+                {{ __('messages.no_entries') }}
+            @endif
+        </p>
+        {{ $products->appends(request()->query())->links() }}
+    </div>
 
 @endsection
 
@@ -507,6 +561,40 @@
                     loadSubs(matchedSub.main_category_id, selSub);
                 }
             }
+
+            // ── AJAX Status Toggle ─────────────────────────────────────────
+            $(document).on('click', '.status-toggle-btn', function() {
+                const btn = $(this);
+                const id = btn.data('id');
+                const cur = btn.data('status');
+                $.ajax({
+                    url: `/products/${id}/toggle-status`,
+                    type: 'PATCH',
+                    data: { _token: '{{ csrf_token() }}' },
+                    beforeSend: () => btn.prop('disabled', true).html(
+                        '<span class="spinner-border spinner-border-sm"></span>'),
+                    success: (res) => {
+                        btn.prop('disabled', false);
+                        if (res.success) {
+                            btn.data('status', res.status);
+                            btn.removeClass('border-success text-success border-danger text-danger');
+                            btn.addClass(res.status === 'active' ?
+                                'border-success text-success' : 'border-danger text-danger');
+                            btn.text(res.status === 'active' ? 'Active' : 'Inactive');
+                            showAdminToast(res.message, 'success');
+                            // ── Update Active stat card live ──────────────
+                            $('#statActiveCount').text($('.status-toggle-btn.border-success').length);
+                        } else {
+                            btn.text(cur === 'active' ? 'Active' : 'Inactive');
+                            showAdminToast(res.message || '{{ __('messages.error_occurred') }}', 'error');
+                        }
+                    },
+                    error: () => {
+                        btn.prop('disabled', false).text(cur === 'active' ? 'Active' : 'Inactive');
+                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
+                    }
+                });
+            });
 
             // ── AJAX Delete with SweetAlert2 ──────────────────────────────────
             $(document).on('click', '.delete-btn', function() {

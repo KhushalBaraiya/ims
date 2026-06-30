@@ -211,7 +211,10 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->paginate(20)->withQueryString();
+        $perPage  = (int) $request->input('per_page', 10);
+        $perPage  = in_array($perPage, [10, 20, 50, 100]) ? $perPage : 10;
+
+        $products = $query->paginate($perPage)->withQueryString();
 
         $brands        = Brand::where('status', 'active')->orderBy('name')->get();
         $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();
@@ -498,6 +501,25 @@ class ProductController extends Controller
             'subCategories' => $subCategories,
             'suppliers'     => $suppliers,
             'isCopy'        => true,
+        ]);
+    }
+
+    /**
+     * Toggle active / inactive status via AJAX.
+     */
+    public function toggleStatus(Product $product): JsonResponse
+    {
+        Gate::authorize('products.update');
+
+        $product->status = $product->status === 'active' ? 'inactive' : 'active';
+        $product->save();
+
+        ActivityLog::log('Product Status Changed', "Changed product status: {$product->name} → {$product->status}");
+
+        return response()->json([
+            'success' => true,
+            'status'  => $product->status,
+            'message' => 'Product status updated successfully.',
         ]);
     }
 

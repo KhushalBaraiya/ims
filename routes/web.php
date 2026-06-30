@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/by-category', [ProductController::class, 'byCategory'])->name('products.by-category');
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
     Route::get('/products/{product}/copy', [ProductController::class, 'copy'])->name('products.copy');
+    Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::resource('products', ProductController::class);
 
     // Sales Routes
