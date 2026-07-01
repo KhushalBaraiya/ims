@@ -155,52 +155,35 @@
                                 </td>
                                 <td class="text-muted small">{{ $subCategory->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                            style="width:32px;height:32px;padding:0;">
-                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
-                                            style="min-width:160px;border-radius:10px;">
-                                            @can('sub_categories.view')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('sub-categories.show', $subCategory->id) }}">
-                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.view') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('sub_categories.update')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('sub-categories.edit', $subCategory->id) }}">
-                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.edit') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('sub_categories.delete')
-                                                <li>
-                                                    <hr class="dropdown-divider my-1">
-                                                </li>
-                                                <li>
-                                                    <form id="delete-form-{{ $subCategory->id }}"
-                                                        action="{{ route('sub-categories.destroy', $subCategory->id) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf @method('DELETE')
-                                                        <button type="button"
-                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
-                                                            data-id="{{ $subCategory->id }}"
-                                                            data-name="{{ $subCategory->name }}">
-                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
-                                                            <span>{{ __('messages.delete') }}</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            @endcan
-                                        </ul>
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('sub_categories.view')
+                                            <a href="{{ route('sub-categories.show', $subCategory->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-show" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('sub_categories.update')
+                                            <a href="{{ route('sub-categories.edit', $subCategory->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-edit" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('sub_categories.delete')
+                                            <form id="delete-form-{{ $subCategory->id }}"
+                                                action="{{ route('sub-categories.destroy', $subCategory->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $subCategory->id }}" data-name="{{ $subCategory->name }}"
+                                                    title="{{ __('messages.delete') }}"
+                                                    style="width:30px;height:30px;padding:0;">
+                                                    <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

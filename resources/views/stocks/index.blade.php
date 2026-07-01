@@ -219,24 +219,14 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                            style="width:32px;height:32px;padding:0;">
-                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
-                                            style="min-width:160px;border-radius:10px;">
-                                            @can('stocks.create')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}">
-                                                        <i class="bx bx-slider text-primary" style="font-size:1rem;"></i>
-                                                        <span>Adjust Stock</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                        </ul>
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('stocks.create')
+                                            <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="Adjust Stock" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-slider" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

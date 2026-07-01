@@ -189,59 +189,40 @@
                                 </td>
                                 <td class="text-muted small">{{ $ret->user->name ?? '-' }}</td>
                                 <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                            style="width:32px;height:32px;padding:0;">
-                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
-                                            style="min-width:180px;border-radius:10px;">
-                                            @can('sale_returns.view')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('sale-returns.show', $ret->id) }}">
-                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.view') }}</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('sale-returns.print', $ret->id) }}" target="_blank">
-                                                        <i class="bx bx-printer text-success" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.print') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('sale_returns.update')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('sale-returns.edit', $ret->id) }}">
-                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.edit') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('sale_returns.delete')
-                                                <li>
-                                                    <hr class="dropdown-divider my-1">
-                                                </li>
-                                                <li>
-                                                    <form id="delete-form-{{ $ret->id }}"
-                                                        action="{{ route('sale-returns.destroy', $ret->id) }}" method="POST"
-                                                        class="d-inline">
-                                                        @csrf @method('DELETE')
-                                                        <button type="button"
-                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
-                                                            data-id="{{ $ret->id }}"
-                                                            data-return="{{ $ret->return_no }}">
-                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
-                                                            <span>{{ __('messages.delete') }}</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            @endcan
-                                        </ul>
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('sale_returns.view')
+                                            <a href="{{ route('sale-returns.show', $ret->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-show" style="font-size:1rem;"></i>
+                                            </a>
+                                            <a href="{{ route('sale-returns.print', $ret->id) }}" target="_blank"
+                                                class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action"
+                                                title="{{ __('messages.print') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-printer" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('sale_returns.update')
+                                            <a href="{{ route('sale-returns.edit', $ret->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-edit" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('sale_returns.delete')
+                                            <form id="delete-form-{{ $ret->id }}"
+                                                action="{{ route('sale-returns.destroy', $ret->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $ret->id }}" data-return="{{ $ret->return_no }}"
+                                                    title="{{ __('messages.delete') }}"
+                                                    style="width:30px;height:30px;padding:0;">
+                                                    <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

@@ -378,60 +378,42 @@
                                     @endcan
                                 </td>
                                 <td class="text-center">
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle"
-                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                            style="width:32px;height:32px;padding:0;">
-                                            <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm"
-                                            style="min-width:160px;border-radius:10px;">
-                                            @can('products.view')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('products.show', $product->id) }}">
-                                                        <i class="bx bx-show text-info" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.view') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('products.update')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('products.edit', $product->id) }}">
-                                                        <i class="bx bx-edit text-primary" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.edit') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('products.create')
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                                        href="{{ route('products.copy', $product->id) }}">
-                                                        <i class="bx bx-copy text-warning" style="font-size:1rem;"></i>
-                                                        <span>{{ __('messages.copy') }}</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
-                                            @can('products.delete')
-                                                <li>
-                                                    <hr class="dropdown-divider my-1">
-                                                </li>
-                                                <li>
-                                                    <form id="del-{{ $product->id }}"
-                                                        action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                                        class="d-inline">
-                                                        @csrf @method('DELETE')
-                                                        <button type="button"
-                                                            class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn"
-                                                            data-id="{{ $product->id }}" data-name="{{ $product->name }}">
-                                                            <i class="bx bx-trash" style="font-size:1rem;"></i>
-                                                            <span>{{ __('messages.delete') }}</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            @endcan
-                                        </ul>
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('products.view')
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-show" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('products.update')
+                                            <a href="{{ route('products.edit', $product->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-edit" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('products.create')
+                                            <a href="{{ route('products.copy', $product->id) }}"
+                                                class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
+                                                title="{{ __('messages.copy') }}" style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-copy" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
+                                        @can('products.delete')
+                                            <form id="del-{{ $product->id }}"
+                                                action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                                    title="{{ __('messages.delete') }}"
+                                                    style="width:30px;height:30px;padding:0;">
+                                                    <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
