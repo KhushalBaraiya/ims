@@ -330,18 +330,16 @@
         }
 
         /* Complete Bootstrap button reset for the toggle */
-        .pw-toggle,
-        .pw-toggle:hover,
-        .pw-toggle:focus,
-        .pw-toggle:active,
-        .pw-toggle:focus-visible,
-        .pw-toggle:focus-within {
+        .pw-toggle {
             position: absolute;
-            inset-y: 0;
+            top: 0;
+            bottom: 0;
             right: 0;
+            width: 2.75rem;
             display: flex;
             align-items: center;
-            padding: 0 .85rem;
+            justify-content: center;
+            padding: 0;
             background: transparent !important;
             background-color: transparent !important;
             border: none !important;
@@ -351,13 +349,22 @@
             appearance: none;
             cursor: pointer;
             color: var(--text-toggle);
-            font-size: .95rem;
+            font-size: 1rem;
             line-height: 1;
             border-radius: 0 10px 10px 0;
             transition: color .15s;
+            z-index: 2;
         }
 
-        .pw-toggle:hover {
+        .pw-toggle:hover,
+        .pw-toggle:focus,
+        .pw-toggle:active,
+        .pw-toggle:focus-visible {
+            background: transparent !important;
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
             color: var(--primary) !important;
         }
 
