@@ -5,7 +5,13 @@
 
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h4 class="fw-bold mb-1">{{ __('messages.activity_logs') }}</h4>
+            <h4 class="fw-bold mb-1">
+                {{ __('messages.activity_logs') }}
+                @if ($restrictToOwn ?? false)
+                    <span class="badge bg-label-info ms-2"
+                        style="font-size:.7rem;vertical-align:middle;">{{ __('messages.own') ?? 'My Logs' }}</span>
+                @endif
+            </h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -28,29 +34,31 @@
                         <input type="text" name="search" class="form-control form-control-sm"
                             value="{{ request('search') }}" placeholder="{{ __('messages.search_activity_placeholder') }}">
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold small">{{ __('messages.user') }}</label>
-                        <select name="user_id" class="form-select form-select-sm">
-                            <option value="">{{ __('messages.all_users') }}</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}"
-                                    {{ request('user_id') == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
+                    @unless ($restrictToOwn ?? false)
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold small">{{ __('messages.user') }}</label>
+                            <select name="user_id" class="form-select form-select-sm">
+                                <option value="">{{ __('messages.all_users') }}</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}"
+                                        {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endunless
+                    <div class="{{ $restrictToOwn ?? false ? 'col-md-3' : 'col-md-2' }}">
                         <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
                         <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('date_from') }}">
                     </div>
-                    <div class="col-md-2">
+                    <div class="{{ $restrictToOwn ?? false ? 'col-md-3' : 'col-md-2' }}">
                         <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
                         <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ request('date_to') }}">
                     </div>
-                    <div class="col-md-2 d-flex gap-2">
+                    <div class="{{ $restrictToOwn ?? false ? 'col-md-3' : 'col-md-2' }} d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">
                             <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
                         </button>

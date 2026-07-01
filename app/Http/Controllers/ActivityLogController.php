@@ -16,10 +16,19 @@ class ActivityLogController extends Controller
     {
         Gate::authorize('activity_logs.view');
 
+        $user  = auth()->user();
         $query = ActivityLog::with('user')->latest();
 
-        // Optional filter by user
-        if ($request->filled('user_id')) {
+        // If the user only has "own" permission (not Super Admin), restrict to their logs
+        $restrictToOwn = $user->can('activity_logs.own')
+            && !$user->getRoleNames()->contains('Super Admin');
+
+        if ($restrictToOwn) {
+            $query->where('user_id', $user->id);
+        }
+
+        // Optional filter by user (only available when not restricted to own)
+        if (!$restrictToOwn && $request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
 
@@ -41,9 +50,11 @@ class ActivityLogController extends Controller
 
         $logs = $query->paginate(50)->withQueryString();
 
-        // Users for filter dropdown
-        $users = \App\Models\User::orderBy('name')->get(['id', 'name']);
+        // Users for filter dropdown (hidden when restricted to own)
+        $users = $restrictToOwn
+            ? collect()
+            : \App\Models\User::orderBy('name')->get(['id', 'name']);
 
-        return view('activity_logs.index', compact('logs', 'users'));
+        return view('activity_logs.index', compact('logs', 'users', 'restrictToOwn'));
     }
 }

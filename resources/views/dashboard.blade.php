@@ -61,15 +61,21 @@
                             <h4 class="text-white mb-1">{{ __('messages.welcome_back') }}, {{ auth()->user()->name }} 👋</h4>
                             <p class="mb-3" style="opacity:.82;">{{ __('messages.store_overview') }}</p>
                             <div class="d-flex gap-2 flex-wrap">
-                                <a href="{{ route('purchases.index') }}" class="btn btn-light btn-sm">
-                                    <i class="bx bx-cart-download me-1"></i>{{ __('messages.purchases') }}
-                                </a>
-                                <a href="{{ route('products.create') }}" class="btn btn-outline-light btn-sm">
-                                    <i class="bx bx-plus me-1"></i>{{ __('messages.add_products') }}
-                                </a>
-                                <a href="{{ route('users.index') }}" class="btn btn-outline-light btn-sm">
-                                    <i class="bx bx-group me-1"></i>{{ __('messages.users') }}
-                                </a>
+                                @can('purchases.create')
+                                    <a href="{{ route('purchases.create') }}" class="btn btn-light btn-sm">
+                                        <i class="bx bx-cart-download me-1"></i>{{ __('messages.purchases') }}
+                                    </a>
+                                @endcan
+                                @can('sales.create')
+                                    <a href="{{ route('sales.create') }}" class="btn btn-outline-light btn-sm">
+                                        <i class="bx bx-plus me-1"></i>{{ __('messages.add_sale') ?? __('messages.sales') }}
+                                    </a>
+                                @endcan
+                                @can('users.create')
+                                    <a href="{{ route('users.create') }}" class="btn btn-outline-light btn-sm">
+                                        <i class="bx bx-group me-1"></i>{{ __('messages.users') }}
+                                    </a>
+                                @endcan
                             </div>
                         </div>
                     </div>
@@ -140,215 +146,233 @@
     </div>
 
     {{-- Today Stats --}}
-    <p class="section-label text-muted mb-2">{{ strtoupper(__('messages.today')) }}</p>
-    <div class="row mb-4">
-        <div class="col-md-4 col-sm-6 mb-3">
-            <div class="card stat-border-card border-primary h-100">
-                <div class="card-body py-3 d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.todays_purchases') }}</p>
-                        <h3 class="mb-0 text-primary fw-bold">{{ $todayPurchases ?? 0 }}</h3>
-                        <small class="text-muted">{{ __('messages.all_time') }}</small>
+    @if (auth()->user()->can('sales.view') || auth()->user()->can('purchases.view'))
+        <p class="section-label text-muted mb-2">{{ strtoupper(__('messages.today')) }}</p>
+        <div class="row mb-4">
+            @can('purchases.view')
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card stat-border-card border-primary h-100">
+                        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-muted small">{{ __('messages.todays_purchases') }}</p>
+                                <h3 class="mb-0 text-primary fw-bold">{{ $todayPurchases ?? 0 }}</h3>
+                                <small class="text-muted">{{ __('messages.all_time') }}</small>
+                            </div>
+                            <span class="stats-card-icon bg-label-primary"><i class="bx bx-cart-download"></i></span>
+                        </div>
                     </div>
-                    <span class="stats-card-icon bg-label-primary"><i class="bx bx-cart-download"></i></span>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mb-3">
-            <div class="card stat-border-card border-success h-100">
-                <div class="card-body py-3 d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.todays_sales') }}</p>
-                        <h3 class="mb-0 text-success fw-bold">{{ format_currency($todaySales ?? 0) }}</h3>
-                        <small class="text-muted">{{ __('messages.from_sales') }}</small>
+            @endcan
+            @can('sales.view')
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card stat-border-card border-success h-100">
+                        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-muted small">{{ __('messages.todays_sales') }}</p>
+                                <h3 class="mb-0 text-success fw-bold">{{ format_currency($todaySales ?? 0) }}</h3>
+                                <small class="text-muted">{{ __('messages.from_sales') }}</small>
+                            </div>
+                            <span class="stats-card-icon bg-label-success"><i class="bx bx-trending-up"></i></span>
+                        </div>
                     </div>
-                    <span class="stats-card-icon bg-label-success"><i class="bx bx-trending-up"></i></span>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-12 mb-3">
-            <div class="card stat-border-card border-warning h-100">
-                <div class="card-body py-3 d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.pending_sales') }}</p>
-                        <h3 class="mb-0 text-warning fw-bold">{{ $pendingSales ?? 0 }}</h3>
-                        <small class="text-muted">{{ __('messages.draft') }}</small>
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <div class="card stat-border-card border-warning h-100">
+                        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-muted small">{{ __('messages.pending_sales') }}</p>
+                                <h3 class="mb-0 text-warning fw-bold">{{ $pendingSales ?? 0 }}</h3>
+                                <small class="text-muted">{{ __('messages.draft') }}</small>
+                            </div>
+                            <span class="stats-card-icon bg-label-warning"><i class="bx bx-time-five"></i></span>
+                        </div>
                     </div>
-                    <span class="stats-card-icon bg-label-warning"><i class="bx bx-time-five"></i></span>
                 </div>
-            </div>
+            @endcan
         </div>
-    </div>
+    @endif
 
     {{-- Overall Financial --}}
-    <p class="section-label text-muted mb-2">{{ strtoupper(__('messages.overall')) }}</p>
-    <div class="row mb-4">
-        <div class="col-md-4 col-sm-6 mb-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.total_revenue') }}</p>
-                        <h4 class="mb-1 fw-bold">{{ format_currency($totalRevenue ?? 0) }}</h4>
-                        <small class="text-success"><i class="bx bx-check-circle"></i>
-                            {{ __('messages.from_sales') }}</small>
-                    </div>
-                    <span class="stats-card-icon bg-label-success" style="width:52px;height:52px;font-size:1.6rem;">
-                        <i class="bx bx-dollar-circle"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mb-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.total_purchases') }}</p>
-                        <h4 class="mb-1 fw-bold">{{ $totalPurchases ?? 0 }}</h4>
-                        <small class="text-info"><i class="bx bx-cart"></i> {{ __('messages.all_time') }}</small>
-                    </div>
-                    <span class="stats-card-icon bg-label-info" style="width:52px;height:52px;font-size:1.6rem;">
-                        <i class="bx bx-cart-download"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-sm-12 mb-3">
-            <div class="card kpi-card h-100">
-                <div class="card-body">
-                    <p class="mb-2 text-muted small fw-semibold">{{ __('messages.quick_stats') }}</p>
-                    <div class="row text-center g-0">
-                        <div class="col-6" style="border-right:1px solid #e9ecef;">
-                            <h5 class="text-primary mb-0 fw-bold">{{ $totalCategories ?? 0 }}</h5>
-                            <small class="text-muted">{{ __('messages.categories') }}</small>
+    @can('sales.view')
+        <p class="section-label text-muted mb-2">{{ strtoupper(__('messages.overall')) }}</p>
+        <div class="row mb-4">
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card kpi-card h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="mb-1 text-muted small">{{ __('messages.total_revenue') }}</p>
+                            <h4 class="mb-1 fw-bold">{{ format_currency($totalRevenue ?? 0) }}</h4>
+                            <small class="text-success"><i class="bx bx-check-circle"></i>
+                                {{ __('messages.from_sales') }}</small>
                         </div>
-                        <div class="col-6">
-                            <h5 class="text-success mb-0 fw-bold">{{ $totalBrands ?? 0 }}</h5>
-                            <small class="text-muted">{{ __('messages.brands') }}</small>
+                        <span class="stats-card-icon bg-label-success" style="width:52px;height:52px;font-size:1.6rem;">
+                            <i class="bx bx-dollar-circle"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @can('purchases.view')
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card kpi-card h-100">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1 text-muted small">{{ __('messages.total_purchases') }}</p>
+                                <h4 class="mb-1 fw-bold">{{ $totalPurchases ?? 0 }}</h4>
+                                <small class="text-info"><i class="bx bx-cart"></i> {{ __('messages.all_time') }}</small>
+                            </div>
+                            <span class="stats-card-icon bg-label-info" style="width:52px;height:52px;font-size:1.6rem;">
+                                <i class="bx bx-cart-download"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
+            @endcan
+            <div class="col-md-4 col-sm-12 mb-3">
+                <div class="card kpi-card h-100">
+                    <div class="card-body">
+                        <p class="mb-2 text-muted small fw-semibold">{{ __('messages.quick_stats') }}</p>
+                        <div class="row text-center g-0">
+                            <div class="col-6" style="border-right:1px solid #e9ecef;">
+                                <h5 class="text-primary mb-0 fw-bold">{{ $totalCategories ?? 0 }}</h5>
+                                <small class="text-muted">{{ __('messages.categories') }}</small>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="text-success mb-0 fw-bold">{{ $totalBrands ?? 0 }}</h5>
+                                <small class="text-muted">{{ __('messages.brands') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    @endcan
 
     {{-- Row 1: This Week Chart + Top Selling Products --}}
-    <div class="row mb-4">
-        {{-- This Week Sales & Purchases Bar Chart --}}
-        <div class="col-lg-7 mb-4 mb-lg-0">
-            <div class="card h-100">
-                <div class="card-header py-3">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-bar-chart-alt-2 me-1 text-primary"></i> This Week Sales &amp; Purchases
-                    </h6>
-                </div>
-                <div class="card-body" style="position:relative;">
-                    <canvas id="weekChart" style="width:100%;height:260px;"></canvas>
+    @if (auth()->user()->can('sales.view') && auth()->user()->can('purchases.view'))
+        <div class="row mb-4">
+            {{-- This Week Sales & Purchases Bar Chart --}}
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <div class="card h-100">
+                    <div class="card-header py-3">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bx bx-bar-chart-alt-2 me-1 text-primary"></i> This Week Sales &amp; Purchases
+                        </h6>
+                    </div>
+                    <div class="card-body" style="position:relative;">
+                        <canvas id="weekChart" style="width:100%;height:260px;"></canvas>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Top Selling Products Pie --}}
-        <div class="col-lg-5">
-            <div class="card h-100">
-                <div class="card-header py-3">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-pie-chart-alt-2 me-1 text-success"></i>
-                        Top Selling Products ({{ now()->format('F') }})
-                    </h6>
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center" style="min-height:280px;">
-                    @if (isset($topProducts) && $topProducts->count())
-                        <canvas id="topProductsChart"></canvas>
-                    @else
-                        <div class="text-center text-muted">
-                            <i class="bx bx-package fs-1 d-block mb-2 opacity-50"></i>
-                            <p class="mb-0 small">No sales data this month</p>
-                        </div>
-                    @endif
+            {{-- Top Selling Products Pie --}}
+            <div class="col-lg-5">
+                <div class="card h-100">
+                    <div class="card-header py-3">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bx bx-pie-chart-alt-2 me-1 text-success"></i>
+                            Top Selling Products ({{ now()->format('F') }})
+                        </h6>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-center" style="min-height:280px;">
+                        @if (isset($topProducts) && $topProducts->count())
+                            <canvas id="topProductsChart"></canvas>
+                        @else
+                            <div class="text-center text-muted">
+                                <i class="bx bx-package fs-1 d-block mb-2 opacity-50"></i>
+                                <p class="mb-0 small">No sales data this month</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 
     {{-- Row 2: Top 5 Customers Pie + Recent Sales Table --}}
-    <div class="row mb-4">
-        {{-- Top 5 Customers Pie --}}
-        <div class="col-lg-5 mb-4 mb-lg-0">
-            <div class="card h-100">
-                <div class="card-header py-3">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-pie-chart me-1 text-info"></i>
-                        Top 5 Customers ({{ now()->format('F') }})
-                    </h6>
-                </div>
-                <div class="card-body d-flex align-items-center justify-content-center" style="min-height:290px;">
-                    @if (isset($topCustomers) && $topCustomers->count())
-                        <canvas id="topCustomersChart"></canvas>
-                    @else
-                        <div class="text-center text-muted">
-                            <i class="bx bx-user fs-1 d-block mb-2 opacity-50"></i>
-                            <p class="mb-0 small">No customer sales this month</p>
+    @if (auth()->user()->can('sales.view') || auth()->user()->can('customers.view'))
+        <div class="row mb-4">
+            {{-- Top 5 Customers Pie --}}
+            @can('customers.view')
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    <div class="card h-100">
+                        <div class="card-header py-3">
+                            <h6 class="mb-0 fw-semibold">
+                                <i class="bx bx-pie-chart me-1 text-info"></i>
+                                Top 5 Customers ({{ now()->format('F') }})
+                            </h6>
                         </div>
-                    @endif
+                        <div class="card-body d-flex align-items-center justify-content-center" style="min-height:290px;">
+                            @if (isset($topCustomers) && $topCustomers->count())
+                                <canvas id="topCustomersChart"></canvas>
+                            @else
+                                <div class="text-center text-muted">
+                                    <i class="bx bx-user fs-1 d-block mb-2 opacity-50"></i>
+                                    <p class="mb-0 small">No customer sales this month</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            @endcan
 
-        {{-- Recent Sales Table --}}
-        <div class="col-lg-7">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center py-3">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-receipt me-1 text-primary"></i> {{ __('messages.recent_sales') }}
-                    </h6>
-                    <a href="{{ route('sales.index') }}"
-                        class="btn btn-sm btn-outline-primary">{{ __('messages.view_all') }}</a>
+            {{-- Recent Sales Table --}}
+            @can('sales.view')
+                <div class="{{ auth()->user()->can('customers.view') ? 'col-lg-7' : 'col-12' }}">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center py-3">
+                            <h6 class="mb-0 fw-semibold">
+                                <i class="bx bx-receipt me-1 text-primary"></i> {{ __('messages.recent_sales') }}
+                            </h6>
+                            <a href="{{ route('sales.index') }}"
+                                class="btn btn-sm btn-outline-primary">{{ __('messages.view_all') }}</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0" style="font-size:.875rem;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>{{ __('messages.th_invoice') }}</th>
+                                        <th>{{ __('messages.th_customer') }}</th>
+                                        <th>{{ __('messages.th_total') }}</th>
+                                        <th>{{ __('messages.th_status') }}</th>
+                                        <th>{{ __('messages.th_date') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($recentSales ?? [] as $sale)
+                                        <tr>
+                                            <td><strong class="text-primary">{{ $sale->invoice_no }}</strong></td>
+                                            <td>{{ $sale->customer->name ?? '-' }}</td>
+                                            <td><strong>{{ format_currency($sale->grand_total) }}</strong></td>
+                                            <td>
+                                                @if ($sale->status === 'Completed')
+                                                    <span
+                                                        class="badge rounded-pill bg-success">{{ __('messages.completed') }}</span>
+                                                @elseif($sale->status === 'Draft')
+                                                    <span
+                                                        class="badge rounded-pill bg-warning text-dark">{{ __('messages.draft') }}</span>
+                                                @else
+                                                    <span
+                                                        class="badge rounded-pill bg-danger">{{ __('messages.cancelled') }}</span>
+                                                @endif
+                                            </td>
+                                            <td><small class="text-muted">{{ $sale->invoice_date }}</small></td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted py-4">
+                                                <i class="bx bx-receipt fs-2 d-block mb-1 opacity-50"></i>
+                                                {{ __('messages.no_recent_sales') }}
+                                            </td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="font-size:.875rem;">
-                        <thead class="table-light">
-                            <tr>
-                                <th>{{ __('messages.th_invoice') }}</th>
-                                <th>{{ __('messages.th_customer') }}</th>
-                                <th>{{ __('messages.th_total') }}</th>
-                                <th>{{ __('messages.th_status') }}</th>
-                                <th>{{ __('messages.th_date') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($recentSales ?? [] as $sale)
-                                <tr>
-                                    <td><strong class="text-primary">{{ $sale->invoice_no }}</strong></td>
-                                    <td>{{ $sale->customer->name ?? '-' }}</td>
-                                    <td><strong>{{ format_currency($sale->grand_total) }}</strong></td>
-                                    <td>
-                                        @if ($sale->status === 'Completed')
-                                            <span
-                                                class="badge rounded-pill bg-success">{{ __('messages.completed') }}</span>
-                                        @elseif($sale->status === 'Draft')
-                                            <span
-                                                class="badge rounded-pill bg-warning text-dark">{{ __('messages.draft') }}</span>
-                                        @else
-                                            <span
-                                                class="badge rounded-pill bg-danger">{{ __('messages.cancelled') }}</span>
-                                        @endif
-                                    </td>
-                                    <td><small class="text-muted">{{ $sale->invoice_date }}</small></td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">
-                                        <i class="bx bx-receipt fs-2 d-block mb-1 opacity-50"></i>
-                                        {{ __('messages.no_recent_sales') }}
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            @endcan
         </div>
-    </div>
+    @endif
 
     {{-- Row 3: Stock Alert Table (full width) --}}
     <div class="row mb-4">
@@ -419,36 +443,42 @@
     </div>
 
     {{-- Recent Activity --}}
-    @if (isset($recentActivities) && $recentActivities->count())
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center py-3">
-                        <h6 class="mb-0 fw-semibold"><i class="bx bx-history me-1 text-secondary"></i> Recent Activity
-                        </h6>
-                        <a href="{{ route('activity-logs.index') }}"
-                            class="btn btn-sm btn-outline-secondary">{{ __('messages.view_all') }}</a>
-                    </div>
-                    <div class="card-body py-2">
-                        @foreach ($recentActivities as $log)
-                            <div class="d-flex gap-3 py-2 border-bottom">
-                                <div
-                                    style="width:8px;height:8px;border-radius:50%;background:#696cff;flex-shrink:0;margin-top:6px;">
+    @can('activity_logs.view')
+        @if ($recentActivities->count())
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center py-3">
+                            <h6 class="mb-0 fw-semibold">
+                                <i class="bx bx-history me-1 text-secondary"></i> Recent Activity
+                                @if (auth()->user()->can('activity_logs.own') && !auth()->user()->getRoleNames()->contains('Super Admin'))
+                                    <span class="badge bg-label-info ms-1 small">{{ __('messages.own') ?? 'Own' }}</span>
+                                @endif
+                            </h6>
+                            <a href="{{ route('activity-logs.index') }}"
+                                class="btn btn-sm btn-outline-secondary">{{ __('messages.view_all') }}</a>
+                        </div>
+                        <div class="card-body py-2">
+                            @foreach ($recentActivities as $log)
+                                <div class="d-flex gap-3 py-2 border-bottom">
+                                    <div
+                                        style="width:8px;height:8px;border-radius:50%;background:#696cff;flex-shrink:0;margin-top:6px;">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-0" style="font-size:.875rem;">
+                                            <strong>{{ $log->user->name ?? __('messages.system') }}</strong>
+                                            — {{ $log->activity ?? ($log->description ?? '') }}
+                                        </p>
+                                        <small class="text-muted">{{ $log->created_at->diffForHumans() }}</small>
+                                    </div>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <p class="mb-0" style="font-size:.875rem;">
-                                        <strong>{{ $log->user->name ?? __('messages.system') }}</strong>
-                                        — {{ $log->activity ?? ($log->description ?? '') }}
-                                    </p>
-                                    <small class="text-muted">{{ $log->created_at->diffForHumans() }}</small>
-                                </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
+    @endcan
 
 @endsection
 

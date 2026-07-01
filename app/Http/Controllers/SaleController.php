@@ -3,17 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaleRequest;
-use App\Models\Sale;
-use App\Models\SaleItem;
-use App\Models\Product;
-use App\Models\Customer;
-use App\Models\User;
 use App\Models\ActivityLog;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class SaleController extends Controller
@@ -57,7 +56,7 @@ class SaleController extends Controller
         $customers = Customer::where('status', 'active')->orderBy('name')->get();
         // Load sales persons (admin, manager, staff)
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
-        
+
         return view('sales.create', compact('customers', 'salesPersons'));
     }
 
@@ -91,11 +90,11 @@ class SaleController extends Controller
                 $subTotal += ($item['quantity'] * $item['unit_price']);
             }
 
-            $taxAmount = (float)($request->tax_amount ?? 0.00);
-            $discountAmount = (float)($request->discount_amount ?? 0.00);
-            $shippingAmount = (float)($request->shipping_amount ?? 0.00);
+            $taxAmount = (float) ($request->tax_amount ?? 0.00);
+            $discountAmount = (float) ($request->discount_amount ?? 0.00);
+            $shippingAmount = (float) ($request->shipping_amount ?? 0.00);
             $grandTotal = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
-            $paidAmount = (float)($request->paid_amount ?? 0.00);
+            $paidAmount = (float) ($request->paid_amount ?? 0.00);
             $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
             // Create Sale
@@ -121,9 +120,9 @@ class SaleController extends Controller
             // Add Sale Items
             foreach ($request->items as $item) {
                 $itemSub = $item['quantity'] * $item['unit_price'];
-                $itemTax = (float)($item['tax_amount'] ?? 0.00);
-                $itemDisc = (float)($item['discount_amount'] ?? 0.00);
-                
+                $itemTax = (float) ($item['tax_amount'] ?? 0.00);
+                $itemDisc = (float) ($item['discount_amount'] ?? 0.00);
+
                 $sale->items()->create([
                     'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
@@ -140,6 +139,7 @@ class SaleController extends Controller
             return redirect()->route('sales.index')->with('success', 'Sale created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
@@ -151,6 +151,7 @@ class SaleController extends Controller
     {
         Gate::authorize('sales.view');
         $sale->load(['customer', 'user', 'salesPerson', 'items.product.stock']);
+
         return view('sales.show', compact('sale'));
     }
 
@@ -160,7 +161,7 @@ class SaleController extends Controller
     public function edit(Sale $sale): View
     {
         Gate::authorize('sales.update');
-        
+
         $sale->load(['items.product.stock']);
         $customers = Customer::where('status', 'active')->orderBy('name')->get();
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
@@ -205,9 +206,9 @@ class SaleController extends Controller
             $subTotal = 0;
             foreach ($request->items as $item) {
                 $itemSub = $item['quantity'] * $item['unit_price'];
-                $itemTax = (float)($item['tax_amount'] ?? 0.00);
-                $itemDisc = (float)($item['discount_amount'] ?? 0.00);
-                
+                $itemTax = (float) ($item['tax_amount'] ?? 0.00);
+                $itemDisc = (float) ($item['discount_amount'] ?? 0.00);
+
                 $subTotal += $itemSub;
 
                 $sale->items()->create([
@@ -220,11 +221,11 @@ class SaleController extends Controller
                 ]);
             }
 
-            $taxAmount = (float)($request->tax_amount ?? 0.00);
-            $discountAmount = (float)($request->discount_amount ?? 0.00);
-            $shippingAmount = (float)($request->shipping_amount ?? 0.00);
+            $taxAmount = (float) ($request->tax_amount ?? 0.00);
+            $discountAmount = (float) ($request->discount_amount ?? 0.00);
+            $shippingAmount = (float) ($request->shipping_amount ?? 0.00);
             $grandTotal = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
-            $paidAmount = (float)($request->paid_amount ?? 0.00);
+            $paidAmount = (float) ($request->paid_amount ?? 0.00);
             $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
             // 4. Update Sale record
@@ -251,6 +252,7 @@ class SaleController extends Controller
             return redirect()->route('sales.index')->with('success', 'Sale updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors($e->getMessage())->withInput();
         }
     }
@@ -293,6 +295,7 @@ class SaleController extends Controller
                     'message' => $e->getMessage(),
                 ], 500);
             }
+
             return back()->withErrors($e->getMessage());
         }
     }
@@ -309,10 +312,10 @@ class SaleController extends Controller
 
         $products = Product::with(['stock'])
             ->where('status', 'active')
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('code', 'like', "%{$query}%")
-                  ->orWhere('barcode', 'like', "%{$query}%");
+                    ->orWhere('code', 'like', "%{$query}%")
+                    ->orWhere('barcode', 'like', "%{$query}%");
             })
             ->limit(10)
             ->get();
@@ -335,7 +338,7 @@ class SaleController extends Controller
                 'discount' => $p->discount_percentage,
                 'unit' => $p->unit_code ?? 'PCS',
                 'currency_symbol' => $symbol,
-                'image_url' => $p->image ? asset('uploads/products/' . $p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image'
+                'image_url' => $p->image ? asset('uploads/products/'.$p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image',
             ];
         }
 
@@ -348,9 +351,9 @@ class SaleController extends Controller
     public function printInvoice(Sale $sale): View
     {
         Gate::authorize('sales.view');
-        
+
         $sale->load(['customer', 'user', 'salesPerson', 'items.product.stock']);
-        
+
         // Log the printing activity
         ActivityLog::log('Sale Printed', "Printed invoice sheet: {$sale->invoice_no}");
 
@@ -367,13 +370,14 @@ class SaleController extends Controller
             $attempts++;
             $latestSale = Sale::withTrashed()->orderBy('id', 'desc')->first();
             $nextNum = $latestSale ? ((int) substr($latestSale->invoice_no, -5)) + 1 : 1;
-            $invoiceNo = 'INV-' . date('Ymd') . '-' . str_pad($nextNum, 5, '0', STR_PAD_LEFT);
+            $invoiceNo = 'INV-'.date('Ymd').'-'.str_pad($nextNum, 5, '0', STR_PAD_LEFT);
 
             // Double check if invoice no is unique
-            if (!Sale::where('invoice_no', $invoiceNo)->exists()) {
+            if (! Sale::where('invoice_no', $invoiceNo)->exists()) {
                 return $invoiceNo;
             }
         }
-        return 'INV-' . date('Ymd') . '-' . uniqid();
+
+        return 'INV-'.date('Ymd').'-'.uniqid();
     }
 }

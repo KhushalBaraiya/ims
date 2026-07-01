@@ -4,8 +4,6 @@
 
         // ─────────────────────────────────────────────────────────────────────────
         // 1. Slug Generation
-        //    Converts the display name into a lowercase hyphen-separated slug
-        //    and writes it into the read-only system name field in real time.
         // ─────────────────────────────────────────────────────────────────────────
         const displayNameInput = document.getElementById('displayNameInput');
         const nameInput = document.getElementById('nameInput');
@@ -14,29 +12,23 @@
             return value
                 .toLowerCase()
                 .trim()
-                .replace(/[^a-z0-9\s\-]/g, '') // strip special chars
-                .replace(/[\s_]+/g, '-') // spaces/underscores → hyphen
-                .replace(/-{2,}/g, '-') // collapse multiple hyphens
-                .replace(/^-|-$/g, ''); // trim leading/trailing hyphens
+                .replace(/[^a-z0-9\s\-]/g, '')
+                .replace(/[\s_]+/g, '-')
+                .replace(/-{2,}/g, '-')
+                .replace(/^-|-$/g, '');
         }
 
-        if (displayNameInput && nameInput) {
+        if (displayNameInput && nameInput && !nameInput.readOnly) {
             displayNameInput.addEventListener('input', function() {
                 nameInput.value = toSlug(this.value);
             });
         }
 
         // ─────────────────────────────────────────────────────────────────────────
-        // 2. Checkbox Visual State Helper
-        //    The custom checkbox UI requires toggling an <svg> opacity class because
-        //    the actual <input> is sr-only. We drive visual state via the peer-checked
-        //    Tailwind utility — the browser handles it automatically when we set
-        //    .checked on the underlying <input>.
+        // 2. Helper — set checkbox state without re-triggering infinite loops
         // ─────────────────────────────────────────────────────────────────────────
-
-        /** Programmatically check or uncheck a checkbox and trigger its change event */
         function setChecked(checkbox, state) {
-            if (checkbox.checked !== state) {
+            if (checkbox && checkbox.checked !== state) {
                 checkbox.checked = state;
                 checkbox.dispatchEvent(new Event('change', {
                     bubbles: true
@@ -45,37 +37,87 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────
-        // 3. Module "All" Checkbox
-        //    Toggling a row's module checkbox checks/unchecks every permission
-        //    checkbox in that same row (matching data-module attribute).
+        // 3. Actions that require "view" to be checked first
+        // ─────────────────────────────────────────────────────────────────────────
+        const DEPENDENT_ACTIONS = ['create', 'update', 'delete', 'own'];
+
+        // ─────────────────────────────────────────────────────────────────────────
+        // 4. Individual Permission Checkbox Logic
+        //    a) Checking create/update/delete/own → auto-check view
+        //    b) Unchecking view → auto-uncheck all dependents
+        //    c) After any change → sync the row's module (All) checkbox
+        //    d) After any change → sync global Select All
+        // ─────────────────────────────────────────────────────────────────────────
+        document.querySelectorAll('.permission-checkbox').forEach(function(permCheckbox) {
+            permCheckbox.addEventListener('change', function() {
+                const module = this.dataset.module;
+                const action = this.dataset.action;
+
+                if (this.checked && DEPENDENT_ACTIONS.includes(action)) {
+                    // Auto-check view when a dependent action is checked
+                    const viewChk = document.querySelector(
+                        `.permission-checkbox[data-module="${module}"][data-action="view"]`
+                    );
+                    if (viewChk && !viewChk.checked) {
+                        viewChk.checked = true;
+                        // Do NOT re-dispatch change here to avoid loops; just set raw state
+                    }
+                }
+
+                if (!this.checked && action === 'view') {
+                    // Auto-uncheck all dependents when view is unchecked
+                    DEPENDENT_ACTIONS.forEach(function(dep) {
+                        const depChk = document.querySelector(
+                            `.permission-checkbox[data-module="${module}"][data-action="${dep}"]`
+                        );
+                        if (depChk && depChk.checked) {
+                            depChk.checked = false;
+                        }
+                    });
+                }
+
+                syncModuleCheckbox(module);
+                syncSelectAll();
+            });
+        });
+
+        // ─────────────────────────────────────────────────────────────────────────
+        // 5. Module "All" (row) Checkbox
+        //    Clicking it checks/unchecks every permission checkbox in that row.
+        //    If unchecking, it also clears all dependents (handled by individual logic above).
         // ─────────────────────────────────────────────────────────────────────────
         document.querySelectorAll('.module-checkbox').forEach(function(moduleCheckbox) {
             moduleCheckbox.addEventListener('change', function() {
                 const module = this.dataset.module;
                 const checked = this.checked;
 
-                document.querySelectorAll(`.permission-checkbox[data-module="${module}"]`)
-                    .forEach(function(perm) {
-                        setChecked(perm, checked);
-                    });
+                if (!checked) {
+                    // Uncheck everything in the row directly (no cascading needed)
+                    document.querySelectorAll(`.permission-checkbox[data-module="${module}"]`)
+                        .forEach(function(perm) {
+                            perm.checked = false;
+                        });
+                } else {
+                    // Check all — view first, then dependents
+                    const viewChk = document.querySelector(
+                        `.permission-checkbox[data-module="${module}"][data-action="view"]`
+                    );
+                    if (viewChk) viewChk.checked = true;
+
+                    document.querySelectorAll(`.permission-checkbox[data-module="${module}"]`)
+                        .forEach(function(perm) {
+                            perm.checked = true;
+                        });
+                }
 
                 syncSelectAll();
             });
         });
 
         // ─────────────────────────────────────────────────────────────────────────
-        // 4. Individual Permission Checkbox
-        //    When any single permission changes, re-evaluate its row's module
-        //    checkbox: tick it if all available permissions in that row are checked.
+        // 6. Sync a row's module checkbox from its children
+        //    All children checked → check module; any unchecked → uncheck module
         // ─────────────────────────────────────────────────────────────────────────
-        document.querySelectorAll('.permission-checkbox').forEach(function(permCheckbox) {
-            permCheckbox.addEventListener('change', function() {
-                syncModuleCheckbox(this.dataset.module);
-                syncSelectAll();
-            });
-        });
-
-        /** Sync a single module's "All" checkbox based on its permission children */
         function syncModuleCheckbox(module) {
             const perms = document.querySelectorAll(`.permission-checkbox[data-module="${module}"]`);
             const allChecked = perms.length > 0 && Array.from(perms).every(p => p.checked);
@@ -86,8 +128,7 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────
-        // 5. Global "Select All" Checkbox
-        //    Checks/unchecks every permission and every module checkbox on the page.
+        // 7. Global "Select All" Checkbox
         // ─────────────────────────────────────────────────────────────────────────
         const selectAllCheckbox = document.getElementById('selectAllPermissions');
 
@@ -95,19 +136,26 @@
             selectAllCheckbox.addEventListener('change', function() {
                 const checked = this.checked;
 
-                document.querySelectorAll('.permission-checkbox')
-                    .forEach(function(perm) {
-                        setChecked(perm, checked);
+                if (!checked) {
+                    // Uncheck everything
+                    document.querySelectorAll('.permission-checkbox').forEach(p => {
+                        p.checked = false;
                     });
-
-                document.querySelectorAll('.module-checkbox')
-                    .forEach(function(mod) {
-                        mod.checked = checked;
+                    document.querySelectorAll('.module-checkbox').forEach(m => {
+                        m.checked = false;
                     });
+                } else {
+                    // Check everything
+                    document.querySelectorAll('.permission-checkbox').forEach(p => {
+                        p.checked = true;
+                    });
+                    document.querySelectorAll('.module-checkbox').forEach(m => {
+                        m.checked = true;
+                    });
+                }
             });
         }
 
-        /** Sync the global "Select All" based on whether every permission is ticked */
         function syncSelectAll() {
             if (!selectAllCheckbox) return;
             const allPerms = document.querySelectorAll('.permission-checkbox');
@@ -116,20 +164,14 @@
         }
 
         // ─────────────────────────────────────────────────────────────────────────
-        // 6. Page-Load State Sync
-        //    On edit/validation-error reload: ensure all module and global checkboxes
-        //    reflect the current checked state of individual permissions.
+        // 8. Page-Load State Sync (for edit page / validation error reload)
         // ─────────────────────────────────────────────────────────────────────────
         (function initCheckboxStates() {
-            // Collect unique module slugs
             const modules = new Set();
             document.querySelectorAll('.permission-checkbox').forEach(function(p) {
                 modules.add(p.dataset.module);
             });
-
-            modules.forEach(function(module) {
-                syncModuleCheckbox(module);
-            });
+            modules.forEach(syncModuleCheckbox);
             syncSelectAll();
         })();
 

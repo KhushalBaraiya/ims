@@ -17,8 +17,6 @@ class RolePermissionSeeder extends Seeder
     {
         // All permissions definition
         $permissions = [
-            'dashboard.view',
-
             'roles.view',
             'roles.create',
             'roles.update',
@@ -95,6 +93,7 @@ class RolePermissionSeeder extends Seeder
             'settings.update',
 
             'activity_logs.view',
+            'activity_logs.own',
         ];
 
         // Create permissions
@@ -112,7 +111,7 @@ class RolePermissionSeeder extends Seeder
 
         // Define Manager permissions (wildcards and specific ones)
         $managerPermissions = array_filter($permissions, function ($permission) {
-            if (in_array($permission, ['dashboard.view', 'reports.view', 'settings.view', 'activity_logs.view'])) {
+            if (in_array($permission, ['reports.view', 'settings.view', 'activity_logs.view', 'activity_logs.own'])) {
                 return true;
             }
 
@@ -144,7 +143,6 @@ class RolePermissionSeeder extends Seeder
 
         // Define Staff permissions
         $staffPermissions = [
-            'dashboard.view',
             'products.view',
             'stocks.view',
             'sales.view',
@@ -152,6 +150,8 @@ class RolePermissionSeeder extends Seeder
             'sale_returns.view',
             'sale_returns.create',
             'reports.view',
+            'activity_logs.view',
+            'activity_logs.own',
         ];
 
         $staffRole->syncPermissions($staffPermissions);
