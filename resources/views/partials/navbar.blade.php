@@ -118,56 +118,77 @@
                         @else
                             <div class="rounded-circle d-flex align-items-center justify-content-center"
                                 style="width:40px;height:40px;background:#696cff;">
-                                <span class="fw-bold text-white">
-                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                <span class="fw-bold text-white" style="font-size:.95rem;">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
                                 </span>
                             </div>
                         @endif
                     </div>
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu"
+                    style="min-width:260px;border-radius:16px;padding:0;overflow:hidden;">
+
+                    {{-- Header: large centered avatar + name + email --}}
                     <li>
-                        <a class="dropdown-item py-2" href="{{ route('profile.show') }}">
-                            <div class="d-flex align-items-center gap-3">
-                                @if (Auth::user()->profile_photo)
-                                    <img class="rounded-circle flex-shrink-0"
-                                        src="{{ asset('uploads/profiles/' . Auth::user()->profile_photo) }}"
-                                        style="object-fit:cover;width:40px;height:40px;" />
-                                @else
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                        style="width:40px;height:40px;background:#696cff;">
-                                        <span class="fw-bold text-white">
-                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                        </span>
-                                    </div>
-                                @endif
-                                <div>
-                                    <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                                    <small class="text-muted">{{ Auth::user()->email }}</small>
+                        <div class="text-center px-4 pt-4 pb-3" style="border-bottom:1px solid rgba(0,0,0,.07);">
+                            @if (Auth::user()->profile_photo)
+                                <img class="rounded-circle d-block mx-auto mb-3"
+                                    src="{{ asset('uploads/profiles/' . Auth::user()->profile_photo) }}"
+                                    style="object-fit:cover;width:72px;height:72px;" />
+                            @else
+                                <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                                    style="width:72px;height:72px;background:#696cff;">
+                                    <span class="fw-bold text-white" style="font-size:1.5rem;">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                                    </span>
                                 </div>
-                            </div>
+                            @endif
+                            <div class="fw-bold" style="font-size:1.05rem;">{{ Auth::user()->name }}</div>
+                            <div class="text-muted mt-1" style="font-size:.8rem;">{{ Auth::user()->email }}</div>
+                        </div>
+                    </li>
+
+                    {{-- Profile --}}
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
+                            href="{{ route('profile.show') }}">
+                            <i class="bx bx-user user-dd-icon"></i>
+                            <span>{{ __('messages.profile') }}</span>
                         </a>
                     </li>
+
+                    {{-- Change Password --}}
                     <li>
-                        <div class="dropdown-divider my-1"></div>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('profile.show') }}">
-                            <i class="bx bx-user me-2"></i>{{ __('messages.profile') }}
+                        <a class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
+                            href="{{ route('profile.show') }}#password">
+                            <i class="bx bx-lock user-dd-icon"></i>
+                            <span>Change Password</span>
                         </a>
                     </li>
+
+                    {{-- Change Language --}}
                     <li>
-                        <div class="dropdown-divider my-1"></div>
+                        <a class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
+                            href="javascript:void(0);" id="userDDLangTrigger">
+                            <i class="bx bx-globe user-dd-icon"></i>
+                            <span>Change Language</span>
+                        </a>
                     </li>
+
+                    {{-- Logout --}}
                     <li>
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
-                            <button class="dropdown-item text-danger" type="submit">
-                                <i class="bx bx-power-off me-2"></i>{{ __('messages.logout') }}
+                            <button class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
+                                type="submit">
+                                <i class="bx bx-log-out user-dd-icon"></i>
+                                <span>{{ __('messages.logout') }}</span>
                             </button>
                         </form>
                     </li>
+                    <li class="pb-2"></li>
+
                 </ul>
             </li>
 
@@ -310,6 +331,66 @@
 
         .theme-toggle-btn:hover i {
             color: #696cff !important;
+        }
+
+        /* ── User Dropdown ── */
+        .user-dropdown-menu {
+            border: 1px solid rgba(0, 0, 0, .07) !important;
+            box-shadow: 0 10px 32px rgba(100, 116, 139, .15) !important;
+            animation: userDDrop .15s ease;
+        }
+
+        [data-bs-theme="dark"] .user-dropdown-menu {
+            border-color: rgba(255, 255, 255, .1) !important;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, .35) !important;
+        }
+
+        @keyframes userDDrop {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-dd-item {
+            font-size: .95rem;
+            font-weight: 500;
+            color: #566a7f;
+            transition: background .12s;
+        }
+
+        .user-dd-item:hover {
+            background: rgba(105, 108, 255, .07) !important;
+            color: #566a7f !important;
+        }
+
+        .user-dd-icon {
+            font-size: 1.2rem;
+            color: #8592a3;
+            width: 20px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        [data-bs-theme="dark"] .user-dd-item {
+            color: #cfd8e3;
+        }
+
+        [data-bs-theme="dark"] .user-dd-item:hover {
+            color: #cfd8e3 !important;
+        }
+
+        [data-bs-theme="dark"] .user-dd-icon {
+            color: #7983bb;
+        }
+
+        [data-bs-theme="dark"] .user-dropdown-menu .text-center {
+            border-bottom-color: rgba(255, 255, 255, .1) !important;
         }
 
         /* ── Language Dropdown menu ── */
@@ -487,6 +568,27 @@
                         });
                 });
             });
+
+            // ── "Change Language" in user dropdown → trigger navbar lang dropdown ──
+            var langTrigger = document.getElementById('userDDLangTrigger');
+            if (langTrigger) {
+                langTrigger.addEventListener('click', function() {
+                    // Close user dropdown first
+                    var userDDToggle = document.querySelector('.navbar-dropdown .dropdown-toggle');
+                    if (userDDToggle) {
+                        var bsDD = bootstrap.Dropdown.getInstance(userDDToggle);
+                        if (bsDD) bsDD.hide();
+                    }
+                    // Open language dropdown
+                    setTimeout(function() {
+                        var lsTriggerEl = document.querySelector('.ls-trigger');
+                        if (lsTriggerEl) {
+                            var bsLang = bootstrap.Dropdown.getOrCreateInstance(lsTriggerEl);
+                            bsLang.toggle();
+                        }
+                    }, 150);
+                });
+            }
         });
     </script>
 @endpush

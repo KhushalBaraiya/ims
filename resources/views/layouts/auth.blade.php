@@ -18,28 +18,39 @@
     <!-- Boxicons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
 
-    <!-- Bootstrap 5 CDN -->
+    <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+    <script>
+        /* Apply saved theme before paint to avoid flash */
+        (function() {
+            try {
+                var t = localStorage.getItem('auth-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 
     <style>
         /* ═══════════════════════════════════════════════
-       DESIGN TOKENS  —  pure black base theme
-    ═══════════════════════════════════════════════ */
-        :root {
+           DESIGN TOKENS — Dark (default)
+        ═══════════════════════════════════════════════ */
+        :root,
+        [data-theme="dark"] {
             --bg-page: #0d0d12;
-            /* deepest black */
             --bg-card: #13131c;
-            /* card surface  */
             --bg-input: #0f0f18;
-            /* input bg      */
-            --bg-hover: #1a1a28;
-
+            --bg-toggle: #0f0f18;
+            /* pw-toggle bg = input bg */
             --border: rgba(255, 255, 255, .08);
             --border-focus: #696cff;
 
             --text-primary: #e8e9f4;
             --text-secondary: #8c8fa8;
             --text-muted: #55576a;
+            --text-toggle: #55576a;
 
             --primary: #696cff;
             --primary-2: #9155fd;
@@ -48,19 +59,61 @@
             --success-text: #34d399;
             --success-bg: rgba(52, 211, 153, .08);
             --success-bdr: rgba(52, 211, 153, .20);
-
             --error: #f87171;
 
             --dot: rgba(105, 108, 255, .18);
+            --blob1: rgba(105, 108, 255, .07);
+            --blob2: rgba(145, 85, 253, .06);
             --radius: 14px;
+
+            --card-shadow: 0 8px 48px rgba(0, 0, 0, .55), 0 1px 0 rgba(255, 255, 255, .04) inset;
         }
 
+        /* ═══════════════════════════════════════════════
+           DESIGN TOKENS — Light
+        ═══════════════════════════════════════════════ */
+        [data-theme="light"] {
+            --bg-page: #f0f2f8;
+            --bg-card: #ffffff;
+            --bg-input: #f5f6fa;
+            --bg-toggle: #f5f6fa;
+            --border: rgba(0, 0, 0, .09);
+            --border-focus: #696cff;
+
+            --text-primary: #1e2130;
+            --text-secondary: #697a8d;
+            --text-muted: #a1aab8;
+            --text-toggle: #a1aab8;
+
+            --primary: #696cff;
+            --primary-2: #9155fd;
+            --primary-glow: rgba(105, 108, 255, .28);
+
+            --success-text: #059669;
+            --success-bg: rgba(5, 150, 105, .07);
+            --success-bdr: rgba(5, 150, 105, .18);
+            --error: #dc2626;
+
+            --dot: rgba(105, 108, 255, .07);
+            --blob1: rgba(105, 108, 255, .06);
+            --blob2: rgba(145, 85, 253, .05);
+
+            --card-shadow: 0 4px 32px rgba(100, 116, 139, .12), 0 1px 0 rgba(255, 255, 255, .8) inset;
+        }
+
+        /* ── Reset ── */
         *,
         *::before,
         *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        /* Override Bootstrap default button background/border for non-btn buttons */
+        button:not([class*="btn"]) {
+            background-color: transparent;
+            border-color: transparent;
         }
 
         html,
@@ -70,9 +123,10 @@
             background: var(--bg-page);
             color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
+            transition: background .3s, color .3s;
         }
 
-        /* ── Dot-grid page background ── */
+        /* ── Dot-grid background ── */
         body::before {
             content: '';
             position: fixed;
@@ -83,7 +137,7 @@
             pointer-events: none;
         }
 
-        /* ── Purple glow blobs ── */
+        /* ── Glow blobs ── */
         .glow-blob {
             position: fixed;
             border-radius: 50%;
@@ -95,7 +149,7 @@
         .glow-1 {
             width: 500px;
             height: 500px;
-            background: rgba(105, 108, 255, .07);
+            background: var(--blob1);
             top: -150px;
             right: -100px;
         }
@@ -103,7 +157,7 @@
         .glow-2 {
             width: 400px;
             height: 400px;
-            background: rgba(145, 85, 253, .06);
+            background: var(--blob2);
             bottom: -100px;
             left: -80px;
         }
@@ -127,7 +181,33 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 2.5rem 2.25rem;
-            box-shadow: 0 8px 48px rgba(0, 0, 0, .55), 0 1px 0 rgba(255, 255, 255, .04) inset;
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        /* ── Theme toggle button (top-right of card) ── */
+        .auth-theme-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: background .2s, color .2s, border-color .2s;
+        }
+
+        .auth-theme-btn:hover {
+            background: var(--border);
+            color: var(--primary);
+            border-color: var(--primary);
         }
 
         /* ── Brand ── */
@@ -176,7 +256,7 @@
             margin-bottom: 1.75rem;
         }
 
-        /* ── Status alert ── */
+        /* ── Success alert ── */
         .alert-success-dark {
             display: flex;
             align-items: flex-start;
@@ -197,7 +277,7 @@
             flex-shrink: 0;
         }
 
-        /* ── Form label ── */
+        /* ── Label ── */
         .form-label-dark {
             display: block;
             font-size: .78rem;
@@ -218,7 +298,7 @@
             color: var(--text-primary);
             font-family: 'Public Sans', sans-serif;
             outline: none;
-            transition: border-color .2s, box-shadow .2s;
+            transition: border-color .2s, box-shadow .2s, background .3s, color .3s;
         }
 
         .input-dark::placeholder {
@@ -235,32 +315,50 @@
             box-shadow: 0 0 0 3px rgba(248, 113, 113, .12);
         }
 
+        .input-dark[readonly] {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
         /* ── Password group ── */
         .pw-wrap {
             position: relative;
         }
 
         .pw-wrap .input-dark {
-            padding-right: 2.6rem;
+            padding-right: 2.8rem;
         }
 
-        .pw-toggle {
+        /* Complete Bootstrap button reset for the toggle */
+        .pw-toggle,
+        .pw-toggle:hover,
+        .pw-toggle:focus,
+        .pw-toggle:active,
+        .pw-toggle:focus-visible,
+        .pw-toggle:focus-within {
             position: absolute;
             inset-y: 0;
             right: 0;
             display: flex;
             align-items: center;
-            padding-right: .85rem;
-            color: var(--text-muted);
-            background: none;
-            border: none;
+            padding: 0 .85rem;
+            background: transparent !important;
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            -webkit-appearance: none;
+            appearance: none;
             cursor: pointer;
-            font-size: .9rem;
+            color: var(--text-toggle);
+            font-size: .95rem;
+            line-height: 1;
+            border-radius: 0 10px 10px 0;
             transition: color .15s;
         }
 
         .pw-toggle:hover {
-            color: var(--primary);
+            color: var(--primary) !important;
         }
 
         /* ── Field error ── */
@@ -273,7 +371,7 @@
             gap: .35rem;
         }
 
-        /* ── Remember + Forgot row ── */
+        /* ── Remember + Forgot ── */
         .form-meta-row {
             display: flex;
             align-items: center;
@@ -293,9 +391,6 @@
             height: 15px;
             accent-color: var(--primary);
             cursor: pointer;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 4px;
         }
 
         .check-wrap span {
@@ -333,7 +428,6 @@
             font-weight: 700;
             font-family: 'Public Sans', sans-serif;
             transition: opacity .2s, box-shadow .2s, transform .1s;
-            letter-spacing: .01em;
         }
 
         .btn-submit:hover {
@@ -345,7 +439,7 @@
             transform: scale(.99);
         }
 
-        /* ── Back / helper link ── */
+        /* ── Back link ── */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -369,13 +463,7 @@
             color: var(--text-muted);
         }
 
-        /* ── Readonly input ── */
-        .input-dark[readonly] {
-            opacity: .6;
-            cursor: not-allowed;
-        }
-
-        /* ── Spacing utils ── */
+        /* ── Spacing ── */
         .mb-field {
             margin-bottom: 1.15rem;
         }
@@ -397,6 +485,12 @@
 
     <main class="auth-page">
         <div class="auth-card">
+
+            {{-- Theme toggle button --}}
+            <button class="auth-theme-btn" id="authThemeBtn" title="Toggle theme" type="button">
+                <i class="bx bx-moon" id="authThemeIcon"></i>
+            </button>
+
             @yield('content')
         </div>
     </main>
@@ -406,6 +500,33 @@
     </p>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function() {
+            var html = document.documentElement;
+            var btn = document.getElementById('authThemeBtn');
+            var icon = document.getElementById('authThemeIcon');
+            var theme = localStorage.getItem('auth-theme') || 'dark';
+
+            function applyTheme(t) {
+                theme = t;
+                html.setAttribute('data-theme', t);
+                localStorage.setItem('auth-theme', t);
+                if (t === 'dark') {
+                    icon.className = 'bx bx-moon';
+                    btn.title = 'Switch to light mode';
+                } else {
+                    icon.className = 'bx bx-sun';
+                    btn.title = 'Switch to dark mode';
+                }
+            }
+
+            applyTheme(theme);
+
+            btn.addEventListener('click', function() {
+                applyTheme(theme === 'dark' ? 'light' : 'dark');
+            });
+        })();
+    </script>
 </body>
 
 </html>
