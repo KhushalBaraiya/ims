@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('currencies', CurrencyController::class);
 
     // Products Routes
+    Route::get('/products/generate-sku', [ProductController::class, 'generateSkuAjax'])->name('products.generate-sku');
     Route::get('/products/gallery', [ProductController::class, 'gallery'])->name('products.gallery');
     Route::get('/products/by-category', [ProductController::class, 'byCategory'])->name('products.by-category');
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
@@ -94,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
 
     // Sales Routes
+    Route::get('/sales/generate-invoice-no', [SaleController::class, 'generateInvoiceNoAjax'])->name('sales.generate-invoice-no');
     Route::get('/sales/{sale}/print', [SaleController::class, 'printInvoice'])->name('sales.print');
     Route::resource('sales', SaleController::class);
 
@@ -102,6 +104,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/sale-returns/{sale_return}/print', [SaleReturnController::class, 'printReturn'])->name('sale-returns.print');
     Route::resource('sale-returns', SaleReturnController::class);
     // Purchase Management Routes
+    Route::get('/purchases/generate-purchase-no', [PurchaseController::class, 'generatePurchaseNoAjax'])->name('purchases.generate-purchase-no');
     Route::get('/purchases/search-products', [PurchaseController::class, 'searchProducts'])->name('purchases.search-products');
     Route::get('/purchases/generate-no', [PurchaseController::class, 'generateNoAjax'])->name('purchases.generate-no');
     Route::get('/purchases/{purchase}/print', [PurchaseController::class, 'printInvoice'])->name('purchases.print');

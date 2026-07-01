@@ -33,13 +33,14 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Purchase No <span class="text-danger">*</span></label>
                     <div class="input-group">
-                        <input type="text" name="purchase_no" id="purchase_no" class="form-control fw-bold @error('purchase_no') is-invalid @enderror"
-                            value="{{ old('purchase_no', $purchase->purchase_no ?? $purchaseNo ?? '') }}" required
+                        <input type="text" name="purchase_no" id="purchase_no"
+                            class="form-control fw-bold @error('purchase_no') is-invalid @enderror"
+                            value="{{ old('purchase_no', $purchase->purchase_no ?? ($purchaseNo ?? '')) }}" required
                             {{ isset($purchase) ? 'readonly' : '' }}>
-                        @if(!isset($purchase))
+                        @if (!isset($purchase))
                             <button type="button" class="btn btn-outline-secondary" id="btnGeneratePurchaseNo">
-                                <i class="bx bx-refresh"></i> Auto Gen
-                            </button>
+                                <i class="bx bx-refresh"></i>
+                            </button>   
                         @endif
                         @error('purchase_no')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -276,6 +277,40 @@
         $(document).ready(function() {
             let rowCount = 0;
 
+            // ── Auto-generate Purchase No on page load ────────────────────────
+            @if (!isset($purchase) || !$purchase->exists)
+                function autoFillPurchaseNo() {
+                    $.ajax({
+                        url: "{{ route('purchases.generate-purchase-no') }}",
+                        type: 'GET',
+                        success: function(res) {
+                            if (!$('#purchase_no').val()) {
+                                $('#purchase_no').val(res.purchase_no);
+                            }
+                        }
+                    });
+                }
+                autoFillPurchaseNo();
+            @endif
+
+            // ── Refresh button ────────────────────────────────────────────────
+            $('#generatePurchaseNoBtn').on('click', function() {
+                const btn = $(this);
+                btn.prop('disabled', true).html('<i class="bx bx-loader-alt bx-spin"></i>');
+                $.ajax({
+                    url: "{{ route('purchases.generate-purchase-no') }}",
+                    type: 'GET',
+                    success: function(res) {
+                        $('#purchase_no').val(res.purchase_no).focus();
+                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
+                    },
+                    error: function() {
+                        showAdminToast('Could not generate purchase number.', 'error');
+                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
+                    }
+                });
+            });
+
             // ── Active currency symbol from server ───────────────────────────
             const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
 
@@ -287,7 +322,9 @@
             $('#btnGeneratePurchaseNo').on('click', function() {
                 const btn = $(this);
                 const originalHtml = btn.html();
-                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                btn.prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+                );
                 $.ajax({
                     url: "{{ route('purchases.generate-no') }}",
                     type: 'GET',

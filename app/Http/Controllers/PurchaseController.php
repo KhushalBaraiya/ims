@@ -445,6 +445,15 @@ class PurchaseController extends Controller
     }
 
     /**
+     * AJAX: Generate a preview purchase number.
+     */
+    public function generatePurchaseNoAjax(): \Illuminate\Http\JsonResponse
+    {
+        Gate::authorize('purchases.create');
+        return response()->json(['purchase_no' => $this->generatePurchaseNo()]);
+    }
+
+    /**
      * Generate a concurrent-safe unique purchase number.
      */
     private function generatePurchaseNo(): string

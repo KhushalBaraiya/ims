@@ -28,8 +28,8 @@ class StockController extends Controller
 
         if ($request->filled('search')) {
             $s = $request->search;
-            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
-                                      ->orWhere('code', 'like', "%$s%"));
+            $query->where(fn ($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('code', 'like', "%$s%"));
         }
 
         if ($request->filled('main_category_id')) {
@@ -38,22 +38,22 @@ class StockController extends Controller
 
         if ($request->filled('stock_status')) {
             match ($request->stock_status) {
-                'out'  => $query->whereHas('stock', fn($q) => $q->where('quantity', '<=', 0)),
-                'low'  => $query->whereHas('stock', fn($q) => $q->where('quantity', '>', 0)
-                                                               ->whereRaw('stocks.quantity <= products.minimum_stock_alert')),
-                'ok'   => $query->whereHas('stock', fn($q) => $q->whereColumn('quantity', '>', 'minimum_stock_alert')),
+                'out' => $query->whereHas('stock', fn ($q) => $q->where('quantity', '<=', 0)),
+                'low' => $query->whereHas('stock', fn ($q) => $q->where('quantity', '>', 0)
+                    ->whereRaw('stocks.quantity <= products.minimum_stock_alert')),
+                'ok' => $query->whereHas('stock', fn ($q) => $q->whereColumn('quantity', '>', 'minimum_stock_alert')),
                 default => null,
             };
         }
 
-        $products   = $query->get();
+        $products = $query->get();
         $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
 
         // Summary stats
-        $totalProducts   = $products->count();
-        $outOfStock      = $products->filter(fn($p) => ($p->stock->quantity ?? 0) <= 0)->count();
-        $lowStock        = $products->filter(fn($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
-        $totalInvValue   = $products->sum(fn($p) => ($p->stock->quantity ?? 0) * $p->purchase_price);
+        $totalProducts = $products->count();
+        $outOfStock = $products->filter(fn ($p) => ($p->stock->quantity ?? 0) <= 0)->count();
+        $lowStock = $products->filter(fn ($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
+        $totalInvValue = $products->sum(fn ($p) => ($p->stock->quantity ?? 0) * $p->purchase_price);
 
         return view('stocks.index', compact(
             'products', 'categories',
@@ -86,18 +86,18 @@ class StockController extends Controller
 
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'notes'            => 'nullable|string|max:500',
-            'items'            => 'required|array|min:1',
+            'notes' => 'nullable|string|max:500',
+            'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.type'       => 'required|in:Plus,Minus',
-            'items.*.quantity'   => 'required|numeric|min:0.01',
+            'items.*.type' => 'required|in:Plus,Minus',
+            'items.*.quantity' => 'required|numeric|min:0.01',
         ]);
 
         DB::beginTransaction();
         try {
             $today = date('Ymd');
             $count = StockAdjustment::where('voucher_no', 'like', "ADJ-{$today}-%")->distinct()->count('voucher_no');
-            $voucherNo = 'ADJ-' . $today . '-' . str_pad($count + 1, 4, '0', STR_PAD_LEFT);
+            $voucherNo = 'ADJ-'.$today.'-'.str_pad($count + 1, 4, '0', STR_PAD_LEFT);
 
             $adjustedProductsLog = [];
 
@@ -116,15 +116,15 @@ class StockController extends Controller
                 $stock->update(['quantity' => $newQty]);
 
                 StockAdjustment::create([
-                    'voucher_no'       => $voucherNo,
+                    'voucher_no' => $voucherNo,
                     'transaction_date' => $validated['transaction_date'],
-                    'product_id'       => $product->id,
-                    'quantity_change'  => $change,
-                    'adjustment_type'  => $item['type'],
-                    'notes'            => $validated['notes'] ?? null,
-                    'user_id'          => auth()->id(),
-                    'created_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
-                    'updated_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                    'product_id' => $product->id,
+                    'quantity_change' => $change,
+                    'adjustment_type' => $item['type'],
+                    'notes' => $validated['notes'] ?? null,
+                    'user_id' => auth()->id(),
+                    'created_at' => $validated['transaction_date'].' '.now()->toTimeString(),
+                    'updated_at' => $validated['transaction_date'].' '.now()->toTimeString(),
                 ]);
 
                 $sign = $change > 0 ? '+' : '';
@@ -133,14 +133,16 @@ class StockController extends Controller
 
             ActivityLog::log(
                 'Stock Adjusted',
-                "Created stock adjustment voucher: {$voucherNo}. Adjusted products: " . implode(', ', $adjustedProductsLog)
+                "Created stock adjustment voucher: {$voucherNo}. Adjusted products: ".implode(', ', $adjustedProductsLog)
             );
 
             DB::commit();
+
             return redirect()->route('stocks.history')
                 ->with('success', "Stock adjustment voucher \"{$voucherNo}\" created successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -155,13 +157,13 @@ class StockController extends Controller
         $adjustments = StockAdjustment::with('product.stock')->where('voucher_no', $voucherNo)->get();
         if ($adjustments->isEmpty()) {
             abort(404);
-       }
+        }
 
-       $allProducts = Product::with('stock')->where('status', 'active')->orderBy('name')->get();
-       $notes = $adjustments->first()->notes;
-       $transactionDate = $adjustments->first()->transaction_date ?: $adjustments->first()->created_at->format('Y-m-d');
+        $allProducts = Product::with('stock')->where('status', 'active')->orderBy('name')->get();
+        $notes = $adjustments->first()->notes;
+        $transactionDate = $adjustments->first()->transaction_date ?: $adjustments->first()->created_at->format('Y-m-d');
 
-       return view('stocks.edit_adjustment', compact('adjustments', 'voucherNo', 'allProducts', 'notes', 'transactionDate'));
+        return view('stocks.edit_adjustment', compact('adjustments', 'voucherNo', 'allProducts', 'notes', 'transactionDate'));
     }
 
     // ──────────────────────────────────────────────────
@@ -173,11 +175,11 @@ class StockController extends Controller
 
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'notes'            => 'nullable|string|max:500',
-            'items'            => 'required|array|min:1',
+            'notes' => 'nullable|string|max:500',
+            'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.type'       => 'required|in:Plus,Minus',
-            'items.*.quantity'   => 'required|numeric|min:0.01',
+            'items.*.type' => 'required|in:Plus,Minus',
+            'items.*.quantity' => 'required|numeric|min:0.01',
         ]);
 
         $oldAdjustments = StockAdjustment::where('voucher_no', $voucherNo)->get();
@@ -221,15 +223,15 @@ class StockController extends Controller
                 $stock->update(['quantity' => $stock->quantity + $change]);
 
                 StockAdjustment::create([
-                    'voucher_no'       => $voucherNo,
+                    'voucher_no' => $voucherNo,
                     'transaction_date' => $validated['transaction_date'],
-                    'product_id'       => $product->id,
-                    'quantity_change'  => $change,
-                    'adjustment_type'  => $item['type'],
-                    'notes'            => $validated['notes'] ?? null,
-                    'user_id'          => auth()->id(),
-                    'created_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
-                    'updated_at'       => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                    'product_id' => $product->id,
+                    'quantity_change' => $change,
+                    'adjustment_type' => $item['type'],
+                    'notes' => $validated['notes'] ?? null,
+                    'user_id' => auth()->id(),
+                    'created_at' => $validated['transaction_date'].' '.now()->toTimeString(),
+                    'updated_at' => $validated['transaction_date'].' '.now()->toTimeString(),
                 ]);
 
                 $sign = $change > 0 ? '+' : '';
@@ -238,14 +240,16 @@ class StockController extends Controller
 
             ActivityLog::log(
                 'Stock Adjusted',
-                "Updated stock adjustment voucher: {$voucherNo}. Adjusted products: " . implode(', ', $adjustedProductsLog)
+                "Updated stock adjustment voucher: {$voucherNo}. Adjusted products: ".implode(', ', $adjustedProductsLog)
             );
 
             DB::commit();
+
             return redirect()->route('stocks.history')
                 ->with('success', "Stock adjustment voucher \"{$voucherNo}\" updated successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withInput()->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -278,10 +282,12 @@ class StockController extends Controller
             );
 
             DB::commit();
+
             return redirect()->route('stocks.history')
                 ->with('success', "Stock adjustment voucher \"{$voucherNo}\" deleted and stock reverted successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -320,9 +326,28 @@ class StockController extends Controller
     // ──────────────────────────────────────────────────
     //  Unused stubs
     // ──────────────────────────────────────────────────
-    public function create(): never  { abort(404); }
-    public function show(Stock $stock): never  { abort(404); }
-    public function edit(Stock $stock): never  { abort(404); }
-    public function update(Request $request, Stock $stock): never { abort(404); }
-    public function destroy(Stock $stock): never { abort(404); }
+    public function create(): never
+    {
+        abort(404);
+    }
+
+    public function show(Stock $stock): never
+    {
+        abort(404);
+    }
+
+    public function edit(Stock $stock): never
+    {
+        abort(404);
+    }
+
+    public function update(Request $request, Stock $stock): never
+    {
+        abort(404);
+    }
+
+    public function destroy(Stock $stock): never
+    {
+        abort(404);
+    }
 }

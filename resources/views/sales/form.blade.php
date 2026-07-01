@@ -12,8 +12,20 @@
             <div class="card-body p-4">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Invoice Number</label>
-                    <input type="text" class="form-control bg-light fw-bold"
-                        value="{{ $sale->invoice_no ?? 'AUTO-GENERATED' }}" readonly>
+                    @if (isset($sale) && $sale->exists)
+                        <input type="text" name="invoice_no" id="invoice_no"
+                            class="form-control fw-bold text-primary bg-light" value="{{ $sale->invoice_no }}" readonly>
+                    @else
+                        <div class="input-group">
+                            <input type="text" name="invoice_no" id="invoice_no" class="form-control fw-semibold"
+                                placeholder="e.g. INV-20260701-00001" value="{{ old('invoice_no') }}">
+                            <button type="button" class="btn btn-outline-primary" id="generateInvoiceNoBtn"
+                                title="Auto-generate Invoice No">
+                                <i class="bx bx-revision"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">Leave blank to auto-generate, or enter manually.</div>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Invoice Date <span class="text-danger">*</span></label>
@@ -241,6 +253,40 @@
     <script>
         $(document).ready(function() {
             let rowCount = 0;
+
+            // ── Auto-generate Invoice No on page load ─────────────────────────
+            @if (!isset($sale) || !$sale->exists)
+                function autoFillInvoiceNo() {
+                    $.ajax({
+                        url: "{{ route('sales.generate-invoice-no') }}",
+                        type: 'GET',
+                        success: function(res) {
+                            if (!$('#invoice_no').val()) {
+                                $('#invoice_no').val(res.invoice_no);
+                            }
+                        }
+                    });
+                }
+                autoFillInvoiceNo();
+            @endif
+
+            // ── Refresh button ────────────────────────────────────────────────
+            $('#generateInvoiceNoBtn').on('click', function() {
+                const btn = $(this);
+                btn.prop('disabled', true).html('<i class="bx bx-loader-alt bx-spin"></i>');
+                $.ajax({
+                    url: "{{ route('sales.generate-invoice-no') }}",
+                    type: 'GET',
+                    success: function(res) {
+                        $('#invoice_no').val(res.invoice_no).focus();
+                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
+                    },
+                    error: function() {
+                        showAdminToast('Could not generate invoice number.', 'error');
+                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
+                    }
+                });
+            });
 
             @if (isset($sale) && $sale->items->count() > 0)
                 @foreach ($sale->items as $item)

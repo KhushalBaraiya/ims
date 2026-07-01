@@ -224,6 +224,28 @@ class ProductController extends Controller
     }
 
     /**
+     * AJAX: Generate a unique SKU/Code for a product.
+     */
+    public function generateSkuAjax(): \Illuminate\Http\JsonResponse
+    {
+        Gate::authorize('products.create');
+
+        $prefix = 'PRD';
+        $attempts = 0;
+        while ($attempts < 20) {
+            $attempts++;
+            $random = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
+            $latest = \App\Models\Product::orderBy('id', 'desc')->first();
+            $nextNum = $latest ? $latest->id + 1 : 1;
+            $sku = $prefix . '-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT) . '-' . $random;
+            if (! \App\Models\Product::where('code', $sku)->exists()) {
+                return response()->json(['sku' => $sku]);
+            }
+        }
+        return response()->json(['sku' => $prefix . '-' . date('His') . '-' . strtoupper(substr(uniqid(), -4))]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create(): View

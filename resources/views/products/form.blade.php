@@ -20,12 +20,24 @@
 
             {{-- SKU --}}
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">SKU / Code <span class="text-danger">*</span></label>
-                <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
-                    value="{{ old('code', $product->code ?? '') }}" placeholder="e.g. LPT-i9-001" required>
-                @error('code')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <label class="form-label fw-semibold small">
+                    SKU / Code <span class="text-danger">*</span>
+                    <span class="text-muted fw-normal">(auto or manual)</span>
+                </label>
+                <div class="input-group">
+                    <input type="text" name="code" id="product_code"
+                        class="form-control fw-semibold @error('code') is-invalid @enderror"
+                        value="{{ old('code', $product->code ?? '') }}" placeholder="e.g. PRD-001-GPAN" required>
+                    @if (!isset($product) || !$product->exists)
+                        <button type="button" class="btn btn-outline-primary" id="generateSkuBtn"
+                            title="Auto-generate SKU">
+                            <i class="bx bx-revision"></i>
+                        </button>
+                    @endif
+                    @error('code')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             {{-- Barcode --}}
@@ -433,6 +445,40 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+            // ── Auto-generate SKU on page load ────────────────────────────────
+            @if (!isset($product) || !$product->exists)
+                function autoFillSku() {
+                    $.ajax({
+                        url: "{{ route('products.generate-sku') }}",
+                        type: 'GET',
+                        success: function(res) {
+                            if (!$('#product_code').val()) {
+                                $('#product_code').val(res.sku);
+                            }
+                        }
+                    });
+                }
+                autoFillSku();
+            @endif
+
+            // ── Refresh button ────────────────────────────────────────────────
+            $('#generateSkuBtn').on('click', function() {
+                const btn = $(this);
+                btn.prop('disabled', true).html('<i class="bx bx-loader-alt bx-spin"></i>');
+                $.ajax({
+                    url: "{{ route('products.generate-sku') }}",
+                    type: 'GET',
+                    success: function(res) {
+                        $('#product_code').val(res.sku).focus();
+                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
+                    },
+                    error: function() {
+                        showAdminToast('Could not generate SKU.', 'error');
+                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
+                    }
+                });
+            });
 
             // ── Sub-category dynamic load ──────────────────────────────────────────────
             const subCategories = @json($subCategories);
