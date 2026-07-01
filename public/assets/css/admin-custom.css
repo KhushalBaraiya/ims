@@ -1,12 +1,68 @@
 /* Action Buttons */
 .btn-action {
-    width: 42px;
-    height: 42px;
-    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0;
+}
+
+/* ===== Modal — Fix close button (Sneat theme override) ===== */
+.modal-content {
+    overflow: hidden !important;
+    border-radius: 0.625rem !important;
+}
+
+.modal .modal-header {
+    --bs-modal-header-padding-x: 1.5rem;
+    --bs-modal-header-padding-y: 1rem;
+    --bs-modal-header-padding: 1rem 1.5rem;
+    padding: 1rem 1.5rem !important;
+    border-bottom: 1px solid #e9ecef !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Custom close button — replaces btn-close to avoid double-icon issue */
+.modal-close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    margin: 0 0 0 auto;
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0.375rem;
+    color: #697a8d;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(105, 108, 255, .08);
+    color: #566a7f;
+}
+
+[data-bs-theme="dark"] .modal .modal-header {
+    border-bottom-color: #444564 !important;
+}
+
+[data-bs-theme="dark"] .modal-close-btn {
+    color: #a3a4cc;
+}
+
+[data-bs-theme="dark"] .modal-close-btn:hover {
+    background: rgba(105, 108, 255, .15);
+    color: #d3d4f5;
 }
 
 /* Admin theme toggle */

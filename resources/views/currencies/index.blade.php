@@ -49,8 +49,11 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title fw-semibold" id="currencyModalLabel">{{ __('messages.add_new_currency') }}</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h6 class="modal-title fw-semibold mb-0" id="currencyModalLabel">{{ __('messages.add_new_currency') }}
+                    </h6>
+                    <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bx bx-x"></i>
+                    </button>
                 </div>
                 <form id="currencyForm" method="POST" novalidate>
                     @csrf
@@ -108,10 +111,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
-                        <button type="submit" class="btn btn-primary"><i class="bx bx-save me-1"></i>
-                            {{ __('messages.save_currency') }}</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                            <i class="bx bx-x me-1"></i>{{ __('messages.cancel') }}
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bx bx-save me-1"></i>{{ __('messages.save_currency') }}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -197,25 +202,15 @@
                             if (!canUpdate && !canDelete)
                                 return '<span class="text-muted small">—</span>';
 
-                            let editItem = canUpdate ?
-                                `<li><a class="dropdown-item d-flex align-items-center gap-2 py-2 edit-btn" href="#" data-id="${r.id}"><i class="bx bx-edit text-primary" style="font-size:1rem;"></i><span>{{ __('messages.edit') }}</span></a></li>` :
+                            let editBtn = canUpdate ?
+                                `<a href="#" class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action edit-btn" data-id="${r.id}" title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;"><i class="bx bx-edit" style="font-size:1rem;"></i></a>` :
                                 '';
 
-                            let divider = (canUpdate && canDelete) ?
-                                '<li><hr class="dropdown-divider my-1"></li>' : '';
-
-                            let deleteItem = canDelete ?
-                                `<li><button type="button" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn" data-id="${r.id}" data-name="${r.name}"><i class="bx bx-trash" style="font-size:1rem;"></i><span>{{ __('messages.delete') }}</span></button></li>` :
+                            let deleteBtn = canDelete ?
+                                `<button type="button" class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn" data-id="${r.id}" data-name="${r.name}" title="{{ __('messages.delete') }}" style="width:30px;height:30px;padding:0;"><i class="bx bx-trash" style="font-size:1rem;"></i></button>` :
                                 '';
 
-                            return `<div class="dropdown">
-                                <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:32px;height:32px;padding:0;">
-                                    <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width:160px;border-radius:10px;">
-                                    ${editItem}${divider}${deleteItem}
-                                </ul>
-                            </div>`;
+                            return `<div class="d-flex align-items-center justify-content-center gap-1">${editBtn}${deleteBtn}</div>`;
                         }
                     }
                 ]
