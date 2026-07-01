@@ -19,7 +19,8 @@
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             @can('purchase_returns.create')
-                <a href="{{ route('purchase-returns.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                <a href="{{ route('purchase-returns.create') }}"
+                    class="btn btn-outline-primary d-flex align-items-center gap-1">
                     <i class="bx bx-plus"></i> {{ __('messages.new_return') }}
                 </a>
             @endcan

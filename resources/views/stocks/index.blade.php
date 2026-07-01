@@ -15,7 +15,7 @@
             </nav>
         </div>
         @can('stocks.create')
-            <a href="{{ route('stocks.adjust') }}" class="btn btn-primary">
+            <a href="{{ route('stocks.adjust') }}" class="btn btn-outline-primary">
                 <i class="bx bx-slider me-1"></i> {{ __('messages.adjust_stock') }}
             </a>
         @endcan

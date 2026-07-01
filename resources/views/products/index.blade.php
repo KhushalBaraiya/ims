@@ -104,7 +104,7 @@
                 <i class="bx bx-category"></i> By Category
             </a>
             @can('products.create')
-                <a href="{{ route('products.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                <a href="{{ route('products.create') }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
                     <i class="bx bx-plus"></i> {{ __('messages.add_product') }}
                 </a>
             @endcan

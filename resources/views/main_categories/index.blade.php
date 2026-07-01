@@ -15,7 +15,7 @@
             </nav>
         </div>
         @can('main_categories.create')
-            <a href="{{ route('main-categories.create') }}" class="btn btn-primary">
+            <a href="{{ route('main-categories.create') }}" class="btn btn-outline-primary">
                 <i class="bx bx-plus me-1"></i> {{ __('messages.add_category') }}
             </a>
         @endcan

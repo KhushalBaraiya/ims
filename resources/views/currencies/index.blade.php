@@ -14,7 +14,7 @@
             </nav>
         </div>
         @can('currencies.create')
-            <button type="button" id="openCreateModalBtn" class="btn btn-primary">
+            <button type="button" id="openCreateModalBtn" class="btn btn-outline-primary">
                 <i class="bx bx-plus me-1"></i> {{ __('messages.add_currency') }}
             </button>
         @endcan
@@ -171,33 +171,51 @@
                         data: 'is_default',
                         render: (d, t, r) => {
                             if (d)
-                                return '<span class="badge bg-label-primary">{{ __('messages.th_default') }}</span>';
+                                return '<span class="badge rounded-pill bg-label-primary fw-semibold px-3 py-1">{{ __('messages.th_default') }}</span>';
                             if (canUpdate)
-                                return `<button type="button" class="btn btn-sm btn-outline-secondary set-default-btn" data-id="${r.id}" style="font-size:11px;">{{ __('messages.set_default') }}</button>`;
+                                return `<button type="button" class="btn btn-sm btn-outline-secondary set-default-btn rounded-pill" data-id="${r.id}" style="font-size:11px;padding:2px 12px;">{{ __('messages.set_default') }}</button>`;
                             return '<span class="text-muted">—</span>';
                         }
                     },
                     {
                         data: 'status',
                         render: (d, t, r) => {
-                            const cls = d === 'active' ? 'bg-success' : 'bg-danger';
-                            const txt = d.charAt(0).toUpperCase() + d.slice(1);
+                            const isActive = d === 'active';
+                            const cls = isActive ? 'border-success text-success' :
+                                'border-danger text-danger';
+                            const txt = isActive ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}';
                             if (canUpdate)
-                                return `<span class="badge rounded-pill ${cls} toggle-status-btn" data-id="${r.id}" style="cursor:pointer;">${txt}</span>`;
-                            return `<span class="badge rounded-pill ${cls}">${txt}</span>`;
+                                return `<button type="button" class="toggle-status-btn badge rounded-pill border fw-semibold px-3 py-1 ${cls}" data-id="${r.id}" data-status="${d}" style="background:transparent;cursor:pointer;" title="{{ __('messages.click_to_toggle') }}">${txt}</button>`;
+                            return `<span class="badge rounded-pill border fw-semibold px-3 py-1 ${cls}" style="background:transparent;">${txt}</span>`;
                         }
                     },
                     {
                         data: null,
                         className: 'text-center',
                         render: (d, t, r) => {
-                            let btns =
-                                '<div class="d-flex align-items-center justify-content-center gap-1">';
-                            if (canUpdate) btns +=
-                                `<button type="button" class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action edit-btn" data-id="${r.id}" title="{{ __('messages.edit') }}"><i class="bx bx-edit"></i></button>`;
-                            if (canDelete) btns +=
-                                `<button type="button" class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn" data-id="${r.id}" data-name="${r.name}" title="{{ __('messages.delete') }}"><i class="bx bx-trash"></i></button>`;
-                            return btns + '</div>';
+                            if (!canUpdate && !canDelete)
+                                return '<span class="text-muted small">—</span>';
+
+                            let editItem = canUpdate ?
+                                `<li><a class="dropdown-item d-flex align-items-center gap-2 py-2 edit-btn" href="#" data-id="${r.id}"><i class="bx bx-edit text-primary" style="font-size:1rem;"></i><span>{{ __('messages.edit') }}</span></a></li>` :
+                                '';
+
+                            let divider = (canUpdate && canDelete) ?
+                                '<li><hr class="dropdown-divider my-1"></li>' : '';
+
+                            let deleteItem = canDelete ?
+                                `<li><button type="button" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger delete-btn" data-id="${r.id}" data-name="${r.name}"><i class="bx bx-trash" style="font-size:1rem;"></i><span>{{ __('messages.delete') }}</span></button></li>` :
+                                '';
+
+                            return `<div class="dropdown">
+                                <button class="btn btn-sm btn-icon btn-outline-secondary rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width:32px;height:32px;padding:0;">
+                                    <i class="bx bx-dots-vertical-rounded" style="font-size:1.1rem;"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width:160px;border-radius:10px;">
+                                    ${editItem}${divider}${deleteItem}
+                                </ul>
+                            </div>`;
                         }
                     }
                 ]
@@ -245,7 +263,8 @@
                 });
             });
 
-            $(document).on('click', '.edit-btn', function() {
+            $(document).on('click', '.edit-btn', function(e) {
+                e.preventDefault();
                 const id = $(this).data('id');
                 resetForm();
                 $.ajax({

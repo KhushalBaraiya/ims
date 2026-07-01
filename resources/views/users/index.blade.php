@@ -14,7 +14,7 @@
             </nav>
         </div>
         @can('users.create')
-            <a href="{{ route('users.create') }}" class="btn btn-primary">
+            <a href="{{ route('users.create') }}" class="btn btn-outline-primary">
                 <i class="bx bx-plus me-1"></i> {{ __('messages.add_user') }}
             </a>
         @endcan

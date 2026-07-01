@@ -15,7 +15,7 @@
             </nav>
         </div>
         @can('sub_categories.create')
-            <a href="{{ route('sub-categories.create') }}" class="btn btn-primary">
+            <a href="{{ route('sub-categories.create') }}" class="btn btn-outline-primary">
                 <i class="bx bx-plus me-1"></i> {{ __('messages.add_sub_category') }}
             </a>
         @endcan

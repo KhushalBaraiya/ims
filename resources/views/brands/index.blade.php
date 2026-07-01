@@ -15,7 +15,7 @@
             </nav>
         </div>
         @can('brands.create')
-            <a href="{{ route('brands.create') }}" class="btn btn-primary">
+            <a href="{{ route('brands.create') }}" class="btn btn-outline-primary">
                 <i class="bx bx-plus me-1"></i> {{ __('messages.add_brand') }}
             </a>
         @endcan
