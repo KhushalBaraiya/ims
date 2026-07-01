@@ -509,10 +509,6 @@
     font-size: 1.3rem;
 }
 
-font-size: 1.4rem;
-color: #adb5bd;
-}
-
 /* Navbar Avatar Image */
 .navbar-avatar {
     object-fit: cover;
@@ -1324,4 +1320,1060 @@ color: #adb5bd;
     .layout-overlay {
         z-index: 1099;
     }
+}
+
+
+/* ================================================================
+   COMPREHENSIVE RESPONSIVE — FULL ADMIN PANEL
+   All screens fixed: navbar, sidebar, tables, forms, cards, modals
+   ================================================================ */
+
+/* ── Global utilities ── */
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* Tables always scrollable horizontally */
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+}
+
+/* Select2 always full width */
+.select2-container {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Input groups full width on small screens */
+.input-group {
+    max-width: 100%;
+}
+
+/* Pagination wraps */
+.pagination {
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+/* Card headers wrap on narrow */
+.card-header {
+    flex-wrap: wrap;
+}
+
+/* ================================================================
+   TABLET  768px – 991px
+   ================================================================ */
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+    /* Full-width form columns */
+    .col-lg-8,
+    .col-lg-4,
+    .col-lg-7,
+    .col-lg-5,
+    .col-lg-3,
+    .col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Table */
+    .table td,
+    .table th {
+        font-size: 0.875rem !important;
+        padding: 0.5rem 0.65rem !important;
+    }
+
+    /* Dashboard charts */
+    .col-xl-8,
+    .col-xl-4,
+    .col-xl-7,
+    .col-xl-5 {
+        width: 100%;
+    }
+
+    /* Sidebar overlay mode on tablet */
+    .layout-menu-fixed .layout-menu {
+        width: 260px;
+    }
+
+    /* Page header */
+    .d-flex.align-items-center.justify-content-between.mb-4,
+    .d-flex.align-items-center.justify-content-between.mb-3 {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    /* Purchase / Sale items table */
+    .purchase-item-row td,
+    .sale-item-row td {
+        padding: 0.4rem 0.4rem !important;
+    }
+
+    /* Filters row */
+    .col-md-3,
+    .col-md-2,
+    .col-md-1 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    /* Report cards */
+    .col-xl-3 {
+        width: 50%;
+    }
+}
+
+/* ================================================================
+   SMALL  576px – 767px
+   ================================================================ */
+@media (min-width: 576px) and (max-width: 767.98px) {
+
+    /* Full-width form columns */
+    .col-lg-8,
+    .col-lg-4,
+    .col-lg-7,
+    .col-lg-5,
+    .col-md-6,
+    .col-md-8,
+    .col-md-4 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Table */
+    .table td,
+    .table th {
+        font-size: 0.84rem !important;
+        padding: 0.45rem 0.55rem !important;
+    }
+
+    /* Navbar padding */
+    .layout-navbar {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    /* Dashboard charts full width */
+    .col-xl-8,
+    .col-xl-4,
+    .col-xl-7,
+    .col-xl-5,
+    .col-lg-7,
+    .col-lg-5 {
+        width: 100% !important;
+    }
+
+    /* Stat cards — 2 per row */
+    .col-6.col-xl-3,
+    .col-sm-6.col-xl-3 {
+        width: 50% !important;
+    }
+
+    /* Card body */
+    .card-body.p-4 {
+        padding: 1.25rem !important;
+    }
+
+    /* DataTable controls */
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_filter,
+    div.dataTables_wrapper div.dataTables_info,
+    div.dataTables_wrapper div.dataTables_paginate {
+        text-align: left !important;
+        float: none !important;
+        width: 100% !important;
+        margin-bottom: 0.35rem;
+    }
+
+    /* Page content padding */
+    .container-xxl.container-p-y {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+}
+
+/* ================================================================
+   MOBILE  0 – 575px  (all fixes + overrides)
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    /* ── Layout & Page ── */
+    .container-xxl.container-p-y {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+        padding-top: 1.25rem !important;
+    }
+
+    .layout-page {
+        padding-left: 0 !important;
+    }
+
+    .content-wrapper {
+        padding: 0 !important;
+    }
+
+    /* ── Navbar ── */
+    .layout-navbar {
+        padding: 0 0.75rem !important;
+        min-height: 56px !important;
+    }
+
+    /* Hide live clock on mobile */
+    #navClock-time,
+    #navClock-date {
+        display: none !important;
+    }
+
+    /* Compress navbar items */
+    .navbar-nav.align-items-center.ms-auto.flex-row.gap-1 {
+        gap: 0 !important;
+    }
+
+    .nav-link.d-flex.align-items-center.cs-trigger,
+    .nav-link.d-flex.align-items-center.ls-trigger {
+        padding: 0.25rem 0.35rem !important;
+    }
+
+    /* Navbar currency / language dropdowns — full width on xs */
+    .cs-dropdown-menu,
+    .ls-dropdown-menu {
+        min-width: 180px !important;
+        right: 0 !important;
+        left: auto !important;
+    }
+
+    /* User dropdown full width */
+    .user-dropdown-menu {
+        min-width: 240px !important;
+        right: 0 !important;
+        left: auto !important;
+    }
+
+    /* ── Sidebar ── */
+    #layout-menu {
+        width: 240px !important;
+        max-width: 85vw;
+    }
+
+    .app-brand-text.demo {
+        font-size: 1.1rem !important;
+    }
+
+    /* ── Page headers ── */
+    .d-flex.align-items-center.justify-content-between.mb-4,
+    .d-flex.align-items-center.justify-content-between.mb-3 {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .d-flex.align-items-center.justify-content-between.mb-4>*,
+    .d-flex.align-items-center.justify-content-between.mb-3>* {
+        width: 100%;
+    }
+
+    .d-flex.align-items-center.justify-content-between.mb-4 .d-flex.gap-2,
+    .d-flex.align-items-center.justify-content-between.mb-3 .d-flex.gap-2 {
+        flex-wrap: wrap;
+        gap: 0.4rem !important;
+    }
+
+    /* Make header buttons full-width on mobile */
+    .d-flex.align-items-center.justify-content-between.mb-4 .btn,
+    .d-flex.align-items-center.justify-content-between.mb-3 .btn {
+        flex: 1 1 auto;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* ── Card headers ── */
+    .card-header.d-flex {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .card-header.d-flex .btn {
+        align-self: flex-start;
+    }
+
+    /* ── Card body ── */
+    .card-body {
+        padding: 1rem !important;
+    }
+
+    .card-body.p-4 {
+        padding: 0.9rem !important;
+    }
+
+    /* ── Typography ── */
+    h4.fw-bold,
+    h4.fw-semibold {
+        font-size: 1.1rem !important;
+    }
+
+    .card-header h5,
+    .card-header h4 {
+        font-size: 0.95rem !important;
+    }
+
+    h3.fw-bold,
+    h3.mb-0.fw-bold {
+        font-size: 1.4rem !important;
+    }
+
+    p.mb-0.text-muted.small {
+        font-size: 0.78rem !important;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+        font-size: 0.76rem;
+        flex-wrap: wrap;
+    }
+
+    /* ── Forms — all columns full width ── */
+    [class*="col-lg-"],
+    [class*="col-md-"],
+    [class*="col-xl-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Exception: keep 2-col stat cards */
+    .col-6.col-xl-3,
+    .col-6.col-md-3,
+    .col-6 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    /* Exception: full-width specific cols */
+    .col-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* col-sm-12 override */
+    .col-md-4.col-sm-12,
+    .col-sm-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Form label */
+    .form-label {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    /* Form controls */
+    .form-control,
+    .form-select {
+        font-size: 0.9rem !important;
+    }
+
+    .form-control-lg,
+    .form-select-lg {
+        font-size: 0.88rem !important;
+        padding: 0.45rem 0.75rem !important;
+    }
+
+    /* Textarea */
+    textarea.form-control {
+        min-height: 100px !important;
+    }
+
+    /* ── Table ── */
+    .table td,
+    .table th {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.45rem !important;
+        white-space: nowrap;
+    }
+
+    /* Table images smaller on mobile */
+    .tbl-img {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+    }
+
+    .tbl-img-wide {
+        width: 52px !important;
+        height: 34px !important;
+        min-width: 52px !important;
+    }
+
+    .tbl-img-round {
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
+    }
+
+    /* Product thumb in table */
+    .prod-thumb {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .prod-price-tag {
+        width: 40px !important;
+        font-size: 7px !important;
+    }
+
+    /* ── Action buttons ── */
+    .btn-action {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+        font-size: 0.85rem !important;
+    }
+
+    .btn-lg {
+        font-size: 0.88rem !important;
+        padding: 0.45rem 0.9rem !important;
+    }
+
+    .btn-sm {
+        font-size: 0.78rem !important;
+        padding: 0.25rem 0.55rem !important;
+    }
+
+    /* ── Badges ── */
+    .badge {
+        font-size: 0.72rem !important;
+    }
+
+    .status-toggle-btn {
+        font-size: 0.72rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+
+    /* ── DataTable controls ── */
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_filter,
+    div.dataTables_wrapper div.dataTables_info,
+    div.dataTables_wrapper div.dataTables_paginate {
+        text-align: left !important;
+        float: none !important;
+        width: 100% !important;
+        margin-bottom: 0.4rem;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        flex-wrap: wrap;
+        gap: 2px;
+    }
+
+    div.dataTables_length select {
+        width: auto !important;
+        display: inline-block !important;
+    }
+
+    .dataTables_paginate .paginate_button {
+        font-size: 0.78rem !important;
+        padding: 0.2rem 0.45rem !important;
+    }
+
+    /* ── Per-page + search row (custom pagination row) ── */
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+    }
+
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2 form {
+        width: 100% !important;
+    }
+
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2 .input-group {
+        width: 100% !important;
+    }
+
+    /* ── Modal ── */
+    .modal-dialog {
+        margin: 0.4rem !important;
+    }
+
+    .modal-content {
+        border-radius: 0.5rem !important;
+    }
+
+    .modal-header {
+        padding: 0.75rem 1rem !important;
+    }
+
+    .modal-body {
+        padding: 0.9rem !important;
+    }
+
+    .modal-footer {
+        padding: 0.6rem 0.9rem !important;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .modal-footer .btn {
+        flex: 1 1 auto;
+    }
+
+    /* ── Dashboard ── */
+    .welcome-banner .card-body.text-white h4,
+    .card.overflow-hidden .card-body h4 {
+        font-size: 1rem !important;
+    }
+
+    #dashClock-time {
+        font-size: 1.6rem !important;
+    }
+
+    .stats-card-icon {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 1.1rem !important;
+    }
+
+    .kpi-card .card-body h3 {
+        font-size: 1.4rem !important;
+    }
+
+    .kpi-card .card-body h4 {
+        font-size: 1.1rem !important;
+    }
+
+    /* Dashboard recent table min width */
+    .table-responsive table.table {
+        min-width: 540px;
+    }
+
+    /* Charts full width */
+    .col-lg-7,
+    .col-lg-5 {
+        width: 100% !important;
+    }
+
+    canvas#weekChart {
+        height: 200px !important;
+    }
+
+    /* ── Purchase / Sale create — item rows ── */
+    .purchase-items-table td,
+    .sale-items-table td {
+        padding: 0.35rem 0.3rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Item input inside table */
+    .purchase-items-table .form-control,
+    .sale-items-table .form-control {
+        font-size: 0.82rem !important;
+        padding: 0.3rem 0.45rem !important;
+    }
+
+    /* ── Profile page ── */
+    .img-preview {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .img-preview-contain {
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    /* ── Product image preview ── */
+    #imagePreviewBox .position-relative img {
+        width: 72px !important;
+        height: 72px !important;
+    }
+
+    /* ── Stock / Report filter rows ── */
+    .row.g-3>[class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* ── Role permissions grid ── */
+    .table-responsive.permission-table {
+        font-size: 0.78rem !important;
+    }
+
+    /* ── Activity log / report table ── */
+    .activity-log-table td {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* ── Settings form ── */
+    .settings-form .col-md-8,
+    .settings-form .col-md-4 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* ── Toast notification ── */
+    #adminToast {
+        min-width: 180px !important;
+        max-width: calc(100vw - 1.2rem) !important;
+        font-size: 0.88rem !important;
+        right: 0.6rem !important;
+        top: 0.6rem !important;
+    }
+
+    /* ── Accordion (roles/permissions) ── */
+    .accordion-button {
+        font-size: 0.88rem !important;
+        padding: 0.7rem 0.9rem !important;
+    }
+
+    .accordion-body {
+        padding: 0.75rem !important;
+    }
+
+    /* ── Input group search ── */
+    .input-group.input-group-sm {
+        width: 100% !important;
+    }
+
+    /* ── List group items ── */
+    .list-group-item.px-4 {
+        padding-left: 0.9rem !important;
+        padding-right: 0.9rem !important;
+    }
+
+    /* ── Row gutter reduce ── */
+    .row.g-4 {
+        --bs-gutter-x: 0.6rem;
+        --bs-gutter-y: 0.6rem;
+    }
+
+    .row.g-3 {
+        --bs-gutter-x: 0.5rem;
+        --bs-gutter-y: 0.5rem;
+    }
+
+    /* ── Product gallery grid ── */
+    .product-gallery-col {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    /* ── Profit-loss / report totals ── */
+    .report-total-card .card-body {
+        padding: 0.75rem !important;
+    }
+
+    /* ── Summary total row ── */
+    .purchase-summary td,
+    .sale-summary td {
+        font-size: 0.85rem !important;
+    }
+
+    /* ── View/Show page detail rows ── */
+    .detail-label {
+        font-size: 0.78rem !important;
+        font-weight: 600;
+        color: #8592a3;
+    }
+
+    .detail-value {
+        font-size: 0.88rem !important;
+    }
+}
+
+/* ================================================================
+   EXTRA SMALL  0 – 400px
+   ================================================================ */
+@media (max-width: 400px) {
+
+    /* Sidebar narrower */
+    #layout-menu {
+        width: 220px !important;
+        max-width: 80vw;
+    }
+
+    /* Stat cards still 2 per row */
+    .col-6.col-xl-3,
+    .col-6 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    /* Navbar — hide currency code text, keep icon */
+    .cs-trigger span.fw-bold,
+    .ls-trigger span.fw-bold {
+        display: none !important;
+    }
+
+    /* User dropdown */
+    .user-dropdown-menu {
+        min-width: 220px !important;
+    }
+
+    /* Table */
+    .table td,
+    .table th {
+        font-size: 0.75rem !important;
+        padding: 0.35rem 0.3rem !important;
+    }
+
+    /* Buttons */
+    .btn {
+        font-size: 0.8rem !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+
+    /* Action buttons */
+    .btn-action {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .card-body {
+        padding: 0.75rem !important;
+    }
+
+    h4.fw-bold {
+        font-size: 1rem !important;
+    }
+}
+
+/* ================================================================
+   PRINT
+   ================================================================ */
+@media print {
+
+    .layout-menu,
+    .layout-navbar,
+    .btn,
+    .breadcrumb,
+    .card-header .btn,
+    #adminToast {
+        display: none !important;
+    }
+
+    .layout-page {
+        margin-left: 0 !important;
+    }
+
+    .content-wrapper {
+        padding: 0 !important;
+    }
+
+    .card {
+        border: 1px solid #dee2e6 !important;
+        box-shadow: none !important;
+    }
+
+    .table td,
+    .table th {
+        font-size: 0.8rem !important;
+    }
+}
+
+
+/* ================================================================
+   PURCHASE / SALE CREATE & EDIT — FORM SPECIFIC RESPONSIVE
+   ================================================================ */
+
+/* Summary inputs — always accessible */
+#shipping_amount,
+#discount_amount,
+#tax_amount {
+    max-width: 120px;
+}
+
+/* Item table inputs */
+.qty-input,
+.price-input,
+.discount-input,
+.tax-input {
+    min-width: 60px;
+}
+
+@media (max-width: 991.98px) {
+
+    /* Left sidebar (Order Info) goes full width above items */
+    .col-lg-3,
+    .col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Summary row inputs slightly wider on tablet */
+    #shipping_amount,
+    #discount_amount,
+    #tax_amount {
+        width: 110px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    /* Product search results */
+    #autocompleteResults {
+        font-size: 0.82rem !important;
+    }
+
+    #autocompleteResults .autocomplete-item {
+        padding: 0.4rem 0.6rem !important;
+    }
+
+    /* Item table inputs smaller */
+    .qty-input {
+        width: 56px !important;
+        font-size: 0.8rem !important;
+        padding: 0.25rem 0.3rem !important;
+    }
+
+    .price-input {
+        width: 78px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .discount-input,
+    .tax-input {
+        width: 62px !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Summary inputs full-width */
+    .d-flex.justify-content-between.align-items-center.border-bottom.py-2 input.form-control {
+        width: 100px !important;
+        font-size: 0.82rem !important;
+    }
+
+    /* Submit button row */
+    .d-flex.justify-content-end.gap-2.mt-4 {
+        flex-direction: column !important;
+    }
+
+    .d-flex.justify-content-end.gap-2.mt-4 .btn {
+        width: 100% !important;
+        justify-content: center;
+    }
+
+    /* Notes textarea */
+    textarea[name="notes"] {
+        min-height: 80px !important;
+    }
+
+    /* Balance due / overpaid boxes */
+    #sum_due,
+    #sum_change {
+        font-size: 0.95rem !important;
+    }
+}
+
+/* ================================================================
+   REPORTS — RESPONSIVE
+   ================================================================ */
+@media (max-width: 767.98px) {
+
+    /* Report filter form full width cols */
+    .report-filter-form .col-md-3,
+    .report-filter-form .col-md-2,
+    .report-filter-form [class*="col-md-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Report summary cards 2 per row */
+    .report-summary-row .col-md-3,
+    .report-summary-row .col-md-4 {
+        width: 50% !important;
+    }
+
+    /* Print button always visible */
+    .btn-print {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    /* Report summary cards full width on xs */
+    .report-summary-row .col-md-3,
+    .report-summary-row .col-md-4,
+    .report-summary-row [class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   ROLE PERMISSIONS — TABLE RESPONSIVE
+   ================================================================ */
+@media (max-width: 767.98px) {
+
+    .permission-table th,
+    .permission-table td {
+        font-size: 0.78rem !important;
+        padding: 0.35rem 0.4rem !important;
+    }
+
+    .permission-table .form-check-input {
+        width: 1rem !important;
+        height: 1rem !important;
+    }
+}
+
+/* ================================================================
+   STOCK / ADJUSTMENT — RESPONSIVE
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    .stock-form .col-md-6,
+    .stock-form .col-md-4,
+    .stock-form .col-md-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   PROFILE PAGE — RESPONSIVE
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    .profile-avatar-wrap {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+    }
+
+    .profile-form-section {
+        padding: 1rem !important;
+    }
+}
+
+/* ================================================================
+   SETTINGS PAGE — RESPONSIVE
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    .settings-logo-preview {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .settings-section .row.g-3>[class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
+
+/* ================================================================
+   PURCHASE / SALE SHOW (VIEW) PAGE — RESPONSIVE
+   ================================================================ */
+@media (max-width: 767.98px) {
+
+    .invoice-header-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .invoice-info-col {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    /* Invoice print view */
+    .print-invoice-wrap {
+        padding: 0.75rem !important;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        font-size: 0.78rem !important;
+        padding: 0.35rem !important;
+    }
+
+    .invoice-total-row td {
+        font-size: 0.82rem !important;
+    }
+}
+
+/* ================================================================
+   PURCHASE RETURN / SALE RETURN — RESPONSIVE
+   ================================================================ */
+@media (max-width: 991.98px) {
+
+    /* Same as purchase/sale create */
+    .return-form .col-lg-3,
+    .return-form .col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   DATATABLE SEARCH + PER PAGE ROW — RESPONSIVE
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    /* Per-page + search row stack vertically */
+    .dt-controls-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+    }
+
+    .dt-controls-row form,
+    .dt-controls-row .input-group {
+        width: 100% !important;
+    }
+
+    /* Pagination row stack */
+    .dt-pagination-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.4rem !important;
+    }
+}
+
+/* ================================================================
+   DARK MODE — RESPONSIVE SPECIFIC OVERRIDES
+   ================================================================ */
+[data-bs-theme="dark"] .autocomplete-item {
+    background: #1f2933;
+    color: #cbd3dc;
+    border-color: #33404d !important;
+}
+
+[data-bs-theme="dark"] .autocomplete-item:hover {
+    background: rgba(105, 108, 255, 0.14) !important;
+}
+
+[data-bs-theme="dark"] #autocompleteResults {
+    background: #1f2933 !important;
+    border-color: #33404d !important;
 }

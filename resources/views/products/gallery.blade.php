@@ -3,7 +3,11 @@
 
 @push('styles')
     <style>
-        /* ── Card ─────────────────────────────────────────────────── */
+        /* ════════════════════════════════════════════════════════════
+                                           PRODUCT GALLERY — BASE STYLES
+                                           ════════════════════════════════════════════════════════════ */
+
+        /* ── Card ── */
         .pg-card {
             border-radius: 12px;
             border: 1px solid rgba(0, 0, 0, .07);
@@ -22,7 +26,7 @@
             border-color: rgba(105, 108, 255, .25);
         }
 
-        /* ── Image area ───────────────────────────────────────────── */
+        /* ── Image area ── */
         .pg-img-wrap {
             position: relative;
             height: 180px;
@@ -64,7 +68,7 @@
             text-transform: uppercase;
         }
 
-        /* ── Overlay badges ───────────────────────────────────────── */
+        /* ── Overlay badges ── */
         .pg-tl {
             position: absolute;
             top: 8px;
@@ -83,7 +87,7 @@
             align-items: flex-end;
         }
 
-        /* ── Card body ────────────────────────────────────────────── */
+        /* ── Card body ── */
         .pg-body {
             padding: .85rem;
             flex: 1;
@@ -91,7 +95,7 @@
             flex-direction: column;
         }
 
-        /* ── Price box ────────────────────────────────────────────── */
+        /* ── Price box ── */
         .pg-price-box {
             background: linear-gradient(135deg, #f0f1ff, #f5f0ff);
             border-radius: 8px;
@@ -99,18 +103,14 @@
             margin-bottom: .6rem;
         }
 
-        [data-bs-theme="dark"] .pg-price-box {
-            background: linear-gradient(135deg, #25264a, #2e1a44);
-        }
-
-        /* ── Action buttons ───────────────────────────────────────── */
+        /* ── Action buttons ── */
         .pg-actions .btn {
             font-size: .75rem;
             padding: .3rem .6rem;
             border-radius: 6px;
         }
 
-        /* ── Gallery thumbs ───────────────────────────────────────── */
+        /* ── Gallery thumbs ── */
         .pg-thumb {
             width: 26px;
             height: 26px;
@@ -119,7 +119,13 @@
             border: 1.5px solid #dee2e6;
         }
 
-        /* ── Dark mode ────────────────────────────────────────────── */
+        /* ── Toolbar selects ── */
+        .pg-toolbar select.form-select {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        /* ── Dark mode ── */
         [data-bs-theme="dark"] .pg-card {
             background: #2b2c40;
             border-color: rgba(255, 255, 255, .07);
@@ -133,7 +139,11 @@
             color: #3d4460;
         }
 
-        /* ── Pagination ───────────────────────────────────────────── */
+        [data-bs-theme="dark"] .pg-price-box {
+            background: linear-gradient(135deg, #25264a, #2e1a44);
+        }
+
+        /* ── Pagination ── */
         .pg-pagination .pagination {
             gap: 4px;
             flex-wrap: wrap;
@@ -169,6 +179,371 @@
         .pg-pagination .page-item.disabled .page-link {
             opacity: .45;
             background: transparent;
+        }
+
+        /* ════════════════════════════════════════════════════════════
+                                           RESPONSIVE — LARGE TABLET  (768 – 991px)
+                                           ════════════════════════════════════════════════════════════ */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+
+            /* Image shorter on tablet to save vertical space */
+            .pg-img-wrap {
+                height: 155px;
+            }
+
+            /* Card body comfortable */
+            .pg-body {
+                padding: .75rem;
+            }
+
+            /* Filters: 2-col layout */
+            #filtersCard .col-md-3,
+            #filtersCard .col-md-2 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            /* Toolbar wrap on narrow tablet */
+            .pg-toolbar {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: .5rem;
+            }
+
+            .pg-toolbar .d-flex.gap-2 {
+                width: 100%;
+            }
+
+            .pg-toolbar select.form-select {
+                flex: 1 1 0;
+            }
+
+            /* Pagination */
+            .pg-pagination nav ul.pagination {
+                justify-content: flex-start !important;
+            }
+        }
+
+        /* ════════════════════════════════════════════════════════════
+                                           RESPONSIVE — SMALL  (576 – 767px)
+                                           ════════════════════════════════════════════════════════════ */
+        @media (min-width: 576px) and (max-width: 767.98px) {
+
+            /* Image height */
+            .pg-img-wrap {
+                height: 140px;
+            }
+
+            /* Card body padding */
+            .pg-body {
+                padding: .65rem;
+            }
+
+            /* Selling price smaller */
+            .pg-price-box .fw-bold.text-primary {
+                font-size: .85rem !important;
+            }
+
+            /* Filters all stacked */
+            #filtersCard .col-md-3,
+            #filtersCard .col-md-2 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            /* Page header buttons wrap */
+            .d-flex.gap-2.flex-wrap .btn {
+                font-size: .78rem;
+            }
+
+            /* Toolbar */
+            .pg-toolbar {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: .4rem;
+            }
+
+            .pg-toolbar .d-flex.gap-2 {
+                width: 100%;
+            }
+
+            .pg-toolbar select.form-select {
+                flex: 1 1 0;
+            }
+
+            /* Pagination row stack */
+            .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-1.py-3 {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+        }
+
+        /* ════════════════════════════════════════════════════════════
+                                           RESPONSIVE — MOBILE  (0 – 575px)
+                                           ════════════════════════════════════════════════════════════ */
+        @media (max-width: 575.98px) {
+
+            /* ── Page header ── */
+            .d-flex.align-items-center.justify-content-between.mb-4 {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: .6rem;
+            }
+
+            .d-flex.align-items-center.justify-content-between.mb-4 h4 {
+                font-size: 1.05rem !important;
+            }
+
+            /* Header buttons: 2-col grid */
+            .d-flex.align-items-center.justify-content-between.mb-4>div:last-child {
+                width: 100%;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: .4rem;
+            }
+
+            .d-flex.align-items-center.justify-content-between.mb-4>div:last-child .btn {
+                width: 100%;
+                font-size: .76rem !important;
+                padding: .3rem .5rem !important;
+                justify-content: center;
+            }
+
+            /* ── Stats cards — 2 per row ── */
+            .row.g-3.mb-4 .col-6.col-xl-3 {
+                width: 50% !important;
+            }
+
+            /* ── Filters ── */
+            #filtersCard .col-md-3,
+            #filtersCard .col-md-2,
+            #filtersCard [class*="col-md-"] {
+                flex: 0 0 100% !important;
+                max-width: 100% !important;
+            }
+
+            #filtersCard .card-body {
+                padding: .85rem !important;
+            }
+
+            #filtersCard .d-flex.justify-content-end.gap-2.mt-3 {
+                flex-direction: row;
+                justify-content: stretch !important;
+            }
+
+            #filtersCard .d-flex.justify-content-end.gap-2.mt-3 .btn {
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+
+            /* ── Toolbar ── */
+            .pg-toolbar {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: .4rem;
+            }
+
+            .pg-toolbar p.text-muted {
+                font-size: .75rem !important;
+            }
+
+            .pg-toolbar .d-flex.gap-2 {
+                width: 100%;
+                flex-wrap: nowrap;
+            }
+
+            .pg-toolbar select.form-select {
+                flex: 1 1 0;
+                min-width: 0;
+                font-size: .78rem !important;
+            }
+
+            /* ── 1-column: horizontal card layout ── */
+            .pg-card {
+                flex-direction: row !important;
+                height: auto !important;
+                min-height: 110px;
+                border-radius: 10px;
+            }
+
+            /* Image = left thumbnail */
+            .pg-img-wrap {
+                width: 110px !important;
+                min-width: 110px !important;
+                height: auto !important;
+                min-height: 110px;
+                border-radius: 10px 0 0 10px !important;
+                flex-shrink: 0;
+            }
+
+            /* Disable zoom on horizontal */
+            .pg-card:hover .pg-img-wrap img {
+                transform: none;
+            }
+
+            .pg-no-img i {
+                font-size: 1.6rem;
+            }
+
+            .pg-no-img span {
+                font-size: .48rem;
+            }
+
+            /* Overlay badges */
+            .pg-tl {
+                top: 6px;
+                left: 6px;
+            }
+
+            .pg-tr {
+                top: 6px;
+                right: 6px;
+            }
+
+            .pg-tl .badge,
+            .pg-tr .badge {
+                font-size: .5rem !important;
+                padding: .1em .28em !important;
+            }
+
+            /* Body fills rest of width */
+            .pg-body {
+                padding: .55rem .65rem !important;
+                flex: 1;
+                min-width: 0;
+                justify-content: space-between;
+            }
+
+            /* Chips */
+            .pg-body .badge {
+                font-size: .5rem !important;
+                padding: .1em .28em !important;
+            }
+
+            /* Product name — 1 line */
+            .pg-body h6 {
+                font-size: .78rem !important;
+                -webkit-line-clamp: 1 !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: block !important;
+            }
+
+            /* SKU */
+            .pg-body p.text-muted {
+                font-size: .6rem !important;
+                margin-bottom: .3rem !important;
+            }
+
+            /* Price box compact */
+            .pg-price-box {
+                padding: .3rem .45rem !important;
+                margin-bottom: .3rem !important;
+                border-radius: 6px !important;
+            }
+
+            .pg-price-box .fw-bold.text-primary {
+                font-size: .82rem !important;
+            }
+
+            .pg-price-box .text-muted.fw-semibold {
+                font-size: .62rem !important;
+            }
+
+            .pg-price-box div[style*="font-size:.58rem"] {
+                font-size: .48rem !important;
+            }
+
+            /* Hide profit row — save vertical space */
+            .pg-price-box>div:last-child {
+                display: none !important;
+            }
+
+            /* Stock row */
+            .pg-body .d-flex.justify-content-between.align-items-center.mb-2 {
+                margin-bottom: .25rem !important;
+            }
+
+            .pg-body .d-flex.align-items-center.gap-1 span {
+                font-size: .62rem !important;
+            }
+
+            /* Hide gallery thumbs on horizontal card */
+            .pg-body .d-flex.gap-1.mb-2.flex-wrap {
+                display: none !important;
+            }
+
+            /* Action buttons */
+            .pg-actions {
+                gap: .3rem !important;
+                margin-top: auto !important;
+            }
+
+            .pg-actions .btn {
+                font-size: .68rem !important;
+                padding: .22rem .4rem !important;
+                flex: 1 1 auto;
+                border-radius: 5px !important;
+            }
+
+            /* Show labels on horizontal (space is available) */
+            .pg-actions .pg-btn-label {
+                display: inline !important;
+            }
+
+            /* ── Pagination row ── */
+            .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-1.py-3 {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: .5rem !important;
+            }
+
+            .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-1.py-3 p {
+                font-size: .72rem !important;
+            }
+
+            .pg-pagination .page-item .page-link {
+                padding: .28rem .5rem !important;
+                font-size: .72rem !important;
+                min-width: 28px !important;
+                border-radius: 6px !important;
+            }
+        }
+
+        /* ════════════════════════════════════════════════════════════
+                                           RESPONSIVE — EXTRA SMALL  (0 – 400px)
+                                           ════════════════════════════════════════════════════════════ */
+        @media (max-width: 400px) {
+
+            /* Image thumb narrower on very small */
+            .pg-img-wrap {
+                width: 90px !important;
+                min-width: 90px !important;
+                min-height: 100px;
+            }
+
+            .pg-body {
+                padding: .45rem .5rem !important;
+            }
+
+            .pg-body h6 {
+                font-size: .72rem !important;
+            }
+
+            .pg-price-box .fw-bold.text-primary {
+                font-size: .75rem !important;
+            }
+
+            .pg-actions .btn {
+                font-size: .62rem !important;
+                padding: .18rem .3rem !important;
+            }
+
+            /* Header buttons single column on very small */
+            .d-flex.align-items-center.justify-content-between.mb-4>div:last-child {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 @endpush
@@ -337,7 +712,7 @@
     </div>
 
     {{-- ── Toolbar: count + sort + per-page ────────────────────── --}}
-    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 pg-toolbar">
         <p class="text-muted small mb-0">
             Showing
             <strong>{{ $products->firstItem() ?? 0 }}–{{ $products->lastItem() ?? 0 }}</strong>
@@ -372,7 +747,7 @@
             <p class="small mb-0">Try adjusting your filters.</p>
         </div>
     @else
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 mb-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-2 g-sm-3 mb-4">
             @foreach ($products as $product)
                 @php
                     $qty = (float) ($product->stock->quantity ?? 0);
@@ -510,13 +885,13 @@
                                 @can('products.view')
                                     <a href="{{ route('products.show', $product->id) }}"
                                         class="btn btn-outline-secondary flex-fill">
-                                        <i class="bx bx-show me-1"></i>View
+                                        <i class="bx bx-show"></i><span class="pg-btn-label ms-1">View</span>
                                     </a>
                                 @endcan
                                 @can('products.update')
                                     <a href="{{ route('products.edit', $product->id) }}"
                                         class="btn btn-outline-primary flex-fill">
-                                        <i class="bx bx-edit me-1"></i>Edit
+                                        <i class="bx bx-edit"></i><span class="pg-btn-label ms-1">Edit</span>
                                     </a>
                                 @endcan
                             </div>
@@ -529,7 +904,8 @@
 
         {{-- ── Pagination ───────────────────────────────────────── --}}
         @if ($products->hasPages())
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-1 py-3 mt-2 border-top">
+            <div
+                class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-1 py-3 mt-2 border-top pg-pagination">
                 <p class="text-muted small mb-0">
                     Showing <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
                     of <strong>{{ $products->total() }}</strong> products
