@@ -19,7 +19,7 @@
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             @can('purchases.create')
-                <a href="{{ route('purchases.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
+                <a href="{{ route('purchases.create') }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
                     <i class="bx bx-plus"></i> {{ __('messages.add_purchase') }}
                 </a>
             @endcan
