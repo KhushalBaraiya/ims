@@ -31,9 +31,20 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Purchase No</label>
-                    <input type="text" class="form-control bg-light fw-bold"
-                        value="{{ $purchase->purchase_no ?? 'AUTO-GENERATED' }}" readonly>
+                    <label class="form-label fw-semibold">Purchase No <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="text" name="purchase_no" id="purchase_no" class="form-control fw-bold @error('purchase_no') is-invalid @enderror"
+                            value="{{ old('purchase_no', $purchase->purchase_no ?? $purchaseNo ?? '') }}" required
+                            {{ isset($purchase) ? 'readonly' : '' }}>
+                        @if(!isset($purchase))
+                            <button type="button" class="btn btn-outline-secondary" id="btnGeneratePurchaseNo">
+                                <i class="bx bx-refresh"></i> Auto Gen
+                            </button>
+                        @endif
+                        @error('purchase_no')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Purchase Date <span class="text-danger">*</span></label>
@@ -205,16 +216,15 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Total Discount (-)</span>
-                            <input type="number" step="0.01" min="0" name="discount_amount"
-                                id="discount_amount" class="form-control form-control-sm text-end"
-                                style="width:120px;"
+                            <input type="hidden" name="discount_amount" id="discount_amount"
                                 value="{{ old('discount_amount', $purchase->discount_amount ?? '0.00') }}">
+                            <span class="fw-bold text-danger" id="lbl_discount_amount">₹0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Total Tax (+)</span>
-                            <input type="number" step="0.01" min="0" name="tax_amount" id="tax_amount"
-                                class="form-control form-control-sm text-end" style="width:120px;"
+                            <input type="hidden" name="tax_amount" id="tax_amount"
                                 value="{{ old('tax_amount', $purchase->tax_amount ?? '0.00') }}">
+                            <span class="fw-bold text-success" id="lbl_tax_amount">₹0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Shipping (+)</span>
@@ -273,6 +283,25 @@
             function fmtCurrency(amount) {
                 return currencySymbol + parseFloat(amount).toFixed(2);
             }
+
+            $('#btnGeneratePurchaseNo').on('click', function() {
+                const btn = $(this);
+                const originalHtml = btn.html();
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                $.ajax({
+                    url: "{{ route('purchases.generate-no') }}",
+                    type: 'GET',
+                    success: function(data) {
+                        $('#purchase_no').val(data.purchase_no);
+                    },
+                    error: function() {
+                        showAdminToast('Failed to generate purchase number.', 'danger');
+                    },
+                    complete: function() {
+                        btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
 
             // ── Restore old products after validation failure ────────────────
             @if (old('items'))
@@ -488,7 +517,9 @@
                 });
                 $('#sum_subtotal').text(fmtCurrency(totalSubtotal));
                 $('#discount_amount').val(sumItemDiscount.toFixed(2));
+                $('#lbl_discount_amount').text(fmtCurrency(sumItemDiscount));
                 $('#tax_amount').val(sumItemTax.toFixed(2));
+                $('#lbl_tax_amount').text(fmtCurrency(sumItemTax));
                 const globalDisc = parseFloat($('#discount_amount').val()) || 0;
                 const globalTax = parseFloat($('#tax_amount').val()) || 0;
                 const shipping = parseFloat($('#shipping_amount').val()) || 0;

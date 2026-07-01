@@ -52,8 +52,54 @@ class PurchaseController extends Controller
         Gate::authorize('purchases.create');
 
         $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
+        $purchaseNo = $this->generatePurchaseNo();
 
-        return view('purchases.create', compact('suppliers'));
+        return view('purchases.create', compact('suppliers', 'purchaseNo'));
+    }
+
+    /**
+     * Ajax route to generate unique purchase number.
+     */
+    public function generateNoAjax(): JsonResponse
+    {
+        return response()->json(['purchase_no' => $this->generatePurchaseNo()]);
+    }
+
+    /**
+     * Update payment details for a purchase order.
+     */
+    public function updatePayment(Request $request, Purchase $purchase): RedirectResponse|JsonResponse
+    {
+        Gate::authorize('purchases.update');
+
+        $request->validate([
+            'paid_amount' => 'required|numeric|min:0',
+            'payment_method' => 'required|string|max:100',
+        ]);
+
+        $paidAmount = (float) $request->paid_amount;
+        $grandTotal = (float) $purchase->grand_total;
+        $dueAmount = max(0.00, $grandTotal - $paidAmount);
+
+        $purchase->update([
+            'paid_amount' => $paidAmount,
+            'due_amount' => $dueAmount,
+            'payment_method' => $request->payment_method,
+        ]);
+
+        ActivityLog::log(
+            'Purchase Payment Updated',
+            "Updated payment for purchase: {$purchase->purchase_no}. Paid: {$paidAmount}, Due: {$dueAmount}"
+        );
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment updated successfully.',
+            ]);
+        }
+
+        return redirect()->route('purchases.index')->with('success', 'Payment updated successfully.');
     }
 
     /**
@@ -66,7 +112,7 @@ class PurchaseController extends Controller
 
         DB::beginTransaction();
         try {
-            $purchaseNo = $this->generatePurchaseNo();
+            $purchaseNo = $request->input('purchase_no') ?: $this->generatePurchaseNo();
 
             $subTotal = 0;
             foreach ($request->items as $item) {

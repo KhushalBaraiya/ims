@@ -20,6 +20,7 @@ class PurchaseRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'purchase_no' => 'required|string|max:100|unique:purchases,purchase_no,' . ($this->route('purchase')?->id ?? 'NULL') . ',id',
             'supplier_id' => 'required|exists:suppliers,id',
             'purchase_date' => 'required|date',
             'reference_no' => 'nullable|string|max:255',
@@ -47,6 +48,7 @@ class PurchaseRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'purchase_no' => 'Purchase No',
             'supplier_id' => 'Supplier',
             'purchase_date' => 'Purchase Date',
             'payment_method' => 'Payment Method',

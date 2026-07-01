@@ -103,7 +103,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('sale-returns', SaleReturnController::class);
     // Purchase Management Routes
     Route::get('/purchases/search-products', [PurchaseController::class, 'searchProducts'])->name('purchases.search-products');
+    Route::get('/purchases/generate-no', [PurchaseController::class, 'generateNoAjax'])->name('purchases.generate-no');
     Route::get('/purchases/{purchase}/print', [PurchaseController::class, 'printInvoice'])->name('purchases.print');
+    Route::post('/purchases/{purchase}/payment', [PurchaseController::class, 'updatePayment'])->name('purchases.update-payment');
     Route::resource('purchases', PurchaseController::class);
 
     // Purchase Return Routes

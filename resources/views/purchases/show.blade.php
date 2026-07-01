@@ -8,7 +8,7 @@
         <div>
             <h4 class="fw-bold mb-1">Purchase Order Details</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('purchases.index') }}">{{ __('messages.purchase_orders') }}</a></li>
@@ -18,16 +18,16 @@
         </div>
         <div class="d-flex gap-2">
             @can('purchases.view')
-                <a href="{{ route('purchases.print', $purchase->id) }}" target="_blank" class="btn btn-outline-success">
+                <a class="btn btn-outline-success" href="{{ route('purchases.print', $purchase->id) }}" target="_blank">
                     <i class="bx bx-printer me-1"></i> Print
                 </a>
             @endcan
             @can('purchases.update')
-                <a href="{{ route('purchases.edit', $purchase->id) }}" class="btn btn-primary">
+                <a class="btn btn-primary" href="{{ route('purchases.edit', $purchase->id) }}">
                     <i class="bx bx-edit me-1"></i> Edit Order
                 </a>
             @endcan
-            <a href="{{ route('purchases.index') }}" class="btn btn-outline-secondary">
+            <a class="btn btn-outline-secondary" href="{{ route('purchases.index') }}">
                 <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
             </a>
         </div>
@@ -39,35 +39,35 @@
         <div class="col-lg-3">
 
             {{-- Order Summary --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header border-bottom bg-white py-3">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-info-circle me-2 text-primary"></i>Order Summary
+                        <i class="bx bx-info-circle text-primary me-2"></i>Order Summary
                     </h6>
                 </div>
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Purchase No</span>
                             <code class="fw-bold text-primary">{{ $purchase->purchase_no }}</code>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Date</span>
                             <span class="fw-semibold">{{ $purchase->purchase_date }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Supplier</span>
                             <span class="fw-bold text-end">{{ $purchase->supplier->name ?? '-' }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Reference No</span>
                             <span class="small">{{ $purchase->reference_no ?: '-' }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Payment Method</span>
                             <span class="small fw-semibold">{{ $purchase->payment_method ?: '-' }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Status</span>
                             @if ($purchase->status === 'Completed')
                                 <span class="badge bg-success rounded-pill">Completed</span>
@@ -77,41 +77,51 @@
                                 <span class="badge bg-danger rounded-pill">Cancelled</span>
                             @endif
                         </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted small fw-semibold">Payment Status</span>
+                            @if ($purchase->payment_status === 'Paid')
+                                <span class="badge bg-success rounded-pill">Paid</span>
+                            @elseif ($purchase->payment_status === 'Partial')
+                                <span class="badge bg-warning text-dark rounded-pill">Partial</span>
+                            @else
+                                <span class="badge bg-danger rounded-pill">Unpaid</span>
+                            @endif
+                        </li>
                     </ul>
                 </div>
             </div>
 
             {{-- Payment Details --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header border-bottom bg-white py-3">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-credit-card me-2 text-success"></i>Payment Details
+                        <i class="bx bx-credit-card text-success me-2"></i>Payment Details
                     </h6>
                 </div>
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Subtotal</span>
                             <span class="fw-semibold">{{ format_currency($purchase->sub_total) }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Discount (-)</span>
                             <span class="fw-semibold text-danger">-
                                 {{ format_currency($purchase->discount_amount) }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Tax (+)</span>
                             <span class="fw-semibold text-warning">+ {{ format_currency($purchase->tax_amount) }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Shipping (+)</span>
                             <span class="fw-semibold">+ {{ format_currency($purchase->shipping_amount) }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom bg-label-primary rounded px-2">
+                        <li class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
                             <span class="fw-bold small">Grand Total</span>
                             <span class="fw-bold text-primary">{{ format_currency($purchase->grand_total) }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Paid Amount</span>
                             <span class="fw-bold text-success">{{ format_currency($purchase->paid_amount) }}</span>
                         </li>
@@ -127,59 +137,59 @@
 
             @if ($purchase->notes)
                 {{-- Notes --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-note me-2 text-warning"></i>Notes
+                            <i class="bx bx-note text-warning me-2"></i>Notes
                         </h6>
                     </div>
                     <div class="card-body p-4">
-                        <p class="mb-0 small text-muted" style="white-space:pre-line;">{{ $purchase->notes }}</p>
+                        <p class="small text-muted mb-0" style="white-space:pre-line;">{{ $purchase->notes }}</p>
                     </div>
                 </div>
             @endif
 
             {{-- Quick Actions --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header border-bottom bg-white py-3">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-bolt-circle me-2 text-warning"></i>Quick Actions
+                        <i class="bx bx-bolt-circle text-warning me-2"></i>Quick Actions
                     </h6>
                 </div>
-                <div class="card-body p-4 d-grid gap-2">
+                <div class="card-body d-grid gap-2 p-4">
                     @can('purchases.update')
-                        <a href="{{ route('purchases.edit', $purchase->id) }}" class="btn btn-primary">
+                        <a class="btn btn-primary" href="{{ route('purchases.edit', $purchase->id) }}">
                             <i class="bx bx-edit me-1"></i> Edit Order
                         </a>
                     @endcan
                     @can('purchases.view')
-                        <a href="{{ route('purchases.print', $purchase->id) }}" target="_blank"
-                            class="btn btn-outline-success">
+                        <a class="btn btn-outline-success" href="{{ route('purchases.print', $purchase->id) }}"
+                            target="_blank">
                             <i class="bx bx-printer me-1"></i> Print Order
                         </a>
                     @endcan
                     @if ($purchase->status === 'Completed')
                         @if ($purchase->returns->count() > 0)
                             @can('purchase_returns.view')
-                                <a href="{{ route('purchase-returns.show', $purchase->returns->first()->id) }}"
-                                    class="btn btn-outline-warning">
+                                <a class="btn btn-outline-warning"
+                                    href="{{ route('purchase-returns.show', $purchase->returns->first()->id) }}">
                                     <i class="bx bx-undo me-1"></i> View Return
                                 </a>
                             @endcan
                         @else
                             @can('purchase_returns.create')
-                                <a href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}"
-                                    class="btn btn-outline-warning">
+                                <a class="btn btn-outline-warning"
+                                    href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}">
                                     <i class="bx bx-undo me-1"></i> Create Return
                                 </a>
                             @endcan
                         @endif
                     @endif
                     @can('purchases.delete')
-                        <form id="deleteForm" action="{{ route('purchases.destroy', $purchase->id) }}" method="POST">
+                        <form action="{{ route('purchases.destroy', $purchase->id) }}" id="deleteForm" method="POST">
                             @csrf @method('DELETE')
-                            <button type="button" class="btn btn-outline-danger w-100 delete-btn"
-                                data-no="{{ $purchase->purchase_no }}">
+                            <button class="btn btn-outline-danger w-100 delete-btn" data-no="{{ $purchase->purchase_no }}"
+                                type="button">
                                 <i class="bx bx-trash me-1"></i> Delete Order
                             </button>
                         </form>
@@ -193,16 +203,16 @@
         <div class="col-lg-9">
 
             {{-- Purchased Items --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header border-bottom d-flex align-items-center justify-content-between bg-white py-3">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-package me-2 text-primary"></i>Purchased Items
+                        <i class="bx bx-package text-primary me-2"></i>Purchased Items
                     </h6>
                     <span class="badge bg-label-primary">{{ $purchase->items->count() }} product(s)</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table-hover mb-0 table align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
@@ -222,8 +232,8 @@
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 @if ($item->product->image)
-                                                    <img src="{{ asset('uploads/products/' . $item->product->image) }}"
-                                                        class="tbl-img rounded" onerror="imgError(this)">
+                                                    <img class="tbl-img rounded" onerror="imgError(this)"
+                                                        src="{{ asset('uploads/products/' . $item->product->image) }}">
                                                 @else
                                                     <div
                                                         class="tbl-img img-fallback d-flex align-items-center justify-content-center bg-light rounded">
@@ -238,19 +248,19 @@
                                             </div>
                                         </td>
                                         <td><code class="small text-primary">{{ $item->product->code }}</code></td>
-                                        <td class="text-center fw-bold">{{ number_format($item->quantity, 2) }}</td>
-                                        <td class="text-end fw-semibold">{{ format_currency($item->purchase_price) }}</td>
-                                        <td class="text-end text-danger">- {{ format_currency($item->discount_amount) }}
+                                        <td class="fw-bold text-center">{{ number_format($item->quantity, 2) }}</td>
+                                        <td class="fw-semibold text-end">{{ format_currency($item->purchase_price) }}</td>
+                                        <td class="text-danger text-end">- {{ format_currency($item->discount_amount) }}
                                         </td>
-                                        <td class="text-end text-warning">+ {{ format_currency($item->tax_amount) }}</td>
-                                        <td class="text-end fw-bold">{{ format_currency($item->total_amount) }}</td>
+                                        <td class="text-warning text-end">+ {{ format_currency($item->tax_amount) }}</td>
+                                        <td class="fw-bold text-end">{{ format_currency($item->total_amount) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td colspan="7" class="text-end fw-bold">Grand Total</td>
-                                    <td class="text-end fw-bold text-primary fs-6">
+                                    <td class="fw-bold text-end" colspan="7">Grand Total</td>
+                                    <td class="fw-bold text-primary fs-6 text-end">
                                         {{ format_currency($purchase->grand_total) }}</td>
                                 </tr>
                             </tfoot>
@@ -261,9 +271,9 @@
 
             {{-- Created By / Meta --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header border-bottom bg-white py-3">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-user me-2 text-secondary"></i>Order Meta
+                        <i class="bx bx-user text-secondary me-2"></i>Order Meta
                     </h6>
                 </div>
                 <div class="card-body p-4">

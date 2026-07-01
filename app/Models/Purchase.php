@@ -28,7 +28,24 @@ class Purchase extends Model
         'notes',
         'status',
         'user_id',
+        'payment_status',
     ];
+
+    protected static function booted()
+    {
+        static::saving(function ($purchase) {
+            $grandTotal = (float) $purchase->grand_total;
+            $paidAmount = (float) $purchase->paid_amount;
+            
+            if ($paidAmount <= 0) {
+                $purchase->payment_status = 'Unpaid';
+            } elseif ($paidAmount >= $grandTotal) {
+                $purchase->payment_status = 'Paid';
+            } else {
+                $purchase->payment_status = 'Partial';
+            }
+        });
+    }
 
     public function supplier(): BelongsTo
     {

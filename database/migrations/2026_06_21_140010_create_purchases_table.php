@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('grand_total', 15, 2);
             $table->decimal('paid_amount', 15, 2)->default(0.00);
             $table->decimal('due_amount', 15, 2)->default(0.00);
+            $table->string('payment_status', 50)->default('Unpaid');
             $table->string('payment_method')->nullable();
             $table->text('notes')->nullable();
             $table->string('status')->default('Completed'); // Draft, Completed, Cancelled
