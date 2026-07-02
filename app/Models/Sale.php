@@ -17,7 +17,6 @@ class Sale extends Model
         'invoice_date',
         'customer_id',
         'sales_person_id',
-        'reference_no',
         'sub_total',
         'tax_amount',
         'discount_amount',
@@ -25,11 +24,34 @@ class Sale extends Model
         'grand_total',
         'paid_amount',
         'due_amount',
+        'payment_status',
         'payment_method',
+        'discount_type',
+        'discount_value',
+        'tax_percentage',
         'notes',
         'status',
         'user_id',
     ];
+
+    /**
+     * Auto-compute payment_status whenever the model is saved.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (Sale $sale) {
+            $grandTotal = (float) $sale->grand_total;
+            $paidAmount = (float) $sale->paid_amount;
+
+            if ($paidAmount <= 0) {
+                $sale->payment_status = 'Unpaid';
+            } elseif ($paidAmount >= $grandTotal) {
+                $sale->payment_status = 'Paid';
+            } else {
+                $sale->payment_status = 'Partial';
+            }
+        });
+    }
 
     public function customer(): BelongsTo
     {

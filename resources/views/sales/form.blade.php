@@ -1,49 +1,74 @@
 @csrf
 
+{{-- Validation Errors --}}
+@if ($errors->has('stock_error'))
+    <div class="alert alert-danger d-flex align-items-center mb-4 gap-2 px-3 py-2">
+        <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+        <span>{{ $errors->first('stock_error') }}</span>
+    </div>
+@endif
+@if ($errors->any() && !$errors->has('stock_error'))
+    <div class="alert alert-danger d-flex align-items-start mb-4 gap-2 px-3 py-2">
+        <i class="bx bx-error-circle fs-5 mt-1 flex-shrink-0"></i>
+        <ul class="mb-0 ps-2">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="row g-4">
 
-    {{-- Left: Invoice Info --}}
+    {{-- ── Left Column: Invoice Info + Payment ── --}}
     <div class="col-lg-3">
 
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-file me-2 text-primary"></i>Invoice Info</h6>
+        {{-- Invoice Info Card --}}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header border-bottom bg-white py-3">
+                <h6 class="fw-semibold mb-0"><i class="bx bx-file text-primary me-2"></i>Invoice Info</h6>
             </div>
             <div class="card-body p-4">
+
+                {{-- Invoice Number --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Invoice Number</label>
                     @if (isset($sale) && $sale->exists)
-                        <input type="text" name="invoice_no" id="invoice_no"
-                            class="form-control fw-bold text-primary bg-light" value="{{ $sale->invoice_no }}" readonly>
+                        <input class="form-control fw-bold text-primary bg-light" id="invoice_no" name="invoice_no"
+                            readonly type="text" value="{{ $sale->invoice_no }}">
                     @else
                         <div class="input-group">
-                            <input type="text" name="invoice_no" id="invoice_no" class="form-control fw-semibold"
-                                placeholder="e.g. INV-20260701-00001" value="{{ old('invoice_no') }}">
-                            <button type="button" class="btn btn-outline-primary" id="generateInvoiceNoBtn"
-                                title="Auto-generate Invoice No">
+                            <input class="form-control fw-semibold" id="invoice_no" name="invoice_no"
+                                placeholder="e.g. INV-20260701-00001" type="text" value="{{ old('invoice_no') }}">
+                            <button class="btn btn-outline-primary" id="generateInvoiceNoBtn"
+                                title="Auto-generate Invoice No" type="button">
                                 <i class="bx bx-revision"></i>
                             </button>
                         </div>
                         <div class="form-text">Leave blank to auto-generate, or enter manually.</div>
                     @endif
                 </div>
+
+                {{-- Invoice Date --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Invoice Date <span class="text-danger">*</span></label>
-                    <input type="date" name="invoice_date"
-                        class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
-                        value="{{ old('invoice_date', $sale->invoice_date ?? date('Y-m-d')) }}" required>
+                    <input class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
+                        name="invoice_date" required type="date"
+                        value="{{ old('invoice_date', $sale->invoice_date ?? date('Y-m-d')) }}">
                     @error('invoice_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
+                {{-- Customer --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Customer <span class="text-danger">*</span></label>
-                    <select name="customer_id" class="form-select @error('customer_id') is-invalid @enderror" required>
+                    <select class="form-select @error('customer_id') is-invalid @enderror" name="customer_id" required>
                         <option value="">Select Customer</option>
                         @foreach ($customers as $c)
-                            <option value="{{ $c->id }}"
-                                {{ old('customer_id', $sale->customer_id ?? '') == $c->id ? 'selected' : '' }}>
-                                {{ $c->name }} {{ $c->phone ? '(' . $c->phone . ')' : '' }}
+                            <option {{ old('customer_id', $sale->customer_id ?? '') == $c->id ? 'selected' : '' }}
+                                value="{{ $c->id }}">
+                                {{ $c->name }}{{ $c->phone ? ' (' . $c->phone . ')' : '' }}
                             </option>
                         @endforeach
                     </select>
@@ -51,71 +76,81 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Sales Person <span class="text-danger">*</span></label>
-                    <select name="sales_person_id" class="form-select @error('sales_person_id') is-invalid @enderror"
-                        required>
-                        <option value="">Select Sales Person</option>
-                        @foreach ($salesPersons as $sp)
-                            <option value="{{ $sp->id }}"
-                                {{ old('sales_person_id', $sale->sales_person_id ?? auth()->id()) == $sp->id ? 'selected' : '' }}>
-                                {{ $sp->name }}
+
+                {{-- Sales Person: hidden + auto-bound for sales.own users --}}
+                @if ($isSalesOwn ?? false)
+                    <input name="sales_person_id" type="hidden" value="{{ auth()->id() }}">
+                @else
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Sales Person</label>
+                        <select class="form-select @error('sales_person_id') is-invalid @enderror"
+                            name="sales_person_id">
+                            <option value="">Select Sales Person</option>
+                            @foreach ($salesPersons as $sp)
+                                <option
+                                    {{ old('sales_person_id', $sale->sales_person_id ?? auth()->id()) == $sp->id ? 'selected' : '' }}
+                                    value="{{ $sp->id }}">
+                                    {{ $sp->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('sales_person_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                @endif
+
+                {{-- Status --}}
+                <div class="mb-0">
+                    <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                    <select class="form-select @error('status') is-invalid @enderror" name="status" required>
+                        @foreach (['Completed', 'Pending', 'Draft', 'Repair', 'Ordered'] as $statusOpt)
+                            <option {{ old('status', $sale->status ?? 'Completed') === $statusOpt ? 'selected' : '' }}
+                                value="{{ $statusOpt }}">
+                                {{ $statusOpt }}
                             </option>
                         @endforeach
                     </select>
-                    @error('sales_person_id')
+                    @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Reference / PO No</label>
-                    <input type="text" name="reference_no" class="form-control"
-                        value="{{ old('reference_no', $sale->reference_no ?? '') }}"
-                        placeholder="Optional PO reference...">
-                </div>
-                <div class="mb-0">
-                    <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                    <select name="status" class="form-select" required>
-                        <option value="Completed"
-                            {{ old('status', $sale->status ?? 'Completed') === 'Completed' ? 'selected' : '' }}>
-                            Completed</option>
-                        <option value="Draft" {{ old('status', $sale->status ?? '') === 'Draft' ? 'selected' : '' }}>
-                            Draft</option>
-                        <option value="Cancelled"
-                            {{ old('status', $sale->status ?? '') === 'Cancelled' ? 'selected' : '' }}>Cancelled
-                        </option>
-                    </select>
-                </div>
+
             </div>
         </div>
 
+        {{-- Payment Details Card --}}
         <div class="card shadow-sm">
-            <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-credit-card me-2 text-success"></i>Payment Details</h6>
+            <div class="card-header border-bottom bg-white py-3">
+                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>Payment Details</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Payment Method <span class="text-danger">*</span></label>
-                    <select name="payment_method" class="form-select" required>
-                        <option value="Cash"
-                            {{ old('payment_method', $sale->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}>
-                            Cash</option>
-                        <option value="Bank Transfer"
-                            {{ old('payment_method', $sale->payment_method ?? '') === 'Bank Transfer' ? 'selected' : '' }}>
-                            Bank Transfer</option>
-                        <option value="Card"
-                            {{ old('payment_method', $sale->payment_method ?? '') === 'Card' ? 'selected' : '' }}>
-                            Credit/Debit Card</option>
-                        <option value="UPI / QR"
-                            {{ old('payment_method', $sale->payment_method ?? '') === 'UPI / QR' ? 'selected' : '' }}>
-                            UPI / QR Code</option>
+                    <select class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
+                        required>
+                        <option value="">Select Method</option>
+                        @foreach (['Cash', 'Bank Transfer', 'Card' => 'Credit/Debit Card', 'UPI / QR' => 'UPI / QR Code', 'Cheque'] as $val => $label)
+                            @php
+                                $optVal = is_string($val) ? $val : $label;
+                                $optLabel = $label;
+                            @endphp
+                            <option
+                                {{ old('payment_method', $sale->payment_method ?? 'Cash') === $optVal ? 'selected' : '' }}
+                                value="{{ $optVal }}">
+                                {{ $optLabel }}
+                            </option>
+                        @endforeach
                     </select>
+                    @error('payment_method')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-0">
                     <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
-                    <input type="number" step="0.01" name="paid_amount" id="paid_amount"
-                        class="form-control @error('paid_amount') is-invalid @enderror"
-                        value="{{ old('paid_amount', $sale->paid_amount ?? '0.00') }}" required>
+                    <input class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
+                        name="paid_amount" required step="0.01" type="number"
+                        value="{{ old('paid_amount', $sale->paid_amount ?? '0.00') }}">
                     @error('paid_amount')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -125,27 +160,35 @@
 
     </div>
 
-    {{-- Right: Products & Totals --}}
+    {{-- ── Right Column: Products + Totals ── --}}
     <div class="col-lg-9">
 
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white py-3 border-bottom">
-                <h6 class="mb-0 fw-semibold"><i class="bx bx-search me-2 text-primary"></i>Add Products to Invoice</h6>
+        {{-- Product Search & Line Items --}}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header border-bottom bg-white py-3">
+                <h6 class="fw-semibold mb-0"><i class="bx bx-search text-primary me-2"></i>Add Products to Invoice</h6>
             </div>
             <div class="card-body p-4">
+
+                @error('items')
+                    <div class="alert alert-danger d-flex align-items-center mb-3 gap-2 px-3 py-2">
+                        <i class="bx bx-error-circle"></i><span>{{ $message }}</span>
+                    </div>
+                @enderror
+
                 <div class="position-relative mb-4">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input type="text" id="productSearchInput" class="form-control"
-                            placeholder="Type Product Name, SKU, or Scan Barcode...">
+                        <input class="form-control" id="productSearchInput"
+                            placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
                     </div>
-                    <div id="autocompleteResults"
-                        class="position-absolute w-100 bg-white border rounded shadow-lg d-none"
-                        style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;"></div>
+                    <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
+                        id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
+                    </div>
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" id="saleItemsTable">
+                    <table class="table-hover mb-0 table align-middle" id="saleItemsTable">
                         <thead class="table-light">
                             <tr>
                                 <th>Image</th>
@@ -154,93 +197,147 @@
                                 <th>Stock</th>
                                 <th class="text-center">Qty</th>
                                 <th class="text-center">Unit Price</th>
-                                <th class="text-center">Discount</th>
-                                <th class="text-center">Tax</th>
-                                <th class="text-end">Subtotal</th>
+                                <th class="text-muted text-center">Discount</th>
+                                <th class="text-muted text-center">Tax</th>
+                                <th class="text-end">Row Total</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="invoiceItemsContainer"></tbody>
                     </table>
-                    <div id="emptyTableMsg" class="text-center py-5 text-muted">
+                    <div class="text-muted py-5 text-center" id="emptyTableMsg">
                         <i class="bx bx-cart" style="font-size:2.5rem;opacity:.3;"></i>
-                        <p class="mt-2 mb-0">No products added to invoice.</p>
+                        <p class="mb-0 mt-2">No products added to invoice.</p>
                     </div>
                 </div>
             </div>
         </div>
 
+        {{-- Notes + Calculation Summary --}}
         <div class="row g-4">
             <div class="col-md-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">Invoice Notes</h6>
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">Invoice Notes</h6>
                     </div>
                     <div class="card-body p-3">
-                        <textarea name="notes" rows="6" class="form-control" placeholder="Payment notes, delivery schedules...">{{ old('notes', $sale->notes ?? '') }}</textarea>
+                        <textarea class="form-control" name="notes" placeholder="Payment notes, delivery schedules..." rows="6">{{ old('notes', $sale->notes ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">Calculation Summary</h6>
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">Calculation Summary</h6>
                     </div>
                     <div class="card-body p-4">
+
+                        {{-- Subtotal (read-only) --}}
                         <div class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Subtotal</span>
-                            <span class="fw-bold" id="sum_subtotal">₹0.00</span>
+                            <span class="text-muted small fw-semibold">Subtotal (rows)</span>
+                            <span class="fw-bold"
+                                id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
+
+                        {{-- Global Discount --}}
+                        <div class="border-bottom py-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted small fw-semibold">Global Discount (−)</span>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="form-check form-check-inline mb-0">
+                                        <input
+                                            {{ old('discount_type', $sale->discount_type ?? 'fixed') === 'fixed' ? 'checked' : '' }}
+                                            class="form-check-input" id="discTypeFixed" name="discount_type"
+                                            type="radio" value="fixed">
+                                        <label class="form-check-label small" for="discTypeFixed">Fixed</label>
+                                    </div>
+                                    <div class="form-check form-check-inline mb-0">
+                                        <input
+                                            {{ old('discount_type', $sale->discount_type ?? 'fixed') === 'percentage' ? 'checked' : '' }}
+                                            class="form-check-input" id="discTypePct" name="discount_type"
+                                            type="radio" value="percentage">
+                                        <label class="form-check-label small" for="discTypePct">%</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small" id="discountLabel">Amount</span>
+                                <input class="form-control form-control-sm text-end" id="discount_value"
+                                    min="0" name="discount_value" step="0.01" style="width:120px;"
+                                    type="number"
+                                    value="{{ old('discount_value', $sale->discount_value ?? '0.00') }}">
+                            </div>
+                            <input id="discount_amount" name="discount_amount" type="hidden" value="0.00">
+                            <div class="mt-1 text-end">
+                                <small class="text-danger fw-semibold"
+                                    id="lbl_discount_amount">−{{ optional(current_currency())->symbol ?? '₹' }}0.00</small>
+                            </div>
+                        </div>
+
+                        {{-- Global Tax --}}
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Total Discount (-)</span>
-                            <input type="number" step="0.01" min="0" name="discount_amount"
-                                id="discount_amount" class="form-control form-control-sm text-end"
-                                style="width:120px;"
-                                value="{{ old('discount_amount', $sale->discount_amount ?? '0.00') }}">
+                            <span class="text-muted small fw-semibold">Global Tax % (+)</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <input class="form-control form-control-sm text-end" id="tax_percentage"
+                                    max="100" min="0" name="tax_percentage" step="0.01"
+                                    style="width:80px;" type="number"
+                                    value="{{ old('tax_percentage', $sale->tax_percentage ?? '0.00') }}">
+                                <span class="text-muted small">%</span>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Total Tax (+)</span>
-                            <input type="number" step="0.01" min="0" name="tax_amount" id="tax_amount"
-                                class="form-control form-control-sm text-end" style="width:120px;"
-                                value="{{ old('tax_amount', $sale->tax_amount ?? '0.00') }}">
+                        <input id="tax_amount" name="tax_amount" type="hidden" value="0.00">
+                        <div class="d-flex justify-content-between border-bottom py-1">
+                            <span class="text-muted small">Tax Amount</span>
+                            <span class="fw-semibold text-warning"
+                                id="lbl_tax_amount">+{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
+
+                        {{-- Shipping --}}
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Shipping (+)</span>
-                            <input type="number" step="0.01" min="0" name="shipping_amount"
-                                id="shipping_amount" class="form-control form-control-sm text-end"
-                                style="width:120px;"
+                            <input class="form-control form-control-sm text-end" id="shipping_amount" min="0"
+                                name="shipping_amount" step="0.01" style="width:120px;" type="number"
                                 value="{{ old('shipping_amount', $sale->shipping_amount ?? '0.00') }}">
                         </div>
+
+                        {{-- Grand Total --}}
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span class="fw-bold">Grand Total</span>
-                            <span class="fw-bold text-primary fs-6" id="sum_grandtotal">₹0.00</span>
+                            <span class="fw-bold text-primary fs-6"
+                                id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
+
+                        {{-- Due / Change --}}
                         <div class="row g-2 mt-1">
                             <div class="col-6">
                                 <div
-                                    class="bg-danger bg-opacity-10 rounded p-2 text-center border border-danger border-opacity-25">
+                                    class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
                                     <div class="text-danger small fw-semibold">Balance Due</div>
-                                    <div class="text-danger fw-bold" id="sum_due">₹0.00</div>
+                                    <div class="text-danger fw-bold" id="sum_due">
+                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div
-                                    class="bg-success bg-opacity-10 rounded p-2 text-center border border-success border-opacity-25">
+                                    class="bg-success border-success rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
                                     <div class="text-success small fw-semibold">Change Ret.</div>
-                                    <div class="text-success fw-bold" id="sum_change">₹0.00</div>
+                                    <div class="text-success fw-bold" id="sum_change">
+                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-4">
-            <a href="{{ route('sales.index') }}" class="btn btn-outline-secondary">
+        {{-- Form Actions --}}
+        <div class="d-flex justify-content-end mt-4 gap-2">
+            <a class="btn btn-outline-secondary" href="{{ route('sales.index') }}">
                 <i class="bx bx-x me-1"></i> Cancel
             </a>
-            <button type="submit" class="btn btn-primary">
+            <button class="btn btn-primary" type="submit">
                 <i class="bx bx-save me-1"></i>
                 {{ isset($sale) ? 'Update Invoice' : 'Generate Invoice' }}
             </button>
@@ -253,53 +350,44 @@
     <script>
         $(document).ready(function() {
             let rowCount = 0;
+            const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+
+            function fmt(n) {
+                return sym + parseFloat(n).toFixed(2);
+            }
 
             // ── Auto-generate Invoice No on page load ─────────────────────────
             @if (!isset($sale) || !$sale->exists)
-                function autoFillInvoiceNo() {
-                    $.ajax({
-                        url: "{{ route('sales.generate-invoice-no') }}",
-                        type: 'GET',
-                        success: function(res) {
-                            if (!$('#invoice_no').val()) {
-                                $('#invoice_no').val(res.invoice_no);
-                            }
-                        }
+                (function autoFillInvoiceNo() {
+                    $.get("{{ route('sales.generate-invoice-no') }}", function(res) {
+                        if (!$('#invoice_no').val()) $('#invoice_no').val(res.invoice_no);
                     });
-                }
-                autoFillInvoiceNo();
+                })();
             @endif
 
             // ── Refresh button ────────────────────────────────────────────────
             $('#generateInvoiceNoBtn').on('click', function() {
                 const btn = $(this);
                 btn.prop('disabled', true).html('<i class="bx bx-loader-alt bx-spin"></i>');
-                $.ajax({
-                    url: "{{ route('sales.generate-invoice-no') }}",
-                    type: 'GET',
-                    success: function(res) {
-                        $('#invoice_no').val(res.invoice_no).focus();
-                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
-                    },
-                    error: function() {
-                        showAdminToast('Could not generate invoice number.', 'error');
-                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
-                    }
+                $.get("{{ route('sales.generate-invoice-no') }}", function(res) {
+                    $('#invoice_no').val(res.invoice_no).focus();
+                }).always(function() {
+                    btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
                 });
             });
 
+            // ── Restore existing items on edit ────────────────────────────────
             @if (isset($sale) && $sale->items->count() > 0)
                 @foreach ($sale->items as $item)
                     addProductRow({
                         id: "{{ $item->product_id }}",
                         name: "{{ addslashes($item->product->name) }}",
                         sku: "{{ $item->product->code }}",
-                        stock: parseFloat("{{ $item->product->stock->quantity ?? 0 }}") + parseFloat(
-                            "{{ $item->quantity }}"),
+                        stock: parseFloat(
+                            "{{ ($item->product->stock->quantity ?? 0) + $item->quantity }}"),
                         price: parseFloat("{{ $item->unit_price }}"),
-                        tax: parseFloat("{{ $item->tax_amount }}") / parseFloat("{{ $item->quantity }}"),
-                        discount: parseFloat("{{ $item->discount_amount }}") / parseFloat(
-                            "{{ $item->quantity }}"),
+                        taxAmt: parseFloat("{{ $item->tax_amount }}"),
+                        discAmt: parseFloat("{{ $item->discount_amount }}"),
                         qty: parseInt("{{ $item->quantity }}"),
                         unit: "{{ $item->product->unit->short_name ?? 'PCS' }}",
                         image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
@@ -307,52 +395,49 @@
                 @endforeach
             @endif
 
+            // ── Product autocomplete ──────────────────────────────────────────
             const searchInput = $('#productSearchInput');
-            const resultsContainer = $('#autocompleteResults');
+            const resultsDiv = $('#autocompleteResults');
             let searchTimeout = null;
 
             searchInput.on('input', function() {
                 clearTimeout(searchTimeout);
-                const query = $(this).val().trim();
-                if (query.length < 1) {
-                    resultsContainer.addClass('d-none').empty();
+                const q = $(this).val().trim();
+                if (q.length < 1) {
+                    resultsDiv.addClass('d-none').empty();
                     return;
                 }
                 searchTimeout = setTimeout(function() {
-                    $.ajax({
-                        url: "{{ route('products.search') }}",
-                        type: 'GET',
-                        data: {
-                            query: query
-                        },
-                        success: function(data) {
-                            resultsContainer.empty();
-                            if (data.length > 0) {
-                                data.forEach(p => {
-                                    resultsContainer.append(`
-                                <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;"
-                                     data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
-                                     data-price="${p.price}" data-tax="${p.tax}" data-discount="${p.discount}"
-                                     data-unit="${p.unit}" data-image="${p.image_url}">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="${p.image_url}" class="rounded" style="width:36px;height:36px;object-fit:cover;">
-                                        <div>
-                                            <div class="fw-semibold small">${p.name}</div>
-                                            <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
-                                        </div>
+                    $.get("{{ route('products.search') }}", {
+                        query: q
+                    }, function(data) {
+                        resultsDiv.empty();
+                        if (data.length) {
+                            data.forEach(function(p) {
+                                resultsDiv.append(
+                                    `<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;"
+                                  data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
+                                  data-price="${p.price}" data-tax="${p.tax}" data-discount="${p.discount}"
+                                  data-unit="${p.unit}" data-image="${p.image_url}">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="${p.image_url}" class="rounded" style="width:36px;height:36px;object-fit:cover;">
+                                    <div>
+                                        <div class="fw-semibold small">${p.name}</div>
+                                        <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
                                     </div>
-                                    <div class="text-end">
-                                        <div class="fw-bold text-primary small">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</div>
-                                        <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
-                                    </div>
-                                </div>`);
-                                });
-                                resultsContainer.removeClass('d-none');
-                            } else {
-                                resultsContainer.html(
-                                    '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
+                                </div>
+                                <div class="text-end">
+                                    <div class="fw-bold text-primary small">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</div>
+                                    <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
+                                </div>
+                            </div>`
+                                );
+                            });
+                            resultsDiv.removeClass('d-none');
+                        } else {
+                            resultsDiv.html(
+                                '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
                                 ).removeClass('d-none');
-                            }
                         }
                     });
                 }, 250);
@@ -360,7 +445,7 @@
 
             $(document).on('click', function(e) {
                 if (!$(e.target).closest('#productSearchInput, #autocompleteResults').length)
-                    resultsContainer.addClass('d-none');
+                    resultsDiv.addClass('d-none');
             });
 
             $(document).on('click', '.autocomplete-item', function() {
@@ -370,11 +455,10 @@
                     sku: $(this).data('sku'),
                     stock: parseFloat($(this).data('stock')),
                     price: parseFloat($(this).data('price')),
-                    tax: parseFloat($(this).data('tax')),
-                    discount: parseFloat($(this).data('discount')),
+                    taxPct: parseFloat($(this).data('tax')),
+                    discPct: parseFloat($(this).data('discount')),
                     unit: $(this).data('unit'),
                     image_url: $(this).data('image'),
-                    qty: 1
                 };
                 let isDuplicate = false;
                 $('#invoiceItemsContainer tr').each(function() {
@@ -385,35 +469,56 @@
                 });
                 if (isDuplicate) {
                     showAdminToast(`"${p.name}" already added.`, 'warning');
-                    resultsContainer.addClass('d-none').empty();
+                    resultsDiv.addClass('d-none').empty();
                     searchInput.val('');
                     return;
                 }
+                // Convert percentage to per-unit amount
+                p.taxAmt = parseFloat(((p.taxPct / 100) * p.price).toFixed(2));
+                p.discAmt = parseFloat(((p.discPct / 100) * p.price).toFixed(2));
+                p.qty = 1;
                 addProductRow(p);
-                resultsContainer.addClass('d-none').empty();
+                resultsDiv.addClass('d-none').empty();
                 searchInput.val('');
             });
 
+            // ── Build row ─────────────────────────────────────────────────────
             function addProductRow(p) {
                 $('#emptyTableMsg').addClass('d-none');
-                const itemTax = (p.tax / 100) * p.price;
-                const itemDisc = (p.discount / 100) * p.price;
+                const taxAmt = typeof p.taxAmt !== 'undefined' ? p.taxAmt : (p.tax || 0);
+                const discAmt = typeof p.discAmt !== 'undefined' ? p.discAmt : (p.disc || 0);
+                // Row discount & tax are READ-ONLY display (locked per spec)
                 $('#invoiceItemsContainer').append(`
-            <tr class="item-row" data-product-id="${p.id}">
-                <td><img src="${p.image_url}" class="tbl-img rounded" onerror="imgError(this)"></td>
-                <td class="fw-semibold">
-                    ${p.name}
-                    <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
-                </td>
-                <td><code class="small">${p.sku}</code></td>
-                <td class="stock-cell fw-semibold text-muted" data-max="${p.stock}">${parseInt(p.stock)}</td>
-                <td class="text-center"><input type="number" step="1" min="1" name="items[${rowCount}][quantity]" value="${parseInt(p.qty || 1)}" class="qty-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
-                <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][unit_price]" value="${p.price.toFixed(2)}" class="price-input form-control form-control-sm text-center" style="width:100px;margin:auto;"></td>
-                <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][discount_amount]" value="${itemDisc.toFixed(2)}" class="discount-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
-                <td class="text-center"><input type="number" step="0.01" min="0" name="items[${rowCount}][tax_amount]" value="${itemTax.toFixed(2)}" class="tax-input form-control form-control-sm text-center" style="width:80px;margin:auto;"></td>
-                <td class="text-end fw-bold subtotal-cell">₹0.00</td>
-                <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button></td>
-            </tr>`);
+        <tr class="item-row" data-product-id="${p.id}">
+            <td><img src="${p.image_url}" class="tbl-img rounded" onerror="imgError(this)"></td>
+            <td class="fw-semibold">
+                ${p.name}
+                <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
+                <input type="hidden" name="items[${rowCount}][discount_amount]" class="disc-hidden" value="${discAmt.toFixed(2)}">
+                <input type="hidden" name="items[${rowCount}][tax_amount]" class="tax-hidden" value="${taxAmt.toFixed(2)}">
+            </td>
+            <td><code class="small">${p.sku}</code></td>
+            <td class="stock-cell fw-semibold text-muted" data-max="${p.stock}">${parseInt(p.stock)}</td>
+            <td class="text-center">
+                <input type="number" step="1" min="1" name="items[${rowCount}][quantity]"
+                    value="${parseInt(p.qty || 1)}"
+                    class="qty-input form-control form-control-sm text-center" style="width:80px;margin:auto;">
+            </td>
+            <td class="text-center">
+                <input type="number" step="0.01" min="0" name="items[${rowCount}][unit_price]"
+                    value="${p.price.toFixed(2)}"
+                    class="price-input form-control form-control-sm text-center" style="width:100px;margin:auto;">
+            </td>
+            <td class="text-center text-muted small disc-display">${fmt(discAmt)}/unit</td>
+            <td class="text-center text-muted small tax-display">${fmt(taxAmt)}/unit</td>
+            <td class="text-end fw-bold subtotal-cell">0.00</td>
+            <td class="text-center">
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                    style="width:28px;height:28px;padding:0;">
+                    <i class="bx bx-trash" style="font-size:13px;"></i>
+                </button>
+            </td>
+        </tr>`);
                 rowCount++;
                 calculateTotals();
             }
@@ -424,51 +529,82 @@
                 calculateTotals();
             });
 
-            $(document).on('input change', '.qty-input, .price-input, .discount-input, .tax-input', function() {
+            // ── Recalculate on any input change ──────────────────────────────
+            $(document).on('input change', '.qty-input, .price-input', function() {
                 const row = $(this).closest('tr');
-                const qtyInput = row.find('.qty-input');
-                let qty = parseInt(qtyInput.val()) || 0;
-                const maxStock = parseInt(row.find('.stock-cell').data('max'));
-                if (qty > maxStock) {
-                    qtyInput.val(maxStock);
-                    qty = maxStock;
-                    showAdminToast(`Cannot sell more than stock (${maxStock}).`, 'error');
+                const qtyInp = row.find('.qty-input');
+                let qty = parseInt(qtyInp.val()) || 0;
+                const maxSt = parseInt(row.find('.stock-cell').data('max'));
+                if (qty > maxSt) {
+                    qtyInp.val(maxSt);
+                    qty = maxSt;
+                    showAdminToast(`Cannot sell more than stock (${maxSt}).`, 'error');
                 }
-                if (qty <= 0) {
-                    qtyInput.val(1);
-                }
+                if (qty <= 0) qtyInp.val(1);
                 calculateTotals();
             });
 
-            $('#discount_amount, #tax_amount, #shipping_amount, #paid_amount').on('input change', calculateTotals);
+            $('#discount_value, #tax_percentage, #shipping_amount, #paid_amount').on('input change',
+                calculateTotals);
+            $('input[name="discount_type"]').on('change', function() {
+                $('#discountLabel').text($(this).val() === 'percentage' ? 'Percentage (%)' : 'Amount');
+                calculateTotals();
+            });
+            // Set initial label
+            $('#discountLabel').text($('input[name="discount_type"]:checked').val() === 'percentage' ?
+                'Percentage (%)' : 'Amount');
 
+            // ── Core calculation engine ───────────────────────────────────────
+            // 1. Compute row totals  → subtotal
+            // 2. Apply global discount (fixed or %) on subtotal
+            // 3. Apply global tax (%) on (subtotal - discount)
+            // 4. Add shipping → grand total
             function calculateTotals() {
-                let totalSubtotal = 0,
-                    sumItemTax = 0,
-                    sumItemDiscount = 0;
+                let subtotal = 0;
+
                 $('#invoiceItemsContainer tr').each(function() {
                     const row = $(this);
                     const qty = parseFloat(row.find('.qty-input').val()) || 0;
                     const price = parseFloat(row.find('.price-input').val()) || 0;
-                    const disc = parseFloat(row.find('.discount-input').val()) || 0;
-                    const tax = parseFloat(row.find('.tax-input').val()) || 0;
-                    row.find('.subtotal-cell').text('₹' + ((price + tax - disc) * qty).toFixed(2));
-                    totalSubtotal += price * qty;
-                    sumItemTax += tax * qty;
-                    sumItemDiscount += disc * qty;
+                    const discU = parseFloat(row.find('.disc-hidden').val()) || 0;
+                    const taxU = parseFloat(row.find('.tax-hidden').val()) || 0;
+                    const rowTot = (price + taxU - discU) * qty;
+                    row.find('.subtotal-cell').text(fmt(rowTot));
+                    subtotal += price * qty; // subtotal = sum of (qty × unit_price), raw
                 });
-                $('#sum_subtotal').text('₹' + totalSubtotal.toFixed(2));
-                $('#discount_amount').val(sumItemDiscount.toFixed(2));
-                $('#tax_amount').val(sumItemTax.toFixed(2));
-                const globalDisc = parseFloat($('#discount_amount').val()) || 0;
-                const globalTax = parseFloat($('#tax_amount').val()) || 0;
+
+                $('#sum_subtotal').text(fmt(subtotal));
+
+                // Global discount
+                const discType = $('input[name="discount_type"]:checked').val() || 'fixed';
+                const discVal = parseFloat($('#discount_value').val()) || 0;
+                const discAmt = discType === 'percentage' ? subtotal * discVal / 100 : discVal;
+                const afterDisc = Math.max(0, subtotal - discAmt);
+
+                $('#discount_amount').val(discAmt.toFixed(2));
+                $('#lbl_discount_amount').text('−' + fmt(discAmt));
+
+                // Global tax on (subtotal − discount)
+                const taxPct = parseFloat($('#tax_percentage').val()) || 0;
+                const taxAmt = afterDisc * taxPct / 100;
+                $('#tax_amount').val(taxAmt.toFixed(2));
+                $('#lbl_tax_amount').text('+' + fmt(taxAmt));
+
+                // Shipping + grand total
                 const shipping = parseFloat($('#shipping_amount').val()) || 0;
-                const grandTotal = totalSubtotal + globalTax + shipping - globalDisc;
-                $('#sum_grandtotal').text('₹' + grandTotal.toFixed(2));
+                const grandTotal = afterDisc + taxAmt + shipping;
+                $('#sum_grandtotal').text(fmt(grandTotal));
+
+                // Due / Change
                 const paid = parseFloat($('#paid_amount').val()) || 0;
-                $('#sum_due').text('₹' + Math.max(0, grandTotal - paid).toFixed(2));
-                $('#sum_change').text('₹' + Math.max(0, paid - grandTotal).toFixed(2));
+                const due = Math.max(0, grandTotal - paid);
+                const change = Math.max(0, paid - grandTotal);
+                $('#sum_due').text(fmt(due));
+                $('#sum_change').text(fmt(change));
             }
+
+            // Run once to initialise display
+            calculateTotals();
         });
     </script>
 @endpush

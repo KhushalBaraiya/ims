@@ -106,6 +106,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/generate-invoice-no', [SaleController::class, 'generateInvoiceNoAjax'])->name('sales.generate-invoice-no');
     Route::get('/sales/{sale}/print', [SaleController::class, 'printInvoice'])->name('sales.print');
     Route::delete('/sales/bulk-delete', [SaleController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
+    Route::post('/sales/{sale}/payment', [SaleController::class, 'updatePayment'])->name('sales.update-payment');
     Route::resource('sales', SaleController::class);
 
     // Sales Return Routes

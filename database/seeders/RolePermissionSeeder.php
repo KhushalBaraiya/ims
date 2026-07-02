@@ -76,6 +76,7 @@ class RolePermissionSeeder extends Seeder
             'sales.create',
             'sales.update',
             'sales.delete',
+            'sales.own',
 
             'sale_returns.view',
             'sale_returns.create',
@@ -147,6 +148,7 @@ class RolePermissionSeeder extends Seeder
             'stocks.view',
             'sales.view',
             'sales.create',
+            'sales.own',
             'sale_returns.view',
             'sale_returns.create',
             'reports.view',

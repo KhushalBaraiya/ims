@@ -19,7 +19,7 @@
                 <i class="bx bx-chevron-down" id="filtersChevron"></i>
             </button>
             @can('purchases.delete')
-                <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button">
                     <i class="bx bx-trash me-1"></i> Delete Multiples
                 </button>
             @endcan
@@ -162,7 +162,7 @@
                 <table class="table-hover mb-0 table align-middle" id="purchasesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
+                            <th style="width:40px"><input class="form-check-input" id="selectAll" type="checkbox"></th>
                             <th>{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.th_purchase_no') }}</th>
                             <th>{{ __('messages.th_date') }}</th>
@@ -179,7 +179,7 @@
                     <tbody>
                         @foreach ($purchases as $index => $purchase)
                             <tr>
-                                <td><input type="checkbox" class="form-check-input row-checkbox"
+                                <td><input class="form-check-input row-checkbox" type="checkbox"
                                         value="{{ $purchase->id }}"></td>
                                 <td class="text-muted fw-semibold">{{ $purchase->id }}</td>
                                 <td><code class="fw-bold">{{ $purchase->purchase_no }}</code></td>
@@ -248,13 +248,13 @@
                                         @endif
                                         @can('purchases.update')
                                             <a class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action btn-payment-modal"
-                                                href="#" style="width:30px;height:30px;padding:0;" title="Payment"
-                                                data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
-                                                data-grand-total="{{ $purchase->grand_total }}"
-                                                data-paid-amount="{{ $purchase->paid_amount }}"
+                                                data-action="{{ route('purchases.update-payment', $purchase->id) }}"
                                                 data-due-amount="{{ $purchase->due_amount }}"
-                                                data-payment-method="{{ $purchase->payment_method }}"
-                                                data-action="{{ route('purchases.update-payment', $purchase->id) }}">
+                                                data-grand-total="{{ $purchase->grand_total }}"
+                                                data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
+                                                data-paid-amount="{{ $purchase->paid_amount }}"
+                                                data-payment-method="{{ $purchase->payment_method }}" href="#"
+                                                style="width:30px;height:30px;padding:0;" title="Payment">
                                                 <i class="bx bx-credit-card" style="font-size:1rem;"></i>
                                             </a>
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
@@ -505,7 +505,10 @@
                 $('#modal_grand_total').val(grandTotal);
                 $('#modal_grand_total_text').text('₹' + grandTotal.toFixed(2));
                 $('#modal_paid_amount').val(paidAmount.toFixed(2));
-                $('#modal_payment_method').val(paymentMethod);
+                // Restore exact saved payment method; only fall back to Cash if truly blank
+                const pmSelect = $('#modal_payment_method');
+                pmSelect.val(paymentMethod || '');
+                pmSelect.trigger('change');
                 $('#paymentForm').attr('action', action);
 
                 updateModalDue();
