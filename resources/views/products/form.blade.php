@@ -174,28 +174,16 @@
             <div class="col-md-2">
                 <label class="form-label fw-semibold small">Tax %</label>
                 <div class="input-group">
-                    <input type="number" step="0.01" name="tax_percentage"
-                        class="form-control @error('tax_percentage') is-invalid @enderror"
-                        value="{{ old('tax_percentage', $product->tax_percentage ?? '0.00') }}">
+                    <input type="number" step="0.01" min="0" max="100" name="tax_percentage"
+                        id="tax_percentage" class="form-control @error('tax_percentage') is-invalid @enderror"
+                        value="{{ old('tax_percentage', $product->tax_percentage ?? '0.00') }}"
+                        oninput="if(parseFloat(this.value)>100){this.value=100;}if(parseFloat(this.value)<0){this.value=0;}">
                     <span class="input-group-text">%</span>
                     @error('tax_percentage')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-            </div>
-
-            {{-- Discount % --}}
-            <div class="col-md-2">
-                <label class="form-label fw-semibold small">Discount %</label>
-                <div class="input-group">
-                    <input type="number" step="0.01" name="discount_percentage"
-                        class="form-control @error('discount_percentage') is-invalid @enderror"
-                        value="{{ old('discount_percentage', $product->discount_percentage ?? '0.00') }}">
-                    <span class="input-group-text">%</span>
-                    @error('discount_percentage')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                <div class="form-text">Max 100%</div>
             </div>
 
             {{-- Min Stock Alert --}}
@@ -539,6 +527,20 @@
 
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
             updateProfitBadge(); // run on load for edit form
+
+            // ── Tax % — enforce max 100 client-side ──────────────────────────────────
+            $('input[name="tax_percentage"]').on('input change', function() {
+                let val = parseFloat($(this).val());
+                if (!isNaN(val) && val > 100) {
+                    $(this).val(100);
+                    if (typeof showAdminToast === 'function') {
+                        showAdminToast('Tax % cannot exceed 100%.', 'warning');
+                    }
+                }
+                if (!isNaN(val) && val < 0) {
+                    $(this).val(0);
+                }
+            });
 
             // ── Opening-stock toggle ──────────────────────────────────────────────────
             function syncOpeningStockRequired(checked) {

@@ -335,7 +335,7 @@ class SaleController extends Controller
                 'stock' => $p->stock->quantity ?? 0.00,
                 'price' => $price,
                 'tax' => $p->tax_percentage,
-                'discount' => $p->discount_percentage,
+                'discount' => 0,
                 'unit' => $p->unit_code ?? 'PCS',
                 'currency_symbol' => $symbol,
                 'image_url' => $p->image ? asset('uploads/products/'.$p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image',

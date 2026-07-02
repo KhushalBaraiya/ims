@@ -48,7 +48,6 @@ class ProductSeeder extends Seeder
     {
         return array_merge([
             'tax_percentage'      => 18,
-            'discount_percentage' => 0,
             'unit_name'           => 'Piece',
             'unit_code'           => 'PCS',
             'warranty'            => '6 Months',

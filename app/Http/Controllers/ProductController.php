@@ -278,7 +278,12 @@ class ProductController extends Controller
 
         // supplier_id is only for opening stock — do NOT persist on product
         $openingSupplier = $validated['supplier_id'] ?? null;
-        unset($validated['supplier_id'], $validated['initial_qty']);
+        unset($validated['supplier_id'], $validated['initial_qty'], $validated['discount_percentage']);
+
+        // Hard cap tax at 100%
+        if (isset($validated['tax_percentage'])) {
+            $validated['tax_percentage'] = min((float) $validated['tax_percentage'], 100);
+        }
 
         // Upload directory
         $uploadPath = public_path('uploads/products');
@@ -423,7 +428,12 @@ class ProductController extends Controller
         $validated = $request->validated();
 
         // supplier_id / initial_qty are only for opening stock on create — strip them
-        unset($validated['supplier_id'], $validated['initial_qty']);
+        unset($validated['supplier_id'], $validated['initial_qty'], $validated['discount_percentage']);
+
+        // Hard cap tax at 100%
+        if (isset($validated['tax_percentage'])) {
+            $validated['tax_percentage'] = min((float) $validated['tax_percentage'], 100);
+        }
 
         $uploadPath = public_path('uploads/products');
 

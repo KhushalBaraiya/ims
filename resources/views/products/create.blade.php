@@ -217,28 +217,17 @@
                             <div class="col-md-2">
                                 <label class="form-label fw-semibold">Tax %</label>
                                 <div class="input-group">
-                                    <input type="number" step="0.01" name="tax_percentage"
+                                    <input type="number" step="0.01" min="0" max="100"
+                                        name="tax_percentage" id="tax_percentage"
                                         class="form-control @error('tax_percentage') is-invalid @enderror"
-                                        value="{{ old('tax_percentage', $product->tax_percentage ?? '0.00') }}">
+                                        value="{{ old('tax_percentage', $product->tax_percentage ?? '0.00') }}"
+                                        oninput="if(parseFloat(this.value)>100){this.value=100;}if(parseFloat(this.value)<0){this.value=0;}">
                                     <span class="input-group-text">%</span>
                                     @error('tax_percentage')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
-
-                            {{-- Discount % --}}
-                            <div class="col-md-2">
-                                <label class="form-label fw-semibold">Discount %</label>
-                                <div class="input-group">
-                                    <input type="number" step="0.01" name="discount_percentage"
-                                        class="form-control @error('discount_percentage') is-invalid @enderror"
-                                        value="{{ old('discount_percentage', $product->discount_percentage ?? '0.00') }}">
-                                    <span class="input-group-text">%</span>
-                                    @error('discount_percentage')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <div class="form-text">Max 100%</div>
                             </div>
 
                             {{-- Min Stock Alert --}}
@@ -448,8 +437,7 @@
                                     <i class="bx bx-cloud-upload d-block mb-1 text-primary"
                                         style="font-size:1.8rem;opacity:.6;"></i>
                                     <div class="small text-muted">Drop images here or</div>
-                                    <button type="button" id="triggerGalleryBtn"
-                                        class="btn btn-outline-primary mt-1">
+                                    <button type="button" id="triggerGalleryBtn" class="btn btn-outline-primary mt-1">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
                                     <div class="form-text mt-1 mb-0">PNG, JPG, WEBP · Max 2MB each</div>

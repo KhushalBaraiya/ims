@@ -432,7 +432,7 @@ class PurchaseController extends Controller
                 'purchase_price' => $purchasePrice,
                 'selling_price' => $sellingPrice,
                 'tax' => $p->tax_percentage,
-                'discount' => $p->discount_percentage,
+                'discount' => 0,
                 'unit' => $p->unit_code ?? 'PCS',
                 'currency_symbol' => $symbol,
                 'image_url' => $p->image

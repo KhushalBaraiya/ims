@@ -233,27 +233,17 @@
                             <div class="col-md-2">
                                 <label class="form-label fw-semibold">Tax %</label>
                                 <div class="input-group">
-                                    <input type="number" step="0.01" name="tax_percentage"
+                                    <input type="number" step="0.01" min="0" max="100"
+                                        name="tax_percentage" id="tax_percentage"
                                         class="form-control @error('tax_percentage') is-invalid @enderror"
-                                        value="{{ old('tax_percentage', $product->tax_percentage) }}">
+                                        value="{{ old('tax_percentage', $product->tax_percentage) }}"
+                                        oninput="if(parseFloat(this.value)>100){this.value=100;}if(parseFloat(this.value)<0){this.value=0;}">
                                     <span class="input-group-text">%</span>
                                     @error('tax_percentage')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label class="form-label fw-semibold">Discount %</label>
-                                <div class="input-group">
-                                    <input type="number" step="0.01" name="discount_percentage"
-                                        class="form-control @error('discount_percentage') is-invalid @enderror"
-                                        value="{{ old('discount_percentage', $product->discount_percentage) }}">
-                                    <span class="input-group-text">%</span>
-                                    @error('discount_percentage')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <div class="form-text">Max 100%</div>
                             </div>
 
                             <div class="col-md-2">

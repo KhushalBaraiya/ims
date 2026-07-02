@@ -26,7 +26,6 @@ class Product extends Model
         'purchase_price',
         'selling_price',
         'tax_percentage',
-        'discount_percentage',
         'minimum_stock_alert',
         'image',
         'gallery',

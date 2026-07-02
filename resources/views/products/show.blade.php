@@ -511,9 +511,10 @@
                             </div>
                         </div>
                         <div class="col-6 col-md-3 p-3 text-center">
-                            <div class="text-muted small mb-1">Discount</div>
+                            <div class="text-muted small mb-1">Min Stock Alert</div>
                             <div class="fw-bold fs-6 text-info">
-                                {{ number_format($product->discount_percentage ?? 0, 2) }}%</div>
+                                {{ number_format($product->minimum_stock_alert ?? 0, 0) }}
+                                {{ $product->unit_code ?? 'PCS' }}</div>
                         </div>
                     </div>
                 </div>
