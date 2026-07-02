@@ -7,29 +7,29 @@
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.edit_role') }}</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('roles.index') }}">{{ __('messages.menu_roles') }}</a></li>
                     <li class="breadcrumb-item active">{{ $role->name }}</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary">
+        <a class="btn btn-outline-secondary" href="{{ route('roles.index') }}">
             <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
         </a>
     </div>
 
-    <form method="POST" action="{{ route('roles.update', $role->id) }}">
+    <form action="{{ route('roles.update', $role->id) }}" method="POST">
         @csrf @method('PUT')
         <div class="row g-4">
 
             {{-- Left: Role Details + Permissions --}}
             <div class="col-lg-8">
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-shield me-2 text-primary"></i>{{ __('messages.role_details_card') }}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-shield text-primary me-2"></i>{{ __('messages.role_details_card') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -38,9 +38,9 @@
                                 <label class="form-label fw-semibold">
                                     {{ __('messages.display_name') }} <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="displayNameInput" name="display_name"
-                                    class="form-control @error('display_name') is-invalid @enderror"
-                                    value="{{ old('display_name', $role->name) }}" required>
+                                <input class="form-control @error('display_name') is-invalid @enderror"
+                                    id="displayNameInput" name="display_name" required type="text"
+                                    value="{{ old('display_name', $role->name) }}">
                                 @error('display_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -49,10 +49,9 @@
                                 <label class="form-label fw-semibold">
                                     {{ __('messages.system_name') }} <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" id="nameInput" name="name"
-                                    class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ old('name', $role->name) }}"
-                                    {{ $role->name === 'Super Admin' ? 'readonly' : '' }}>
+                                <input {{ $role->name === 'super_admin' ? 'readonly' : '' }}
+                                    class="form-control @error('name') is-invalid @enderror" id="nameInput" name="name"
+                                    type="text" value="{{ old('name', $role->name) }}">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -62,13 +61,13 @@
                 </div>
 
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-key me-2 text-warning"></i>{{ __('messages.permissions') }}
+                    <div class="card-header border-bottom d-flex justify-content-between align-items-center bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-key text-warning me-2"></i>{{ __('messages.permissions') }}
                             <span class="badge bg-label-warning ms-1">{{ count($selectedPermissions) }}</span>
                         </h6>
                         <div class="form-check form-switch mb-0">
-                            <input class="form-check-input" type="checkbox" id="selectAllPermissions" role="switch">
+                            <input class="form-check-input" id="selectAllPermissions" role="switch" type="checkbox">
                             <label class="form-check-label fw-semibold small" for="selectAllPermissions">
                                 {{ __('messages.select_all') }}
                             </label>
@@ -76,7 +75,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-bordered align-middle mb-0">
+                            <table class="table-bordered mb-0 table align-middle">
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.module_label') }}</th>
@@ -95,20 +94,19 @@
                                             <td class="fw-semibold ps-3">{{ $module }}</td>
                                             <td class="text-center">
                                                 <div class="form-check d-flex justify-content-center mb-0">
-                                                    <input class="form-check-input module-checkbox" type="checkbox"
-                                                        data-module="{{ $moduleSlug }}">
+                                                    <input class="form-check-input module-checkbox"
+                                                        data-module="{{ $moduleSlug }}" type="checkbox">
                                                 </div>
                                             </td>
                                             @foreach (['view', 'own', 'create', 'update', 'delete'] as $action)
                                                 <td class="text-center">
                                                     @if (isset($actions[$action]))
                                                         <div class="form-check d-flex justify-content-center mb-0">
-                                                            <input class="form-check-input permission-checkbox"
-                                                                type="checkbox" name="permissions[]"
-                                                                value="{{ $actions[$action]->name }}"
-                                                                data-module="{{ $moduleSlug }}"
+                                                            <input @checked(in_array($actions[$action]->name, $selectedPermissions))
+                                                                class="form-check-input permission-checkbox"
                                                                 data-action="{{ $action }}"
-                                                                @checked(in_array($actions[$action]->name, $selectedPermissions))>
+                                                                data-module="{{ $moduleSlug }}" name="permissions[]"
+                                                                type="checkbox" value="{{ $actions[$action]->name }}">
                                                         </div>
                                                     @else
                                                         <span class="text-muted">—</span>
@@ -127,18 +125,18 @@
 
             {{-- Right: Publish + Info --}}
             <div class="col-lg-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-send me-2 text-primary"></i>{{ __('messages.publish') }}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-send text-primary me-2"></i>{{ __('messages.publish') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
+                            <button class="btn btn-primary" type="submit">
                                 <i class="bx bx-save me-1"></i> {{ __('messages.update') }} {{ __('messages.role') }}
                             </button>
-                            <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary">
+                            <a class="btn btn-outline-secondary" href="{{ route('roles.index') }}">
                                 <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                             </a>
                         </div>
@@ -146,22 +144,22 @@
                 </div>
 
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-info-circle me-2 text-secondary"></i>{{ __('messages.information') }}
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-info-circle text-secondary me-2"></i>{{ __('messages.information') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
-                        <ul class="list-unstyled mb-0 small">
-                            <li class="d-flex justify-content-between py-2 border-bottom">
+                        <ul class="list-unstyled small mb-0">
+                            <li class="d-flex justify-content-between border-bottom py-2">
                                 <span class="text-muted fw-semibold">ID</span>
                                 <span class="fw-bold">#{{ $role->id }}</span>
                             </li>
-                            <li class="d-flex justify-content-between py-2 border-bottom">
+                            <li class="d-flex justify-content-between border-bottom py-2">
                                 <span class="text-muted fw-semibold">{{ __('messages.permissions') }}</span>
                                 <span class="badge bg-label-warning">{{ count($selectedPermissions) }}</span>
                             </li>
-                            <li class="d-flex justify-content-between py-2 border-bottom">
+                            <li class="d-flex justify-content-between border-bottom py-2">
                                 <span class="text-muted fw-semibold">{{ __('messages.th_created') }}</span>
                                 <span>{{ $role->created_at->format('d M Y') }}</span>
                             </li>

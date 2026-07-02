@@ -69,13 +69,13 @@ class DashboardController extends Controller
             : collect();
 
         // 6. Recent Activity Log (latest 5) — filtered to own logs when user has
-        //    activity_logs.own but is NOT Super Admin (Super Admin sees everything).
+        //    activity_logs.own but is NOT super_admin (super_admin sees everything).
         $recentActivities = collect();
         if ($user->can('activity_logs.view')) {
             $activityQuery = ActivityLog::with('user')->latest();
 
             $restrictToOwn = $user->can('activity_logs.own')
-                && !$user->getRoleNames()->contains('Super Admin');
+                && !$user->getRoleNames()->contains('super_admin');
 
             if ($restrictToOwn) {
                 $activityQuery->where('user_id', $user->id);

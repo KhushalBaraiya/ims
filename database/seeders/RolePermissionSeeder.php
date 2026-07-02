@@ -103,11 +103,11 @@ class RolePermissionSeeder extends Seeder
         }
 
         // Create roles
-        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
-        $managerRole = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'web']);
-        $staffRole = Role::firstOrCreate(['name' => 'Staff', 'guard_name' => 'web']);
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+        $managerRole = Role::firstOrCreate(['name' => 'manager', 'guard_name' => 'web']);
+        $staffRole = Role::firstOrCreate(['name' => 'staff', 'guard_name' => 'web']);
 
-        // Super Admin gets all permissions
+        // super_admin gets all permissions
         $superAdminRole->syncPermissions($permissions);
 
         // Define Manager permissions (wildcards and specific ones)
@@ -158,7 +158,7 @@ class RolePermissionSeeder extends Seeder
 
         $staffRole->syncPermissions($staffPermissions);
 
-        // Create Default Super Admin user
+        // Create Default super_admin user
         $admin = User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [

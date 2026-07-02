@@ -20,7 +20,7 @@ class SaleSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminId   = 1; // Super Admin user
+        $adminId   = 1; // super_admin user
         $customers = Customer::all()->keyBy('email');
         $products  = Product::with('stock')->where('status', 'active')->get()->keyBy('code');
 

@@ -54,25 +54,25 @@
     {{-- Welcome Banner --}}
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card overflow-hidden welcome-banner">
+            <div class="card welcome-banner overflow-hidden">
                 <div class="d-flex align-items-center row">
                     <div class="col-sm-7">
-                        <div class="card-body text-white py-4">
-                            <h4 class="text-white mb-1">{{ __('messages.welcome_back') }}, {{ auth()->user()->name }} 👋</h4>
+                        <div class="card-body py-4 text-white">
+                            <h4 class="mb-1 text-white">{{ __('messages.welcome_back') }}, {{ auth()->user()->name }} 👋</h4>
                             <p class="mb-3" style="opacity:.82;">{{ __('messages.store_overview') }}</p>
-                            <div class="d-flex gap-2 flex-wrap">
+                            <div class="d-flex flex-wrap gap-2">
                                 @can('purchases.create')
-                                    <a href="{{ route('purchases.create') }}" class="btn btn-light btn-sm">
+                                    <a class="btn btn-light btn-sm" href="{{ route('purchases.create') }}">
                                         <i class="bx bx-cart-download me-1"></i>{{ __('messages.purchases') }}
                                     </a>
                                 @endcan
                                 @can('sales.create')
-                                    <a href="{{ route('sales.create') }}" class="btn btn-outline-light btn-sm">
+                                    <a class="btn btn-outline-light btn-sm" href="{{ route('sales.create') }}">
                                         <i class="bx bx-plus me-1"></i>{{ __('messages.add_sale') ?? __('messages.sales') }}
                                     </a>
                                 @endcan
                                 @can('users.create')
-                                    <a href="{{ route('users.create') }}" class="btn btn-outline-light btn-sm">
+                                    <a class="btn btn-outline-light btn-sm" href="{{ route('users.create') }}">
                                         <i class="bx bx-group me-1"></i>{{ __('messages.users') }}
                                     </a>
                                 @endcan
@@ -103,8 +103,8 @@
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.total_products') }}</p>
-                        <h3 class="mb-0 fw-bold text-primary">{{ $totalProducts ?? 0 }}</h3>
+                        <p class="text-muted small mb-1">{{ __('messages.total_products') }}</p>
+                        <h3 class="fw-bold text-primary mb-0">{{ $totalProducts ?? 0 }}</h3>
                     </div>
                     <span class="stats-card-icon bg-label-primary"><i class="bx bx-package"></i></span>
                 </div>
@@ -114,8 +114,8 @@
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.customers') }}</p>
-                        <h3 class="mb-0 fw-bold text-success">{{ $totalCustomers ?? 0 }}</h3>
+                        <p class="text-muted small mb-1">{{ __('messages.customers') }}</p>
+                        <h3 class="fw-bold text-success mb-0">{{ $totalCustomers ?? 0 }}</h3>
                     </div>
                     <span class="stats-card-icon bg-label-success"><i class="bx bx-user"></i></span>
                 </div>
@@ -125,8 +125,8 @@
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.suppliers') }}</p>
-                        <h3 class="mb-0 fw-bold text-warning">{{ $totalSuppliers ?? 0 }}</h3>
+                        <p class="text-muted small mb-1">{{ __('messages.suppliers') }}</p>
+                        <h3 class="fw-bold text-warning mb-0">{{ $totalSuppliers ?? 0 }}</h3>
                     </div>
                     <span class="stats-card-icon bg-label-warning"><i class="bx bx-buildings"></i></span>
                 </div>
@@ -136,8 +136,8 @@
             <div class="card kpi-card h-100">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="mb-1 text-muted small">{{ __('messages.total_users') }}</p>
-                        <h3 class="mb-0 fw-bold text-info">{{ $totalUsers ?? 0 }}</h3>
+                        <p class="text-muted small mb-1">{{ __('messages.total_users') }}</p>
+                        <h3 class="fw-bold text-info mb-0">{{ $totalUsers ?? 0 }}</h3>
                     </div>
                     <span class="stats-card-icon bg-label-info"><i class="bx bx-group"></i></span>
                 </div>
@@ -152,10 +152,10 @@
             @can('purchases.view')
                 <div class="col-md-4 col-sm-6 mb-3">
                     <div class="card stat-border-card border-primary h-100">
-                        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                        <div class="card-body d-flex justify-content-between align-items-center py-3">
                             <div>
-                                <p class="mb-1 text-muted small">{{ __('messages.todays_purchases') }}</p>
-                                <h3 class="mb-0 text-primary fw-bold">{{ $todayPurchases ?? 0 }}</h3>
+                                <p class="text-muted small mb-1">{{ __('messages.todays_purchases') }}</p>
+                                <h3 class="text-primary fw-bold mb-0">{{ $todayPurchases ?? 0 }}</h3>
                                 <small class="text-muted">{{ __('messages.all_time') }}</small>
                             </div>
                             <span class="stats-card-icon bg-label-primary"><i class="bx bx-cart-download"></i></span>
@@ -166,10 +166,10 @@
             @can('sales.view')
                 <div class="col-md-4 col-sm-6 mb-3">
                     <div class="card stat-border-card border-success h-100">
-                        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                        <div class="card-body d-flex justify-content-between align-items-center py-3">
                             <div>
-                                <p class="mb-1 text-muted small">{{ __('messages.todays_sales') }}</p>
-                                <h3 class="mb-0 text-success fw-bold">{{ format_currency($todaySales ?? 0) }}</h3>
+                                <p class="text-muted small mb-1">{{ __('messages.todays_sales') }}</p>
+                                <h3 class="text-success fw-bold mb-0">{{ format_currency($todaySales ?? 0) }}</h3>
                                 <small class="text-muted">{{ __('messages.from_sales') }}</small>
                             </div>
                             <span class="stats-card-icon bg-label-success"><i class="bx bx-trending-up"></i></span>
@@ -178,10 +178,10 @@
                 </div>
                 <div class="col-md-4 col-sm-12 mb-3">
                     <div class="card stat-border-card border-warning h-100">
-                        <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                        <div class="card-body d-flex justify-content-between align-items-center py-3">
                             <div>
-                                <p class="mb-1 text-muted small">{{ __('messages.pending_sales') }}</p>
-                                <h3 class="mb-0 text-warning fw-bold">{{ $pendingSales ?? 0 }}</h3>
+                                <p class="text-muted small mb-1">{{ __('messages.pending_sales') }}</p>
+                                <h3 class="text-warning fw-bold mb-0">{{ $pendingSales ?? 0 }}</h3>
                                 <small class="text-muted">{{ __('messages.draft') }}</small>
                             </div>
                             <span class="stats-card-icon bg-label-warning"><i class="bx bx-time-five"></i></span>
@@ -200,8 +200,8 @@
                 <div class="card kpi-card h-100">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="mb-1 text-muted small">{{ __('messages.total_revenue') }}</p>
-                            <h4 class="mb-1 fw-bold">{{ format_currency($totalRevenue ?? 0) }}</h4>
+                            <p class="text-muted small mb-1">{{ __('messages.total_revenue') }}</p>
+                            <h4 class="fw-bold mb-1">{{ format_currency($totalRevenue ?? 0) }}</h4>
                             <small class="text-success"><i class="bx bx-check-circle"></i>
                                 {{ __('messages.from_sales') }}</small>
                         </div>
@@ -216,8 +216,8 @@
                     <div class="card kpi-card h-100">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 text-muted small">{{ __('messages.total_purchases') }}</p>
-                                <h4 class="mb-1 fw-bold">{{ $totalPurchases ?? 0 }}</h4>
+                                <p class="text-muted small mb-1">{{ __('messages.total_purchases') }}</p>
+                                <h4 class="fw-bold mb-1">{{ $totalPurchases ?? 0 }}</h4>
                                 <small class="text-info"><i class="bx bx-cart"></i> {{ __('messages.all_time') }}</small>
                             </div>
                             <span class="stats-card-icon bg-label-info" style="width:52px;height:52px;font-size:1.6rem;">
@@ -230,14 +230,14 @@
             <div class="col-md-4 col-sm-12 mb-3">
                 <div class="card kpi-card h-100">
                     <div class="card-body">
-                        <p class="mb-2 text-muted small fw-semibold">{{ __('messages.quick_stats') }}</p>
-                        <div class="row text-center g-0">
+                        <p class="text-muted small fw-semibold mb-2">{{ __('messages.quick_stats') }}</p>
+                        <div class="row g-0 text-center">
                             <div class="col-6" style="border-right:1px solid #e9ecef;">
-                                <h5 class="text-primary mb-0 fw-bold">{{ $totalCategories ?? 0 }}</h5>
+                                <h5 class="text-primary fw-bold mb-0">{{ $totalCategories ?? 0 }}</h5>
                                 <small class="text-muted">{{ __('messages.categories') }}</small>
                             </div>
                             <div class="col-6">
-                                <h5 class="text-success mb-0 fw-bold">{{ $totalBrands ?? 0 }}</h5>
+                                <h5 class="text-success fw-bold mb-0">{{ $totalBrands ?? 0 }}</h5>
                                 <small class="text-muted">{{ __('messages.brands') }}</small>
                             </div>
                         </div>
@@ -251,11 +251,11 @@
     @if (auth()->user()->can('sales.view') && auth()->user()->can('purchases.view'))
         <div class="row mb-4">
             {{-- This Week Sales & Purchases Bar Chart --}}
-            <div class="col-lg-7 mb-4 mb-lg-0">
+            <div class="col-lg-7 mb-lg-0 mb-4">
                 <div class="card h-100">
                     <div class="card-header py-3">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-bar-chart-alt-2 me-1 text-primary"></i> This Week Sales &amp; Purchases
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-bar-chart-alt-2 text-primary me-1"></i> This Week Sales &amp; Purchases
                         </h6>
                     </div>
                     <div class="card-body" style="position:relative;">
@@ -268,8 +268,8 @@
             <div class="col-lg-5">
                 <div class="card h-100">
                     <div class="card-header py-3">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-pie-chart-alt-2 me-1 text-success"></i>
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-pie-chart-alt-2 text-success me-1"></i>
                             Top Selling Products ({{ now()->format('F') }})
                         </h6>
                     </div>
@@ -277,9 +277,9 @@
                         @if (isset($topProducts) && $topProducts->count())
                             <canvas id="topProductsChart"></canvas>
                         @else
-                            <div class="text-center text-muted">
+                            <div class="text-muted text-center">
                                 <i class="bx bx-package fs-1 d-block mb-2 opacity-50"></i>
-                                <p class="mb-0 small">No sales data this month</p>
+                                <p class="small mb-0">No sales data this month</p>
                             </div>
                         @endif
                     </div>
@@ -293,11 +293,11 @@
         <div class="row mb-4">
             {{-- Top 5 Customers Pie --}}
             @can('customers.view')
-                <div class="col-lg-5 mb-4 mb-lg-0">
+                <div class="col-lg-5 mb-lg-0 mb-4">
                     <div class="card h-100">
                         <div class="card-header py-3">
-                            <h6 class="mb-0 fw-semibold">
-                                <i class="bx bx-pie-chart me-1 text-info"></i>
+                            <h6 class="fw-semibold mb-0">
+                                <i class="bx bx-pie-chart text-info me-1"></i>
                                 Top 5 Customers ({{ now()->format('F') }})
                             </h6>
                         </div>
@@ -305,9 +305,9 @@
                             @if (isset($topCustomers) && $topCustomers->count())
                                 <canvas id="topCustomersChart"></canvas>
                             @else
-                                <div class="text-center text-muted">
+                                <div class="text-muted text-center">
                                     <i class="bx bx-user fs-1 d-block mb-2 opacity-50"></i>
-                                    <p class="mb-0 small">No customer sales this month</p>
+                                    <p class="small mb-0">No customer sales this month</p>
                                 </div>
                             @endif
                         </div>
@@ -320,14 +320,14 @@
                 <div class="{{ auth()->user()->can('customers.view') ? 'col-lg-7' : 'col-12' }}">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center py-3">
-                            <h6 class="mb-0 fw-semibold">
-                                <i class="bx bx-receipt me-1 text-primary"></i> {{ __('messages.recent_sales') }}
+                            <h6 class="fw-semibold mb-0">
+                                <i class="bx bx-receipt text-primary me-1"></i> {{ __('messages.recent_sales') }}
                             </h6>
-                            <a href="{{ route('sales.index') }}"
-                                class="btn btn-sm btn-outline-primary">{{ __('messages.view_all') }}</a>
+                            <a class="btn btn-sm btn-outline-primary"
+                                href="{{ route('sales.index') }}">{{ __('messages.view_all') }}</a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0" style="font-size:.875rem;">
+                            <table class="table-hover mb-0 table align-middle" style="font-size:.875rem;">
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.th_invoice') }}</th>
@@ -359,7 +359,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted py-4">
+                                            <td class="text-muted py-4 text-center" colspan="5">
                                                 <i class="bx bx-receipt fs-2 d-block mb-1 opacity-50"></i>
                                                 {{ __('messages.no_recent_sales') }}
                                             </td>
@@ -379,14 +379,14 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center py-3">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-error-circle me-1 text-danger"></i> {{ __('messages.low_stock_alert') }}
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bx bx-error-circle text-danger me-1"></i> {{ __('messages.low_stock_alert') }}
                     </h6>
-                    <a href="{{ route('stocks.index') }}"
-                        class="btn btn-sm btn-outline-danger">{{ __('messages.manage') }}</a>
+                    <a class="btn btn-sm btn-outline-danger"
+                        href="{{ route('stocks.index') }}">{{ __('messages.manage') }}</a>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="font-size:.875rem;">
+                    <table class="table-hover mb-0 table align-middle" style="font-size:.875rem;">
                         <thead class="table-light">
                             <tr>
                                 <th>Product</th>
@@ -403,8 +403,9 @@
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
                                             @if ($product->image)
-                                                <img src="{{ asset('storage/' . $product->image) }}" class="rounded"
-                                                    style="width:32px;height:32px;object-fit:cover;" alt="">
+                                                <img alt="" class="rounded"
+                                                    src="{{ asset('storage/' . $product->image) }}"
+                                                    style="width:32px;height:32px;object-fit:cover;">
                                             @else
                                                 <span class="stats-card-icon bg-label-secondary"
                                                     style="width:32px;height:32px;font-size:.85rem;flex-shrink:0;">
@@ -429,7 +430,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">
+                                    <td class="text-muted py-4 text-center" colspan="5">
                                         <i class="bx bx-check-shield fs-2 text-success d-block mb-1"></i>
                                         {{ __('messages.all_stock_healthy') }}
                                     </td>
@@ -449,18 +450,18 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center py-3">
-                            <h6 class="mb-0 fw-semibold">
-                                <i class="bx bx-history me-1 text-secondary"></i> Recent Activity
-                                @if (auth()->user()->can('activity_logs.own') && !auth()->user()->getRoleNames()->contains('Super Admin'))
-                                    <span class="badge bg-label-info ms-1 small">{{ __('messages.own') ?? 'Own' }}</span>
+                            <h6 class="fw-semibold mb-0">
+                                <i class="bx bx-history text-secondary me-1"></i> Recent Activity
+                                @if (auth()->user()->can('activity_logs.own') && !auth()->user()->getRoleNames()->contains('super_admin'))
+                                    <span class="badge bg-label-info small ms-1">{{ __('messages.own') ?? 'Own' }}</span>
                                 @endif
                             </h6>
-                            <a href="{{ route('activity-logs.index') }}"
-                                class="btn btn-sm btn-outline-secondary">{{ __('messages.view_all') }}</a>
+                            <a class="btn btn-sm btn-outline-secondary"
+                                href="{{ route('activity-logs.index') }}">{{ __('messages.view_all') }}</a>
                         </div>
                         <div class="card-body py-2">
                             @foreach ($recentActivities as $log)
-                                <div class="d-flex gap-3 py-2 border-bottom">
+                                <div class="d-flex border-bottom gap-3 py-2">
                                     <div
                                         style="width:8px;height:8px;border-radius:50%;background:#696cff;flex-shrink:0;margin-top:6px;">
                                     </div>

@@ -19,9 +19,9 @@ class ActivityLogController extends Controller
         $user  = auth()->user();
         $query = ActivityLog::with('user')->latest();
 
-        // If the user only has "own" permission (not Super Admin), restrict to their logs
+        // If the user only has "own" permission (not super_admin), restrict to their logs
         $restrictToOwn = $user->can('activity_logs.own')
-            && !$user->getRoleNames()->contains('Super Admin');
+            && !$user->getRoleNames()->contains('super_admin');
 
         if ($restrictToOwn) {
             $query->where('user_id', $user->id);

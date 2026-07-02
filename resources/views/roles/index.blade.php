@@ -7,20 +7,20 @@
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.role_management') }}</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item active">{{ __('messages.menu_roles') }}</li>
                 </ol>
             </nav>
         </div>
         @can('roles.create')
-            <div class="d-flex gap-2 align-items-center">
+            <div class="d-flex align-items-center gap-2">
                 @can('roles.delete')
-                    <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                    <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button">
                         <i class="bx bx-trash me-1"></i> Delete Multiples
                     </button>
                 @endcan
-                <a href="{{ route('roles.create') }}" class="btn btn-outline-primary">
+                <a class="btn btn-outline-primary" href="{{ route('roles.create') }}">
                     <i class="bx bx-plus me-1"></i> {{ __('messages.add_role') }}
                 </a>
             </div>
@@ -30,21 +30,21 @@
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" id="rolesTable" style="width:100%">
+                <table class="table-hover mb-0 table align-middle" id="rolesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
-                            <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
+                            <th style="width:40px"><input class="form-check-input" id="selectAll" type="checkbox"></th>
                             <th>{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.role') }}</th>
                             <th class="text-center">{{ __('messages.permissions') }}</th>
                             <th>{{ __('messages.th_created') }}</th>
-                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
+                            <th class="no-sort text-center">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($roles as $index => $role)
                             <tr>
-                                <td><input type="checkbox" class="form-check-input row-checkbox"
+                                <td><input class="form-check-input row-checkbox" type="checkbox"
                                         value="{{ $role->id }}"></td>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td>
@@ -67,23 +67,22 @@
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('roles.update')
-                                            <a href="{{ route('roles.edit', $role->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                            <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                href="{{ route('roles.edit', $role->id) }}"
+                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.edit') }}">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('roles.delete')
-                                            @if ($role->name !== 'Super Admin')
-                                                <form id="delete-form-{{ $role->id }}"
-                                                    action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                                    class="d-inline">
+                                            @if ($role->name !== 'super_admin')
+                                                <form action="{{ route('roles.destroy', $role->id) }}" class="d-inline"
+                                                    id="delete-form-{{ $role->id }}" method="POST">
                                                     @csrf @method('DELETE')
-                                                    <button type="button"
+                                                    <button
                                                         class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                         data-id="{{ $role->id }}" data-name="{{ $role->name }}"
-                                                        title="{{ __('messages.delete') }}"
-                                                        style="width:30px;height:30px;padding:0;">
+                                                        style="width:30px;height:30px;padding:0;"
+                                                        title="{{ __('messages.delete') }}" type="button">
                                                         <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                     </button>
                                                 </form>
@@ -94,9 +93,9 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-5">
+                                <td class="text-muted py-5 text-center" colspan="5">
                                     <i class="bx bx-shield" style="font-size:2.5rem;opacity:.3;"></i>
-                                    <p class="mt-2 mb-0">{{ __('messages.no_records') }}</p>
+                                    <p class="mb-0 mt-2">{{ __('messages.no_records') }}</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -194,7 +193,7 @@
                 if (!ids.length) return;
                 Swal.fire({
                     title: 'Delete ' + ids.length + ' role(s)?',
-                    text: 'Super Admin role will be skipped. This action cannot be undone.',
+                    text: 'super_admin role will be skipped. This action cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

@@ -28,7 +28,7 @@ class SaleController extends Controller
         $query = Sale::with(['customer', 'user', 'items'])->latest();
 
         // RBAC: sales.own restricts to records created by the authenticated user
-        if (! auth()->user()->can('sales.view') || auth()->user()->hasPermissionTo('sales.own') && ! auth()->user()->hasAnyRole(['Super Admin', 'Manager'])) {
+        if (! auth()->user()->can('sales.view') || auth()->user()->hasPermissionTo('sales.own') && ! auth()->user()->hasAnyRole(['super_admin', 'manager'])) {
             $query->where('user_id', auth()->id());
         }
 
@@ -65,7 +65,7 @@ class SaleController extends Controller
         $customers = Customer::where('status', 'active')->orderBy('name')->get();
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
         $isSalesOwn = auth()->user()->hasPermissionTo('sales.own')
-            && ! auth()->user()->hasAnyRole(['Super Admin', 'Manager']);
+            && ! auth()->user()->hasAnyRole(['super_admin', 'manager']);
 
         return view('sales.create', compact('customers', 'salesPersons', 'isSalesOwn'));
     }
@@ -118,7 +118,7 @@ class SaleController extends Controller
 
             // Restrict sales_person_id for sales.own users
             $salesPersonId = auth()->user()->hasPermissionTo('sales.own')
-                && ! auth()->user()->hasAnyRole(['Super Admin', 'Manager'])
+                && ! auth()->user()->hasAnyRole(['super_admin', 'manager'])
                 ? auth()->id()
                 : $request->sales_person_id;
 
@@ -192,7 +192,7 @@ class SaleController extends Controller
         $customers    = Customer::where('status', 'active')->orderBy('name')->get();
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
         $isSalesOwn   = auth()->user()->hasPermissionTo('sales.own')
-            && ! auth()->user()->hasAnyRole(['Super Admin', 'Manager']);
+            && ! auth()->user()->hasAnyRole(['super_admin', 'manager']);
 
         return view('sales.edit', compact('sale', 'customers', 'salesPersons', 'isSalesOwn'));
     }
@@ -265,7 +265,7 @@ class SaleController extends Controller
 
             // Restrict sales_person_id for sales.own users
             $salesPersonId = auth()->user()->hasPermissionTo('sales.own')
-                && ! auth()->user()->hasAnyRole(['Super Admin', 'Manager'])
+                && ! auth()->user()->hasAnyRole(['super_admin', 'manager'])
                 ? auth()->id()
                 : $request->sales_person_id;
 
@@ -489,7 +489,7 @@ class SaleController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasPermissionTo('sales.own') && ! $user->hasAnyRole(['Super Admin', 'Manager'])) {
+        if ($user->hasPermissionTo('sales.own') && ! $user->hasAnyRole(['super_admin', 'manager'])) {
             if ($sale->user_id !== $user->id) {
                 abort(403, 'Access denied: you can only view your own sales.');
             }

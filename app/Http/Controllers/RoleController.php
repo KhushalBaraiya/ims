@@ -162,9 +162,9 @@ class RoleController extends Controller
     {
         Gate::authorize('roles.delete');
 
-        // Prevent deleting Super Admin
-        if ($role->name === 'Super Admin') {
-            $message = 'The Super Admin role cannot be deleted.';
+        // Prevent deleting super_admin
+        if ($role->name === 'super_admin') {
+            $message = 'The super_admin role cannot be deleted.';
 
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => $message], 403);
@@ -186,7 +186,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Bulk delete roles (cannot delete Super Admin).
+     * Bulk delete roles (cannot delete super_admin).
      */
     public function bulkDestroy(Request $request): JsonResponse
     {
@@ -200,7 +200,7 @@ class RoleController extends Controller
         $roles = Role::whereIn('id', $ids)->get();
         $deleted = 0;
         foreach ($roles as $role) {
-            if ($role->name === 'Super Admin') continue;
+            if ($role->name === 'super_admin') continue;
             $role->delete();
             $deleted++;
         }
