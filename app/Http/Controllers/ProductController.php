@@ -584,4 +584,28 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
+
+    /**
+     * Bulk delete products.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('products.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        Product::whereIn('id', $ids)->each(function ($product) {
+            if ($product->stock) {
+                $product->stock()->delete();
+            }
+            $product->delete();
+        });
+
+        ActivityLog::log('Products Bulk Deleted', 'Deleted ' . count($ids) . ' product(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' product(s) deleted successfully.']);
+    }
 }

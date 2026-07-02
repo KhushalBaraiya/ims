@@ -127,4 +127,23 @@ class SupplierController extends Controller
 
         return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
     }
+
+    /**
+     * Bulk delete suppliers.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('suppliers.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        Supplier::whereIn('id', $ids)->each(fn($s) => $s->delete());
+
+        ActivityLog::log('Suppliers Bulk Deleted', 'Deleted ' . count($ids) . ' supplier(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' supplier(s) deleted successfully.']);
+    }
 }

@@ -355,6 +355,41 @@ class PurchaseReturnController extends Controller
     }
 
     /**
+     * Bulk delete purchase returns.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('purchase_returns.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        $deleted = 0;
+        DB::beginTransaction();
+        try {
+            foreach ($ids as $id) {
+                $ret = PurchaseReturn::with('items.product.stock')->find($id);
+                if (!$ret) continue;
+                if ($ret->status === 'Completed') {
+                    foreach ($ret->items as $item) {
+                        $item->product->stock->increment('quantity', $item->quantity);
+                    }
+                }
+                $ret->delete();
+                $deleted++;
+            }
+            DB::commit();
+            ActivityLog::log('Purchase Returns Bulk Deleted', "Deleted {$deleted} purchase return(s).");
+            return response()->json(['success' => true, 'message' => "{$deleted} purchase return(s) deleted successfully."]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Print the purchase return receipt.
      */
     public function printReturn(PurchaseReturn $purchaseReturn): View

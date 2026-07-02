@@ -18,6 +18,11 @@
                 <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
                 <i class="bx bx-chevron-down" id="filtersChevron"></i>
             </button>
+            @can('purchases.delete')
+                <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                </button>
+            @endcan
             @can('purchases.create')
                 <a class="btn btn-outline-primary d-flex align-items-center gap-1" href="{{ route('purchases.create') }}">
                     <i class="bx bx-plus"></i> {{ __('messages.add_purchase') }}
@@ -157,6 +162,7 @@
                 <table class="table-hover mb-0 table align-middle" id="purchasesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
+                            <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
                             <th>{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.th_purchase_no') }}</th>
                             <th>{{ __('messages.th_date') }}</th>
@@ -173,6 +179,8 @@
                     <tbody>
                         @foreach ($purchases as $index => $purchase)
                             <tr>
+                                <td><input type="checkbox" class="form-check-input row-checkbox"
+                                        value="{{ $purchase->id }}"></td>
                                 <td class="text-muted fw-semibold">{{ $purchase->id }}</td>
                                 <td><code class="fw-bold">{{ $purchase->purchase_no }}</code></td>
                                 <td class="text-muted">{{ $purchase->purchase_date }}</td>
@@ -240,10 +248,8 @@
                                         @endif
                                         @can('purchases.update')
                                             <a class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action btn-payment-modal"
-                                                href="#"
-                                                style="width:30px;height:30px;padding:0;" title="Payment"
-                                                data-id="{{ $purchase->id }}"
-                                                data-no="{{ $purchase->purchase_no }}"
+                                                href="#" style="width:30px;height:30px;padding:0;" title="Payment"
+                                                data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
                                                 data-grand-total="{{ $purchase->grand_total }}"
                                                 data-paid-amount="{{ $purchase->paid_amount }}"
                                                 data-due-amount="{{ $purchase->due_amount }}"
@@ -422,6 +428,68 @@
                 });
             });
 
+            // ── Bulk Select ──────────────────────────────────────────────
+            $('#selectAll').on('change', function() {
+                $('.row-checkbox').prop('checked', this.checked);
+                toggleBulkBtn();
+            });
+            $(document).on('change', '.row-checkbox', function() {
+                $('#selectAll').prop('checked', $('.row-checkbox:not(:checked)').length === 0);
+                toggleBulkBtn();
+            });
+
+            function toggleBulkBtn() {
+                const count = $('.row-checkbox:checked').length;
+                count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
+            }
+
+            // ── Bulk Delete ──────────────────────────────────────────────
+            $('#bulkDeleteBtn').on('click', function() {
+                const ids = $('.row-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get();
+                if (!ids.length) return;
+                Swal.fire({
+                    title: 'Delete ' + ids.length + ' purchase(s)?',
+                    text: 'Stock will be reversed for Completed orders. This cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete all!',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('purchases.bulk-destroy') }}',
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                ids: ids
+                            },
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                            title: 'Deleted!',
+                                            text: res.message,
+                                            icon: 'success',
+                                            confirmButtonColor: '#696cff'
+                                        })
+                                        .then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function(xhr) {
+                                const msg = xhr.responseJSON?.message ||
+                                    '{{ __('messages.error_occurred') }}';
+                                showAdminToast(msg, 'error');
+                            }
+                        });
+                    }
+                });
+            });
+
             // ── Payment Modal Event Handler ──────────────────────────────
             $(document).on('click', '.btn-payment-modal', function(e) {
                 e.preventDefault();
@@ -474,7 +542,7 @@
 
                 btn.prop('disabled', true).html(
                     '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Saving...'
-                    );
+                );
 
                 $.ajax({
                     url: form.attr('action'),

@@ -132,4 +132,23 @@ class SubCategoryController extends Controller
 
         return redirect()->route('sub-categories.index')->with('success', 'Sub category deleted successfully.');
     }
+
+    /**
+     * Bulk delete sub categories.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('sub_categories.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        SubCategory::whereIn('id', $ids)->each(fn($s) => $s->delete());
+
+        ActivityLog::log('Sub Categories Bulk Deleted', 'Deleted ' . count($ids) . ' sub category(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' sub category(s) deleted successfully.']);
+    }
 }

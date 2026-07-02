@@ -127,4 +127,23 @@ class MainCategoryController extends Controller
 
         return redirect()->route('main-categories.index')->with('success', 'Category deleted successfully.');
     }
+
+    /**
+     * Bulk delete main categories.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('main_categories.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        MainCategory::whereIn('id', $ids)->each(fn($c) => $c->delete());
+
+        ActivityLog::log('Main Categories Bulk Deleted', 'Deleted ' . count($ids) . ' main category(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' category(s) deleted successfully.']);
+    }
 }

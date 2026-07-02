@@ -103,6 +103,11 @@
             <a href="{{ route('products.by-category') }}" class="btn btn-outline-success d-flex align-items-center gap-1">
                 <i class="bx bx-category"></i> By Category
             </a>
+            @can('products.delete')
+                <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                </button>
+            @endcan
             @can('products.create')
                 <a href="{{ route('products.create') }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
                     <i class="bx bx-plus"></i> {{ __('messages.add_product') }}
@@ -298,6 +303,7 @@
                     <thead class="table-light">
                         <tr>
                             <th style="width:40px">#</th>
+                            <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
                             <th class="no-sort" style="width:80px">Image</th>
                             <th>{{ __('messages.th_name') }}</th>
                             <th>{{ __('messages.sku') }}</th>
@@ -325,6 +331,8 @@
                             @endphp
                             <tr>
                                 <td class="text-muted small fw-semibold">{{ $products->firstItem() + $i }}</td>
+                                <td><input type="checkbox" class="form-check-input row-checkbox"
+                                        value="{{ $product->id }}"></td>
                                 <td>
                                     <div class="prod-img-cell">
                                         @if ($product->image)
@@ -639,6 +647,67 @@
                             },
                             error: () => showAdminToast(
                                 '{{ __('messages.error_occurred') }}', 'error')
+                        });
+                    }
+                });
+            });
+
+            // ── Bulk Select ──────────────────────────────────────────────
+            $('#selectAll').on('change', function() {
+                $('.row-checkbox').prop('checked', this.checked);
+                toggleBulkBtn();
+            });
+            $(document).on('change', '.row-checkbox', function() {
+                $('#selectAll').prop('checked', $('.row-checkbox:not(:checked)').length === 0);
+                toggleBulkBtn();
+            });
+
+            function toggleBulkBtn() {
+                const count = $('.row-checkbox:checked').length;
+                count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
+            }
+
+            // ── Bulk Delete ──────────────────────────────────────────────
+            $('#bulkDeleteBtn').on('click', function() {
+                const ids = $('.row-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get();
+                if (!ids.length) return;
+                Swal.fire({
+                    title: 'Delete ' + ids.length + ' product(s)?',
+                    text: 'This action cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete all!',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('products.bulk-destroy') }}',
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                ids: ids
+                            },
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                            title: 'Deleted!',
+                                            text: res.message,
+                                            icon: 'success',
+                                            confirmButtonColor: '#696cff'
+                                        })
+                                        .then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                    'error');
+                            }
                         });
                     }
                 });

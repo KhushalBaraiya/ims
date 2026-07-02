@@ -15,9 +15,16 @@
             </nav>
         </div>
         @can('sub_categories.create')
-            <a href="{{ route('sub-categories.create') }}" class="btn btn-outline-primary">
-                <i class="bx bx-plus me-1"></i> {{ __('messages.add_sub_category') }}
-            </a>
+            <div class="d-flex gap-2 align-items-center">
+                @can('sub_categories.delete')
+                    <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                        <i class="bx bx-trash me-1"></i> Delete Multiples
+                    </button>
+                @endcan
+                <a href="{{ route('sub-categories.create') }}" class="btn btn-outline-primary">
+                    <i class="bx bx-plus me-1"></i> {{ __('messages.add_sub_category') }}
+                </a>
+            </div>
         @endcan
     </div>
 
@@ -95,6 +102,7 @@
                 <table class="table table-hover align-middle mb-0" id="subCategoriesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
+                            <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
                             <th>{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.sub_category_name') }}</th>
                             <th>{{ __('messages.th_code') }}</th>
@@ -107,6 +115,8 @@
                     <tbody>
                         @foreach ($subCategories as $index => $subCategory)
                             <tr>
+                                <td><input type="checkbox" class="form-check-input row-checkbox"
+                                        value="{{ $subCategory->id }}"></td>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
@@ -172,8 +182,8 @@
                                         @endcan
                                         @can('sub_categories.delete')
                                             <form id="delete-form-{{ $subCategory->id }}"
-                                                action="{{ route('sub-categories.destroy', $subCategory->id) }}" method="POST"
-                                                class="d-inline">
+                                                action="{{ route('sub-categories.destroy', $subCategory->id) }}"
+                                                method="POST" class="d-inline">
                                                 @csrf @method('DELETE')
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
@@ -303,6 +313,67 @@
                                         icon: 'success',
                                         confirmButtonColor: '#696cff'
                                     }).then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                    'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // ── Bulk Select ──────────────────────────────────────────────
+            $('#selectAll').on('change', function() {
+                $('.row-checkbox').prop('checked', this.checked);
+                toggleBulkBtn();
+            });
+            $(document).on('change', '.row-checkbox', function() {
+                $('#selectAll').prop('checked', $('.row-checkbox:not(:checked)').length === 0);
+                toggleBulkBtn();
+            });
+
+            function toggleBulkBtn() {
+                const count = $('.row-checkbox:checked').length;
+                count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
+            }
+
+            // ── Bulk Delete ──────────────────────────────────────────────
+            $('#bulkDeleteBtn').on('click', function() {
+                const ids = $('.row-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get();
+                if (!ids.length) return;
+                Swal.fire({
+                    title: 'Delete ' + ids.length + ' item(s)?',
+                    text: 'This action cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete all!',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('sub-categories.bulk-destroy') }}',
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                ids: ids
+                            },
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                            title: 'Deleted!',
+                                            text: res.message,
+                                            icon: 'success',
+                                            confirmButtonColor: '#696cff'
+                                        })
+                                        .then(() => window.location.reload());
                                 } else {
                                     showAdminToast(res.message, 'error');
                                 }

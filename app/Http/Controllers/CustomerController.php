@@ -127,4 +127,23 @@ class CustomerController extends Controller
 
         return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
     }
+
+    /**
+     * Bulk delete customers.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('customers.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        Customer::whereIn('id', $ids)->each(fn($c) => $c->delete());
+
+        ActivityLog::log('Customers Bulk Deleted', 'Deleted ' . count($ids) . ' customer(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' customer(s) deleted successfully.']);
+    }
 }

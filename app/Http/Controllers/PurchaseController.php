@@ -384,6 +384,47 @@ class PurchaseController extends Controller
     }
 
     /**
+     * Bulk delete purchases.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('purchases.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        $deleted = 0;
+        DB::beginTransaction();
+        try {
+            foreach ($ids as $id) {
+                $purchase = Purchase::with('items.product.stock')->find($id);
+                if (!$purchase) continue;
+                if ($purchase->status === 'Completed') {
+                    foreach ($purchase->items as $item) {
+                        $currentQty = $item->product->stock->quantity ?? 0;
+                        if (($currentQty - $item->quantity) < 0) {
+                            throw new \Exception("Cannot delete: reversing stock for \"{$item->product->name}\" would go negative.");
+                        }
+                    }
+                    foreach ($purchase->items as $item) {
+                        $item->product->stock->decrement('quantity', $item->quantity);
+                    }
+                }
+                $purchase->delete();
+                $deleted++;
+            }
+            DB::commit();
+            ActivityLog::log('Purchases Bulk Deleted', "Deleted {$deleted} purchase(s).");
+            return response()->json(['success' => true, 'message' => "{$deleted} purchase(s) deleted successfully."]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Render a printable purchase order invoice.
      */
     public function printInvoice(Purchase $purchase): View

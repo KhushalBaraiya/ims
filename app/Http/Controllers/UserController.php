@@ -192,4 +192,26 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
+
+    /**
+     * Bulk delete users (cannot delete own account).
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('users.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        // Prevent self-deletion
+        $ids = array_filter($ids, fn($id) => (int) $id !== auth()->id());
+
+        User::whereIn('id', $ids)->each(fn($u) => $u->delete());
+
+        ActivityLog::log('Users Bulk Deleted', 'Deleted ' . count($ids) . ' user(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' user(s) deleted successfully.']);
+    }
 }

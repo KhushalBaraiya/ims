@@ -361,6 +361,41 @@ class SaleController extends Controller
     }
 
     /**
+     * Bulk delete sales.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('sales.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        $deleted = 0;
+        DB::beginTransaction();
+        try {
+            foreach ($ids as $id) {
+                $sale = Sale::with('items.product.stock')->find($id);
+                if (!$sale) continue;
+                if ($sale->status === 'Completed') {
+                    foreach ($sale->items as $item) {
+                        $item->product->stock->increment('quantity', $item->quantity);
+                    }
+                }
+                $sale->delete();
+                $deleted++;
+            }
+            DB::commit();
+            ActivityLog::log('Sales Bulk Deleted', "Deleted {$deleted} sale(s).");
+            return response()->json(['success' => true, 'message' => "{$deleted} sale(s) deleted successfully."]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Generate concurrent-safe unique invoice number.
      */
     private function generateInvoiceNo(): string

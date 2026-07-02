@@ -184,4 +184,29 @@ class RoleController extends Controller
 
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
+
+    /**
+     * Bulk delete roles (cannot delete Super Admin).
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('roles.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        $roles = Role::whereIn('id', $ids)->get();
+        $deleted = 0;
+        foreach ($roles as $role) {
+            if ($role->name === 'Super Admin') continue;
+            $role->delete();
+            $deleted++;
+        }
+
+        ActivityLog::log('Roles Bulk Deleted', "Deleted {$deleted} role(s).");
+
+        return response()->json(['success' => true, 'message' => "{$deleted} role(s) deleted successfully."]);
+    }
 }

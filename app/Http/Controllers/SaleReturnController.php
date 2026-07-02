@@ -305,6 +305,41 @@ class SaleReturnController extends Controller
     }
 
     /**
+     * Bulk delete sale returns.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('sale_returns.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        $deleted = 0;
+        DB::beginTransaction();
+        try {
+            foreach ($ids as $id) {
+                $ret = SaleReturn::with('items.product.stock')->find($id);
+                if (!$ret) continue;
+                if ($ret->status === 'Completed') {
+                    foreach ($ret->items as $item) {
+                        $item->product->stock->decrement('quantity', $item->quantity);
+                    }
+                }
+                $ret->delete();
+                $deleted++;
+            }
+            DB::commit();
+            ActivityLog::log('Sale Returns Bulk Deleted', "Deleted {$deleted} sale return(s).");
+            return response()->json(['success' => true, 'message' => "{$deleted} return(s) deleted successfully."]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * AJAX action to load details of a sale invoice.
      */
     public function getSaleReturnData(Sale $sale): JsonResponse

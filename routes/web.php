@@ -56,22 +56,29 @@ Route::middleware('auth')->group(function () {
 
     // Role Management CRUD Resource Route
     Route::resource('roles', RoleController::class);
+    Route::delete('roles/bulk-delete', [RoleController::class, 'bulkDestroy'])->name('roles.bulk-destroy');
 
     // User Management CRUD Resource Route
     Route::resource('users', UserController::class);
     Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::delete('users/bulk-delete', [UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
 
     // Inventory CRUD Resource Routes
     Route::resource('brands', BrandController::class);
     Route::patch('brands/{brand}/toggle-status', [BrandController::class, 'toggleStatus'])->name('brands.toggle-status');
+    Route::delete('brands/bulk-delete', [BrandController::class, 'bulkDestroy'])->name('brands.bulk-destroy');
     Route::resource('main-categories', MainCategoryController::class);
     Route::patch('main-categories/{mainCategory}/toggle-status', [MainCategoryController::class, 'toggleStatus'])->name('main-categories.toggle-status');
+    Route::delete('main-categories/bulk-delete', [MainCategoryController::class, 'bulkDestroy'])->name('main-categories.bulk-destroy');
     Route::resource('sub-categories', SubCategoryController::class);
     Route::patch('sub-categories/{subCategory}/toggle-status', [SubCategoryController::class, 'toggleStatus'])->name('sub-categories.toggle-status');
+    Route::delete('sub-categories/bulk-delete', [SubCategoryController::class, 'bulkDestroy'])->name('sub-categories.bulk-destroy');
     Route::resource('suppliers', SupplierController::class);
     Route::patch('suppliers/{supplier}/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle-status');
+    Route::delete('suppliers/bulk-delete', [SupplierController::class, 'bulkDestroy'])->name('suppliers.bulk-destroy');
     Route::resource('customers', CustomerController::class);
     Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
+    Route::delete('customers/bulk-delete', [CustomerController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
     Route::resource('stocks', StockController::class);
     Route::get('/stocks-adjust', [StockController::class, 'adjust'])->name('stocks.adjust');
     Route::post('/stocks-adjust', [StockController::class, 'store'])->name('stocks.store_adjustment');
@@ -92,16 +99,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/search', [SaleController::class, 'searchProducts'])->name('products.search');
     Route::get('/products/{product}/copy', [ProductController::class, 'copy'])->name('products.copy');
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::delete('/products/bulk-delete', [ProductController::class, 'bulkDestroy'])->name('products.bulk-destroy');
     Route::resource('products', ProductController::class);
 
     // Sales Routes
     Route::get('/sales/generate-invoice-no', [SaleController::class, 'generateInvoiceNoAjax'])->name('sales.generate-invoice-no');
     Route::get('/sales/{sale}/print', [SaleController::class, 'printInvoice'])->name('sales.print');
+    Route::delete('/sales/bulk-delete', [SaleController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
     Route::resource('sales', SaleController::class);
 
     // Sales Return Routes
     Route::get('/sales/{sale}/return-data', [SaleReturnController::class, 'getSaleReturnData'])->name('sales.return-data');
     Route::get('/sale-returns/{sale_return}/print', [SaleReturnController::class, 'printReturn'])->name('sale-returns.print');
+    Route::delete('/sale-returns/bulk-delete', [SaleReturnController::class, 'bulkDestroy'])->name('sale-returns.bulk-destroy');
     Route::resource('sale-returns', SaleReturnController::class);
     // Purchase Management Routes
     Route::get('/purchases/generate-purchase-no', [PurchaseController::class, 'generatePurchaseNoAjax'])->name('purchases.generate-purchase-no');
@@ -109,12 +119,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchases/generate-no', [PurchaseController::class, 'generateNoAjax'])->name('purchases.generate-no');
     Route::get('/purchases/{purchase}/print', [PurchaseController::class, 'printInvoice'])->name('purchases.print');
     Route::post('/purchases/{purchase}/payment', [PurchaseController::class, 'updatePayment'])->name('purchases.update-payment');
+    Route::delete('/purchases/bulk-delete', [PurchaseController::class, 'bulkDestroy'])->name('purchases.bulk-destroy');
     Route::resource('purchases', PurchaseController::class);
 
     // Purchase Return Routes
     Route::get('/purchase-returns/search-products', [PurchaseReturnController::class, 'searchProducts'])->name('purchase-returns.search-products');
     Route::get('/purchases/{purchase}/return-data', [PurchaseReturnController::class, 'getPurchaseReturnData'])->name('purchases.return-data');
     Route::get('/purchase-returns/{purchase_return}/print', [PurchaseReturnController::class, 'printReturn'])->name('purchase-returns.print');
+    Route::delete('/purchase-returns/bulk-delete', [PurchaseReturnController::class, 'bulkDestroy'])->name('purchase-returns.bulk-destroy');
     Route::resource('purchase-returns', PurchaseReturnController::class);
 
     // Settings Routes

@@ -18,6 +18,11 @@
                 <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
+            @can('sales.delete')
+                <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                </button>
+            @endcan
             @can('sales.create')
                 <a href="{{ route('sales.create') }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
                     <i class="bx bx-plus"></i> {{ __('messages.add_sale') }}
@@ -157,6 +162,7 @@
                 <table class="table table-hover align-middle mb-0" id="salesTable" style="width:100%">
                     <thead class="table-light">
                         <tr>
+                            <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
                             <th>{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.th_invoice') }}</th>
                             <th>{{ __('messages.th_date') }}</th>
@@ -173,6 +179,8 @@
                     <tbody>
                         @foreach ($sales as $index => $sale)
                             <tr>
+                                <td><input type="checkbox" class="form-check-input row-checkbox"
+                                        value="{{ $sale->id }}"></td>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td><code class="fw-bold">{{ $sale->invoice_no }}</code></td>
                                 <td class="text-muted">{{ $sale->invoice_date }}</td>
@@ -309,6 +317,68 @@
                             error: function() {
                                 showAdminToast('{{ __('messages.error_occurred') }}',
                                     'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // ── Bulk Select ──────────────────────────────────────────────
+            $('#selectAll').on('change', function() {
+                $('.row-checkbox').prop('checked', this.checked);
+                toggleBulkBtn();
+            });
+            $(document).on('change', '.row-checkbox', function() {
+                $('#selectAll').prop('checked', $('.row-checkbox:not(:checked)').length === 0);
+                toggleBulkBtn();
+            });
+
+            function toggleBulkBtn() {
+                const count = $('.row-checkbox:checked').length;
+                count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
+            }
+
+            // ── Bulk Delete ──────────────────────────────────────────────
+            $('#bulkDeleteBtn').on('click', function() {
+                const ids = $('.row-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get();
+                if (!ids.length) return;
+                Swal.fire({
+                    title: 'Delete ' + ids.length + ' sale(s)?',
+                    text: 'Stock will be restored for Completed invoices. This cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete all!',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('sales.bulk-destroy') }}',
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                ids: ids
+                            },
+                            success: function(res) {
+                                if (res.success) {
+                                    Swal.fire({
+                                            title: 'Deleted!',
+                                            text: res.message,
+                                            icon: 'success',
+                                            confirmButtonColor: '#696cff'
+                                        })
+                                        .then(() => window.location.reload());
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function(xhr) {
+                                const msg = xhr.responseJSON?.message ||
+                                    '{{ __('messages.error_occurred') }}';
+                                showAdminToast(msg, 'error');
                             }
                         });
                     }

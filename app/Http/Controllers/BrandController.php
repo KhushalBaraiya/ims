@@ -149,4 +149,26 @@ class BrandController extends Controller
 
         return redirect()->route('brands.index')->with('success', 'Brand deleted successfully.');
     }
+
+    /**
+     * Bulk delete brands.
+     */
+    public function bulkDestroy(Request $request): JsonResponse
+    {
+        Gate::authorize('brands.delete');
+
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'No items selected.']);
+        }
+
+        $brands = Brand::whereIn('id', $ids)->get();
+        foreach ($brands as $brand) {
+            $brand->delete();
+        }
+
+        ActivityLog::log('Brands Bulk Deleted', 'Deleted ' . count($ids) . ' brand(s).');
+
+        return response()->json(['success' => true, 'message' => count($ids) . ' brand(s) deleted successfully.']);
+    }
 }
