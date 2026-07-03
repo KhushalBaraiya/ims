@@ -217,7 +217,7 @@
                                                 <div>
                                                     <strong>{{ $item->product->name }}</strong>
                                                     <small
-                                                        class="d-block text-muted">{{ $item->product->unit->short_name ?? 'PCS' }}</small>
+                                                        class="d-block text-muted">{{ $item->product->unit_code ?? 'PCS' }}</small>
                                                 </div>
                                             </div>
                                         </td>
@@ -226,7 +226,7 @@
                                         <td class="text-center fw-bold text-primary">
                                             {{ number_format($item->quantity, 0) }}
                                             <small
-                                                class="text-muted fw-normal">{{ $item->product->unit->short_name ?? 'PCS' }}</small>
+                                                class="text-muted fw-normal">{{ $item->product->unit_code ?? 'PCS' }}</small>
                                         </td>
                                         <td class="text-muted fst-italic small">
                                             {{ $item->reason ?: '—' }}
@@ -296,3 +296,4 @@
         });
     </script>
 @endpush
+

@@ -16,6 +16,9 @@
             </nav>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('reports.stock-alert.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
+                <i class="bx bx-download me-1"></i> Export CSV
+            </a>
             <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
                 <i class="bx bx-printer me-1"></i> Print
             </button>

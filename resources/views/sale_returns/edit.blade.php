@@ -198,7 +198,7 @@
                                                 <td class="text-center text-muted">
                                                     {{ (int) $item->quantity }}
                                                     <small
-                                                        class="text-muted">{{ $item->product->unit->short_name ?? 'PCS' }}</small>
+                                                        class="text-muted">{{ $item->product->unit_code ?? 'PCS' }}</small>
                                                 </td>
                                                 <td class="text-center text-warning fw-semibold">
                                                     {{ (int) $otherReturned }}
@@ -211,7 +211,7 @@
                                                     data-max="{{ $maxReturnable }}">
                                                     {{ $maxReturnable }}
                                                     <small
-                                                        class="text-muted fw-normal">{{ $item->product->unit->short_name ?? 'PCS' }}</small>
+                                                        class="text-muted fw-normal">{{ $item->product->unit_code ?? 'PCS' }}</small>
                                                 </td>
                                                 <td class="text-center">
                                                     <input type="number" step="1" min="0"
@@ -358,3 +358,4 @@
         });
     </script>
 @endpush
+

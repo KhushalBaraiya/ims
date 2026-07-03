@@ -27,6 +27,32 @@
         @endcan
     </div>
 
+    {{-- Filters --}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>Filters</h6>
+        </div>
+        <div class="card-body p-4">
+            <form method="GET" action="{{ route('roles.index') }}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small">Search Role</label>
+                        <input type="text" name="search" class="form-control form-control-sm"
+                            value="{{ request('search') }}" placeholder="Role name...">
+                    </div>
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                            <i class="bx bx-search me-1"></i>Apply
+                        </button>
+                        <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary btn-sm" title="Reset">
+                            <i class="bx bx-reset"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">

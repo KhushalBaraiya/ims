@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MainCategoryRequest;
-use App\Models\MainCategory;
 use App\Models\ActivityLog;
-use Illuminate\Http\RedirectResponse;
+use App\Models\MainCategory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -16,11 +16,23 @@ class MainCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('main_categories.view');
 
-        $categories = MainCategory::withCount('subCategories')->with('subCategories')->latest()->get();
+        $query = MainCategory::withCount('subCategories')->with('subCategories');
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(fn ($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('slug', 'like', "%$s%"));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $categories = $query->latest()->get();
 
         return view('main_categories.index', compact('categories'));
     }
@@ -99,7 +111,7 @@ class MainCategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'status'  => $mainCategory->status,
+            'status' => $mainCategory->status,
             'message' => 'Status updated successfully.',
         ]);
     }
@@ -140,10 +152,10 @@ class MainCategoryController extends Controller
             return response()->json(['success' => false, 'message' => 'No items selected.']);
         }
 
-        MainCategory::whereIn('id', $ids)->each(fn($c) => $c->delete());
+        MainCategory::whereIn('id', $ids)->each(fn ($c) => $c->delete());
 
-        ActivityLog::log('Main Categories Bulk Deleted', 'Deleted ' . count($ids) . ' main category(s).');
+        ActivityLog::log('Main Categories Bulk Deleted', 'Deleted '.count($ids).' main category(s).');
 
-        return response()->json(['success' => true, 'message' => count($ids) . ' category(s) deleted successfully.']);
+        return response()->json(['success' => true, 'message' => count($ids).' category(s) deleted successfully.']);
     }
 }

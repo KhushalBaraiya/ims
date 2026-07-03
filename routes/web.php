@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
     // Activity Logs Routes
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 
-    // Reports Routes
+    // Report Export Routes (CSV — no external package needed)
     Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('index');
         Route::get('/sales', [ReportController::class, 'sales'])->name('sales');
@@ -145,5 +145,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/profit-loss', [ReportController::class, 'profitLoss'])->name('profit-loss');
         Route::get('/top-selling', [ReportController::class, 'topSelling'])->name('top-selling');
         Route::get('/stock-alert', [ReportController::class, 'stockAlert'])->name('stock-alert');
+        // CSV exports
+        Route::get('/sales/export', [ReportController::class, 'exportSales'])->name('sales.export');
+        Route::get('/purchases/export', [ReportController::class, 'exportPurchases'])->name('purchases.export');
+        Route::get('/stock-alert/export', [ReportController::class, 'exportStockAlert'])->name('stock-alert.export');
     });
 });

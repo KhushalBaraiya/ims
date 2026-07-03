@@ -42,6 +42,9 @@ class SaleReturnController extends Controller
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('return_date', [$request->start_date, $request->end_date]);
         }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
 
         $returns = $query->get();
         $customers = Customer::where('status', 'active')->orderBy('name')->get();

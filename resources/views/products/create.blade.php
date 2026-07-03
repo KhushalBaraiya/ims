@@ -21,7 +21,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+        <div class="alert  -danger alert-dismissible fade show mb-4" role="alert">
             <i class="bx bx-error-circle me-2"></i>
             <strong>{{ __('messages.fix_errors') }}:</strong>
             <ul class="mb-0 mt-1 ps-3">
@@ -700,7 +700,8 @@
                 const qty = parseFloat($('#initial_qty').val()) || 0;
                 const price = parseFloat($('#purchase_price').val()) || 0;
                 if (qty > 0 && price > 0) {
-                    $('#openingStockTotal').text('₹' + (qty * price).toLocaleString('en-IN', {
+                    const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+                    $('#openingStockTotal').text(sym + (qty * price).toLocaleString('en-IN', {
                         minimumFractionDigits: 2
                     }));
                 } else {

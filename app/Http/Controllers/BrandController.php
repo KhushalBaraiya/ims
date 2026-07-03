@@ -16,11 +16,23 @@ class BrandController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('brands.view');
 
-        $brands = Brand::with('products')->latest()->get();
+        $query = Brand::with('products');
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('slug', 'like', "%$s%"));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $brands = $query->latest()->get();
 
         return view('brands.index', compact('brands'));
     }

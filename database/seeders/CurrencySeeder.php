@@ -10,9 +10,10 @@ class CurrencySeeder extends Seeder
     public function run(): void
     {
         $currencies = [
-            ['name' => 'Indian Rupee', 'code' => 'INR', 'symbol' => '₹', 'exchange_rate' => 1.0000, 'is_default' => true,  'status' => 'active'],
-            ['name' => 'US Dollar',    'code' => 'USD', 'symbol' => '$', 'exchange_rate' => 83.500, 'is_default' => false, 'status' => 'active'],
-            ['name' => 'Euro',         'code' => 'EUR', 'symbol' => '€', 'exchange_rate' => 90.200, 'is_default' => false, 'status' => 'active'],
+            ['name' => 'Indian Rupee',  'code' => 'INR', 'symbol' => '₹', 'exchange_rate' => 1.0000,  'is_default' => true,  'status' => 'active'],
+            ['name' => 'US Dollar',     'code' => 'USD', 'symbol' => '$', 'exchange_rate' => 83.500,  'is_default' => false, 'status' => 'active'],
+            ['name' => 'British Pound', 'code' => 'GBP', 'symbol' => '£', 'exchange_rate' => 106.500, 'is_default' => false, 'status' => 'active'],
+            ['name' => 'Euro',          'code' => 'EUR', 'symbol' => '€', 'exchange_rate' => 90.200,  'is_default' => false, 'status' => 'active'],
         ];
 
         foreach ($currencies as $c) {

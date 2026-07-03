@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubCategoryRequest;
-use App\Models\SubCategory;
-use App\Models\MainCategory;
 use App\Models\ActivityLog;
-use Illuminate\Http\RedirectResponse;
+use App\Models\MainCategory;
+use App\Models\SubCategory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -17,13 +17,30 @@ class SubCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('sub_categories.view');
 
-        $subCategories = SubCategory::with('mainCategory')->latest()->get();
+        $query = SubCategory::with('mainCategory');
 
-        return view('sub_categories.index', compact('subCategories'));
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(fn ($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('slug', 'like', "%$s%"));
+        }
+
+        if ($request->filled('main_category_id')) {
+            $query->where('main_category_id', $request->main_category_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $subCategories = $query->latest()->get();
+        $mainCategories = MainCategory::where('status', 'active')->orderBy('name')->get();
+
+        return view('sub_categories.index', compact('subCategories', 'mainCategories'));
     }
 
     /**
@@ -104,7 +121,7 @@ class SubCategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'status'  => $subCategory->status,
+            'status' => $subCategory->status,
             'message' => 'Status updated successfully.',
         ]);
     }
@@ -145,10 +162,10 @@ class SubCategoryController extends Controller
             return response()->json(['success' => false, 'message' => 'No items selected.']);
         }
 
-        SubCategory::whereIn('id', $ids)->each(fn($s) => $s->delete());
+        SubCategory::whereIn('id', $ids)->each(fn ($s) => $s->delete());
 
-        ActivityLog::log('Sub Categories Bulk Deleted', 'Deleted ' . count($ids) . ' sub category(s).');
+        ActivityLog::log('Sub Categories Bulk Deleted', 'Deleted '.count($ids).' sub category(s).');
 
-        return response()->json(['success' => true, 'message' => count($ids) . ' sub category(s) deleted successfully.']);
+        return response()->json(['success' => true, 'message' => count($ids).' sub category(s) deleted successfully.']);
     }
 }

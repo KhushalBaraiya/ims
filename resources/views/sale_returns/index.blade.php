@@ -135,6 +135,18 @@
                             <input type="date" name="end_date" class="form-control form-control-sm flatpickr-filter-date"
                                 value="{{ request('end_date') }}">
                         </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">Status</label>
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="">All Status</option>
+                                <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>
+                                    Completed</option>
+                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="Cancelled" {{ request('status') == 'Cancelled' ? 'selected' : '' }}>
+                                    Cancelled</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
                         <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary"><i

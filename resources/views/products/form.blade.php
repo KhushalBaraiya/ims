@@ -569,7 +569,8 @@
                 const price = parseFloat($('#purchase_price').val()) || 0;
                 if (qty > 0 && price > 0) {
                     const total = (qty * price).toFixed(2);
-                    $('#openingStockTotal').text('₹' + parseFloat(total).toLocaleString('en-IN', {
+                    const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+                    $('#openingStockTotal').text(sym + parseFloat(total).toLocaleString('en-IN', {
                         minimumFractionDigits: 2
                     }));
                 } else {

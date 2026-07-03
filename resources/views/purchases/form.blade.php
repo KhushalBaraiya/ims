@@ -1,4 +1,4 @@
-@csrf
+﻿@csrf
 
 {{-- Show stock errors prominently --}}
 @if ($errors->has('stock_error'))
@@ -213,19 +213,19 @@
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Subtotal</span>
-                            <span class="fw-bold" id="sum_subtotal">₹0.00</span>
+                            <span class="fw-bold" id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Total Discount (-)</span>
                             <input type="hidden" name="discount_amount" id="discount_amount"
                                 value="{{ old('discount_amount', $purchase->discount_amount ?? '0.00') }}">
-                            <span class="fw-bold text-danger" id="lbl_discount_amount">₹0.00</span>
+                            <span class="fw-bold text-danger" id="lbl_discount_amount">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Total Tax (+)</span>
                             <input type="hidden" name="tax_amount" id="tax_amount"
                                 value="{{ old('tax_amount', $purchase->tax_amount ?? '0.00') }}">
-                            <span class="fw-bold text-success" id="lbl_tax_amount">₹0.00</span>
+                            <span class="fw-bold text-success" id="lbl_tax_amount">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Shipping (+)</span>
@@ -236,21 +236,21 @@
                         </div>
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span class="fw-bold">Grand Total</span>
-                            <span class="fw-bold text-primary fs-6" id="sum_grandtotal">₹0.00</span>
+                            <span class="fw-bold text-primary fs-6" id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
                         <div class="row g-2 mt-1">
                             <div class="col-6">
                                 <div
                                     class="bg-danger bg-opacity-10 rounded p-2 text-center border border-danger border-opacity-25">
                                     <div class="text-danger small fw-semibold">Balance Due</div>
-                                    <div class="text-danger fw-bold" id="sum_due">₹0.00</div>
+                                    <div class="text-danger fw-bold" id="sum_due">{{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div
                                     class="bg-success bg-opacity-10 rounded p-2 text-center border border-success border-opacity-25">
                                     <div class="text-success small fw-semibold">Overpaid</div>
-                                    <div class="text-success fw-bold" id="sum_change">₹0.00</div>
+                                    <div class="text-success fw-bold" id="sum_change">{{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
                             </div>
                         </div>

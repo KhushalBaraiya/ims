@@ -16,6 +16,9 @@
             </nav>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('reports.sales.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
+                <i class="bx bx-download me-1"></i> Export CSV
+            </a>
             <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
                 <i class="bx bx-printer me-1"></i> Print
             </button>
@@ -23,88 +26,82 @@
                 <i class="bx bx-arrow-back me-1"></i> All Reports
             </a>
         </div>
+        <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>Filter Sales</h6>
     </div>
-
-    {{-- Filters --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>Filter Sales</h6>
-        </div>
-        <div class="card-body p-4">
-            <form method="GET">
-                <div class="row g-3">
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Date From</label>
-                        <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
-                            value="{{ request('date_from') }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Date To</label>
-                        <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
-                            value="{{ request('date_to') }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Customer</label>
-                        <select name="customer_id" class="form-select form-select-sm">
-                            <option value="">All Customers</option>
-                            @foreach ($customers as $c)
-                                <option value="{{ $c->id }}"
-                                    {{ request('customer_id') == $c->id ? 'selected' : '' }}>
-                                    {{ $c->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Status</label>
-                        <select name="status" class="form-select form-select-sm">
-                            <option value="">All Statuses</option>
-                            <option value="Completed" {{ request('status') === 'Completed' ? 'selected' : '' }}>Completed
-                            </option>
-                            <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="Cancelled" {{ request('status') === 'Cancelled' ? 'selected' : '' }}>Cancelled
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Payment Method</label>
-                        <select name="payment_method" class="form-select form-select-sm">
-                            <option value="">All Methods</option>
-                            <option value="Cash" {{ request('payment_method') === 'Cash' ? 'selected' : '' }}>Cash
-                            </option>
-                            <option value="Card" {{ request('payment_method') === 'Card' ? 'selected' : '' }}>Card
-                            </option>
-                            <option value="UPI" {{ request('payment_method') === 'UPI' ? 'selected' : '' }}>UPI</option>
-                            <option value="Bank" {{ request('payment_method') === 'Bank' ? 'selected' : '' }}>Bank
-                                Transfer</option>
-                            <option value="Credit" {{ request('payment_method') === 'Credit' ? 'selected' : '' }}>Credit
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-md-1 d-flex align-items-end gap-1">
-                        <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                            <i class="bx bx-search"></i>
-                        </button>
-                        <a href="{{ route('reports.sales') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bx bx-reset"></i>
-                        </a>
-                    </div>
+    <div class="card-body p-4">
+        <form method="GET">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold small">Date From</label>
+                    <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
+                        value="{{ request('date_from') }}">
                 </div>
-                {{-- Quick date shortcuts --}}
-                <div class="d-flex gap-2 mt-3 flex-wrap">
-                    <span class="text-muted small fw-semibold me-1 align-self-center">Quick:</span>
-                    <a href="?date_from={{ now()->toDateString() }}&date_to={{ now()->toDateString() }}"
-                        class="btn btn-outline-secondary btn-sm py-0">Today</a>
-                    <a href="?date_from={{ now()->startOfWeek()->toDateString() }}&date_to={{ now()->toDateString() }}"
-                        class="btn btn-outline-secondary btn-sm py-0">This Week</a>
-                    <a href="?date_from={{ now()->startOfMonth()->toDateString() }}&date_to={{ now()->toDateString() }}"
-                        class="btn btn-outline-secondary btn-sm py-0">This Month</a>
-                    <a href="?date_from={{ now()->subMonth()->startOfMonth()->toDateString() }}&date_to={{ now()->subMonth()->endOfMonth()->toDateString() }}"
-                        class="btn btn-outline-secondary btn-sm py-0">Last Month</a>
-                    <a href="?date_from={{ now()->startOfYear()->toDateString() }}&date_to={{ now()->toDateString() }}"
-                        class="btn btn-outline-secondary btn-sm py-0">This Year</a>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold small">Date To</label>
+                    <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
+                        value="{{ request('date_to') }}">
                 </div>
-            </form>
-        </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold small">Customer</label>
+                    <select name="customer_id" class="form-select form-select-sm">
+                        <option value="">All Customers</option>
+                        @foreach ($customers as $c)
+                            <option value="{{ $c->id }}" {{ request('customer_id') == $c->id ? 'selected' : '' }}>
+                                {{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold small">Status</label>
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">All Statuses</option>
+                        <option value="Completed" {{ request('status') === 'Completed' ? 'selected' : '' }}>Completed
+                        </option>
+                        <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="Cancelled" {{ request('status') === 'Cancelled' ? 'selected' : '' }}>Cancelled
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold small">Payment Method</label>
+                    <select name="payment_method" class="form-select form-select-sm">
+                        <option value="">All Methods</option>
+                        <option value="Cash" {{ request('payment_method') === 'Cash' ? 'selected' : '' }}>Cash
+                        </option>
+                        <option value="Card" {{ request('payment_method') === 'Card' ? 'selected' : '' }}>Card
+                        </option>
+                        <option value="UPI" {{ request('payment_method') === 'UPI' ? 'selected' : '' }}>UPI</option>
+                        <option value="Bank" {{ request('payment_method') === 'Bank' ? 'selected' : '' }}>Bank
+                            Transfer</option>
+                        <option value="Credit" {{ request('payment_method') === 'Credit' ? 'selected' : '' }}>Credit
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-flex align-items-end gap-1">
+                    <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                        <i class="bx bx-search"></i>
+                    </button>
+                    <a href="{{ route('reports.sales') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bx bx-reset"></i>
+                    </a>
+                </div>
+            </div>
+            {{-- Quick date shortcuts --}}
+            <div class="d-flex gap-2 mt-3 flex-wrap">
+                <span class="text-muted small fw-semibold me-1 align-self-center">Quick:</span>
+                <a href="?date_from={{ now()->toDateString() }}&date_to={{ now()->toDateString() }}"
+                    class="btn btn-outline-secondary btn-sm py-0">Today</a>
+                <a href="?date_from={{ now()->startOfWeek()->toDateString() }}&date_to={{ now()->toDateString() }}"
+                    class="btn btn-outline-secondary btn-sm py-0">This Week</a>
+                <a href="?date_from={{ now()->startOfMonth()->toDateString() }}&date_to={{ now()->toDateString() }}"
+                    class="btn btn-outline-secondary btn-sm py-0">This Month</a>
+                <a href="?date_from={{ now()->subMonth()->startOfMonth()->toDateString() }}&date_to={{ now()->subMonth()->endOfMonth()->toDateString() }}"
+                    class="btn btn-outline-secondary btn-sm py-0">Last Month</a>
+                <a href="?date_from={{ now()->startOfYear()->toDateString() }}&date_to={{ now()->toDateString() }}"
+                    class="btn btn-outline-secondary btn-sm py-0">This Year</a>
+            </div>
+        </form>
+    </div>
     </div>
 
     {{-- Summary KPI Cards --}}

@@ -16,6 +16,9 @@
             </nav>
         </div>
         <div class="d-flex gap-2">
+            <a href="{{ route('reports.purchases.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
+                <i class="bx bx-download me-1"></i> Export CSV
+            </a>
             <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
                 <i class="bx bx-printer me-1"></i> Print
             </button>
@@ -60,7 +63,8 @@
                             <option value="">All Statuses</option>
                             <option value="Completed" {{ request('status') === 'Completed' ? 'selected' : '' }}>Completed
                             </option>
-                            <option value="Pending" {{ request('status') === 'Pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="Pending" {{ request('status') === 'Pending' ? 'selected' : '' }}>Pending
+                            </option>
                             <option value="Cancelled" {{ request('status') === 'Cancelled' ? 'selected' : '' }}>Cancelled
                             </option>
                         </select>

@@ -28,6 +28,41 @@
         @endcan
     </div>
 
+    {{-- Filters --}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>Filters</h6>
+        </div>
+        <div class="card-body p-4">
+            <form method="GET" action="{{ route('suppliers.index') }}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold small">Search</label>
+                        <input type="text" name="search" class="form-control form-control-sm"
+                            value="{{ request('search') }}" placeholder="Name, company, phone or email...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small">Status</label>
+                        <select name="status" class="form-select form-select-sm">
+                            <option value="">All Status</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                            <i class="bx bx-search me-1"></i>Apply
+                        </button>
+                        <a href="{{ route('suppliers.index') }}" class="btn btn-outline-secondary btn-sm" title="Reset">
+                            <i class="bx bx-reset"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- Summary Stats --}}
     <div class="row g-3 mb-4">
         <div class="col-6 col-xl-3">

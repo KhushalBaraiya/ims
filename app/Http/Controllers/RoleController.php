@@ -50,11 +50,17 @@ class RoleController extends Controller
     /**
      * Display a listing of roles.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('roles.view');
 
-        $roles = Role::withCount('permissions')->latest()->get();
+        $query = Role::withCount('permissions');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        $roles = $query->latest()->get();
 
         return view('roles.index', compact('roles'));
     }

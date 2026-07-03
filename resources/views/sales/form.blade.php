@@ -389,7 +389,7 @@
                         taxAmt: parseFloat("{{ $item->tax_amount }}"),
                         discAmt: parseFloat("{{ $item->discount_amount }}"),
                         qty: parseInt("{{ $item->quantity }}"),
-                        unit: "{{ $item->product->unit->short_name ?? 'PCS' }}",
+                        unit: "{{ $item->product->unit_code ?? 'PCS' }}",
                         image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
                     });
                 @endforeach
@@ -608,3 +608,4 @@
         });
     </script>
 @endpush
+

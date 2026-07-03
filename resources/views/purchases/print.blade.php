@@ -49,6 +49,15 @@
 
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen py-10 print:py-0 print:bg-white print:text-black">
 
+    @php
+        $sym = optional(current_currency())->symbol ?? '₹';
+        $settings = \App\Models\Setting::pluck('value', 'key');
+        $companyName = $settings['company_name'] ?? config('app.name', 'IMS');
+        $companyAddress = $settings['company_address'] ?? '';
+        $companyPhone = $settings['company_phone'] ?? '';
+        $companyEmail = $settings['company_email'] ?? '';
+    @endphp
+
     <!-- Top Action Bar (hidden on print) -->
     <div
         class="max-w-4xl mx-auto mb-6 px-4 no-print flex justify-between items-center bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
@@ -78,10 +87,26 @@
         <div class="flex justify-between items-start border-b border-slate-200 pb-8 mb-8">
             <div>
                 <div
-                    class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1">
-                    ⚡ Kalathiya POS
+                    class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1 print:text-black print:bg-none">
+                    ⚡ {{ $companyName }}
                 </div>
                 <p class="text-xs text-slate-400">Electronics & Inventory Management System</p>
+                @if ($companyAddress)
+                    <p class="text-[11px] text-slate-400 mt-0.5">{{ $companyAddress }}</p>
+                @endif
+                @if ($companyPhone || $companyEmail)
+                    <p class="text-[11px] text-slate-400">
+                        @if ($companyPhone)
+                            Phone: {{ $companyPhone }}
+                        @endif
+                        @if ($companyPhone && $companyEmail)
+                            &bull;
+                        @endif
+                        @if ($companyEmail)
+                            Email: {{ $companyEmail }}
+                        @endif
+                    </p>
+                @endif
             </div>
             <div class="text-right">
                 <div class="text-3xl font-black text-slate-800 tracking-tight">PURCHASE ORDER</div>
@@ -151,18 +176,17 @@
                             <p class="font-bold text-slate-800">{{ $item->product->name }}</p>
                             <p class="text-xs text-slate-400 font-mono">{{ $item->product->code }}</p>
                         </td>
-                        <td class="py-3 px-4 text-center text-slate-500">
-                            {{ $item->product->unit_code ?? 'PCS' }}</td>
+                        <td class="py-3 px-4 text-center text-slate-500">{{ $item->product->unit_code ?? 'PCS' }}</td>
                         <td class="py-3 px-4 text-center font-bold text-slate-700">
                             {{ number_format($item->quantity, 2) }}</td>
-                        <td class="py-3 px-4 text-right text-slate-700">₹{{ number_format($item->purchase_price, 2) }}
-                        </td>
-                        <td class="py-3 px-4 text-right text-red-500">₹{{ number_format($item->discount_amount, 2) }}
-                        </td>
-                        <td class="py-3 px-4 text-right text-orange-500">₹{{ number_format($item->tax_amount, 2) }}
-                        </td>
+                        <td class="py-3 px-4 text-right text-slate-700">
+                            {{ $sym }}{{ number_format($item->purchase_price, 2) }}</td>
+                        <td class="py-3 px-4 text-right text-red-500">
+                            {{ $sym }}{{ number_format($item->discount_amount, 2) }}</td>
+                        <td class="py-3 px-4 text-right text-orange-500">
+                            {{ $sym }}{{ number_format($item->tax_amount, 2) }}</td>
                         <td class="py-3 px-4 text-right font-bold text-slate-800">
-                            ₹{{ number_format($item->total_amount, 2) }}</td>
+                            {{ $sym }}{{ number_format($item->total_amount, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -173,39 +197,41 @@
             <div class="w-72 space-y-2 text-sm">
                 <div class="flex justify-between border-b border-slate-100 pb-1.5">
                     <span class="text-slate-500">Subtotal</span>
-                    <span class="font-semibold">₹{{ number_format($purchase->sub_total, 2) }}</span>
+                    <span class="font-semibold">{{ $sym }}{{ number_format($purchase->sub_total, 2) }}</span>
                 </div>
                 @if ($purchase->discount_amount > 0)
                     <div class="flex justify-between border-b border-slate-100 pb-1.5">
                         <span class="text-slate-500">Discount (-)</span>
                         <span
-                            class="text-red-500 font-semibold">₹{{ number_format($purchase->discount_amount, 2) }}</span>
+                            class="text-red-500 font-semibold">{{ $sym }}{{ number_format($purchase->discount_amount, 2) }}</span>
                     </div>
                 @endif
                 @if ($purchase->tax_amount > 0)
                     <div class="flex justify-between border-b border-slate-100 pb-1.5">
                         <span class="text-slate-500">Tax (+)</span>
                         <span
-                            class="text-orange-500 font-semibold">₹{{ number_format($purchase->tax_amount, 2) }}</span>
+                            class="text-orange-500 font-semibold">{{ $sym }}{{ number_format($purchase->tax_amount, 2) }}</span>
                     </div>
                 @endif
                 @if ($purchase->shipping_amount > 0)
                     <div class="flex justify-between border-b border-slate-100 pb-1.5">
                         <span class="text-slate-500">Shipping (+)</span>
-                        <span class="font-semibold">₹{{ number_format($purchase->shipping_amount, 2) }}</span>
+                        <span
+                            class="font-semibold">{{ $sym }}{{ number_format($purchase->shipping_amount, 2) }}</span>
                     </div>
                 @endif
                 <div class="flex justify-between items-center bg-slate-800 text-white px-3 py-2.5 rounded-xl">
                     <span class="font-bold uppercase tracking-wide text-xs">Grand Total</span>
-                    <span class="font-black text-lg">₹{{ number_format($purchase->grand_total, 2) }}</span>
+                    <span
+                        class="font-black text-lg">{{ $sym }}{{ number_format($purchase->grand_total, 2) }}</span>
                 </div>
                 <div class="flex justify-between text-emerald-600 font-semibold pt-1">
                     <span>Paid Amount</span>
-                    <span>₹{{ number_format($purchase->paid_amount, 2) }}</span>
+                    <span>{{ $sym }}{{ number_format($purchase->paid_amount, 2) }}</span>
                 </div>
                 <div class="flex justify-between text-red-500 font-semibold">
                     <span>Balance Due</span>
-                    <span>₹{{ number_format($purchase->due_amount, 2) }}</span>
+                    <span>{{ $sym }}{{ number_format($purchase->due_amount, 2) }}</span>
                 </div>
             </div>
         </div>
@@ -219,17 +245,16 @@
 
         <!-- Footer -->
         <div class="border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
-            <p>This is a system-generated purchase order from <strong>Kalathiya POS</strong> &mdash; Electronics &
-                Inventory Management System.</p>
+            <p>This is a system-generated purchase order from <strong>{{ $companyName }}</strong> &mdash; Electronics
+                & Inventory Management System.</p>
             <p class="mt-1">Created by: {{ $purchase->user->name ?? 'System' }} &bull; Printed on:
                 {{ now()->format('d M Y, h:i A') }}</p>
         </div>
     </div>
 
     <script>
-        // Auto-print on page load
         window.onload = function() {
-            // Slight delay so fonts load
+            window.print();
         }
     </script>
 </body>

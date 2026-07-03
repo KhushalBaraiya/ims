@@ -167,7 +167,8 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">{{ __('messages.opening_balance') }}</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span
+                                        class="input-group-text">{{ optional(current_currency())->symbol ?? '₹' }}</span>
                                     <input type="number" step="0.01" min="0" name="opening_balance"
                                         class="form-control @error('opening_balance') is-invalid @enderror"
                                         value="{{ old('opening_balance', $supplier->opening_balance) }}">

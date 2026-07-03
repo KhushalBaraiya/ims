@@ -16,17 +16,32 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('suppliers.view');
 
-        $suppliers = Supplier::with('purchases')->latest()->get();
+        $query = Supplier::with('purchases');
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('company_name', 'like', "%$s%")
+                ->orWhere('phone', 'like', "%$s%")
+                ->orWhere('email', 'like', "%$s%"));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $suppliers = $query->latest()->get();
 
         return view('suppliers.index', compact('suppliers'));
     }
 
     /**
      * Show the form for creating a new resource.
+     * 
      */
     public function create(): View
     {
@@ -63,6 +78,7 @@ class SupplierController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * specification of 
      */
     public function edit(Supplier $supplier): View
     {

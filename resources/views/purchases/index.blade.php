@@ -308,7 +308,7 @@
                             <div class="col-6">
                                 <div class="bg-light rounded border p-3 text-center">
                                     <div class="text-muted small fw-semibold mb-1">Grand Total</div>
-                                    <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">₹0.00</div>
+                                    <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">{{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
                                 </div>
                             </div>
@@ -316,7 +316,7 @@
                                 <div
                                     class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-3 text-center">
                                     <div class="text-danger small-div fw-semibold mb-1">Balance Due</div>
-                                    <div class="text-danger fw-bold fs-5" id="modal_balance_due_text">₹0.00</div>
+                                    <div class="text-danger fw-bold fs-5" id="modal_balance_due_text">{{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
                             </div>
                         </div>
@@ -339,7 +339,9 @@
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-top p-3">
-                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">
+                            <i class="bx bx-x me-1"></i> Close
+                        </button>
                         <button class="btn btn-primary" id="btnSavePayment" type="submit">
                             <i class="bx bx-save me-1"></i> Update Payment
                         </button>
@@ -503,7 +505,7 @@
 
                 $('#modal_purchase_no').val(no);
                 $('#modal_grand_total').val(grandTotal);
-                $('#modal_grand_total_text').text('₹' + grandTotal.toFixed(2));
+                $('#modal_grand_total_text').text(sym + grandTotal.toFixed(2));
                 $('#modal_paid_amount').val(paidAmount.toFixed(2));
                 // Restore exact saved payment method; only fall back to Cash if truly blank
                 const pmSelect = $('#modal_payment_method');
@@ -521,7 +523,7 @@
                 const total = parseFloat($('#modal_grand_total').val()) || 0;
                 const paid = parseFloat($('#modal_paid_amount').val()) || 0;
                 const due = Math.max(0, total - paid);
-                $('#modal_balance_due_text').text('₹' + due.toFixed(2));
+                $('#modal_balance_due_text').text(sym + due.toFixed(2));
                 if (due > 0) {
                     $('#modal_balance_due_text').parent().removeClass(
                         'bg-success bg-opacity-10 border-success border-opacity-25 text-success').addClass(
@@ -574,3 +576,4 @@
         });
     </script>
 @endpush
+

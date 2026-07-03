@@ -19,13 +19,30 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('users.view');
 
-        $users = User::with('roles')->latest()->get();
+        $query = User::with('roles');
 
-        return view('users.index', compact('users'));
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('email', 'like', "%$s%"));
+        }
+
+        if ($request->filled('role')) {
+            $query->role($request->role);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $users = $query->latest()->get();
+        $roles = Role::all();
+
+        return view('users.index', compact('users', 'roles'));
     }
 
     /**

@@ -233,12 +233,14 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="form-label fw-semibold small">Min ₹</label>
+                            <label class="form-label fw-semibold small">Min
+                                {{ optional(current_currency())->symbol ?? '₹' }}</label>
                             <input type="number" step="0.01" name="price_min" class="form-control form-control-sm"
                                 value="{{ request('price_min') }}" placeholder="0">
                         </div>
                         <div class="col-md-1">
-                            <label class="form-label fw-semibold small">Max ₹</label>
+                            <label class="form-label fw-semibold small">Max
+                                {{ optional(current_currency())->symbol ?? '₹' }}</label>
                             <input type="number" step="0.01" name="price_max" class="form-control form-control-sm"
                                 value="{{ request('price_max') }}" placeholder="∞">
                         </div>

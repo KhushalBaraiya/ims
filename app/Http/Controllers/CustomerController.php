@@ -16,11 +16,24 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('customers.view');
 
-        $customers = Customer::with('sales')->latest()->get();
+        $query = Customer::with('sales');
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
+                ->orWhere('phone', 'like', "%$s%")
+                ->orWhere('email', 'like', "%$s%"));
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $customers = $query->latest()->get();
 
         return view('customers.index', compact('customers'));
     }
