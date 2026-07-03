@@ -562,7 +562,7 @@
 
         .dataTables_paginate .paginate_button.current,
         .dataTables_paginate .paginate_button.current:hover {
-            background: #696cff !important;
+            /* background: #696cff !important; */
             color: #fff !important;
             border-color: #696cff !important;
         }
