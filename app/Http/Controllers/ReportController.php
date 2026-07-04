@@ -28,7 +28,7 @@ class ReportController extends Controller
 
         $summary = [
             'total_sales' => Sale::where('status', 'Completed')->sum('grand_total'),
-            'total_purchases' => Purchase::where('status', 'Completed')->sum('grand_total'),
+            'total_purchases' => Purchase::where('status', 'received')->sum('grand_total'),
             'total_returns' => SaleReturn::sum('grand_total'),
             'total_products' => Product::count(),
             'low_stock' => Product::whereHas('stock', fn ($q) => $q->where('quantity', '>', 0)

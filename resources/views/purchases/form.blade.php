@@ -1,4 +1,7 @@
-﻿@csrf
+@csrf
+@php
+    $isReturned = isset($purchase) && $purchase->returns->isNotEmpty();
+@endphp
 
 {{-- Show stock errors prominently --}}
 @if ($errors->has('stock_error'))
@@ -36,7 +39,7 @@
                         <input type="text" name="purchase_no" id="purchase_no"
                             class="form-control fw-bold @error('purchase_no') is-invalid @enderror"
                             value="{{ old('purchase_no', $purchase->purchase_no ?? ($purchaseNo ?? '')) }}" required
-                            {{ isset($purchase) ? 'readonly' : '' }}>
+                            {{ isset($purchase) ? 'readonly' : '' }} {{ $isReturned ? 'disabled' : '' }}>
                         @if (!isset($purchase))
                             <button type="button" class="btn btn-outline-secondary" id="btnGeneratePurchaseNo">
                                 <i class="bx bx-refresh"></i>
@@ -51,14 +54,14 @@
                     <label class="form-label fw-semibold">Purchase Date <span class="text-danger">*</span></label>
                     <input type="date" name="purchase_date"
                         class="form-control flatpickr-date @error('purchase_date') is-invalid @enderror"
-                        value="{{ old('purchase_date', $purchase->purchase_date ?? date('Y-m-d')) }}" required>
+                        value="{{ old('purchase_date', $purchase->purchase_date ?? date('Y-m-d')) }}" required {{ $isReturned ? 'disabled' : '' }}>
                     @error('purchase_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
-                    <select name="supplier_id" class="form-select @error('supplier_id') is-invalid @enderror" required>
+                    <select name="supplier_id" class="form-select @error('supplier_id') is-invalid @enderror" required {{ $isReturned ? 'disabled' : '' }}>
                         <option value="">Select Supplier</option>
                         @foreach ($suppliers as $s)
                             <option value="{{ $s->id }}"
@@ -75,21 +78,24 @@
                     <label class="form-label fw-semibold">Reference / PO No</label>
                     <input type="text" name="reference_no" class="form-control"
                         value="{{ old('reference_no', $purchase->reference_no ?? '') }}"
-                        placeholder="Optional reference...">
+                        placeholder="Optional reference..." {{ $isReturned ? 'disabled' : '' }}>
                 </div>
                 <div class="mb-0">
                     <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                    <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+                    <select name="status" class="form-select @error('status') is-invalid @enderror" required {{ $isReturned ? 'disabled' : '' }}>
                         <option value="">Select Status</option>
-                        <option value="Completed"
-                            {{ old('status', $purchase->status ?? 'Completed') === 'Completed' ? 'selected' : '' }}>
-                            Completed</option>
-                        <option value="Draft"
-                            {{ old('status', $purchase->status ?? '') === 'Draft' ? 'selected' : '' }}>
+                        <option value="received"
+                            {{ old('status', $purchase->status ?? 'received') === 'received' ? 'selected' : '' }}>
+                            Received</option>
+                        <option value="pending"
+                            {{ old('status', $purchase->status ?? '') === 'pending' ? 'selected' : '' }}>
+                            Pending</option>
+                        <option value="ordered"
+                            {{ old('status', $purchase->status ?? '') === 'ordered' ? 'selected' : '' }}>
+                            Ordered</option>
+                        <option value="draft"
+                            {{ old('status', $purchase->status ?? '') === 'draft' ? 'selected' : '' }}>
                             Draft</option>
-                        <option value="Cancelled"
-                            {{ old('status', $purchase->status ?? '') === 'Cancelled' ? 'selected' : '' }}>
-                            Cancelled</option>
                     </select>
                     @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -106,7 +112,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Payment Method <span class="text-danger">*</span></label>
                     <select name="payment_method" class="form-select @error('payment_method') is-invalid @enderror"
-                        required>
+                        required {{ $isReturned ? 'disabled' : '' }}>
                         <option value="">Select Payment Method</option>
                         <option value="Cash"
                             {{ old('payment_method', $purchase->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}>
@@ -132,7 +138,7 @@
                     <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
                     <input type="number" step="0.01" name="paid_amount" id="paid_amount"
                         class="form-control @error('paid_amount') is-invalid @enderror"
-                        value="{{ old('paid_amount', $purchase->paid_amount ?? '0.00') }}" required>
+                        value="{{ old('paid_amount', $purchase->paid_amount ?? '0.00') }}" required {{ $isReturned ? 'disabled' : '' }}>
                     @error('paid_amount')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -162,7 +168,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
                         <input type="text" id="productSearchInput" class="form-control"
-                            placeholder="Type Product Name, SKU, or Scan Barcode...">
+                            placeholder="Type Product Name, SKU, or Scan Barcode..." {{ $isReturned ? 'disabled' : '' }}>
                     </div>
                     <div id="autocompleteResults"
                         class="position-absolute w-100 bg-white border rounded shadow-lg d-none"
@@ -187,8 +193,8 @@
                         <tbody id="purchaseItemsContainer"></tbody>
                     </table>
                 </div>
-                <div id="emptyTableMsg" class="text-center py-5 text-muted">
-                    <i class="bx bx-package d-block mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                <div id="emptyTableMsg" class="text-center py-5 text-muted d-flex flex-column align-items-center justify-content-center">
+                    <i class="bx bx-package mb-2" style="font-size:2.5rem;opacity:.3;"></i>
                     <p class="mb-0 small">No products added yet. Search above to add products.</p>
                 </div>
             </div>
@@ -201,7 +207,7 @@
                         <h6 class="mb-0 fw-semibold">Order Notes</h6>
                     </div>
                     <div class="card-body p-3">
-                        <textarea name="notes" rows="6" class="form-control" placeholder="Delivery instructions, warranty terms...">{{ old('notes', $purchase->notes ?? '') }}</textarea>
+                        <textarea name="notes" rows="6" class="form-control" placeholder="Delivery instructions, warranty terms..." {{ $isReturned ? 'disabled' : '' }}>{{ old('notes', $purchase->notes ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -232,7 +238,7 @@
                             <input type="number" step="0.01" min="0" name="shipping_amount"
                                 id="shipping_amount" class="form-control form-control-sm text-end"
                                 style="width:120px;"
-                                value="{{ old('shipping_amount', $purchase->shipping_amount ?? '0.00') }}">
+                                value="{{ old('shipping_amount', $purchase->shipping_amount ?? '0.00') }}" {{ $isReturned ? 'disabled' : '' }}>
                         </div>
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span class="fw-bold">Grand Total</span>
@@ -263,7 +269,12 @@
             <a href="{{ route('purchases.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-x me-1"></i> Cancel
             </a>
-            <button type="submit" class="btn btn-primary">
+            @if (!$isReturned)
+                <button type="button" id="btnSaveDraft" class="btn btn-outline-primary">
+                    <i class="bx bx-file me-1"></i> Save As Draft
+                </button>
+            @endif
+            <button type="submit" class="btn btn-primary" {{ $isReturned ? 'disabled' : '' }}>
                 <i class="bx bx-save me-1"></i>
                 {{ isset($purchase) && $purchase->exists ? 'Update Purchase Order' : 'Save Purchase Order' }}
             </button>
@@ -276,6 +287,7 @@
     <script>
         $(document).ready(function() {
             let rowCount = 0;
+            const isReturned = {{ $isReturned ? 'true' : 'false' }};
 
             // ── Auto-generate Purchase No on page load ────────────────────────
             @if (!isset($purchase) || !$purchase->exists)
@@ -497,29 +509,31 @@
                     <td class="text-center">
                         <input type="number" step="1" min="1" name="items[${rowCount}][quantity]"
                                value="${parseInt(p.qty || 1)}" class="qty-input form-control form-control-sm text-center"
-                               style="width:80px;margin:auto;">
+                               style="width:80px;margin:auto;" ${isReturned ? 'disabled' : ''}>
                     </td>
                     <td class="text-center">
                         <input type="number" step="0.01" min="0" name="items[${rowCount}][purchase_price]"
                                value="${price.toFixed(2)}" class="price-input form-control form-control-sm text-center"
-                               style="width:100px;margin:auto;">
+                               style="width:100px;margin:auto;" ${isReturned ? 'disabled' : ''}>
                     </td>
                     <td class="text-center">
                         <input type="number" step="0.01" min="0" name="items[${rowCount}][discount_amount]"
                                value="${itemDisc.toFixed(2)}" class="discount-input form-control form-control-sm text-center"
-                               style="width:80px;margin:auto;">
+                               style="width:80px;margin:auto;" ${isReturned ? 'disabled' : ''}>
                     </td>
                     <td class="text-center">
                         <input type="number" step="0.01" min="0" name="items[${rowCount}][tax_amount]"
                                value="${itemTax.toFixed(2)}" class="tax-input form-control form-control-sm text-center"
-                               style="width:80px;margin:auto;">
+                               style="width:80px;margin:auto;" ${isReturned ? 'disabled' : ''}>
                     </td>
                     <td class="text-end fw-bold subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
+                        ${isReturned ? '' : `
                         <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
                                 style="width:28px;height:28px;padding:0;">
                             <i class="bx bx-trash" style="font-size:13px;"></i>
                         </button>
+                        `}
                     </td>
                 </tr>`);
                 rowCount++;
@@ -566,6 +580,12 @@
                 $('#sum_due').text(fmtCurrency(Math.max(0, grandTotal - paid)));
                 $('#sum_change').text(fmtCurrency(Math.max(0, paid - grandTotal)));
             }
+
+            $('#btnSaveDraft').on('click', function(e) {
+                e.preventDefault();
+                $('select[name="status"]').val('draft');
+                $(this).closest('form').submit();
+            });
 
             // Initial calculation after any old items are loaded
             calculateTotals();

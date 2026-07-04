@@ -113,16 +113,22 @@
                 <div class="mt-2 text-sm font-mono font-bold text-violet-600">{{ $purchase->purchase_no }}</div>
                 <div class="text-xs text-slate-400 mt-1">Date: {{ $purchase->purchase_date }}</div>
                 <div class="mt-3">
-                    @if ($purchase->status === 'Completed')
+                    @if ($purchase->status === 'received')
                         <span
                             class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 border border-emerald-200">✔
-                            COMPLETED</span>
-                    @elseif ($purchase->status === 'Draft')
+                            RECEIVED</span>
+                    @elseif ($purchase->status === 'pending')
                         <span
-                            class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 border border-amber-200">DRAFT</span>
+                            class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 border border-amber-200">PENDING</span>
+                    @elseif ($purchase->status === 'ordered')
+                        <span
+                            class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 border border-blue-200">ORDERED</span>
+                    @elseif ($purchase->status === 'draft')
+                        <span
+                            class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 border border-slate-200">DRAFT</span>
                     @else
                         <span
-                            class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700 border border-red-200">CANCELLED</span>
+                            class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700 border border-red-200">{{ strtoupper($purchase->status) }}</span>
                     @endif
                 </div>
             </div>

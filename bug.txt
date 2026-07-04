@@ -1,0 +1,14 @@
+* Purchase Form -> Add Product -> if There Not Select Any Product -> icon show center not left side
+* Not Re : Purchase Form -> Save As Draft button -> Remove Status Select Box -> Auto Save As Draft
+* Purchase Form -> Status -> received, pending, ordered, draft Keep this options 
+* Default Recrived Selected -> Orderd Pending and Draft Do Not Add Stock in Stock Table
+* in Edit Time Check if Alredy Stock Add mens Recived Check Stock Availabe or not Recived change to Any Other status like pending check qty availabe show alret if not else minus alredy added old qty 
+* Purchase Table on Click Payment Button Does Not Open Model getting Console Error Can you check and fix it.
+* Purchase Form Edit Time Check This Purchase Alredy Return or Not - If Alredy Return Show Top This Product Alredy Return Do not edit this 
+
+
+* Purchase Create Time Show "Save As Draft" Button Edit Time Not Show Hide Edit Time
+* 
+
+  
+* 

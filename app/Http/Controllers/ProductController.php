@@ -339,7 +339,7 @@ class ProductController extends Controller
                     'paid_amount'    => $lineTotal,
                     'due_amount'     => 0.00,
                     'payment_method' => 'Cash',
-                    'status'         => 'Completed',
+                    'status'         => 'received',
                     'notes'          => 'Auto-created opening-stock purchase on product creation.',
                     'user_id'        => auth()->id(),
                 ]);

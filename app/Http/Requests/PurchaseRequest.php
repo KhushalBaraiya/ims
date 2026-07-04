@@ -30,7 +30,7 @@ class PurchaseRequest extends FormRequest
             'tax_amount' => 'nullable|numeric|min:0',
             'shipping_amount' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
-            'status' => 'required|in:Draft,Completed,Cancelled',
+            'status' => 'required|in:received,pending,ordered,draft',
             
             // Item details validation
             'items' => 'required|array|min:1',

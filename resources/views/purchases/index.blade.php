@@ -35,11 +35,11 @@
     @php
         use App\Models\Purchase;
         $totalPurchases = Purchase::count();
-        $completedPurchases = Purchase::where('status', 'Completed')->count();
-        $draftPurchases = Purchase::where('status', 'Draft')->count();
-        $cancelledPurchases = Purchase::where('status', 'Cancelled')->count();
-        $totalAmount = Purchase::where('status', 'Completed')->sum('grand_total');
-        $totalDue = Purchase::where('status', 'Completed')->sum('due_amount');
+        $completedPurchases = Purchase::where('status', 'received')->count();
+        $draftPurchases = Purchase::where('status', 'draft')->count();
+        $cancelledPurchases = Purchase::whereIn('status', ['ordered', 'pending'])->count();
+        $totalAmount = Purchase::where('status', 'received')->sum('grand_total');
+        $totalDue = Purchase::where('status', 'received')->sum('due_amount');
     @endphp
     <div class="row g-3 mb-4">
         <div class="col-6 col-xl-3">
@@ -59,7 +59,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">{{ __('messages.completed') }}</p>
+                        <p class="text-muted small mb-0">Received</p>
                         <h4 class="fw-bold text-success mb-0">{{ $completedPurchases }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
@@ -126,12 +126,10 @@
                             <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select class="form-select form-select-sm" name="status">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
-                                <option {{ request('status') === 'Draft' ? 'selected' : '' }} value="Draft">
-                                    {{ __('messages.draft') }}</option>
-                                <option {{ request('status') === 'Completed' ? 'selected' : '' }} value="Completed">
-                                    {{ __('messages.completed') }}</option>
-                                <option {{ request('status') === 'Cancelled' ? 'selected' : '' }} value="Cancelled">
-                                    {{ __('messages.cancelled') }}</option>
+                                <option {{ request('status') === 'received' ? 'selected' : '' }} value="received">Received</option>
+                                <option {{ request('status') === 'pending' ? 'selected' : '' }} value="pending">Pending</option>
+                                <option {{ request('status') === 'ordered' ? 'selected' : '' }} value="ordered">Ordered</option>
+                                <option {{ request('status') === 'draft' ? 'selected' : '' }} value="draft">Draft</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -203,13 +201,16 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @if ($purchase->status === 'Completed')
-                                        <span class="badge rounded-pill bg-success">{{ __('messages.completed') }}</span>
-                                    @elseif($purchase->status === 'Draft')
-                                        <span
-                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.draft') }}</span>
+                                    @if ($purchase->status === 'received')
+                                        <span class="badge rounded-pill bg-success">Received</span>
+                                    @elseif($purchase->status === 'pending')
+                                        <span class="badge rounded-pill bg-warning text-dark">Pending</span>
+                                    @elseif($purchase->status === 'ordered')
+                                        <span class="badge rounded-pill bg-primary">Ordered</span>
+                                    @elseif($purchase->status === 'draft')
+                                        <span class="badge rounded-pill bg-secondary text-dark">Draft</span>
                                     @else
-                                        <span class="badge rounded-pill bg-danger">{{ __('messages.cancelled') }}</span>
+                                        <span class="badge rounded-pill bg-danger">{{ $purchase->status }}</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -227,7 +228,7 @@
                                                 <i class="bx bx-printer" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
-                                        @if ($purchase->status === 'Completed')
+                                        @if ($purchase->status === 'received')
                                             @if ($purchase->returns->count() > 0)
                                                 @can('purchase_returns.update')
                                                     <a class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
@@ -355,6 +356,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            const sym = '{{ optional(current_currency())->symbol ?? "₹" }}';
             $('#purchasesTable').DataTable({
                 responsive: true,
                 pageLength: 10,
@@ -453,7 +455,7 @@
                 if (!ids.length) return;
                 Swal.fire({
                     title: 'Delete ' + ids.length + ' purchase(s)?',
-                    text: 'Stock will be reversed for Completed orders. This cannot be undone.',
+                    text: 'Stock will be reversed for Received orders. This cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

@@ -28,6 +28,15 @@
         </div>
     </div>
 
+    @if ($purchase->returns->isNotEmpty())
+        <div class="alert alert-warning border border-warning d-flex align-items-center gap-2 mb-4">
+            <i class="bx bx-error-circle fs-4 text-warning"></i>
+            <div>
+                <strong>Notice:</strong> This purchase has already been returned and cannot be edited.
+            </div>
+        </div>
+    @endif
+
     {{-- Identity ribbon --}}
     <div class="card shadow-sm border-0 mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3">
@@ -43,8 +52,8 @@
             </div>
             <span
                 class="badge bg-white ms-auto
-                {{ $purchase->status === 'Completed' ? 'text-success' : ($purchase->status === 'Draft' ? 'text-warning' : 'text-danger') }}">
-                {{ $purchase->status }}
+                {{ $purchase->status === 'received' ? 'text-success' : ($purchase->status === 'pending' ? 'text-warning' : ($purchase->status === 'ordered' ? 'text-primary' : 'text-secondary')) }}">
+                {{ ucfirst($purchase->status) }}
             </span>
         </div>
     </div>

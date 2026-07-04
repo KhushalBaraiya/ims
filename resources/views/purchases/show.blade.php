@@ -69,12 +69,16 @@
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">Status</span>
-                            @if ($purchase->status === 'Completed')
-                                <span class="badge bg-success rounded-pill">Completed</span>
-                            @elseif ($purchase->status === 'Draft')
-                                <span class="badge bg-warning text-dark rounded-pill">Draft</span>
+                            @if ($purchase->status === 'received')
+                                <span class="badge bg-success rounded-pill">Received</span>
+                            @elseif ($purchase->status === 'pending')
+                                <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                            @elseif ($purchase->status === 'ordered')
+                                <span class="badge bg-primary rounded-pill">Ordered</span>
+                            @elseif ($purchase->status === 'draft')
+                                <span class="badge bg-secondary text-dark rounded-pill">Draft</span>
                             @else
-                                <span class="badge bg-danger rounded-pill">Cancelled</span>
+                                <span class="badge bg-danger rounded-pill">{{ $purchase->status }}</span>
                             @endif
                         </li>
                         <li class="d-flex justify-content-between py-2">
@@ -168,7 +172,7 @@
                             <i class="bx bx-printer me-1"></i> Print Order
                         </a>
                     @endcan
-                    @if ($purchase->status === 'Completed')
+                    @if ($purchase->status === 'received')
                         @if ($purchase->returns->count() > 0)
                             @can('purchase_returns.view')
                                 <a class="btn btn-outline-warning"

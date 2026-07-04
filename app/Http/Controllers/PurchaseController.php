@@ -160,8 +160,8 @@ class PurchaseController extends Controller
                     'total_amount' => $itemTotal,
                 ]);
 
-                // Only add stock for Completed purchases
-                if ($request->status === 'Completed') {
+                // Only add stock for received purchases
+                if ($request->status === 'received') {
                     $product = Product::with('stock')->findOrFail($item['product_id']);
                     $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
                     $stock->increment('quantity', $qty);
@@ -200,7 +200,7 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.update');
 
-        $purchase->load(['items.product.stock']);
+        $purchase->load(['items.product.stock', 'returns']);
         $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
 
         return view('purchases.edit', compact('purchase', 'suppliers'));
@@ -221,50 +221,77 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.update');
 
+        if ($purchase->returns()->exists()) {
+            return back()->withInput()->withErrors(['stock_error' => 'This purchase has already been returned and cannot be edited.']);
+        }
+
         DB::beginTransaction();
         try {
             $oldStatus = $purchase->status;
             $newStatus = $request->status;
 
-            // Build a map of product_id => new_qty from the incoming request
+            // Build maps of product quantities
             $newQtyMap = [];
             foreach ($request->items as $item) {
                 $newQtyMap[(int) $item['product_id']] = (float) $item['quantity'];
             }
 
-            // ── STEP 1: Pre-check — only fail when stock would go net-negative ──
-            // net = current_stock - old_qty + new_qty
-            // We only care when old status was Completed (stock was previously added).
-            if ($oldStatus === 'Completed') {
-                foreach ($purchase->items as $oldItem) {
-                    $currentQty = $oldItem->product->stock->quantity ?? 0;
-                    $oldQty = $oldItem->quantity;
-                    $newQty = $newQtyMap[$oldItem->product_id] ?? 0;
-                    $netStock = $currentQty - $oldQty + $newQty;
+            $oldQtyMap = [];
+            foreach ($purchase->items as $oldItem) {
+                $oldQtyMap[(int) $oldItem->product_id] = (float) $oldItem->quantity;
+            }
 
-                    // Only block if net result is negative (i.e. reducing qty causes issue)
-                    if ($netStock < 0) {
+            // Gather all unique product IDs involved
+            $allProductIds = array_unique(array_merge(array_keys($newQtyMap), array_keys($oldQtyMap)));
+
+            // Pre-check stock adjustments
+            $stockAdjustments = [];
+            foreach ($allProductIds as $productId) {
+                $oldQty = $oldQtyMap[$productId] ?? 0.0;
+                $newQty = $newQtyMap[$productId] ?? 0.0;
+
+                $oldAdded = ($oldStatus === 'received') ? $oldQty : 0.0;
+                $newToAdd = ($newStatus === 'received') ? $newQty : 0.0;
+
+                $netChange = $newToAdd - $oldAdded;
+                $stockAdjustments[$productId] = $netChange;
+
+                if ($netChange < 0) {
+                    $product = Product::with('stock')->findOrFail($productId);
+                    $currentQty = $product->stock->quantity ?? 0.0;
+
+                    if (($currentQty + $netChange) < 0) {
                         DB::rollBack();
-                        $msg = "Cannot update purchase: stock for \"{$oldItem->product->name}\" "
-                             .'would go negative. '
-                             ."Current stock: {$currentQty}, old purchase qty: {$oldQty}, new qty: {$newQty}.";
+                        
+                        if ($oldStatus === 'received' && $newStatus !== 'received') {
+                            $msg = "Cannot change purchase status because sufficient stock is not available to reverse the previously received quantity.";
+                        } else {
+                            $msg = "Cannot update purchase: stock for \"{$product->name}\" would go negative. "
+                                 . "Current stock: {$currentQty}, old purchase qty: {$oldQty}, new qty: {$newQty}.";
+                        }
 
                         return back()->withInput()->withErrors(['stock_error' => $msg]);
                     }
                 }
             }
 
-            // ── STEP 2: Reverse old stock ──
-            if ($oldStatus === 'Completed') {
-                foreach ($purchase->items as $oldItem) {
-                    $oldItem->product->stock->decrement('quantity', $oldItem->quantity);
+            // Apply stock changes safely
+            foreach ($stockAdjustments as $productId => $netChange) {
+                if ($netChange != 0) {
+                    $product = Product::with('stock')->findOrFail($productId);
+                    $stock = $product->stock ?? $product->stock()->create(['quantity' => 0.0]);
+                    if ($netChange > 0) {
+                        $stock->increment('quantity', $netChange);
+                    } else {
+                        $stock->decrement('quantity', abs($netChange));
+                    }
                 }
             }
 
-            // ── STEP 3: Delete old line items ──
+            // Delete old line items
             $purchase->items()->delete();
 
-            // ── STEP 4: Create new items and apply new stock ──
+            // Create new items
             $subTotal = 0;
             foreach ($request->items as $item) {
                 $qty = (float) $item['quantity'];
@@ -282,12 +309,6 @@ class PurchaseController extends Controller
                     'tax_amount' => $itemTax,
                     'total_amount' => $itemTotal,
                 ]);
-
-                if ($newStatus === 'Completed') {
-                    $product = Product::with('stock')->findOrFail($item['product_id']);
-                    $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
-                    $stock->increment('quantity', $qty);
-                }
             }
 
             $taxAmount = (float) ($request->tax_amount ?? 0);
@@ -338,7 +359,7 @@ class PurchaseController extends Controller
         DB::beginTransaction();
         try {
             // ── Pre-check: will reversing stock go negative? ──
-            if ($purchase->status === 'Completed') {
+            if ($purchase->status === 'received') {
                 foreach ($purchase->items as $item) {
                     $currentQty = $item->product->stock->quantity ?? 0;
                     $afterReversal = $currentQty - $item->quantity;
@@ -401,7 +422,7 @@ class PurchaseController extends Controller
             foreach ($ids as $id) {
                 $purchase = Purchase::with('items.product.stock')->find($id);
                 if (!$purchase) continue;
-                if ($purchase->status === 'Completed') {
+                if ($purchase->status === 'received') {
                     foreach ($purchase->items as $item) {
                         $currentQty = $item->product->stock->quantity ?? 0;
                         if (($currentQty - $item->quantity) < 0) {

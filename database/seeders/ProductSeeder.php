@@ -603,10 +603,10 @@ class ProductSeeder extends Seeder
                 $data
             );
 
-            Stock::updateOrCreate(
-                ['product_id' => $product->id],
-                ['quantity'   => $stockQty]
-            );
+            // Stock::updateOrCreate(
+            //     ['product_id' => $product->id],
+            //     ['quantity'   => $stockQty]
+            // );
         }
 
         $this->command->info('✅ ProductSeeder done — ' . count($products) . ' products seeded.');
