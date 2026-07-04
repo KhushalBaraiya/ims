@@ -81,7 +81,23 @@ if (!function_exists('format_currency')) {
         // Avoid division by zero; treat rate <= 0 as 1
         $converted = ($rate > 0) ? ($amount / $rate) : $amount;
 
-        return $currency->symbol . number_format($converted, 2);
+        $isNegative = $converted < 0;
+        $absVal = abs($converted);
+
+        if ($absVal < 1000) {
+            $valStr = number_format($absVal, 2);
+        } elseif ($absVal < 1000000) {
+            $formatted = $absVal / 1000;
+            $valStr = (round($formatted, 2) == (int)$formatted ? (int)$formatted : round($formatted, 2)) . 'K';
+        } elseif ($absVal < 1000000000) {
+            $formatted = $absVal / 1000000;
+            $valStr = (round($formatted, 2) == (int)$formatted ? (int)$formatted : round($formatted, 2)) . 'M';
+        } else {
+            $formatted = $absVal / 1000000000;
+            $valStr = (round($formatted, 2) == (int)$formatted ? (int)$formatted : round($formatted, 2)) . 'B';
+        }
+
+        return ($isNegative ? '-' : '') . $currency->symbol . $valStr;
     }
 }
 

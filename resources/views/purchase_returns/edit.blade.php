@@ -170,6 +170,7 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
+                                        <th style="width:60px;">Image</th>
                                         <th class="ps-3">Product</th>
                                         <th class="text-center">Unit Price</th>
                                         @if ($purchaseReturn->purchase_id)
@@ -347,6 +348,7 @@
                             purchased_qty: null,
                             already_returned: null,
                             max_returnable: {{ (float) (($p->stock->quantity ?? 0) + $item->quantity) }},
+                            image_url: "{{ $p->image ? asset('uploads/products/' . $p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
                         }, {{ (int) $item->quantity }}, "{{ addslashes($item->reason ?? '') }}", false);
                     @endif
                 @endforeach
@@ -405,9 +407,10 @@
                         '<div class="text-muted" style="font-size:11px;">Stock: ' + stock.toFixed(0) +
                         '</div>';
 
+                    var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
                     resultsBox.append(
                         '<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;" data-id="' +
-                        id + '" data-mode="' + mode + '">' +
+                        id + '" data-mode="' + mode + '" data-image="' + imgUrl + '" data-sku="' + sku + '">' +
                         '<div><div class="fw-semibold small">' + item.name +
                         '</div><div class="text-muted" style="font-size:11px;">SKU: ' + sku +
                         '</div></div>' +
@@ -458,12 +461,13 @@
                     addRow({
                         product_id: id,
                         name: $(this).find('.fw-semibold.small').text().trim(),
-                        sku: $(this).find('.text-muted').first().text().replace('SKU: ', '').trim(),
+                        sku: $(this).data('sku'),
                         unit_price: parseFloat(priceText) || 0,
                         stock: parseFloat(stockText) || 0,
                         purchased_qty: null,
                         already_returned: null,
                         max_returnable: parseFloat(stockText) || 99999,
+                        image_url: $(this).data('image')
                     }, 1, '', false);
                 }
                 resultsBox.addClass('d-none').empty();
@@ -485,13 +489,15 @@
                 } else {
                     extraCols = '<td class="text-center text-muted">' + parseInt(item.stock) + '</td>';
                 }
+                var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
                 itemsContainer.append(
                     '<tr class="item-row" data-product-id="' + item.product_id + '">' +
-                    '<td class="ps-3 fw-semibold">' + item.name +
-                    '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item
-                    .product_id + '">' +
-                    '<input type="hidden" name="items[' + rowCount + '][unit_price]" value="' + price.toFixed(
-                    2) + '">' +
+                    '<td><img src="' + imgUrl + '" class="tbl-img rounded" onerror="imgError(this)" style="width:36px;height:36px;object-fit:cover;"></td>' +
+                    '<td class="ps-3">' +
+                    '<div class="fw-bold text-primary mb-0" style="font-size:13px;">' + item.name + '</div>' +
+                    '<div class="text-muted small" style="font-size:11px;">SKU: ' + (item.sku || '-') + '</div>' +
+                    '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item.product_id + '">' +
+                    '<input type="hidden" name="items[' + rowCount + '][unit_price]" value="' + price.toFixed(2) + '">' +
                     '</td>' +
                     '<td class="text-center text-primary fw-bold unit-price-cell" data-price="' + price + '">' +
                     fmt(price) + '</td>' +

@@ -181,7 +181,6 @@
                             <tr>
                                 <th style="width:50px">Image</th>
                                 <th>Product</th>
-                                <th>SKU</th>
                                 <th class="text-center">Qty</th>
                                 <th class="text-center">Purchase Price</th>
                                 <th class="text-center">Discount</th>
@@ -269,7 +268,7 @@
             <a href="{{ route('purchases.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-x me-1"></i> Cancel
             </a>
-            @if (!$isReturned)
+            @if ((!isset($purchase) || !$purchase->exists) && !$isReturned)
                 <button type="button" id="btnSaveDraft" class="btn btn-outline-primary">
                     <i class="bx bx-file me-1"></i> Save As Draft
                 </button>
@@ -500,12 +499,14 @@
                 const price = p.purchase_price || 0;
                 $('#purchaseItemsContainer').append(`
                 <tr class="item-row" data-product-id="${p.id}">
-                    <td><img src="${p.image_url}" class="tbl-img rounded" onerror="imgError(this)"></td>
-                    <td class="fw-semibold">
-                        ${p.name}
+                    <td>
+                        <img src="${p.image_url}" class="rounded" onerror="imgError(this)" style="width:36px;height:36px;object-fit:cover;">
+                    </td>
+                    <td>
+                        <div class="fw-bold text-primary mb-0" style="font-size:13px;">${p.name}</div>
+                        <div class="text-muted small" style="font-size:11px;">SKU: ${p.sku}</div>
                         <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
                     </td>
-                    <td><code class="small">${p.sku}</code></td>
                     <td class="text-center">
                         <input type="number" step="1" min="1" name="items[${rowCount}][quantity]"
                                value="${parseInt(p.qty || 1)}" class="qty-input form-control form-control-sm text-center"

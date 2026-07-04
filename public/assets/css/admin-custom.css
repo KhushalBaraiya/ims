@@ -1366,6 +1366,12 @@ img {
     flex-wrap: wrap;
 }
 
+table .item-row td {
+    padding: 5px !important;
+}
+table .table-light th {
+    padding: 10px 12px !important;
+}
 /* ================================================================
    TABLET  768px – 991px
    ================================================================ */

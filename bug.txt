@@ -8,7 +8,42 @@
 
 
 * Purchase Create Time Show "Save As Draft" Button Edit Time Not Show Hide Edit Time
+* Purchase Table On Delete Check Stock Working and Show Alret As Toster All Working but Purchase View Page Delete Button Show Alret Message Not working 
+* Sales Create Form -> Add "Save As Draft" Button Same As Purchase Form
+* Sales Form -> Change Product Select Desgin 
+   - First Small Size image After Name As Title and SKU Code As Description
+   - After Show Stock and qty input 
+   - After Unit Price not Editable Direct Show Net Unit price After Discount and Tax After Row TOtal 
+   - Make Samll text Show All Proper User Attractive 
+   - After Delete Button 
+* Sales Form "Global Discount" if There Select % do not enter more than 100 
+* if There Seelct Fix Do Not Enter More Than Sub Total 
+* Sales Table -> Check Payment Model Does Not Open - Check that and make it working
+* Sale Return Form -> If There Not Select Any Inovice "Show Center icon in Invoice Return Items"
+* Small Size image and all text in product select box 
+* Sale Return Form Show Proepr Calculation 
+  - Product list img name qty editable 
+  - All Calcuate Same As Sales - dicsount tax and sub total row 
+  - after Last Refund Sub Total Show 
+  - Refund Amount input box and all properly 
+* Sales Table Show "Sale Return" icon On Click Sale Return 
+
+
+* All Anount Show Proper Formate - K M B use All Amount - use CurrencyHelper.php
+* Purchase Make img Size Small - Product Name and SKU show As Title and Description Small Text Size 
+* Same Show in Purchase Retrun Form Title and Desc Small Text Size 
+* Same in Sales and Sale retrun form Samll Text size
+* Purchase Table Remove id Column Else Hide it 
+* Sales Form
+   - image size small 
+   - product title and sku font size small 
+   - first img after name third column qty in top show qty sold qty after qty input default selectd sold qty
+   - Forth Column Net Unit Price Discount and tax after lastt column sub total do not show any other coluumn 
+   - Remove retrun reson column in product 
+* Sales Table After Sales Return Hide "Sales Retrun" icon
+* After Sales Return on Edit Sales Show TOp Alret Same Like Purchase Availabe Show Edit Form Top Alret Do Not Edit Sale
 * 
 
-  
-* 
+
+
+

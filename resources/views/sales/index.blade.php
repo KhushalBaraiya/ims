@@ -244,6 +244,15 @@
                                             </a>
                                         @endcan
                                         @can('sales.update')
+                                            @if ($sale->status === 'Completed' && $sale->returns->isEmpty())
+                                                @can('sale_returns.create')
+                                                    <a class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
+                                                        href="{{ route('sale-returns.create', ['sale_id' => $sale->id]) }}"
+                                                        style="width:30px;height:30px;padding:0;" title="Sale Return">
+                                                        <i class="bx bx-undo" style="font-size:1rem;"></i>
+                                                    </a>
+                                                @endcan
+                                            @endif
                                             <a class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action btn-payment-modal"
                                                 data-action="{{ route('sales.update-payment', $sale->id) }}"
                                                 data-due-amount="{{ $sale->due_amount }}"
@@ -352,6 +361,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            const sym = '{{ optional(current_currency())->symbol ?? "₹" }}';
             $('#salesTable').DataTable({
                 responsive: true,
                 pageLength: 10,

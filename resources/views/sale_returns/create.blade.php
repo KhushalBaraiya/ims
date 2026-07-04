@@ -142,34 +142,30 @@
                     <div class="card-body p-0">
                         <div class="table-responsive" id="itemsTableWrapper" style="display:none;">
                             <table class="table table-hover align-middle mb-0" id="returnItemsTable">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width:60px;">Image</th>
-                                        <th>Product</th>
-                                        <th class="text-center">Sold Qty</th>
-                                        <th class="text-center">Already Ret.</th>
-                                        <th class="text-end">Unit Price</th>
-                                        <th class="text-center">Avail. Return</th>
-                                        <th class="text-center" style="width:110px">Return Qty</th>
-                                        <th>Reason</th>
-                                        <th class="text-end">Subtotal</th>
-                                    </tr>
-                                </thead>
+                                 <thead class="table-light">
+                                     <tr>
+                                         <th style="width:60px;">Image</th>
+                                         <th>Product</th>
+                                         <th class="text-center" style="width:130px;">Quantity</th>
+                                         <th class="text-center" style="width:180px;">Pricing</th>
+                                         <th class="text-end" style="width:120px;">Sub Total</th>
+                                     </tr>
+                                 </thead>
                                 <tbody id="returnItemsContainer"></tbody>
                             </table>
                         </div>
 
                         {{-- States --}}
-                        <div id="noInvoiceMsg" class="text-center py-5 text-muted">
-                            <i class="bx bx-file-blank d-block mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                        <div id="noInvoiceMsg" class="text-center py-5 text-muted d-flex flex-column align-items-center justify-content-center">
+                            <i class="bx bx-file-blank mb-2" style="font-size:2.5rem;opacity:.3;"></i>
                             <p class="mb-0 small">Select a sales invoice to load line items.</p>
                         </div>
-                        <div id="loadingMsg" class="text-center py-5 text-muted d-none">
-                            <i class="bx bx-loader-alt bx-spin d-block mb-2" style="font-size:2.5rem;opacity:.5;"></i>
+                        <div id="loadingMsg" class="text-center py-5 text-muted d-none d-flex flex-column align-items-center justify-content-center">
+                            <i class="bx bx-loader-alt bx-spin mb-2" style="font-size:2.5rem;opacity:.5;"></i>
                             <p class="mb-0 small">Loading invoice items...</p>
                         </div>
-                        <div id="emptyReturnMsg" class="text-center py-5 text-success d-none">
-                            <i class="bx bx-check-circle d-block mb-2" style="font-size:2.5rem;"></i>
+                        <div id="emptyReturnMsg" class="text-center py-5 text-success d-none d-flex flex-column align-items-center justify-content-center">
+                            <i class="bx bx-check-circle mb-2" style="font-size:2.5rem;"></i>
                             <p class="mb-0 small">All items from this invoice have already been returned.</p>
                         </div>
                         <div id="errorMsg" class="text-center py-4 text-danger d-none">
@@ -308,35 +304,31 @@
 
                             returnableCount++;
                             const max = parseInt(item.available_quantity);
-                            const imgHtml =
-                                `<img src="${item.image_url}" class="tbl-img rounded" onerror="imgError(this)">`;
+                            const imgHtml = `<img src="${item.image_url}" class="tbl-img rounded" onerror="imgError(this)">`;
 
-                            itemsContainer.append(`
-                            <tr class="item-row" data-product-id="${item.product_id}">
-                                <td>${imgHtml}</td>
-                                <td class="fw-semibold">
-                                    ${item.name}
-                                    <small class="d-block text-muted">${item.sku}</small>
-                                    <input type="hidden" name="items[${rowCount}][product_id]" value="${item.product_id}">
-                                </td>
-                                <td class="text-center text-muted">${parseInt(item.sold_quantity)} <small class="text-muted">${item.unit}</small></td>
-                                <td class="text-center text-warning fw-semibold">${parseInt(item.returned_quantity)}</td>
-                                <td class="text-end fw-semibold price-cell" data-price="${item.unit_price}">${fmt(item.unit_price)}</td>
-                                <td class="text-center fw-bold text-success max-returnable-cell" data-max="${max}">${max} <small class="text-muted fw-normal">${item.unit}</small></td>
-                                <td class="text-center">
-                                    <input type="number" step="1" min="0" max="${max}"
-                                        name="items[${rowCount}][quantity]"
-                                        value="0"
-                                        class="qty-input form-control form-control-sm text-center"
-                                        style="width:88px;margin:auto;">
-                                </td>
-                                <td>
-                                    <input type="text" name="items[${rowCount}][reason]"
-                                        class="form-control form-control-sm"
-                                        placeholder="Reason...">
-                                </td>
-                                <td class="text-end fw-bold subtotal-cell">${fmt(0)}</td>
-                            </tr>`);
+                             itemsContainer.append(`
+                             <tr class="item-row" data-product-id="${item.product_id}">
+                                 <td>${imgHtml}</td>
+                                 <td>
+                                     <div class="fw-bold text-primary mb-0" style="font-size:13px;">${item.name}</div>
+                                     <div class="text-muted small" style="font-size:11px;">SKU: ${item.sku}</div>
+                                     <input type="hidden" name="items[${rowCount}][product_id]" value="${item.product_id}">
+                                 </td>
+                                 <td class="text-center">
+                                     <div class="small text-muted mb-1">Sold Qty: ${parseInt(item.sold_quantity)}</div>
+                                     <input type="number" step="1" min="0" max="${parseInt(item.sold_quantity)}"
+                                         name="items[${rowCount}][quantity]"
+                                         value="${parseInt(item.sold_quantity)}"
+                                         class="qty-input form-control form-control-sm text-center"
+                                         style="width:80px;margin:auto;">
+                                 </td>
+                                 <td class="text-center text-muted small">
+                                     <div>Net Price: <span class="fw-semibold text-dark price-cell" data-price="${item.unit_price}">${fmt(item.unit_price)}</span></div>
+                                     <div>Discount: <span class="disc-cell" data-disc="${item.discount_amount}">${fmt(item.discount_amount)}</span></div>
+                                     <div>Tax: <span class="tax-cell" data-tax="${item.tax_amount}">${fmt(item.tax_amount)}</span></div>
+                                 </td>
+                                 <td class="text-end fw-bold subtotal-cell">${fmt(0)}</td>
+                             </tr>`);
                             rowCount++;
                         });
 
@@ -384,26 +376,51 @@
 
             // Refunded amount live update
             refundedInput.on('input change', function() {
-                $('#summary_refunded').text(fmt(parseFloat($(this).val()) || 0));
+                let val = parseFloat($(this).val()) || 0;
+                const maxRefund = parseFloat($('#sum_grandtotal').text().replace(/[^\d.]/g, '')) || 0;
+                if (val > maxRefund) {
+                    $(this).val(maxRefund.toFixed(2));
+                    showAdminToast(`Refund amount cannot exceed Grand Total Refund (${fmt(maxRefund)}).`, 'error');
+                    val = maxRefund;
+                }
+                if (val < 0) $(this).val(0);
+                $('#summary_refunded').text(fmt(val));
             });
 
             function calcTotals() {
                 let subtotal = 0;
+                let totalTax = 0;
+                let totalDisc = 0;
+                let refundTotal = 0;
+
                 itemsContainer.find('tr.item-row').each(function() {
-                    const qty = parseInt($(this).find('.qty-input').val()) || 0;
-                    const price = parseFloat($(this).find('.price-cell').data('price')) || 0;
-                    const rowSub = price * qty;
-                    $(this).find('.subtotal-cell').text(fmt(rowSub));
-                    subtotal += rowSub;
+                    const row = $(this);
+                    const qty = parseInt(row.find('.qty-input').val()) || 0;
+                    const price = parseFloat(row.find('.price-cell').data('price')) || 0;
+                    const unitDisc = parseFloat(row.find('.disc-cell').data('disc')) || 0;
+                    const unitTax = parseFloat(row.find('.tax-cell').data('tax')) || 0;
+
+                    const rowDisc = unitDisc * qty;
+                    const rowTax = unitTax * qty;
+                    const rowSubtotal = (price + unitTax - unitDisc) * qty;
+
+                    row.find('.disc-cell').text(fmt(rowDisc));
+                    row.find('.tax-cell').text(fmt(rowTax));
+                    row.find('.subtotal-cell').text(fmt(rowSubtotal));
+
+                    subtotal += price * qty;
+                    totalTax += rowTax;
+                    totalDisc += rowDisc;
+                    refundTotal += rowSubtotal;
                 });
 
                 $('#sum_subtotal').text(fmt(subtotal));
-                $('#sum_grandtotal').text(fmt(subtotal));
+                $('#sum_grandtotal').text(fmt(refundTotal));
 
                 // Auto-set refunded amount to grand total if 0
                 const currentRefunded = parseFloat(refundedInput.val()) || 0;
-                if (currentRefunded === 0 || currentRefunded > subtotal) {
-                    refundedInput.val(subtotal.toFixed(2));
+                if (currentRefunded === 0 || currentRefunded > refundTotal) {
+                    refundedInput.val(refundTotal.toFixed(2));
                 }
                 $('#summary_refunded').text(fmt(parseFloat(refundedInput.val()) || 0));
             }

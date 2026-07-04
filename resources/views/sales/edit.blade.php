@@ -9,6 +9,15 @@
         <p class="text-muted small">Modify line items, quantities, or statuses of invoice: <code>{{ $sale->invoice_no }}</code>.</p>
     </div>
 
+    @if ($sale->returns->isNotEmpty())
+        <div class="alert alert-warning border border-warning d-flex align-items-center gap-2 mb-4">
+            <i class="bx bx-error-circle fs-4 text-warning"></i>
+            <div>
+                This sale has already been returned and cannot be edited.
+            </div>
+        </div>
+    @endif
+
     <!-- Form wrapper -->
     <form method="POST" action="{{ route('sales.update', $sale->id) }}" novalidate>
         @method('PUT')

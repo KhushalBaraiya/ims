@@ -343,6 +343,22 @@
                         placeholder: $el.find('option[value=""]').first().text().trim() ||
                             'Select…',
                         dropdownParent: $modal.length ? $modal : $('body'),
+                        templateResult: function(state) {
+                            if (!state.id) return state.text;
+                            var element = $(state.element);
+                            var img = element.data('image');
+                            var sku = element.data('sku');
+                            if (!img && !sku) return state.text;
+                            return $(
+                                '<div class="d-flex align-items-center gap-2">' +
+                                '<img src="' + img + '" class="rounded" style="width:32px;height:32px;object-fit:cover;">' +
+                                '<div class="d-flex flex-column">' +
+                                '<span class="fw-semibold text-dark lh-sm" style="font-size:13px;">' + (element.data('name') || state.text.split(' (')[0]) + '</span>' +
+                                '<span class="text-muted" style="font-size:10.5px;">SKU: ' + sku + '</span>' +
+                                '</div>' +
+                                '</div>'
+                            );
+                        }
                     });
                     if ($el.hasClass('is-invalid')) {
                         $el.next('.select2-container').addClass('is-invalid');

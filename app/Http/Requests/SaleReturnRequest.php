@@ -35,6 +35,44 @@ class SaleReturnRequest extends FormRequest
         ];
     }
 
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $saleId = $this->input('sale_id');
+            if (!$saleId) return;
+
+            $sale = \App\Models\Sale::find($saleId);
+            if (!$sale) return;
+
+            // Compute refundable amount
+            $refundableTotal = 0;
+            if ($this->has('items') && is_array($this->input('items'))) {
+                foreach ($this->input('items') as $item) {
+                    $qty = (int) ($item['quantity'] ?? 0);
+                    if ($qty <= 0) continue;
+
+                    $saleItem = $sale->items()->where('product_id', $item['product_id'])->first();
+                    if ($saleItem) {
+                        $origQty = max(1.0, (float)$saleItem->quantity);
+                        $unitDisc = (float)($saleItem->discount_amount / $origQty);
+                        $unitTax = (float)($saleItem->tax_amount / $origQty);
+
+                        $rowDisc = round($unitDisc * $qty, 2);
+                        $rowTax = round($unitTax * $qty, 2);
+                        $rowTotal = ($qty * $saleItem->unit_price) + $rowTax - $rowDisc;
+
+                        $refundableTotal += $rowTotal;
+                    }
+                }
+            }
+
+            $refundedAmount = (float) $this->input('refunded_amount', 0);
+            if ($refundedAmount > round($refundableTotal, 2)) {
+                $validator->errors()->add('refunded_amount', 'Refunded amount cannot exceed the calculated refundable amount of ' . number_format($refundableTotal, 2) . '.');
+            }
+        });
+    }
+
     /**
      * Custom validation attribute names.
      */

@@ -25,7 +25,7 @@ class SaleController extends Controller
     {
         Gate::authorize('sales.view');
 
-        $query = Sale::with(['customer', 'user', 'items'])->latest();
+        $query = Sale::with(['customer', 'user', 'items', 'returns'])->latest();
 
         // RBAC: sales.own restricts to records created by the authenticated user
         if (! auth()->user()->can('sales.view') || auth()->user()->hasPermissionTo('sales.own') && ! auth()->user()->hasAnyRole(['super_admin', 'manager'])) {
@@ -203,6 +203,10 @@ class SaleController extends Controller
     public function update(SaleRequest $request, Sale $sale): RedirectResponse
     {
         Gate::authorize('sales.update');
+
+        if ($sale->returns()->exists()) {
+            return back()->withInput()->withErrors(['stock_error' => 'This sale has already been returned and cannot be edited.']);
+        }
 
         DB::beginTransaction();
         try {

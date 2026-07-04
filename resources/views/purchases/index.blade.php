@@ -161,7 +161,7 @@
                     <thead class="table-light">
                         <tr>
                             <th style="width:40px"><input class="form-check-input" id="selectAll" type="checkbox"></th>
-                            <th>{{ __('messages.th_no') }}</th>
+                            <th class="d-none">{{ __('messages.th_no') }}</th>
                             <th>{{ __('messages.th_purchase_no') }}</th>
                             <th>{{ __('messages.th_date') }}</th>
                             <th>{{ __('messages.th_supplier') }}</th>
@@ -179,7 +179,7 @@
                             <tr>
                                 <td><input class="form-check-input row-checkbox" type="checkbox"
                                         value="{{ $purchase->id }}"></td>
-                                <td class="text-muted fw-semibold">{{ $purchase->id }}</td>
+                                <td class="text-muted fw-semibold d-none">{{ $purchase->id }}</td>
                                 <td><code class="fw-bold">{{ $purchase->purchase_no }}</code></td>
                                 <td class="text-muted">{{ $purchase->purchase_date }}</td>
                                 <td><strong>{{ $purchase->supplier->name ?? '-' }}</strong></td>
@@ -363,10 +363,17 @@
                 order: [
                     [0, 'desc']
                 ],
-                columnDefs: [{
-                    targets: 'no-sort',
-                    orderable: false
-                }],
+                columnDefs: [
+                    {
+                        targets: 1,
+                        visible: false,
+                        searchable: true
+                    },
+                    {
+                        targets: 'no-sort',
+                        orderable: false
+                    }
+                ],
                 dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                 language: {
                     search: "_INPUT_",

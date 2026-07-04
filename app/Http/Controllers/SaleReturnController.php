@@ -80,6 +80,9 @@ class SaleReturnController extends Controller
             // ── STEP 1: Validate all quantities before touching stock ──
             $itemsToProcess = [];
             $subTotal = 0;
+            $totalTax = 0;
+            $totalDiscount = 0;
+            $grandTotal = 0;
             foreach ($request->items as $item) {
                 $qty = (int) $item['quantity'];
                 if ($qty <= 0) continue;
@@ -101,13 +104,25 @@ class SaleReturnController extends Controller
                         "Cannot return {$qty} unit(s) for \"{$saleItem->product->name}\". Max returnable: {$availableReturn}.");
                 }
 
-                $subTotal += $qty * $saleItem->unit_price;
+                $origQty = max(1.0, (float)$saleItem->quantity);
+                $unitDisc = (float)($saleItem->discount_amount / $origQty);
+                $unitTax = (float)($saleItem->tax_amount / $origQty);
+
+                $rowDisc = round($unitDisc * $qty, 2);
+                $rowTax = round($unitTax * $qty, 2);
+                $rowTotal = ($qty * $saleItem->unit_price) + $rowTax - $rowDisc;
+
+                $subTotal += ($qty * $saleItem->unit_price);
+                $totalTax += $rowTax;
+                $totalDiscount += $rowDisc;
+                $grandTotal += $rowTotal;
+
                 $itemsToProcess[] = [
                     'product_id'   => $item['product_id'],
                     'quantity'     => $qty,
                     'unit_price'   => $saleItem->unit_price,
-                    'tax_amount'   => 0.00,
-                    'total_amount' => $qty * $saleItem->unit_price,
+                    'tax_amount'   => $rowTax,
+                    'total_amount' => $rowTotal,
                     'reason'       => $item['reason'] ?? null,
                 ];
             }
@@ -126,9 +141,9 @@ class SaleReturnController extends Controller
                 'customer_id'     => $sale->customer_id,
                 'reference_no'    => $request->reference_no,
                 'sub_total'       => $subTotal,
-                'tax_amount'      => 0.00,
-                'discount_amount' => 0.00,
-                'grand_total'     => $subTotal,
+                'tax_amount'      => $totalTax,
+                'discount_amount' => $totalDiscount,
+                'grand_total'     => $grandTotal,
                 'refunded_amount' => (float) ($request->refunded_amount ?? 0.00),
                 'notes'           => $request->notes,
                 'status'          => $request->status,
@@ -191,6 +206,9 @@ class SaleReturnController extends Controller
             // ── STEP 1: Validate quantities BEFORE touching any stock ──
             $itemsToProcess = [];
             $subTotal = 0;
+            $totalTax = 0;
+            $totalDiscount = 0;
+            $grandTotal = 0;
             foreach ($request->items as $item) {
                 $qty = (int) $item['quantity'];
                 if ($qty <= 0) continue;
@@ -214,13 +232,25 @@ class SaleReturnController extends Controller
                         "Cannot return {$qty} unit(s) for \"{$saleItem->product->name}\". Max returnable: {$availableReturn}.");
                 }
 
-                $subTotal += $qty * $saleItem->unit_price;
+                $origQty = max(1.0, (float)$saleItem->quantity);
+                $unitDisc = (float)($saleItem->discount_amount / $origQty);
+                $unitTax = (float)($saleItem->tax_amount / $origQty);
+
+                $rowDisc = round($unitDisc * $qty, 2);
+                $rowTax = round($unitTax * $qty, 2);
+                $rowTotal = ($qty * $saleItem->unit_price) + $rowTax - $rowDisc;
+
+                $subTotal += ($qty * $saleItem->unit_price);
+                $totalTax += $rowTax;
+                $totalDiscount += $rowDisc;
+                $grandTotal += $rowTotal;
+
                 $itemsToProcess[] = [
                     'product_id'   => $item['product_id'],
                     'quantity'     => $qty,
                     'unit_price'   => $saleItem->unit_price,
-                    'tax_amount'   => 0.00,
-                    'total_amount' => $qty * $saleItem->unit_price,
+                    'tax_amount'   => $rowTax,
+                    'total_amount' => $rowTotal,
                     'reason'       => $item['reason'] ?? null,
                 ];
             }
@@ -249,7 +279,9 @@ class SaleReturnController extends Controller
                 'return_date'     => $request->return_date,
                 'reference_no'    => $request->reference_no,
                 'sub_total'       => $subTotal,
-                'grand_total'     => $subTotal,
+                'tax_amount'      => $totalTax,
+                'discount_amount' => $totalDiscount,
+                'grand_total'     => $grandTotal,
                 'refunded_amount' => (float) ($request->refunded_amount ?? 0.00),
                 'notes'           => $request->notes,
                 'status'          => $newStatus,
@@ -360,6 +392,10 @@ class SaleReturnController extends Controller
 
             $availableReturn = max(0.00, $item->quantity - $alreadyReturned);
 
+            $origQty = max(1.0, (float)$item->quantity);
+            $unitTax = (float)($item->tax_amount / $origQty);
+            $unitDisc = (float)($item->discount_amount / $origQty);
+
             $items[] = [
                 'product_id' => $item->product_id,
                 'name' => $item->product->name,
@@ -369,7 +405,9 @@ class SaleReturnController extends Controller
                 'returned_quantity' => (float)$alreadyReturned,
                 'available_quantity' => (float)$availableReturn,
                 'unit' => $item->product->unit_code ?? 'PCS',
-                'image_url' => $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image'
+                'image_url' => $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image',
+                'discount_amount' => $unitDisc,
+                'tax_amount' => $unitTax,
             ];
         }
 

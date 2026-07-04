@@ -35,6 +35,32 @@ class SaleRequest extends FormRequest
         ];
     }
 
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $discountType = $this->input('discount_type');
+            $discountValue = (float) $this->input('discount_value', 0);
+            
+            // Calculate subtotal
+            $subTotal = 0;
+            if ($this->has('items') && is_array($this->input('items'))) {
+                foreach ($this->input('items') as $item) {
+                    $subTotal += ((float) ($item['quantity'] ?? 0) * (float) ($item['unit_price'] ?? 0));
+                }
+            }
+
+            if ($discountType === 'percentage') {
+                if ($discountValue > 100) {
+                    $validator->errors()->add('discount_value', 'Discount percentage cannot exceed 100%.');
+                }
+            } elseif ($discountType === 'fixed') {
+                if ($discountValue > $subTotal) {
+                    $validator->errors()->add('discount_value', 'Discount amount cannot exceed the subtotal.');
+                }
+            }
+        });
+    }
+
     public function attributes(): array
     {
         return [

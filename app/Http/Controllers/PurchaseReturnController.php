@@ -477,6 +477,7 @@ class PurchaseReturnController extends Controller
                 'max_returnable'   => (float) $maxReturnable,
                 'stock'            => (float) ($product->stock->quantity ?? 0),
                 'unit_price'       => (float) $item->purchase_price,
+                'image_url'        => $product->image ? asset('uploads/products/' . $product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image',
             ];
         }
 
