@@ -551,6 +551,12 @@
             <a class="btn btn-outline-secondary" href="{{ route('sales.index') }}">
                 <i class="bx bx-x me-1"></i> Cancel
             </a>
+            @can('stocks.create')
+                <button type="button" class="btn btn-outline-warning" id="btnAdjustStock"
+                    title="Open Stock Adjustment with current invoice products">
+                    <i class="bx bx-slider me-1"></i> Adjust Stock
+                </button>
+            @endcan
             @if (!isset($sale) || !$sale->exists)
                 <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-outline-primary" id="btnSaveDraft"
                     type="button">
@@ -907,6 +913,23 @@
                 e.preventDefault();
                 $('select[name="status"]').val('Draft');
                 $(this).closest('form').submit();
+            });
+
+            // ── Adjust Stock: collect current invoice product IDs → open adjust page ──
+            $('#btnAdjustStock').on('click', function() {
+                const ids = [];
+                $('#invoiceItemsContainer tr[data-product-id]').each(function() {
+                    const id = $(this).data('product-id');
+                    if (id) ids.push(id);
+                });
+
+                if (ids.length === 0) {
+                    showAdminToast('Please add at least one product to the invoice first.', 'warning');
+                    return;
+                }
+
+                const params = ids.map(id => `products[]=${encodeURIComponent(id)}`).join('&');
+                window.open(`{{ route('stocks.adjust') }}?${params}`, '_blank');
             });
 
             // Run once to initialise display

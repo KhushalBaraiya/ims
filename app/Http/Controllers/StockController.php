@@ -103,7 +103,7 @@ class StockController extends Controller
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.type' => 'required|in:Plus,Minus',
-            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.quantity' => 'required|integer|min:1',
         ]);
 
         DB::beginTransaction();
@@ -215,7 +215,7 @@ class StockController extends Controller
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.type' => 'required|in:Plus,Minus',
-            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.quantity' => 'required|integer|min:1',
         ]);
 
         $oldAdjustments = StockAdjustment::where('voucher_no', $voucherNo)->get();
