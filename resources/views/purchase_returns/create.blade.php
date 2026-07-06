@@ -179,8 +179,8 @@
                                 <input autocomplete="off" class="form-control" id="productSearchInput"
                                     placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
                             </div>
-                            <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
-                                id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
+                            <div class="position-absolute w-100 d-none rounded" id="autocompleteResults"
+                                style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
                             </div>
                         </div>
 
@@ -189,8 +189,7 @@
                             <table class="table-hover mb-0 table align-middle" id="returnItemsTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width:60px;">Image</th>
-                                        <th class="ps-3">Product</th>
+                                        <th>Product</th>
                                         <th class="text-center">Unit Price</th>
                                         @if (isset($selectedPurchase))
                                             <th class="text-center">Purchased Qty</th>
@@ -411,8 +410,11 @@
             function renderResults(items, mode) {
                 resultsBox.empty();
                 if (!items || items.length === 0) {
-                    resultsBox.html('<div class="px-3 py-3 text-muted small text-center">No products found.</div>')
-                        .removeClass('d-none');
+                    resultsBox.html(
+                        '<div class="px-3 py-4 text-center ac-no-results">' +
+                        '<i class="bx bx-search-alt d-block mb-1" style="font-size:1.8rem;opacity:.4;"></i>' +
+                        '<span class="small">No products found.</span></div>'
+                    ).removeClass('d-none');
                     return;
                 }
                 items.forEach(function(item) {
@@ -421,28 +423,32 @@
                     var maxR = mode === 'purchase' ? parseInt(item.max_returnable) : null;
                     var stock = parseFloat(item.stock || 0);
                     var sku = item.sku || '-';
-                    var badge = '';
-                    if (mode === 'purchase') {
-                        badge = maxR > 0 ?
-                            '<div class="text-muted" style="font-size:11px;">Max Returnable: ' + maxR +
-                            '</div>' :
-                            '<div class="text-danger" style="font-size:11px;">Already fully returned</div>';
-                    } else {
-                        badge = '<div class="text-muted" style="font-size:11px;">Stock: ' + stock.toFixed(
-                            0) + '</div>';
-                    }
                     var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
+
+                    var stockLine = '';
+                    if (mode === 'purchase') {
+                        stockLine = maxR > 0 ?
+                            '<div class="ac-stock"><i class="bx bx-undo" style="font-size:10px;"></i> Max ret: ' +
+                            maxR + '</div>' :
+                            '<div class="ac-stock text-danger" style="font-size:10px;">Fully returned</div>';
+                    } else {
+                        stockLine =
+                            '<div class="ac-stock"><i class="bx bx-box" style="font-size:10px;"></i> ' +
+                            stock.toFixed(0) + ' in stock</div>';
+                    }
+
                     resultsBox.append(
-                        '<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;" data-id="' +
-                        id + '" data-mode="' + mode + '" data-image="' + imgUrl + '" data-sku="' + sku +
-                        '">' +
-                        '<div>' +
-                        '<div class="fw-semibold small">' + item.name + '</div>' +
-                        '<div class="text-muted" style="font-size:11px;">SKU: ' + sku + '</div>' +
+                        '<div class="autocomplete-item d-flex align-items-center gap-3 px-3 py-2" style="cursor:pointer;"' +
+                        ' data-id="' + id + '" data-mode="' + mode + '" data-image="' + imgUrl +
+                        '" data-sku="' + sku + '">' +
+                        '<img src="' + imgUrl + '" class="ac-img" onerror="imgError(this)">' +
+                        '<div class="flex-grow-1 overflow-hidden">' +
+                        '<div class="ac-name text-truncate">' + item.name + '</div>' +
+                        '<div class="ac-sku">SKU: ' + sku + '</div>' +
                         '</div>' +
-                        '<div class="text-end">' +
-                        '<div class="fw-bold text-primary small">' + fmt(price) + '</div>' +
-                        badge +
+                        '<div class="text-end flex-shrink-0">' +
+                        '<div class="ac-price">' + fmt(price) + '</div>' +
+                        stockLine +
                         '</div>' +
                         '</div>'
                     );
@@ -519,11 +525,13 @@
                 var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
                 itemsContainer.append(
                     '<tr class="item-row" data-product-id="' + item.product_id + '">' +
-                    '<td><img src="' + imgUrl +
-                    '" class="tbl-img rounded" onerror="imgError(this)" style="width:36px;height:36px;object-fit:cover;"></td>' +
-                    '<td class="ps-3">' +
-                    '<div class="fw-bold text-primary mb-0" style="font-size:13px;">' + item.name + '</div>' +
-                    '<div class="text-muted small" style="font-size:11px;">SKU: ' + (item.sku || '-') +
+                    '<td>' +
+                    '<div class="d-flex align-items-center gap-2">' +
+                    '<img src="' + imgUrl + '" class="ret-prod-img rounded" onerror="imgError(this)">' +
+                    '<div>' +
+                    '<div class="ret-prod-name fw-bold text-primary mb-0">' + item.name + '</div>' +
+                    '<div class="ret-prod-sku text-muted">SKU: ' + (item.sku || '-') + '</div>' +
+                    '</div>' +
                     '</div>' +
                     '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item
                     .product_id + '">' +
@@ -536,13 +544,14 @@
                     '<td class="text-center">' +
                     '<input type="number" step="1" min="1" max="' + maxInt + '"' +
                     ' name="items[' + rowCount + '][quantity]" value="' + qty + '"' +
-                    ' class="qty-input form-control form-control-sm text-center" style="width:88px;margin:auto;">' +
+                    ' class="qty-input form-control form-control-sm text-center ret-qty-input">' +
                     '</td>' +
                     '<td>' +
                     '<input type="text" name="items[' + rowCount + '][reason]" value="' + reason + '"' +
                     ' class="form-control form-control-sm" placeholder="Reason...">' +
                     '</td>' +
-                    '<td class="text-end fw-bold subtotal-cell">' + fmt(price * qty) + '</td>' +
+                    '<td class="text-end fw-bold subtotal-cell ret-subtotal-cell">' + fmt(price * qty) +
+                    '</td>' +
                     '<td class="text-center">' +
                     '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"' +
                     ' style="width:28px;height:28px;padding:0;">' +

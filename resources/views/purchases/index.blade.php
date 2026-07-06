@@ -126,9 +126,12 @@
                             <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select class="form-select form-select-sm" name="status">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
-                                <option {{ request('status') === 'received' ? 'selected' : '' }} value="received">Received</option>
-                                <option {{ request('status') === 'pending' ? 'selected' : '' }} value="pending">Pending</option>
-                                <option {{ request('status') === 'ordered' ? 'selected' : '' }} value="ordered">Ordered</option>
+                                <option {{ request('status') === 'received' ? 'selected' : '' }} value="received">Received
+                                </option>
+                                <option {{ request('status') === 'pending' ? 'selected' : '' }} value="pending">Pending
+                                </option>
+                                <option {{ request('status') === 'ordered' ? 'selected' : '' }} value="ordered">Ordered
+                                </option>
                                 <option {{ request('status') === 'draft' ? 'selected' : '' }} value="draft">Draft</option>
                             </select>
                         </div>
@@ -309,7 +312,8 @@
                             <div class="col-6">
                                 <div class="bg-light rounded border p-3 text-center">
                                     <div class="text-muted small fw-semibold mb-1">Grand Total</div>
-                                    <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">{{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
+                                    <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
+                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
                                 </div>
                             </div>
@@ -317,7 +321,8 @@
                                 <div
                                     class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-3 text-center">
                                     <div class="text-danger small-div fw-semibold mb-1">Balance Due</div>
-                                    <div class="text-danger fw-bold fs-5" id="modal_balance_due_text">{{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
+                                    <div class="text-danger fw-bold fs-5" id="modal_balance_due_text">
+                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
                             </div>
                         </div>
@@ -330,7 +335,7 @@
                             <label class="form-label fw-semibold">Payment Method <span
                                     class="text-danger">*</span></label>
                             <select class="form-select form-select-lg" id="modal_payment_method" name="payment_method"
-                                required>
+                                data-no-select2="1" required>
                                 <option value="Cash">Cash</option>
                                 <option value="Bank Transfer">Bank Transfer</option>
                                 <option value="Card">Credit/Debit Card</option>
@@ -356,15 +361,14 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const sym = '{{ optional(current_currency())->symbol ?? "₹" }}';
+            const sym = '{{ optional(current_currency())->symbol ?? '₹' }}';
             $('#purchasesTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 order: [
                     [0, 'desc']
                 ],
-                columnDefs: [
-                    {
+                columnDefs: [{
                         targets: 1,
                         visible: false,
                         searchable: true
@@ -519,7 +523,6 @@
                 // Restore exact saved payment method; only fall back to Cash if truly blank
                 const pmSelect = $('#modal_payment_method');
                 pmSelect.val(paymentMethod || '');
-                pmSelect.trigger('change');
                 $('#paymentForm').attr('action', action);
 
                 updateModalDue();
@@ -585,4 +588,3 @@
         });
     </script>
 @endpush
-

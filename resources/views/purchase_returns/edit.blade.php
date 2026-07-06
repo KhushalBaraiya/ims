@@ -32,6 +32,37 @@
     <form action="{{ route('purchase-returns.update', $purchaseReturn->id) }}" id="returnForm" method="POST" novalidate>
         @csrf @method('PUT')
 
+        <style>
+            .ret-prod-img {
+                width: 32px !important;
+                height: 32px !important;
+                object-fit: cover !important;
+                border-radius: 4px !important;
+            }
+
+            .ret-prod-name {
+                font-size: 12.5px !important;
+                line-height: 1.2 !important;
+            }
+
+            .ret-prod-sku {
+                font-size: 10.5px !important;
+                line-height: 1.1 !important;
+            }
+
+            .ret-qty-input {
+                width: 70px !important;
+                height: 28px !important;
+                font-size: 12.5px !important;
+                padding: 2px 4px !important;
+                margin: auto !important;
+            }
+
+            .ret-subtotal-cell {
+                font-size: 13px !important;
+            }
+        </style>
+
         @if ($purchaseReturn->purchase_id)
             <input name="purchase_id" type="hidden" value="{{ $purchaseReturn->purchase_id }}">
         @endif
@@ -156,8 +187,8 @@
                                 <input autocomplete="off" class="form-control" id="productSearchInput"
                                     placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
                             </div>
-                            <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
-                                id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
+                            <div class="position-absolute w-100 d-none rounded" id="autocompleteResults"
+                                style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
                             </div>
                         </div>
 
@@ -165,8 +196,7 @@
                             <table class="table-hover mb-0 table align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width:60px;">Image</th>
-                                        <th class="ps-3">Product</th>
+                                        <th>Product</th>
                                         <th class="text-center">Unit Price</th>
                                         @if ($purchaseReturn->purchase_id)
                                             <th class="text-center">Purchased Qty</th>
@@ -383,8 +413,11 @@
             function renderResults(items, mode) {
                 resultsBox.empty();
                 if (!items || items.length === 0) {
-                    resultsBox.html('<div class="px-3 py-3 text-muted small text-center">No products found.</div>')
-                        .removeClass('d-none');
+                    resultsBox.html(
+                        '<div class="px-3 py-4 text-center ac-no-results">' +
+                        '<i class="bx bx-search-alt d-block mb-1" style="font-size:1.8rem;opacity:.4;"></i>' +
+                        '<span class="small">No products found.</span></div>'
+                    ).removeClass('d-none');
                     return;
                 }
                 items.forEach(function(item) {
@@ -393,25 +426,30 @@
                     var maxR = mode === 'purchase' ? parseInt(item.max_returnable) : null;
                     var stock = parseFloat(item.stock || 0);
                     var sku = item.sku || '-';
-                    var badge = mode === 'purchase' ?
-                        (maxR > 0 ?
-                            '<div class="text-muted" style="font-size:11px;">Max Returnable: ' + maxR +
-                            '</div>' :
-                            '<div class="text-danger" style="font-size:11px;">Already fully returned</div>'
-                        ) :
-                        '<div class="text-muted" style="font-size:11px;">Stock: ' + stock.toFixed(0) +
-                        '</div>';
-
                     var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
+
+                    var stockLine = mode === 'purchase' ?
+                        (maxR > 0 ?
+                            '<div class="ac-stock"><i class="bx bx-undo" style="font-size:10px;"></i> Max ret: ' +
+                            maxR + '</div>' :
+                            '<div class="ac-stock text-danger" style="font-size:10px;">Fully returned</div>'
+                            ) :
+                        '<div class="ac-stock"><i class="bx bx-box" style="font-size:10px;"></i> ' + stock
+                        .toFixed(0) + ' in stock</div>';
+
                     resultsBox.append(
-                        '<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;" data-id="' +
-                        id + '" data-mode="' + mode + '" data-image="' + imgUrl + '" data-sku="' + sku +
-                        '">' +
-                        '<div><div class="fw-semibold small">' + item.name +
-                        '</div><div class="text-muted" style="font-size:11px;">SKU: ' + sku +
-                        '</div></div>' +
-                        '<div class="text-end"><div class="fw-bold text-primary small">' + fmt(price) +
-                        '</div>' + badge + '</div>' +
+                        '<div class="autocomplete-item d-flex align-items-center gap-3 px-3 py-2" style="cursor:pointer;"' +
+                        ' data-id="' + id + '" data-mode="' + mode + '" data-image="' + imgUrl +
+                        '" data-sku="' + sku + '">' +
+                        '<img src="' + imgUrl + '" class="ac-img" onerror="imgError(this)">' +
+                        '<div class="flex-grow-1 overflow-hidden">' +
+                        '<div class="ac-name text-truncate">' + item.name + '</div>' +
+                        '<div class="ac-sku">SKU: ' + sku + '</div>' +
+                        '</div>' +
+                        '<div class="text-end flex-shrink-0">' +
+                        '<div class="ac-price">' + fmt(price) + '</div>' +
+                        stockLine +
+                        '</div>' +
                         '</div>'
                     );
                 });
@@ -488,26 +526,29 @@
                 var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
                 itemsContainer.append(
                     '<tr class="item-row" data-product-id="' + item.product_id + '">' +
-                    '<td><img src="' + imgUrl +
-                    '" class="tbl-img rounded" onerror="imgError(this)" style="width:36px;height:36px;object-fit:cover;"></td>' +
-                    '<td class="ps-3">' +
-                    '<div class="fw-bold text-primary mb-0" style="font-size:13px;">' + item.name + '</div>' +
-                    '<div class="text-muted small" style="font-size:11px;">SKU: ' + (item.sku || '-') +
+                    '<td style="min-width:200px;">' +
+                    '<div class="d-flex align-items-center gap-2">' +
+                    '<img src="' + imgUrl + '" class="ret-prod-img rounded" onerror="imgError(this)">' +
+                    '<div>' +
+                    '<div class="ret-prod-name fw-bold text-primary mb-0">' + item.name + '</div>' +
+                    '<div class="ret-prod-sku text-muted">SKU: ' + (item.sku || '-') + '</div>' +
+                    '</div>' +
                     '</div>' +
                     '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item
                     .product_id + '">' +
                     '<input type="hidden" name="items[' + rowCount + '][unit_price]" value="' + price.toFixed(
-                    2) + '">' +
+                        2) + '">' +
                     '</td>' +
                     '<td class="text-center text-primary fw-bold unit-price-cell" data-price="' + price + '">' +
                     fmt(price) + '</td>' +
                     extraCols +
                     '<td class="text-center"><input type="number" step="1" min="1" max="' + maxInt +
                     '" name="items[' + rowCount + '][quantity]" value="' + qty +
-                    '" class="qty-input form-control form-control-sm text-center" style="width:88px;margin:auto;"></td>' +
+                    '" class="qty-input form-control form-control-sm text-center ret-qty-input"></td>' +
                     '<td><input type="text" name="items[' + rowCount + '][reason]" value="' + reason +
                     '" class="form-control form-control-sm" placeholder="Reason..."></td>' +
-                    '<td class="text-end fw-bold subtotal-cell">' + fmt(price * qty) + '</td>' +
+                    '<td class="text-end fw-bold subtotal-cell ret-subtotal-cell">' + fmt(price * qty) +
+                    '</td>' +
                     '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button></td>' +
                     '</tr>'
                 );
@@ -524,13 +565,12 @@
             $(document).on('input change', '.qty-input', function() {
                 var val = parseInt($(this).val()) || 0;
                 var maxCell = $(this).closest('tr').find('.max-returnable-cell');
-                if (maxCell.length) {
-                    var max = parseInt(maxCell.data('max'));
-                    if (val > max) {
-                        $(this).val(max);
-                        showAdminToast('Max returnable: ' + max, 'error');
-                        val = max;
-                    }
+                var maxAttr = parseInt($(this).attr('max')) || 0;
+                var max = maxCell.length ? parseInt(maxCell.data('max')) : maxAttr;
+                if (max > 0 && val > max) {
+                    $(this).val(max);
+                    showAdminToast('Max returnable: ' + max, 'error');
+                    val = max;
                 }
                 if (val < 1) $(this).val(1);
                 calcTotals();

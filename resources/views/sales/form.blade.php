@@ -4,7 +4,9 @@
 @endphp
 
 <style>
-    /* Scoped custom CSS for sales form selected product table */
+    /* ══════════════════════════════════════════════════════════════
+       SALES FORM — Product Table  (light + dark)
+    ══════════════════════════════════════════════════════════════ */
     #saleItemsTable th,
     #saleItemsTable td {
         padding: 8px 14px !important;
@@ -15,7 +17,12 @@
         width: 32px !important;
         height: 32px !important;
         object-fit: cover !important;
-        border-radius: 4px !important;
+        border-radius: 6px !important;
+        border: 1px solid rgba(0, 0, 0, .08);
+    }
+
+    [data-bs-theme="dark"] .sale-prod-img {
+        border-color: rgba(255, 255, 255, .1);
     }
 
     .sale-prod-name {
@@ -30,7 +37,7 @@
 
     .sale-stock-badge {
         font-size: 10.5px !important;
-        padding: 4px 6px !important;
+        padding: 4px 7px !important;
     }
 
     .sale-qty-input {
@@ -46,24 +53,160 @@
     }
 
     .sale-compact-text {
-        font-size: 11px !important;
+        font-size: 10.5px !important;
+        line-height: 1.3 !important;
     }
 
     .sale-subtotal-cell {
         font-size: 13px !important;
     }
 
-    /* Out-of-stock autocomplete item */
+    /* ── Autocomplete Container ─────────────────────────────────── */
+    #autocompleteResults {
+        background: #fff;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 10px 32px rgba(0, 0, 0, .12) !important;
+        overflow: hidden !important;
+    }
+
+    [data-bs-theme="dark"] #autocompleteResults {
+        background: #2b2c40 !important;
+        border-color: rgba(255, 255, 255, .12) !important;
+        box-shadow: 0 10px 32px rgba(0, 0, 0, .4) !important;
+    }
+
+    /* ── Each Item ──────────────────────────────────────────────── */
+    .autocomplete-item {
+        transition: background .13s ease;
+        border-bottom: 1px solid #f1f5f9 !important;
+        background: transparent;
+    }
+
+    .autocomplete-item:last-child {
+        border-bottom: none !important;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item {
+        border-bottom-color: rgba(255, 255, 255, .07) !important;
+    }
+
+    /* Hover — in-stock only */
+    .autocomplete-item:not(.oos-item):hover {
+        background: rgba(105, 108, 255, .08) !important;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item:not(.oos-item):hover {
+        background: rgba(105, 108, 255, .15) !important;
+    }
+
+    /* ── Product Image ──────────────────────────────────────────── */
+    .autocomplete-item .ac-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 7px;
+        flex-shrink: 0;
+        border: 1px solid rgba(0, 0, 0, .08);
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item .ac-img {
+        border-color: rgba(255, 255, 255, .12);
+    }
+
+    /* ── Product Name ───────────────────────────────────────────── */
+    .autocomplete-item .ac-name {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #3d4150;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item .ac-name {
+        color: #cfd3ec;
+    }
+
+    /* ── SKU ────────────────────────────────────────────────────── */
+    .autocomplete-item .ac-sku {
+        font-size: 11px;
+        color: #94a3b8;
+        line-height: 1.2;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item .ac-sku {
+        color: #7983bb;
+    }
+
+    /* ── Price ──────────────────────────────────────────────────── */
+    .autocomplete-item .ac-price {
+        font-size: 13px;
+        font-weight: 700;
+        color: #696cff;
+        white-space: nowrap;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item .ac-price {
+        color: #8b8fff;
+    }
+
+    /* ── Stock text ─────────────────────────────────────────────── */
+    .autocomplete-item .ac-stock {
+        font-size: 11px;
+        color: #94a3b8;
+        white-space: nowrap;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item .ac-stock {
+        color: #7983bb;
+    }
+
+    /* ── Out-of-Stock Item ──────────────────────────────────────── */
     .autocomplete-item.oos-item {
-        opacity: 0.55;
-        background-color: #fff5f5 !important;
+        background: #fafafa !important;
         cursor: not-allowed !important;
         pointer-events: none;
     }
 
+    [data-bs-theme="dark"] .autocomplete-item.oos-item {
+        background: rgba(255, 255, 255, .03) !important;
+    }
+
+    .autocomplete-item.oos-item .ac-img {
+        opacity: .4;
+        filter: grayscale(70%);
+    }
+
+    .autocomplete-item.oos-item .ac-name {
+        color: #aab0c0 !important;
+    }
+
+    .autocomplete-item.oos-item .ac-price {
+        color: #aab0c0 !important;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item.oos-item .ac-name {
+        color: #4f5570 !important;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item.oos-item .ac-price {
+        color: #4f5570 !important;
+    }
+
+    /* ── Out-of-Stock Badge ─────────────────────────────────────── */
     .oos-badge {
         font-size: 10px !important;
-        padding: 2px 6px !important;
+        padding: 2px 7px !important;
+        border-radius: 20px !important;
+        letter-spacing: .3px;
+    }
+
+    /* ── No-results message ─────────────────────────────────────── */
+    .ac-no-results {
+        color: #94a3b8;
+    }
+
+    [data-bs-theme="dark"] .ac-no-results {
+        color: #7983bb;
     }
 </style>
 
@@ -237,7 +380,8 @@
         {{-- Product Search & Line Items --}}
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-search text-primary me-2"></i>Add Products to Invoice</h6>
+                <h6 class="fw-semibold mb-0"><i class="bx bx-search text-primary me-2"></i>Add Products to Invoice
+                </h6>
             </div>
             <div class="card-body p-4">
 
@@ -253,8 +397,8 @@
                         <input {{ $isReturned ? 'disabled' : '' }} class="form-control" id="productSearchInput"
                             placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
                     </div>
-                    <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
-                        id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
+                    <div class="position-absolute w-100 d-none rounded" id="autocompleteResults"
+                        style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
                     </div>
                 </div>
 
@@ -263,20 +407,18 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Product</th>
-                                <th>Stock</th>
-                                <th class="text-center">Qty</th>
-                                <th class="text-center">Unit Price</th>
-                                <th class="text-muted text-center">Discount</th>
-                                <th class="text-muted text-center">Tax</th>
-                                <th class="text-end">Row Total</th>
-                                <th></th>
+                                <th class="text-center" style="width:110px;">Qty</th>
+                                <th class="text-center" style="width:160px;">Price / Disc / Tax</th>
+                                <th class="text-end" style="width:110px;">Row Total</th>
+                                <th style="width:40px;"></th>
                             </tr>
                         </thead>
                         <tbody id="invoiceItemsContainer"></tbody>
                     </table>
-                    <div class="text-muted py-5 text-center" id="emptyTableMsg">
-                        <i class="bx bx-cart" style="font-size:2.5rem;opacity:.3;"></i>
-                        <p class="mb-0 mt-2">No products added to invoice.</p>
+                    <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                        id="emptyTableMsg">
+                        <i class="bx bx-cart mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                        <p class="mb-0 small">No products added to invoice.</p>
                     </div>
                 </div>
             </div>
@@ -471,7 +613,7 @@
                             stock: parseFloat("{{ $oldProduct->stock->quantity ?? 0 }}"),
                             price: parseFloat(
                                 "{{ old('items.' . $oldIndex . '.unit_price', $oldProduct->selling_price) }}"
-                                ),
+                            ),
                             taxAmt: parseFloat("{{ old('items.' . $oldIndex . '.tax_amount', 0) }}"),
                             discAmt: parseFloat("{{ old('items.' . $oldIndex . '.discount_amount', 0) }}"),
                             qty: parseInt("{{ old('items.' . $oldIndex . '.quantity', 1) }}"),
@@ -520,37 +662,41 @@
                             data.forEach(function(p) {
                                 const isOos = p.out_of_stock === true;
                                 const oosClass = isOos ? ' oos-item' : '';
-                                const cursorStyle = isOos ? 'cursor:not-allowed;' :
-                                    'cursor:pointer;';
-                                const stockBadge = isOos ?
+
+                                // Stock display
+                                const stockHtml = isOos ?
                                     `<span class="badge bg-danger oos-badge">Out of Stock</span>` :
-                                    `<div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>`;
-                                const oosLabel = isOos ?
-                                    ` <span class="badge bg-danger oos-badge">Out of Stock</span>` :
-                                    '';
+                                    `<span class="ac-stock"><i class="bx bx-box" style="font-size:10px;"></i> ${parseFloat(p.stock).toFixed(0)} in stock</span>`;
+
+                                // Price display
+                                const priceHtml =
+                                    `<span class="ac-price">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</span>`;
+
                                 resultsDiv.append(
-                                    `<div class="autocomplete-item${oosClass} d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="${cursorStyle}"
-                                  data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
-                                  data-price="${p.price}" data-tax="${p.tax}" data-discount="${p.discount}"
-                                  data-unit="${p.unit}" data-image="${p.image_url}" data-oos="${isOos ? '1' : '0'}">
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="${p.image_url}" class="rounded${isOos ? ' opacity-50' : ''}" style="width:36px;height:36px;object-fit:cover;">
-                                    <div>
-                                        <div class="fw-semibold small${isOos ? ' text-danger' : ''}">${p.name}${oosLabel}</div>
-                                        <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="fw-bold ${isOos ? 'text-muted' : 'text-primary'} small">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</div>
-                                    ${stockBadge}
-                                </div>
-                            </div>`
+                                    `<div class="autocomplete-item${oosClass} d-flex align-items-center gap-3 px-3 py-2"
+                                        data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
+                                        data-price="${p.price}" data-tax="${p.tax}" data-discount="${p.discount}"
+                                        data-unit="${p.unit}" data-image="${p.image_url}" data-oos="${isOos ? '1' : '0'}"
+                                        style="cursor:${isOos ? 'not-allowed' : 'pointer'};">
+                                        <img src="${p.image_url}" class="ac-img" onerror="imgError(this)">
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <div class="ac-name text-truncate">${p.name}${isOos ? ' <span class="badge bg-danger oos-badge ms-1">Out of Stock</span>' : ''}</div>
+                                            <div class="ac-sku">SKU: ${p.sku}</div>
+                                        </div>
+                                        <div class="text-end flex-shrink-0">
+                                            ${priceHtml}
+                                            <div class="mt-1">${stockHtml}</div>
+                                        </div>
+                                    </div>`
                                 );
                             });
                             resultsDiv.removeClass('d-none');
                         } else {
                             resultsDiv.html(
-                                '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
+                                `<div class="px-3 py-4 text-center ac-no-results">
+                                    <i class="bx bx-search-alt d-block mb-1" style="font-size:1.8rem;opacity:.4;"></i>
+                                    <span class="small">No products found.</span>
+                                </div>`
                             ).removeClass('d-none');
                         }
                     });
@@ -605,46 +751,61 @@
                 $('#emptyTableMsg').addClass('d-none');
                 const taxAmt = typeof p.taxAmt !== 'undefined' ? p.taxAmt : (p.tax || 0);
                 const discAmt = typeof p.discAmt !== 'undefined' ? p.discAmt : (p.disc || 0);
-                // Row discount & tax are READ-ONLY display (locked per spec)
+                const netPrice = parseFloat(p.price) + taxAmt - discAmt;
+                const stockQty = parseInt(p.stock) || 0;
+                const qty = parseInt(p.qty || 1);
+
                 $('#invoiceItemsContainer').append(
                     '<tr class="item-row" data-product-id="' + p.id + '">' +
-                    '<td style="min-width:200px !important;">' +
+
+                    // ── Col 1: Product (img + name + SKU) ──
+                    '<td style="min-width:200px;">' +
                     '<div class="d-flex align-items-center gap-2">' +
                     '<img src="' + p.image_url + '" class="sale-prod-img rounded" onerror="imgError(this)">' +
-                    '<div>' +
-                    '<div class="sale-prod-name fw-bold text-primary mb-0">' + p.name + '</div>' +
+                    '<div class="overflow-hidden">' +
+                    '<div class="sale-prod-name fw-semibold text-dark text-truncate">' + p.name + '</div>' +
                     '<div class="sale-prod-sku text-muted">SKU: ' + p.sku + '</div>' +
                     '</div>' +
                     '</div>' +
-                    '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + p.id + '">' +
+                    '<input type="hidden" name="items[' + rowCount + '][product_id]"  value="' + p.id + '">' +
                     '<input type="hidden" name="items[' + rowCount +
                     '][discount_amount]" class="disc-hidden" value="' + discAmt.toFixed(2) + '">' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][tax_amount]" class="tax-hidden" value="' + taxAmt.toFixed(2) + '">' +
+                    '][tax_amount]"      class="tax-hidden"  value="' + taxAmt.toFixed(2) + '">' +
                     '</td>' +
-                    '<td class="stock-cell" data-max="' + p.stock + '">' +
-                    '<span class="badge bg-label-info sale-stock-badge">' + parseInt(p.stock) +
-                    ' available</span>' +
+
+                    // ── Col 2: Qty (stock badge above, input below) ──
+                    '<td class="text-center stock-cell" data-max="' + stockQty + '">' +
+                    '<div class="mb-1">' +
+                    '<span class="badge ' + (stockQty > 0 ? 'bg-label-success' : 'bg-label-danger') +
+                    ' sale-stock-badge">' +
+                    (stockQty > 0 ? stockQty + ' avail.' : 'Out of stock') +
+                    '</span>' +
+                    '</div>' +
+                    '<input type="number" step="1" min="1" ' +
+                    'name="items[' + rowCount + '][quantity]" value="' + qty + '" ' +
+                    'class="qty-input form-control form-control-sm text-center sale-qty-input" ' +
+                    (isReturned ? 'disabled' : '') + '>' +
                     '</td>' +
+
+                    // ── Col 3: Net Price / Disc / Tax (read-only) ──
                     '<td class="text-center">' +
-                    '<input type="number" step="1" min="1" name="items[' + rowCount + '][quantity]" value="' +
-                    parseInt(p.qty || 1) +
-                    '" class="qty-input form-control form-control-sm text-center sale-qty-input" ' + (
-                        isReturned ? 'disabled' : '') + '>' +
-                    '</td>' +
-                    '<td class="text-center fw-semibold text-muted sale-price-cell">' +
-                    fmt(p.price) +
+                    '<div class="fw-semibold text-primary sale-price-cell">' + fmt(p.price) + '</div>' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][unit_price]" class="price-input" value="' + p.price.toFixed(2) + '">' +
+                    '][unit_price]" class="price-input" value="' + parseFloat(p.price).toFixed(2) + '">' +
+                    '<div class="text-danger sale-compact-text">-' + fmt(discAmt) + ' disc</div>' +
+                    '<div class="text-success sale-compact-text">+' + fmt(taxAmt) + ' tax</div>' +
                     '</td>' +
-                    '<td class="text-center text-muted small disc-display sale-compact-text">' + fmt(discAmt) +
-                    '/unit</td>' +
-                    '<td class="text-center text-muted small tax-display sale-compact-text">' + fmt(taxAmt) +
-                    '/unit</td>' +
-                    '<td class="text-end fw-bold subtotal-cell sale-subtotal-cell">0.00</td>' +
+
+                    // ── Col 4: Row Total ──
+                    '<td class="text-end fw-bold subtotal-cell sale-subtotal-cell">' + fmt(netPrice * qty) +
+                    '</td>' +
+
+                    // ── Col 5: Remove ──
                     '<td class="text-center">' +
                     (isReturned ? '' :
-                        '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button>'
+                        '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;">' +
+                        '<i class="bx bx-trash" style="font-size:13px;"></i></button>'
                     ) +
                     '</td>' +
                     '</tr>'

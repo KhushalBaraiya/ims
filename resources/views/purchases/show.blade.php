@@ -305,41 +305,44 @@
 
 @push('scripts')
     <script>
-        $(document).on('click', '.delete-btn', function() {
-            const no = $(this).data('no');
-            const form = $('#deleteForm');
-            Swal.fire({
-                title: '{{ __('messages.confirm_delete') }}',
-                text: `{{ __('messages.delete') }} "${no}"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: '{{ __('messages.yes_delete') }}',
-                cancelButtonText: '{{ __('messages.cancel') }}'
-            }).then((r) => {
-                if (r.isConfirmed) {
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        data: form.serialize(),
-                        success: function(res) {
-                            if (res.success) {
-                                showAdminToast(res.message, 'success');
-                                setTimeout(() => window.location.href = "{{ route('purchases.index') }}", 1200);
-                            } else {
-                                showAdminToast(res.message, 'error');
+        $(document).ready(function() {
+            $(document).on('click', '.delete-btn', function() {
+                const no = $(this).data('no');
+                const form = $('#deleteForm');
+                Swal.fire({
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: `{{ __('messages.delete') }} "${no}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (r.isConfirmed) {
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
+                            success: function(res) {
+                                if (res.success) {
+                                    showAdminToast(res.message, 'success');
+                                    setTimeout(() => window.location.href =
+                                        "{{ route('purchases.index') }}", 1200);
+                                } else {
+                                    showAdminToast(res.message, 'error');
+                                }
+                            },
+                            error: function(xhr) {
+                                let msg = '{{ __('messages.error_occurred') }}';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
+                                showAdminToast(msg, 'error');
                             }
-                        },
-                        error: function(xhr) {
-                            let msg = '{{ __('messages.error_occurred') }}';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                msg = xhr.responseJSON.message;
-                            }
-                            showAdminToast(msg, 'error');
-                        }
-                    });
-                }
+                        });
+                    }
+                });
             });
         });
     </script>

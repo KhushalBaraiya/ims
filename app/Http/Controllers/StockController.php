@@ -148,6 +148,29 @@ class StockController extends Controller
     }
 
     // ──────────────────────────────────────────────────
+    //  3.5  SHOW ADJUSTMENT (VIEW)
+    // ──────────────────────────────────────────────────
+    public function show_adjustment(string $voucherNo): View
+    {
+        Gate::authorize('stocks.view');
+
+        $adjustments = StockAdjustment::with(['product.stock', 'user'])
+            ->where('voucher_no', $voucherNo)
+            ->get();
+
+        if ($adjustments->isEmpty()) {
+            abort(404);
+        }
+
+        $notes           = $adjustments->first()->notes;
+        $transactionDate = $adjustments->first()->transaction_date
+            ? \Carbon\Carbon::parse($adjustments->first()->transaction_date)->format('d M Y')
+            : $adjustments->first()->created_at->format('d M Y');
+
+        return view('stocks.show_adjustment', compact('adjustments', 'voucherNo', 'notes', 'transactionDate'));
+    }
+
+    // ──────────────────────────────────────────────────
     //  4. EDIT ADJUSTMENT
     // ──────────────────────────────────────────────────
     public function edit_adjustment($voucherNo): View

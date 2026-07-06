@@ -139,10 +139,11 @@
                             <table class="table-hover mb-0 table align-middle" id="returnItemsTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width:60px;">Image</th>
                                         <th>Product</th>
-                                        <th class="text-center" style="width:130px;">Quantity</th>
-                                        <th class="text-center" style="width:180px;">Pricing</th>
+                                        <th class="text-center" style="width:130px;">Return Qty</th>
+                                        <th class="text-center" style="width:110px;">Unit Price</th>
+                                        <th class="text-center" style="width:100px;">Discount</th>
+                                        <th class="text-center" style="width:100px;">Tax</th>
                                         <th class="text-end" style="width:120px;">Sub Total</th>
                                     </tr>
                                 </thead>
@@ -166,7 +167,8 @@
                             <i class="bx bx-check-circle mb-2" style="font-size:2.5rem;"></i>
                             <p class="small mb-0">All items from this invoice have already been returned.</p>
                         </div>
-                        <div class="text-danger d-none py-4 text-center" id="errorMsg">
+                        <div class="text-danger d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                            id="errorMsg">
                             <i class="bx bx-error-circle d-block mb-2" style="font-size:2rem;"></i>
                             <p class="small mb-0">Failed to load invoice items. Please try again.</p>
                         </div>
@@ -303,30 +305,41 @@
                             returnableCount++;
                             const max = parseInt(item.available_quantity);
                             const imgHtml =
-                                `<img src="${item.image_url}" class="tbl-img rounded" onerror="imgError(this)">`;
+                                `<img src="${item.image_url}" class="rounded" style="width:32px;height:32px;object-fit:cover;" onerror="imgError(this)">`;
 
                             itemsContainer.append(`
                              <tr class="item-row" data-product-id="${item.product_id}">
-                                 <td>${imgHtml}</td>
-                                 <td>
-                                     <div class="fw-bold text-primary mb-0" style="font-size:13px;">${item.name}</div>
-                                     <div class="text-muted small" style="font-size:11px;">SKU: ${item.sku}</div>
+                                 <td style="min-width:200px;">
+                                     <div class="d-flex align-items-center gap-2">
+                                         ${imgHtml}
+                                         <div>
+                                             <div class="fw-bold text-primary mb-0" style="font-size:12.5px;">${item.name}</div>
+                                             <div class="text-muted" style="font-size:10.5px;">SKU: ${item.sku}</div>
+                                         </div>
+                                     </div>
                                      <input type="hidden" name="items[${rowCount}][product_id]" value="${item.product_id}">
                                  </td>
                                  <td class="text-center">
-                                     <div class="small text-muted mb-1">Sold Qty: ${parseInt(item.sold_quantity)}</div>
+                                     <div class="text-muted small mb-1" style="font-size:10.5px;">Sold: ${parseInt(item.sold_quantity)}</div>
                                      <input type="number" step="1" min="0" max="${parseInt(item.sold_quantity)}"
                                          name="items[${rowCount}][quantity]"
                                          value="${parseInt(item.sold_quantity)}"
                                          class="qty-input form-control form-control-sm text-center"
-                                         style="width:80px;margin:auto;">
+                                         style="width:72px;margin:auto;">
                                  </td>
-                                 <td class="text-center text-muted small">
-                                     <div>Net Price: <span class="fw-semibold text-dark price-cell" data-price="${item.unit_price}">${fmt(item.unit_price)}</span></div>
-                                     <div>Discount: <span class="disc-cell" data-disc="${item.discount_amount}">${fmt(item.discount_amount)}</span></div>
-                                     <div>Tax: <span class="tax-cell" data-tax="${item.tax_amount}">${fmt(item.tax_amount)}</span></div>
+                                 <td class="text-center price-cell fw-semibold text-muted" style="font-size:12.5px;"
+                                     data-price="${item.unit_price}">
+                                     ${fmt(item.unit_price)}
                                  </td>
-                                 <td class="text-end fw-bold subtotal-cell">${fmt(0)}</td>
+                                 <td class="text-center text-danger small disc-cell"
+                                     data-disc="${item.discount_amount}" style="font-size:11px;">
+                                     ${fmt(item.discount_amount)}
+                                 </td>
+                                 <td class="text-center text-warning small tax-cell"
+                                     data-tax="${item.tax_amount}" style="font-size:11px;">
+                                     ${fmt(item.tax_amount)}
+                                 </td>
+                                 <td class="text-end fw-bold subtotal-cell" style="font-size:13px;">${fmt(0)}</td>
                              </tr>`);
                             rowCount++;
                         });
@@ -363,8 +376,8 @@
             // Qty input validation
             $(document).on('input change', '.qty-input', function() {
                 let val = parseInt($(this).val()) || 0;
-                const max = parseInt($(this).closest('tr').find('.max-returnable-cell').data('max'));
-                if (val > max) {
+                const max = parseInt($(this).attr('max')) || 0;
+                if (max > 0 && val > max) {
                     $(this).val(max);
                     showAdminToast(`Max returnable: ${max} unit(s).`, 'error');
                     val = max;

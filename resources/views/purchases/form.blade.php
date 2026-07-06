@@ -488,28 +488,29 @@
                                     const sym = p.currency_symbol ||
                                         currencySymbol;
                                     resultsContainer.append(`
-                                    <div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom"
+                                    <div class="autocomplete-item d-flex align-items-center gap-3 px-3 py-2"
                                          style="cursor:pointer;"
                                          data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}"
                                          data-purchase-price="${p.purchase_price}" data-tax="${p.tax}"
                                          data-discount="${p.discount}" data-unit="${p.unit}" data-image="${p.image_url}">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <img src="${p.image_url}" class="rounded" style="width:36px;height:36px;object-fit:cover;">
-                                            <div>
-                                                <div class="fw-semibold small">${p.name}</div>
-                                                <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
-                                            </div>
+                                        <img src="${p.image_url}" class="ac-img" onerror="imgError(this)">
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <div class="ac-name text-truncate">${p.name}</div>
+                                            <div class="ac-sku">SKU: ${p.sku}</div>
                                         </div>
-                                        <div class="text-end">
-                                            <div class="fw-bold text-primary small">${sym}${parseFloat(p.purchase_price).toFixed(2)}</div>
-                                            <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
+                                        <div class="text-end flex-shrink-0">
+                                            <div class="ac-price">${sym}${parseFloat(p.purchase_price).toFixed(2)}</div>
+                                            <div class="ac-stock mt-1"><i class="bx bx-box" style="font-size:10px;"></i> ${parseFloat(p.stock).toFixed(0)} in stock</div>
                                         </div>
                                     </div>`);
                                 });
                                 resultsContainer.removeClass('d-none');
                             } else {
                                 resultsContainer.html(
-                                    '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
+                                    `<div class="px-3 py-4 text-center ac-no-results">
+                                        <i class="bx bx-search-alt d-block mb-1" style="font-size:1.8rem;opacity:.4;"></i>
+                                        <span class="small">No products found.</span>
+                                    </div>`
                                 ).removeClass('d-none');
                             }
                         }
@@ -603,10 +604,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                        style="width:28px;height:28px;padding:0;">
-                                    <i class="bx bx-trash" style="font-size:13px;"></i>
-                                </button>`}
+                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                style="width:28px;height:28px;padding:0;">
+                                            <i class="bx bx-trash" style="font-size:13px;"></i>
+                                        </button>`}
                     </td>
                 </tr>`);
                 rowCount++;

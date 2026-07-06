@@ -139,10 +139,11 @@
                             <table class="table-hover mb-0 table align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th style="width:60px;">Image</th>
                                         <th>Product</th>
-                                        <th class="text-center" style="width:130px;">Quantity</th>
-                                        <th class="text-center" style="width:180px;">Pricing</th>
+                                        <th class="text-center" style="width:130px;">Return Qty</th>
+                                        <th class="text-center" style="width:110px;">Unit Price</th>
+                                        <th class="text-center" style="width:100px;">Discount</th>
+                                        <th class="text-center" style="width:100px;">Tax</th>
                                         <th class="text-end" style="width:120px;">Sub Total</th>
                                     </tr>
                                 </thead>
@@ -177,47 +178,51 @@
                                         @endphp
                                         @if ($maxReturnable > 0 || $currentQty > 0)
                                             <tr class="item-row" data-product-id="{{ $item->product_id }}">
-                                                <td>
-                                                    @if ($item->product->image)
-                                                        <img class="tbl-img rounded" onerror="imgError(this)"
-                                                            src="{{ asset('uploads/products/' . $item->product->image) }}"
-                                                            style="width:36px;height:36px;object-fit:cover;">
-                                                    @else
-                                                        <div class="tbl-img d-flex align-items-center justify-content-center bg-light img-fallback rounded"
-                                                            style="width:36px;height:36px;">
-                                                            <i class="bx bx-package text-muted"></i>
+                                                <td style="min-width:200px;">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        @if ($item->product->image)
+                                                            <img class="rounded" onerror="imgError(this)"
+                                                                src="{{ asset('uploads/products/' . $item->product->image) }}"
+                                                                style="width:32px;height:32px;object-fit:cover;">
+                                                        @else
+                                                            <div class="d-flex align-items-center justify-content-center bg-light rounded"
+                                                                style="width:32px;height:32px;">
+                                                                <i class="bx bx-package text-muted"></i>
+                                                            </div>
+                                                        @endif
+                                                        <div>
+                                                            <div class="fw-bold text-primary mb-0"
+                                                                style="font-size:12.5px;">
+                                                                {{ $item->product->name }}</div>
+                                                            <div class="text-muted" style="font-size:10.5px;">SKU:
+                                                                {{ $item->product->code }}</div>
                                                         </div>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <div class="fw-bold text-primary mb-0" style="font-size:13px;">
-                                                        {{ $item->product->name }}</div>
-                                                    <div class="text-muted small" style="font-size:11px;">SKU:
-                                                        {{ $item->product->code }}</div>
+                                                    </div>
                                                     <input name="items[{{ $rowCount }}][product_id]" type="hidden"
                                                         value="{{ $item->product_id }}">
                                                 </td>
                                                 <td class="text-center">
-                                                    <div class="small text-muted mb-1">Sold Qty:
+                                                    <div class="text-muted mb-1" style="font-size:10.5px;">Sold:
                                                         {{ (int) $item->quantity }}</div>
                                                     <input class="qty-input form-control form-control-sm text-center"
                                                         max="{{ (int) $item->quantity }}" min="0"
                                                         name="items[{{ $rowCount }}][quantity]" step="1"
-                                                        style="width:80px;margin:auto;" type="number"
+                                                        style="width:72px;margin:auto;" type="number"
                                                         value="{{ old("items.{$rowCount}.quantity", $currentQty) }}">
                                                 </td>
-                                                <td class="text-muted small text-center">
-                                                    <div>Net Price: <span class="fw-semibold text-dark price-cell"
-                                                            data-price="{{ $item->unit_price }}">{{ format_currency($item->unit_price) }}</span>
-                                                    </div>
-                                                    <div>Discount: <span class="disc-cell"
-                                                            data-disc="{{ $unitDisc }}">{{ format_currency($rowDisc) }}</span>
-                                                    </div>
-                                                    <div>Tax: <span class="tax-cell"
-                                                            data-tax="{{ $unitTax }}">{{ format_currency($rowTax) }}</span>
-                                                    </div>
+                                                <td class="text-center price-cell fw-semibold text-muted"
+                                                    data-price="{{ $item->unit_price }}" style="font-size:12.5px;">
+                                                    {{ format_currency($item->unit_price) }}
                                                 </td>
-                                                <td class="fw-bold subtotal-cell text-end">
+                                                <td class="text-center text-danger small disc-cell"
+                                                    data-disc="{{ $unitDisc }}" style="font-size:11px;">
+                                                    {{ format_currency($rowDisc) }}
+                                                </td>
+                                                <td class="text-center text-warning small tax-cell"
+                                                    data-tax="{{ $unitTax }}" style="font-size:11px;">
+                                                    {{ format_currency($rowTax) }}
+                                                </td>
+                                                <td class="fw-bold subtotal-cell text-end" style="font-size:13px;">
                                                     {{ format_currency($rowTotal) }}
                                                 </td>
                                             </tr>
@@ -302,8 +307,8 @@
 
             $(document).on('input change', '.qty-input', function() {
                 let val = parseInt($(this).val()) || 0;
-                const max = parseInt($(this).closest('tr').find('.max-returnable-cell').data('max'));
-                if (val > max) {
+                const max = parseInt($(this).attr('max')) || 0;
+                if (max > 0 && val > max) {
                     $(this).val(max);
                     showAdminToast(`Max returnable: ${max} unit(s).`, 'error');
                     val = max;
@@ -355,7 +360,6 @@
                 $('#sum_subtotal').text(fmt(subtotal));
                 $('#sum_grandtotal').text(fmt(refundTotal));
 
-                // Auto-set refunded amount to grand total if 0 or exceeds grand total
                 const currentRefunded = parseFloat(refundedInput.val()) || 0;
                 if (currentRefunded === 0 || currentRefunded > refundTotal) {
                     refundedInput.val(refundTotal.toFixed(2));

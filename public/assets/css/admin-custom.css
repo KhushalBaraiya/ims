@@ -1369,9 +1369,11 @@ img {
 table .item-row td {
     padding: 5px !important;
 }
+
 table .table-light th {
     padding: 10px 12px !important;
 }
+
 /* ================================================================
    TABLET  768px – 991px
    ================================================================ */
@@ -2382,4 +2384,175 @@ table .table-light th {
 [data-bs-theme="dark"] #autocompleteResults {
     background: #1f2933 !important;
     border-color: #33404d !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   GLOBAL AUTOCOMPLETE DROPDOWN — Light & Dark Mode
+   Used by: Purchase form, Sale form, Purchase Return, Sale Return
+══════════════════════════════════════════════════════════════════════ */
+
+/* Container */
+#autocompleteResults {
+    background: #fff;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, .13) !important;
+    overflow: hidden !important;
+}
+
+[data-bs-theme="dark"] #autocompleteResults {
+    background: #2b2c40 !important;
+    border-color: rgba(255, 255, 255, .11) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .45) !important;
+}
+
+/* Each row */
+.autocomplete-item {
+    transition: background .13s ease;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none !important;
+}
+
+[data-bs-theme="dark"] .autocomplete-item {
+    border-bottom-color: rgba(255, 255, 255, .07) !important;
+}
+
+/* Hover — in-stock */
+.autocomplete-item:not(.oos-item):hover {
+    background: rgba(105, 108, 255, .08) !important;
+    cursor: pointer;
+}
+
+[data-bs-theme="dark"] .autocomplete-item:not(.oos-item):hover {
+    background: rgba(105, 108, 255, .16) !important;
+}
+
+/* Product image */
+.autocomplete-item .ac-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 7px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, .08);
+}
+
+[data-bs-theme="dark"] .autocomplete-item .ac-img {
+    border-color: rgba(255, 255, 255, .12);
+}
+
+/* Name */
+.autocomplete-item .ac-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #3d4150;
+}
+
+[data-bs-theme="dark"] .autocomplete-item .ac-name {
+    color: #cfd3ec;
+}
+
+/* SKU */
+.autocomplete-item .ac-sku {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.2;
+}
+
+[data-bs-theme="dark"] .autocomplete-item .ac-sku {
+    color: #7983bb;
+}
+
+/* Price */
+.autocomplete-item .ac-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: #696cff;
+    white-space: nowrap;
+}
+
+[data-bs-theme="dark"] .autocomplete-item .ac-price {
+    color: #8b8fff;
+}
+
+/* Stock text */
+.autocomplete-item .ac-stock {
+    font-size: 11px;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+[data-bs-theme="dark"] .autocomplete-item .ac-stock {
+    color: #7983bb;
+}
+
+/* ── Out-of-stock item ── */
+.autocomplete-item.oos-item {
+    background: #fafafa !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+[data-bs-theme="dark"] .autocomplete-item.oos-item {
+    background: rgba(255, 255, 255, .025) !important;
+}
+
+.autocomplete-item.oos-item .ac-img {
+    opacity: .4;
+    filter: grayscale(70%);
+}
+
+.autocomplete-item.oos-item .ac-name {
+    color: #aab0c0 !important;
+}
+
+.autocomplete-item.oos-item .ac-price {
+    color: #aab0c0 !important;
+}
+
+[data-bs-theme="dark"] .autocomplete-item.oos-item .ac-name {
+    color: #4a5070 !important;
+}
+
+[data-bs-theme="dark"] .autocomplete-item.oos-item .ac-price {
+    color: #4a5070 !important;
+}
+
+/* Out-of-stock badge */
+.oos-badge {
+    font-size: 10px !important;
+    padding: 2px 7px !important;
+    border-radius: 20px !important;
+    letter-spacing: .3px;
+}
+
+/* No results */
+.ac-no-results {
+    color: #94a3b8;
+}
+
+[data-bs-theme="dark"] .ac-no-results {
+    color: #7983bb;
+}
+
+/* ── Purchase/Return form small autocomplete items (old style) ──
+   Keeps legacy .autocomplete-item rows in purchase form working   */
+.autocomplete-item.d-flex.justify-content-between {
+    background: transparent;
+}
+
+[data-bs-theme="dark"] .autocomplete-item.d-flex .fw-semibold.small {
+    color: #cfd3ec;
+}
+
+[data-bs-theme="dark"] .autocomplete-item.d-flex .fw-bold.text-primary {
+    color: #8b8fff !important;
+}
+
+[data-bs-theme="dark"] .autocomplete-item.d-flex .text-muted {
+    color: #7983bb !important;
 }
