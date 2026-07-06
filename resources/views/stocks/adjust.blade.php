@@ -10,19 +10,13 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('stocks.index') }}">{{ __('messages.stock_overview') }}</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="{{ route('stocks.history') }}">{{ __('messages.stock_history') }}</a>
-                    </li>
+                    <li class="breadcrumb-item"><a href="{{ route('stocks.history') }}">Adjustments</a></li>
                     <li class="breadcrumb-item active">New Adjustment</li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('stocks.history') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-history me-1"></i> {{ __('messages.stock_history') }}
-            </a>
-            <a href="{{ route('stocks.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
             </a>
         </div>

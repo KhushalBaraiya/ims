@@ -10,17 +10,13 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('stocks.index') }}">{{ __('messages.stock_overview') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('stocks.history') }}">{{ __('messages.stock_history') }}</a></li>
-                    <li class="breadcrumb-item active">Edit Adjustment</li>
+                    <li class="breadcrumb-item"><a href="{{ route('stocks.history') }}">Adjustments</a></li>
+                    <li class="breadcrumb-item active">Edit — {{ $voucherNo }}</li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('stocks.history') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-history me-1"></i> {{ __('messages.stock_history') }}
-            </a>
-            <a href="{{ route('stocks.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
             </a>
         </div>
@@ -57,18 +53,23 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Voucher No</label>
-                            <input type="text" class="form-control bg-light fw-bold" value="{{ $voucherNo }}" readonly>
+                            <input type="text" class="form-control bg-light fw-bold" value="{{ $voucherNo }}"
+                                readonly>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Transaction Date <span class="text-danger">*</span></label>
-                            <input type="date" name="transaction_date" class="form-control @error('transaction_date') is-invalid @enderror" value="{{ old('transaction_date', $transactionDate) }}" required>
+                            <label class="form-label fw-semibold">Transaction Date <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" name="transaction_date"
+                                class="form-control @error('transaction_date') is-invalid @enderror"
+                                value="{{ old('transaction_date', $transactionDate) }}" required>
                             @error('transaction_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Global Remarks / Notes</label>
-                            <textarea name="notes" rows="4" class="form-control @error('notes') is-invalid @enderror" placeholder="Reason for adjustment, e.g. Year-end inventory audit...">{{ old('notes', $notes) }}</textarea>
+                            <textarea name="notes" rows="4" class="form-control @error('notes') is-invalid @enderror"
+                                placeholder="Reason for adjustment, e.g. Year-end inventory audit...">{{ old('notes', $notes) }}</textarea>
                             @error('notes')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -93,17 +94,17 @@
                                 <select id="productSelectDropdown" class="form-select select2">
                                     <option value="">Choose a product...</option>
                                     @foreach ($allProducts as $p)
-                                        <option value="{{ $p->id }}" 
-                                                data-name="{{ $p->name }}" 
-                                                data-sku="{{ $p->code }}" 
-                                                data-stock="{{ $p->stock->quantity ?? 0 }}"
-                                                data-unit="{{ $p->unit_code ?? 'Units' }}"
-                                                data-image="{{ $p->image ? asset('uploads/products/' . $p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}">
-                                            {{ $p->name }} ({{ $p->code }}) — Stock: {{ number_format($p->stock->quantity ?? 0, 2) }}
+                                        <option value="{{ $p->id }}" data-name="{{ $p->name }}"
+                                            data-sku="{{ $p->code }}" data-stock="{{ $p->stock->quantity ?? 0 }}"
+                                            data-unit="{{ $p->unit_code ?? 'Units' }}"
+                                            data-image="{{ $p->image ? asset('uploads/products/' . $p->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}">
+                                            {{ $p->name }} ({{ $p->code }}) — Stock:
+                                            {{ number_format($p->stock->quantity ?? 0, 2) }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <button type="button" id="addProductBtn" class="btn btn-primary d-flex align-items-center gap-1">
+                                <button type="button" id="addProductBtn"
+                                    class="btn btn-primary d-flex align-items-center gap-1">
                                     <i class="bx bx-plus"></i> Add
                                 </button>
                             </div>
@@ -264,7 +265,8 @@
                         id: "{{ $adj->product_id }}",
                         name: "{{ addslashes($adj->product->name) }}",
                         sku: "{{ $adj->product->code }}",
-                        stock: parseFloat("{{ ($adj->product->stock->quantity ?? 0) - $adj->quantity_change }}"),
+                        stock: parseFloat(
+                            "{{ ($adj->product->stock->quantity ?? 0) - $adj->quantity_change }}"),
                         unit: "{{ $adj->product->unit_code ?? 'Units' }}",
                         image: "{{ $adj->product->image ? asset('uploads/products/' . $adj->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}",
                         qty: parseFloat("{{ $qty }}"),

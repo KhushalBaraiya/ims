@@ -134,64 +134,6 @@
         @endcan
 
         {{-- ════════════════════════════════════════
-             3.5 STOCK MANAGEMENT  (group)
-             Sub-items: Overview → Adjustments → History
-             ════════════════════════════════════════ --}}
-        @canany(['stocks.view', 'stocks.create'])
-            <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-layer" style="font-size:20px;"></i>
-                    Stock Management
-                </span>
-            </li>
-        @endcanany
-
-        @can('stocks.view')
-            @php
-                $stockActive =
-                    request()->routeIs('stocks.index') ||
-                    request()->routeIs('stocks.history') ||
-                    request()->routeIs('stocks.adjust') ||
-                    request()->routeIs('stocks.store_adjustment') ||
-                    request()->routeIs('stocks.edit_adjustment') ||
-                    request()->routeIs('stocks.show_adjustment') ||
-                    request()->routeIs('stocks.update_adjustment');
-            @endphp
-            <li class="menu-item {{ $stockActive ? 'active open' : '' }}">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-layer"></i>
-                    <div class="text-truncate">Stock Management</div>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item {{ request()->routeIs('stocks.index') ? 'active' : '' }}">
-                        <a href="{{ route('stocks.index') }}" class="menu-link">
-                            <div class="text-truncate">
-                                <i class="bx bx-package me-1"></i>Overview
-                            </div>
-                        </a>
-                    </li>
-                    @can('stocks.create')
-                        <li class="menu-item {{ request()->routeIs('stocks.adjust') ? 'active' : '' }}">
-                            <a href="{{ route('stocks.adjust') }}" class="menu-link">
-                                <div class="text-truncate">
-                                    <i class="bx bx-plus-circle me-1"></i>New Adjustment
-                                </div>
-                            </a>
-                        </li>
-                    @endcan
-                    <li
-                        class="menu-item {{ request()->routeIs('stocks.history') || request()->routeIs('stocks.show_adjustment') || request()->routeIs('stocks.edit_adjustment') ? 'active' : '' }}">
-                        <a href="{{ route('stocks.history') }}" class="menu-link">
-                            <div class="text-truncate">
-                                <i class="bx bx-history me-1"></i>Adjustment History
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        @endcan
-
-        {{-- ════════════════════════════════════════
              4. STOCK IN  (group)
              Sub-items: Purchase → Purchase Return
              ════════════════════════════════════════ --}}
@@ -249,6 +191,38 @@
                 <a href="{{ route('sale-returns.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-transfer"></i>
                     <div class="text-truncate">{{ __('messages.menu_sale_returns') }}</div>
+                </a>
+            </li>
+        @endcan
+
+        {{-- ════════════════════════════════════════
+             3.5 STOCK MANAGEMENT
+             Single flat item: Adjustments
+             ════════════════════════════════════════ --}}
+        @canany(['stocks.view', 'stocks.create'])
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-layer" style="font-size:20px;"></i>
+                    Stock Management
+                </span>
+            </li>
+        @endcanany
+
+        @can('stocks.view')
+            @php
+                $adjustmentsActive =
+                    request()->routeIs('stocks.history') ||
+                    request()->routeIs('stocks.adjust') ||
+                    request()->routeIs('stocks.store_adjustment') ||
+                    request()->routeIs('stocks.edit_adjustment') ||
+                    request()->routeIs('stocks.show_adjustment') ||
+                    request()->routeIs('stocks.update_adjustment') ||
+                    request()->routeIs('stocks.index');
+            @endphp
+            <li class="menu-item {{ $adjustmentsActive ? 'active' : '' }}">
+                <a href="{{ route('stocks.history') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-slider"></i>
+                    <div class="text-truncate">Adjustments</div>
                 </a>
             </li>
         @endcan

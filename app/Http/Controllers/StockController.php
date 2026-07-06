@@ -64,17 +64,30 @@ class StockController extends Controller
     // ──────────────────────────────────────────────────
     //  2. ADJUSTMENT FORM PAGE
     // ──────────────────────────────────────────────────
-    // ──────────────────────────────────────────────────
-    //  2. ADJUSTMENT FORM PAGE
-    // ──────────────────────────────────────────────────
     public function adjust(Request $request): View
     {
         Gate::authorize('stocks.create');
 
         $allProducts = Product::with('stock')->where('status', 'active')->orderBy('name')->get();
-        $preselected = $request->query('product_id');
 
-        return view('stocks.adjust', compact('allProducts', 'preselected'));
+        // Support both single ?product_id=X and multiple ?products[]=X&products[]=Y
+        $preselected = [];
+        if ($request->filled('products')) {
+            $preselected = array_filter((array) $request->query('products'));
+        } elseif ($request->filled('product_id')) {
+            $preselected = [$request->query('product_id')];
+        }
+
+        // Load full product data for preselected IDs
+        $preselectedProducts = collect();
+        if (!empty($preselected)) {
+            $preselectedProducts = Product::with('stock')
+                ->whereIn('id', $preselected)
+                ->where('status', 'active')
+                ->get();
+        }
+
+        return view('stocks.adjust', compact('allProducts', 'preselected', 'preselectedProducts'));
     }
 
     // ──────────────────────────────────────────────────
@@ -316,7 +329,7 @@ class StockController extends Controller
     }
 
     // ──────────────────────────────────────────────────
-    //  7. HISTORY PAGE
+    //  7. ADJUSTMENTS PAGE (unified, was "history")
     // ──────────────────────────────────────────────────
     public function history(Request $request): View
     {
@@ -337,13 +350,21 @@ class StockController extends Controller
             );
         }
 
-        $allAdjustments = $query->get();
+        $allAdjustments     = $query->get();
         $adjustmentsGrouped = $allAdjustments->groupBy('voucher_no');
+        $allProducts        = Product::orderBy('name')->get(['id', 'name', 'code']);
+        $types              = ['Plus', 'Minus'];
 
-        $allProducts = Product::orderBy('name')->get(['id', 'name', 'code']);
-        $types = ['Plus', 'Minus'];
+        // Summary card stats (across ALL products, not filtered)
+        $allStockProducts = Product::with('stock')->where('status', 'active')->get();
+        $totalProducts    = $allStockProducts->count();
+        $outOfStock       = $allStockProducts->filter(fn ($p) => ($p->stock->quantity ?? 0) <= 0)->count();
+        $lowStock         = $allStockProducts->filter(fn ($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
 
-        return view('stocks.history', compact('adjustmentsGrouped', 'allProducts', 'types'));
+        return view('stocks.history', compact(
+            'adjustmentsGrouped', 'allProducts', 'types',
+            'totalProducts', 'outOfStock', 'lowStock'
+        ));
     }
 
     // ──────────────────────────────────────────────────
