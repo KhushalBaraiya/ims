@@ -45,5 +45,10 @@
 * 
 
 
-
+* Add One Check Box -> "Show Out of Stock Products" in Settings Page -> Store in Setting Table Key Value boolean
+* After Add This Sales Form -> On Search Product Show Only Availabe STock Product else Show Out of Stock Product According This Check Box On Or Off
+* if There is On -> Show Only Product Do Not Select Product -> else minor danger color else disable color - do not select - out off stock Products
+* Sales Form -> Product Select -> After Select Product -> See Products Column Desgin - Same Desgin Copy Other All Off Plase -> Sale Retrun -> Purchase -> Purchase Retrun
+* On Select Product in Sales Form -> After Submit -> Show Validation Msg but Old Products Does not Selectd -> Fix This If there Form Submit -> Old Products Show and Show Valiadtion 
+* Do Not Show Validation Msg List in Top Form - Show only First Error msg in Top Flash msg -> Purchase/sale PurchaseRetrun/SaleRetrun This All Form Top Flash Single First Show
 
