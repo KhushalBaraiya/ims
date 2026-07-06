@@ -1,31 +1,38 @@
 @php
     $isReturned = isset($sale) && $sale->returns->isNotEmpty();
+    $showOutOfStock = $showOutOfStock ?? false;
 @endphp
 
 <style>
     /* Scoped custom CSS for sales form selected product table */
-    #saleItemsTable th, #saleItemsTable td {
+    #saleItemsTable th,
+    #saleItemsTable td {
         padding: 8px 14px !important;
         font-size: 13px !important;
     }
+
     .sale-prod-img {
         width: 32px !important;
         height: 32px !important;
         object-fit: cover !important;
         border-radius: 4px !important;
     }
+
     .sale-prod-name {
         font-size: 12.5px !important;
         line-height: 1.2 !important;
     }
+
     .sale-prod-sku {
         font-size: 10.5px !important;
         line-height: 1.1 !important;
     }
+
     .sale-stock-badge {
         font-size: 10.5px !important;
         padding: 4px 6px !important;
     }
+
     .sale-qty-input {
         width: 60px !important;
         height: 28px !important;
@@ -33,14 +40,30 @@
         padding: 2px 4px !important;
         margin: auto !important;
     }
+
     .sale-price-cell {
         font-size: 12.5px !important;
     }
+
     .sale-compact-text {
         font-size: 11px !important;
     }
+
     .sale-subtotal-cell {
         font-size: 13px !important;
+    }
+
+    /* Out-of-stock autocomplete item */
+    .autocomplete-item.oos-item {
+        opacity: 0.55;
+        background-color: #fff5f5 !important;
+        cursor: not-allowed !important;
+        pointer-events: none;
+    }
+
+    .oos-badge {
+        font-size: 10px !important;
+        padding: 2px 6px !important;
     }
 </style>
 
@@ -54,13 +77,9 @@
     </div>
 @endif
 @if ($errors->any() && !$errors->has('stock_error'))
-    <div class="alert alert-danger d-flex align-items-start mb-4 gap-2 px-3 py-2">
-        <i class="bx bx-error-circle fs-5 mt-1 flex-shrink-0"></i>
-        <ul class="mb-0 ps-2">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+    <div class="alert alert-danger d-flex align-items-center mb-4 gap-2 px-3 py-2">
+        <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+        <span>{{ $errors->first() }}</span>
     </div>
 @endif
 
@@ -84,10 +103,11 @@
                             readonly type="text" value="{{ $sale->invoice_no }}">
                     @else
                         <div class="input-group">
-                            <input class="form-control fw-semibold" id="invoice_no" name="invoice_no"
-                                placeholder="e.g. INV-20260701-00001" type="text" value="{{ old('invoice_no') }}" {{ $isReturned ? 'disabled' : '' }}>
-                            <button class="btn btn-outline-primary" id="generateInvoiceNoBtn"
-                                title="Auto-generate Invoice No" type="button" {{ $isReturned ? 'disabled' : '' }}>
+                            <input {{ $isReturned ? 'disabled' : '' }} class="form-control fw-semibold" id="invoice_no"
+                                name="invoice_no" placeholder="e.g. INV-20260701-00001" type="text"
+                                value="{{ old('invoice_no') }}">
+                            <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-outline-primary"
+                                id="generateInvoiceNoBtn" title="Auto-generate Invoice No" type="button">
                                 <i class="bx bx-revision"></i>
                             </button>
                         </div>
@@ -98,9 +118,10 @@
                 {{-- Invoice Date --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Invoice Date <span class="text-danger">*</span></label>
-                    <input class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
+                    <input {{ $isReturned ? 'disabled' : '' }}
+                        class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
                         name="invoice_date" required type="date"
-                        value="{{ old('invoice_date', $sale->invoice_date ?? date('Y-m-d')) }}" {{ $isReturned ? 'disabled' : '' }}>
+                        value="{{ old('invoice_date', $sale->invoice_date ?? date('Y-m-d')) }}">
                     @error('invoice_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -109,7 +130,8 @@
                 {{-- Customer --}}
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Customer <span class="text-danger">*</span></label>
-                    <select class="form-select @error('customer_id') is-invalid @enderror" name="customer_id" required {{ $isReturned ? 'disabled' : '' }}>
+                    <select {{ $isReturned ? 'disabled' : '' }}
+                        class="form-select @error('customer_id') is-invalid @enderror" name="customer_id" required>
                         <option value="">Select Customer</option>
                         @foreach ($customers as $c)
                             <option {{ old('customer_id', $sale->customer_id ?? '') == $c->id ? 'selected' : '' }}
@@ -129,8 +151,8 @@
                 @else
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Sales Person</label>
-                        <select class="form-select @error('sales_person_id') is-invalid @enderror"
-                            name="sales_person_id" {{ $isReturned ? 'disabled' : '' }}>
+                        <select {{ $isReturned ? 'disabled' : '' }}
+                            class="form-select @error('sales_person_id') is-invalid @enderror" name="sales_person_id">
                             <option value="">Select Sales Person</option>
                             @foreach ($salesPersons as $sp)
                                 <option
@@ -149,7 +171,8 @@
                 {{-- Status --}}
                 <div class="mb-0">
                     <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                    <select class="form-select @error('status') is-invalid @enderror" name="status" required {{ $isReturned ? 'disabled' : '' }}>
+                    <select {{ $isReturned ? 'disabled' : '' }}
+                        class="form-select @error('status') is-invalid @enderror" name="status" required>
                         @foreach (['Completed', 'Pending', 'Draft', 'Repair', 'Ordered'] as $statusOpt)
                             <option {{ old('status', $sale->status ?? 'Completed') === $statusOpt ? 'selected' : '' }}
                                 value="{{ $statusOpt }}">
@@ -173,8 +196,9 @@
             <div class="card-body p-4">
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Payment Method <span class="text-danger">*</span></label>
-                    <select class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
-                        required {{ $isReturned ? 'disabled' : '' }}>
+                    <select {{ $isReturned ? 'disabled' : '' }}
+                        class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
+                        required>
                         <option value="">Select Method</option>
                         @foreach (['Cash', 'Bank Transfer', 'Card' => 'Credit/Debit Card', 'UPI / QR' => 'UPI / QR Code', 'Cheque'] as $val => $label)
                             @php
@@ -194,9 +218,10 @@
                 </div>
                 <div class="mb-0">
                     <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
-                    <input class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
+                    <input {{ $isReturned ? 'disabled' : '' }}
+                        class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
                         name="paid_amount" required step="0.01" type="number"
-                        value="{{ old('paid_amount', $sale->paid_amount ?? '0.00') }}" {{ $isReturned ? 'disabled' : '' }}>
+                        value="{{ old('paid_amount', $sale->paid_amount ?? '0.00') }}">
                     @error('paid_amount')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -225,8 +250,8 @@
                 <div class="position-relative mb-4">
                     <div class="input-group">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input class="form-control" id="productSearchInput"
-                            placeholder="Type Product Name, SKU, or Scan Barcode..." type="text" {{ $isReturned ? 'disabled' : '' }}>
+                        <input {{ $isReturned ? 'disabled' : '' }} class="form-control" id="productSearchInput"
+                            placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
                     </div>
                     <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
                         id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
@@ -265,7 +290,8 @@
                         <h6 class="fw-semibold mb-0">Invoice Notes</h6>
                     </div>
                     <div class="card-body p-3">
-                        <textarea class="form-control" name="notes" placeholder="Payment notes, delivery schedules..." rows="6" {{ $isReturned ? 'disabled' : '' }}>{{ old('notes', $sale->notes ?? '') }}</textarea>
+                        <textarea {{ $isReturned ? 'disabled' : '' }} class="form-control" name="notes"
+                            placeholder="Payment notes, delivery schedules..." rows="6">{{ old('notes', $sale->notes ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -289,27 +315,27 @@
                                 <span class="text-muted small fw-semibold">Global Discount (−)</span>
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="form-check form-check-inline mb-0">
-                                        <input
+                                        <input {{ $isReturned ? 'disabled' : '' }}
                                             {{ old('discount_type', $sale->discount_type ?? 'fixed') === 'fixed' ? 'checked' : '' }}
                                             class="form-check-input" id="discTypeFixed" name="discount_type"
-                                            type="radio" value="fixed" {{ $isReturned ? 'disabled' : '' }}>
+                                            type="radio" value="fixed">
                                         <label class="form-check-label small" for="discTypeFixed">Fixed</label>
                                     </div>
                                     <div class="form-check form-check-inline mb-0">
-                                        <input
+                                        <input {{ $isReturned ? 'disabled' : '' }}
                                             {{ old('discount_type', $sale->discount_type ?? 'fixed') === 'percentage' ? 'checked' : '' }}
                                             class="form-check-input" id="discTypePct" name="discount_type"
-                                            type="radio" value="percentage" {{ $isReturned ? 'disabled' : '' }}>
+                                            type="radio" value="percentage">
                                         <label class="form-check-label small" for="discTypePct">%</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="text-muted small" id="discountLabel">Amount</span>
-                                <input class="form-control form-control-sm text-end" id="discount_value"
-                                    min="0" name="discount_value" step="0.01" style="width:120px;"
-                                    type="number"
-                                    value="{{ old('discount_value', $sale->discount_value ?? '0.00') }}" {{ $isReturned ? 'disabled' : '' }}>
+                                <input {{ $isReturned ? 'disabled' : '' }}
+                                    class="form-control form-control-sm text-end" id="discount_value" min="0"
+                                    name="discount_value" step="0.01" style="width:120px;" type="number"
+                                    value="{{ old('discount_value', $sale->discount_value ?? '0.00') }}">
                             </div>
                             <input id="discount_amount" name="discount_amount" type="hidden" value="0.00">
                             <div class="mt-1 text-end">
@@ -322,10 +348,11 @@
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Global Tax % (+)</span>
                             <div class="d-flex align-items-center gap-2">
-                                <input class="form-control form-control-sm text-end" id="tax_percentage"
-                                    max="100" min="0" name="tax_percentage" step="0.01"
-                                    style="width:80px;" type="number"
-                                    value="{{ old('tax_percentage', $sale->tax_percentage ?? '0.00') }}" {{ $isReturned ? 'disabled' : '' }}>
+                                <input {{ $isReturned ? 'disabled' : '' }}
+                                    class="form-control form-control-sm text-end" id="tax_percentage" max="100"
+                                    min="0" name="tax_percentage" step="0.01" style="width:80px;"
+                                    type="number"
+                                    value="{{ old('tax_percentage', $sale->tax_percentage ?? '0.00') }}">
                                 <span class="text-muted small">%</span>
                             </div>
                         </div>
@@ -339,9 +366,10 @@
                         {{-- Shipping --}}
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                             <span class="text-muted small fw-semibold">Shipping (+)</span>
-                            <input class="form-control form-control-sm text-end" id="shipping_amount" min="0"
-                                name="shipping_amount" step="0.01" style="width:120px;" type="number"
-                                value="{{ old('shipping_amount', $sale->shipping_amount ?? '0.00') }}" {{ $isReturned ? 'disabled' : '' }}>
+                            <input {{ $isReturned ? 'disabled' : '' }} class="form-control form-control-sm text-end"
+                                id="shipping_amount" min="0" name="shipping_amount" step="0.01"
+                                style="width:120px;" type="number"
+                                value="{{ old('shipping_amount', $sale->shipping_amount ?? '0.00') }}">
                         </div>
 
                         {{-- Grand Total --}}
@@ -382,11 +410,12 @@
                 <i class="bx bx-x me-1"></i> Cancel
             </a>
             @if (!isset($sale) || !$sale->exists)
-                <button type="button" id="btnSaveDraft" class="btn btn-outline-primary" {{ $isReturned ? 'disabled' : '' }}>
+                <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-outline-primary" id="btnSaveDraft"
+                    type="button">
                     <i class="bx bx-file me-1"></i> Save As Draft
                 </button>
             @endif
-            <button class="btn btn-primary" type="submit" {{ $isReturned ? 'disabled' : '' }}>
+            <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-primary" type="submit">
                 <i class="bx bx-save me-1"></i>
                 {{ isset($sale) ? 'Update Invoice' : 'Generate Invoice' }}
             </button>
@@ -400,6 +429,7 @@
         $(document).ready(function() {
             let rowCount = 0;
             const isReturned = {{ $isReturned ? 'true' : 'false' }};
+            const showOutOfStock = {{ $showOutOfStock ? 'true' : 'false' }};
             const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
 
             function fmt(n) {
@@ -426,8 +456,32 @@
                 });
             });
 
-            // ── Restore existing items on edit ────────────────────────────────
-            @if (isset($sale) && $sale->items->count() > 0)
+            // ── Restore items: old() after validation fail → edit mode → nothing ──
+            @if (old('items'))
+                {{-- Validation failed: re-hydrate from old() input --}}
+                @foreach (old('items', []) as $oldIndex => $oldItem)
+                    @php
+                        $oldProduct = \App\Models\Product::with('stock')->find($oldItem['product_id'] ?? null);
+                    @endphp
+                    @if ($oldProduct)
+                        addProductRow({
+                            id: "{{ $oldProduct->id }}",
+                            name: "{{ addslashes($oldProduct->name) }}",
+                            sku: "{{ $oldProduct->code }}",
+                            stock: parseFloat("{{ $oldProduct->stock->quantity ?? 0 }}"),
+                            price: parseFloat(
+                                "{{ old('items.' . $oldIndex . '.unit_price', $oldProduct->selling_price) }}"
+                                ),
+                            taxAmt: parseFloat("{{ old('items.' . $oldIndex . '.tax_amount', 0) }}"),
+                            discAmt: parseFloat("{{ old('items.' . $oldIndex . '.discount_amount', 0) }}"),
+                            qty: parseInt("{{ old('items.' . $oldIndex . '.quantity', 1) }}"),
+                            unit: "{{ $oldProduct->unit_code ?? 'PCS' }}",
+                            image_url: "{{ $oldProduct->image ? asset('uploads/products/' . $oldProduct->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
+                        });
+                    @endif
+                @endforeach
+            @elseif (isset($sale) && $sale->items->count() > 0)
+                {{-- Edit mode: populate from saved sale items --}}
                 @foreach ($sale->items as $item)
                     addProductRow({
                         id: "{{ $item->product_id }}",
@@ -464,21 +518,31 @@
                         resultsDiv.empty();
                         if (data.length) {
                             data.forEach(function(p) {
+                                const isOos = p.out_of_stock === true;
+                                const oosClass = isOos ? ' oos-item' : '';
+                                const cursorStyle = isOos ? 'cursor:not-allowed;' :
+                                    'cursor:pointer;';
+                                const stockBadge = isOos ?
+                                    `<span class="badge bg-danger oos-badge">Out of Stock</span>` :
+                                    `<div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>`;
+                                const oosLabel = isOos ?
+                                    ` <span class="badge bg-danger oos-badge">Out of Stock</span>` :
+                                    '';
                                 resultsDiv.append(
-                                    `<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;"
+                                    `<div class="autocomplete-item${oosClass} d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="${cursorStyle}"
                                   data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
                                   data-price="${p.price}" data-tax="${p.tax}" data-discount="${p.discount}"
-                                  data-unit="${p.unit}" data-image="${p.image_url}">
+                                  data-unit="${p.unit}" data-image="${p.image_url}" data-oos="${isOos ? '1' : '0'}">
                                 <div class="d-flex align-items-center gap-2">
-                                    <img src="${p.image_url}" class="rounded" style="width:36px;height:36px;object-fit:cover;">
+                                    <img src="${p.image_url}" class="rounded${isOos ? ' opacity-50' : ''}" style="width:36px;height:36px;object-fit:cover;">
                                     <div>
-                                        <div class="fw-semibold small">${p.name}</div>
+                                        <div class="fw-semibold small${isOos ? ' text-danger' : ''}">${p.name}${oosLabel}</div>
                                         <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fw-bold text-primary small">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</div>
-                                    <div class="text-muted" style="font-size:11px;">Stock: ${parseFloat(p.stock).toFixed(2)}</div>
+                                    <div class="fw-bold ${isOos ? 'text-muted' : 'text-primary'} small">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</div>
+                                    ${stockBadge}
                                 </div>
                             </div>`
                                 );
@@ -487,7 +551,7 @@
                         } else {
                             resultsDiv.html(
                                 '<div class="px-3 py-3 text-muted small text-center">No products found.</div>'
-                                ).removeClass('d-none');
+                            ).removeClass('d-none');
                         }
                     });
                 }, 250);
@@ -499,6 +563,10 @@
             });
 
             $(document).on('click', '.autocomplete-item', function() {
+                // Guard: do not add out-of-stock products
+                if ($(this).data('oos') == '1') {
+                    return;
+                }
                 const p = {
                     id: $(this).data('id'),
                     name: $(this).data('name'),
@@ -549,24 +617,35 @@
                     '</div>' +
                     '</div>' +
                     '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + p.id + '">' +
-                    '<input type="hidden" name="items[' + rowCount + '][discount_amount]" class="disc-hidden" value="' + discAmt.toFixed(2) + '">' +
-                    '<input type="hidden" name="items[' + rowCount + '][tax_amount]" class="tax-hidden" value="' + taxAmt.toFixed(2) + '">' +
+                    '<input type="hidden" name="items[' + rowCount +
+                    '][discount_amount]" class="disc-hidden" value="' + discAmt.toFixed(2) + '">' +
+                    '<input type="hidden" name="items[' + rowCount +
+                    '][tax_amount]" class="tax-hidden" value="' + taxAmt.toFixed(2) + '">' +
                     '</td>' +
                     '<td class="stock-cell" data-max="' + p.stock + '">' +
-                    '<span class="badge bg-label-info sale-stock-badge">' + parseInt(p.stock) + ' available</span>' +
+                    '<span class="badge bg-label-info sale-stock-badge">' + parseInt(p.stock) +
+                    ' available</span>' +
                     '</td>' +
                     '<td class="text-center">' +
-                    '<input type="number" step="1" min="1" name="items[' + rowCount + '][quantity]" value="' + parseInt(p.qty || 1) + '" class="qty-input form-control form-control-sm text-center sale-qty-input" ' + (isReturned ? 'disabled' : '') + '>' +
+                    '<input type="number" step="1" min="1" name="items[' + rowCount + '][quantity]" value="' +
+                    parseInt(p.qty || 1) +
+                    '" class="qty-input form-control form-control-sm text-center sale-qty-input" ' + (
+                        isReturned ? 'disabled' : '') + '>' +
                     '</td>' +
                     '<td class="text-center fw-semibold text-muted sale-price-cell">' +
                     fmt(p.price) +
-                    '<input type="hidden" name="items[' + rowCount + '][unit_price]" class="price-input" value="' + p.price.toFixed(2) + '">' +
+                    '<input type="hidden" name="items[' + rowCount +
+                    '][unit_price]" class="price-input" value="' + p.price.toFixed(2) + '">' +
                     '</td>' +
-                    '<td class="text-center text-muted small disc-display sale-compact-text">' + fmt(discAmt) + '/unit</td>' +
-                    '<td class="text-center text-muted small tax-display sale-compact-text">' + fmt(taxAmt) + '/unit</td>' +
+                    '<td class="text-center text-muted small disc-display sale-compact-text">' + fmt(discAmt) +
+                    '/unit</td>' +
+                    '<td class="text-center text-muted small tax-display sale-compact-text">' + fmt(taxAmt) +
+                    '/unit</td>' +
                     '<td class="text-end fw-bold subtotal-cell sale-subtotal-cell">0.00</td>' +
                     '<td class="text-center">' +
-                    (isReturned ? '' : '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button>') +
+                    (isReturned ? '' :
+                        '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button>'
+                    ) +
                     '</td>' +
                     '</tr>'
                 );
@@ -674,4 +753,3 @@
         });
     </script>
 @endpush
-

@@ -7,6 +7,7 @@ use App\Models\ActivityLog;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -66,8 +67,9 @@ class SaleController extends Controller
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
         $isSalesOwn = auth()->user()->hasPermissionTo('sales.own')
             && ! auth()->user()->hasAnyRole(['super_admin', 'manager']);
+        $showOutOfStock = Setting::where('key', 'show_out_of_stock_products')->value('value') === '1';
 
-        return view('sales.create', compact('customers', 'salesPersons', 'isSalesOwn'));
+        return view('sales.create', compact('customers', 'salesPersons', 'isSalesOwn', 'showOutOfStock'));
     }
 
     /**
@@ -193,8 +195,9 @@ class SaleController extends Controller
         $salesPersons = User::where('status', 'active')->orderBy('name')->get();
         $isSalesOwn   = auth()->user()->hasPermissionTo('sales.own')
             && ! auth()->user()->hasAnyRole(['super_admin', 'manager']);
+        $showOutOfStock = Setting::where('key', 'show_out_of_stock_products')->value('value') === '1';
 
-        return view('sales.edit', compact('sale', 'customers', 'salesPersons', 'isSalesOwn'));
+        return view('sales.edit', compact('sale', 'customers', 'salesPersons', 'isSalesOwn', 'showOutOfStock'));
     }
 
     /**
@@ -401,15 +404,24 @@ class SaleController extends Controller
             return response()->json([]);
         }
 
-        $products = Product::with(['stock'])
+        $showOutOfStock = Setting::where('key', 'show_out_of_stock_products')->value('value') === '1';
+
+        $productsQuery = Product::with(['stock'])
             ->where('status', 'active')
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
                     ->orWhere('code', 'like', "%{$query}%")
                     ->orWhere('barcode', 'like', "%{$query}%");
-            })
-            ->limit(10)
-            ->get();
+            });
+
+        // If the setting is OFF, only show products with stock > 0
+        if (! $showOutOfStock) {
+            $productsQuery->whereHas('stock', function ($q) {
+                $q->where('quantity', '>', 0);
+            });
+        }
+
+        $products = $productsQuery->limit(10)->get();
 
         $activeCurrency = current_currency();
         $rate           = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;
@@ -418,12 +430,14 @@ class SaleController extends Controller
         $results = [];
         foreach ($products as $p) {
             $price     = $rate > 0 ? ($p->selling_price / $rate) : $p->selling_price;
+            $stockQty  = $p->stock->quantity ?? 0;
             $results[] = [
                 'id'              => $p->id,
                 'name'            => $p->name,
                 'sku'             => $p->code,
                 'barcode'         => $p->barcode,
-                'stock'           => $p->stock->quantity ?? 0.00,
+                'stock'           => $stockQty,
+                'out_of_stock'    => $stockQty <= 0,
                 'price'           => $price,
                 'tax'             => $p->tax_percentage,
                 'discount'        => 0,

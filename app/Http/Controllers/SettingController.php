@@ -32,14 +32,15 @@ class SettingController extends Controller
         Gate::authorize('settings.update');
 
         $request->validate([
-            'company_name'    => ['required', 'string', 'max:255'],
-            'company_email'   => ['required', 'email', 'max:255'],
-            'company_phone'   => ['nullable', 'string', 'max:50'],
-            'company_address' => ['nullable', 'string', 'max:500'],
-            'tax_name'        => ['nullable', 'string', 'max:50'],
-            'tax_percentage'  => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'invoice_prefix'  => ['nullable', 'string', 'max:20'],
-            'purchase_prefix' => ['nullable', 'string', 'max:20'],
+            'company_name'                => ['required', 'string', 'max:255'],
+            'company_email'               => ['required', 'email', 'max:255'],
+            'company_phone'               => ['nullable', 'string', 'max:50'],
+            'company_address'             => ['nullable', 'string', 'max:500'],
+            'tax_name'                    => ['nullable', 'string', 'max:50'],
+            'tax_percentage'              => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'invoice_prefix'              => ['nullable', 'string', 'max:20'],
+            'purchase_prefix'             => ['nullable', 'string', 'max:20'],
+            'show_out_of_stock_products'  => ['nullable', 'boolean'],
         ]);
 
         $keys = [
@@ -59,6 +60,12 @@ class SettingController extends Controller
                 ['value' => $request->input($key)]
             );
         }
+
+        // Checkbox: not present in POST when unchecked, so default to '0'
+        Setting::updateOrCreate(
+            ['key' => 'show_out_of_stock_products'],
+            ['value' => $request->has('show_out_of_stock_products') ? '1' : '0']
+        );
 
         ActivityLog::log('Settings Updated', 'Company settings were updated.');
 

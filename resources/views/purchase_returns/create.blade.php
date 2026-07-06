@@ -8,7 +8,7 @@
         <div>
             <h4 class="fw-bold mb-1">Create Purchase Return</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('purchase-returns.index') }}">{{ __('messages.purchase_returns') }}</a></li>
@@ -16,33 +16,67 @@
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+        <a class="btn btn-outline-secondary" href="{{ route('purchase-returns.index') }}">
             <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
         </a>
     </div>
 
-    <form method="POST" action="{{ route('purchase-returns.store') }}" id="returnForm" novalidate>
+    <form action="{{ route('purchase-returns.store') }}" id="returnForm" method="POST" novalidate>
         @csrf
 
+        <style>
+            /* Scoped compact styles — purchase return product table */
+            #returnItemsTable th,
+            #returnItemsTable td {
+                padding: 8px 14px !important;
+                font-size: 13px !important;
+            }
+
+            .ret-prod-img {
+                width: 32px !important;
+                height: 32px !important;
+                object-fit: cover !important;
+                border-radius: 4px !important;
+            }
+
+            .ret-prod-name {
+                font-size: 12.5px !important;
+                line-height: 1.2 !important;
+            }
+
+            .ret-prod-sku {
+                font-size: 10.5px !important;
+                line-height: 1.1 !important;
+            }
+
+            .ret-qty-input {
+                width: 70px !important;
+                height: 28px !important;
+                font-size: 12.5px !important;
+                padding: 2px 4px !important;
+                margin: auto !important;
+            }
+
+            .ret-subtotal-cell {
+                font-size: 13px !important;
+            }
+        </style>
+
         @if (isset($selectedPurchase))
-            <input type="hidden" name="purchase_id" id="purchase_id" value="{{ $selectedPurchase->id }}">
+            <input id="purchase_id" name="purchase_id" type="hidden" value="{{ $selectedPurchase->id }}">
         @endif
 
         {{-- Alerts --}}
         @if (session('error'))
-            <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
+            <div class="alert alert-danger d-flex align-items-center mb-4 gap-2 px-3 py-2">
                 <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
                 <span>{{ session('error') }}</span>
             </div>
         @endif
         @if ($errors->any())
-            <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3">
-                <i class="bx bx-error-circle fs-5 flex-shrink-0 mt-1"></i>
-                <ul class="mb-0 ps-2">
-                    @foreach ($errors->all() as $e)
-                        <li>{{ $e }}</li>
-                    @endforeach
-                </ul>
+            <div class="alert alert-danger d-flex align-items-center mb-4 gap-2 px-3 py-2">
+                <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+                <span>{{ $errors->first() }}</span>
             </div>
         @endif
 
@@ -52,14 +86,14 @@
             <div class="col-lg-3">
 
                 {{-- Return Details Card --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold"><i class="bx bx-info-circle me-2 text-primary"></i>Return Details</h6>
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0"><i class="bx bx-info-circle text-primary me-2"></i>Return Details</h6>
                     </div>
                     <div class="card-body p-4">
 
                         @if (isset($selectedPurchase))
-                            <div class="alert alert-primary py-2 px-3 mb-3 d-flex align-items-center gap-2">
+                            <div class="alert alert-primary d-flex align-items-center mb-3 gap-2 px-3 py-2">
                                 <i class="bx bx-link-alt flex-shrink-0"></i>
                                 <div>
                                     <div class="fw-semibold small">Linked Purchase</div>
@@ -74,9 +108,8 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
-                            <input type="date" name="return_date"
-                                class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
-                                value="{{ old('return_date', date('Y-m-d')) }}" required>
+                            <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
+                                name="return_date" required type="date" value="{{ old('return_date', date('Y-m-d')) }}">
                             @error('return_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -84,17 +117,17 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Reference No</label>
-                            <input type="text" name="reference_no" class="form-control"
-                                value="{{ old('reference_no') }}" placeholder="Optional reference...">
+                            <input class="form-control" name="reference_no" placeholder="Optional reference..."
+                                type="text" value="{{ old('reference_no') }}">
                         </div>
 
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                            <select name="status" class="form-select" required>
-                                <option value="Completed"
-                                    {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}>
+                            <select class="form-select" name="status" required>
+                                <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
+                                    value="Completed">
                                     Completed</option>
-                                <option value="Pending" {{ old('status') === 'Pending' ? 'selected' : '' }}>Pending
+                                <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">Pending
                                 </option>
                             </select>
                         </div>
@@ -103,15 +136,15 @@
 
                 {{-- Refund Details Card --}}
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold"><i class="bx bx-money me-2 text-success"></i>Refund Details</h6>
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0"><i class="bx bx-money text-success me-2"></i>Refund Details</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" min="0" name="refunded_amount" id="refunded_amount"
-                                class="form-control @error('refunded_amount') is-invalid @enderror"
-                                value="{{ old('refunded_amount', '0.00') }}" required>
+                            <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
+                                min="0" name="refunded_amount" required step="0.01" type="number"
+                                value="{{ old('refunded_amount', '0.00') }}">
                             <div class="form-text">Amount refunded to company / credited from supplier.</div>
                             @error('refunded_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -126,10 +159,10 @@
             <div class="col-lg-9">
 
                 {{-- Search / Products Card --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-search me-2 text-primary"></i>
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-search text-primary me-2"></i>
                             @if (isset($selectedPurchase))
                                 Products from Purchase #{{ $selectedPurchase->purchase_no }}
                             @else
@@ -143,17 +176,17 @@
                         <div class="position-relative mb-4">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bx bx-search"></i></span>
-                                <input type="text" id="productSearchInput" class="form-control"
-                                    placeholder="Type Product Name, SKU, or Scan Barcode..." autocomplete="off">
+                                <input autocomplete="off" class="form-control" id="productSearchInput"
+                                    placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
                             </div>
-                            <div id="autocompleteResults"
-                                class="position-absolute w-100 bg-white border rounded shadow-lg d-none"
-                                style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;"></div>
+                            <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
+                                id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
+                            </div>
                         </div>
 
                         {{-- Items Table --}}
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0" id="returnItemsTable">
+                            <table class="table-hover mb-0 table align-middle" id="returnItemsTable">
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width:60px;">Image</th>
@@ -176,9 +209,9 @@
                             </table>
                         </div>
 
-                        <div id="noItemsMsg" class="text-center py-5 text-muted">
+                        <div class="text-muted py-5 text-center" id="noItemsMsg">
                             <i class="bx bx-search-alt d-block mb-2" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="mb-0 small">Search and add products to return above.</p>
+                            <p class="small mb-0">Search and add products to return above.</p>
                         </div>
 
                     </div>
@@ -187,20 +220,20 @@
                 {{-- Notes + Refund Summary --}}
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white py-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold"><i class="bx bx-note me-2 text-warning"></i>Return Notes</h6>
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header border-bottom bg-white py-3">
+                                <h6 class="fw-semibold mb-0"><i class="bx bx-note text-warning me-2"></i>Return Notes</h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea name="notes" rows="5" class="form-control"
-                                    placeholder="Describe return reason, item conditions..." style="resize:vertical;">{{ old('notes') }}</textarea>
+                                <textarea class="form-control" name="notes" placeholder="Describe return reason, item conditions..."
+                                    rows="5" style="resize:vertical;">{{ old('notes') }}</textarea>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white py-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold"><i class="bx bx-receipt me-2 text-info"></i>Refund Summary
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header border-bottom bg-white py-3">
+                                <h6 class="fw-semibold mb-0"><i class="bx bx-receipt text-info me-2"></i>Refund Summary
                                 </h6>
                             </div>
                             <div class="card-body p-4">
@@ -215,7 +248,7 @@
                                     <span class="fw-bold text-primary fs-6"
                                         id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                                 </div>
-                                <div class="rounded p-3 mt-3 d-flex justify-content-between align-items-center"
+                                <div class="d-flex justify-content-between align-items-center mt-3 rounded p-3"
                                     style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
                                     <span class="text-muted small fw-semibold">Refunded to Company</span>
                                     <span class="fw-bold text-success fs-6"
@@ -227,11 +260,11 @@
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
+                <div class="d-flex justify-content-end mt-4 gap-2">
+                    <a class="btn btn-outline-secondary" href="{{ route('purchase-returns.index') }}">
                         <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <button class="btn btn-primary" id="submitBtn" type="submit">
                         <i class="bx bx-save me-1"></i> Process Return
                     </button>
                 </div>
@@ -287,7 +320,8 @@
                                     purchased_qty: null,
                                     already_returned: null,
                                     max_returnable: {{ (float) ($op->stock->quantity ?? 0) }},
-                                }, {{ (int) ($oi['quantity'] ?? 1) }}, "{{ addslashes($oi['reason'] ?? '') }}",
+                                }, {{ (int) ($oi['quantity'] ?? 1) }},
+                                "{{ addslashes($oi['reason'] ?? '') }}",
                                 false);
                         @endif
                     @endif
@@ -308,7 +342,7 @@
                     error: function() {
                         noItemsMsg.html(
                             '<p class="text-danger text-center py-3">Failed to load purchase items.</p>'
-                            ).removeClass('d-none');
+                        ).removeClass('d-none');
                     }
                 });
             }
@@ -400,7 +434,8 @@
                     var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
                     resultsBox.append(
                         '<div class="autocomplete-item d-flex justify-content-between align-items-center px-3 py-2 border-bottom" style="cursor:pointer;" data-id="' +
-                        id + '" data-mode="' + mode + '" data-image="' + imgUrl + '" data-sku="' + sku + '">' +
+                        id + '" data-mode="' + mode + '" data-image="' + imgUrl + '" data-sku="' + sku +
+                        '">' +
                         '<div>' +
                         '<div class="fw-semibold small">' + item.name + '</div>' +
                         '<div class="text-muted" style="font-size:11px;">SKU: ' + sku + '</div>' +
@@ -449,7 +484,7 @@
                     var priceText = $(this).find('.fw-bold.text-primary.small').text().replace(/[^0-9.]/g,
                         '');
                     var stockText = $(this).find('.text-muted[style]').last().text().replace(/[^0-9.]/g,
-                    '');
+                        '');
                     addRow({
                         product_id: id,
                         name: $(this).find('.fw-semibold.small').text().trim(),
@@ -484,12 +519,16 @@
                 var imgUrl = item.image_url || 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image';
                 itemsContainer.append(
                     '<tr class="item-row" data-product-id="' + item.product_id + '">' +
-                    '<td><img src="' + imgUrl + '" class="tbl-img rounded" onerror="imgError(this)" style="width:36px;height:36px;object-fit:cover;"></td>' +
+                    '<td><img src="' + imgUrl +
+                    '" class="tbl-img rounded" onerror="imgError(this)" style="width:36px;height:36px;object-fit:cover;"></td>' +
                     '<td class="ps-3">' +
                     '<div class="fw-bold text-primary mb-0" style="font-size:13px;">' + item.name + '</div>' +
-                    '<div class="text-muted small" style="font-size:11px;">SKU: ' + (item.sku || '-') + '</div>' +
-                    '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item.product_id + '">' +
-                    '<input type="hidden" name="items[' + rowCount + '][unit_price]" class="unit-price-input" value="' + price.toFixed(2) + '">' +
+                    '<div class="text-muted small" style="font-size:11px;">SKU: ' + (item.sku || '-') +
+                    '</div>' +
+                    '<input type="hidden" name="items[' + rowCount + '][product_id]" value="' + item
+                    .product_id + '">' +
+                    '<input type="hidden" name="items[' + rowCount +
+                    '][unit_price]" class="unit-price-input" value="' + price.toFixed(2) + '">' +
                     '</td>' +
                     '<td class="text-center text-primary fw-bold unit-price-cell" data-price="' + price + '">' +
                     fmt(price) + '</td>' +

@@ -8,37 +8,33 @@
         <div>
             <h4 class="fw-bold mb-1">Create Sales Return</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('sale-returns.index') }}">Sale Returns</a></li>
                     <li class="breadcrumb-item active">Create</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary">
+        <a class="btn btn-outline-secondary" href="{{ route('sale-returns.index') }}">
             <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
         </a>
     </div>
 
     {{-- Alerts --}}
     @if (session('error'))
-        <div class="alert alert-danger d-flex align-items-center gap-2 mb-4 py-2 px-3">
+        <div class="alert alert-danger d-flex align-items-center mb-4 gap-2 px-3 py-2">
             <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
             <span>{{ session('error') }}</span>
         </div>
     @endif
     @if ($errors->any())
-        <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3">
-            <i class="bx bx-error-circle fs-5 flex-shrink-0 mt-1"></i>
-            <ul class="mb-0 ps-2">
-                @foreach ($errors->all() as $e)
-                    <li>{{ $e }}</li>
-                @endforeach
-            </ul>
+        <div class="alert alert-danger d-flex align-items-center mb-4 gap-2 px-3 py-2">
+            <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+            <span>{{ $errors->first() }}</span>
         </div>
     @endif
 
-    <form method="POST" action="{{ route('sale-returns.store') }}" id="returnForm" novalidate>
+    <form action="{{ route('sale-returns.store') }}" id="returnForm" method="POST" novalidate>
         @csrf
 
         <div class="row g-4">
@@ -47,22 +43,22 @@
             <div class="col-lg-3">
 
                 {{-- Return Details --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-info-circle me-2 text-primary"></i>Return Details
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-info-circle text-primary me-2"></i>Return Details
                         </h6>
                     </div>
                     <div class="card-body p-4">
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Sales Invoice <span class="text-danger">*</span></label>
-                            <select name="sale_id" id="sale_id" class="form-select @error('sale_id') is-invalid @enderror"
+                            <select class="form-select @error('sale_id') is-invalid @enderror" id="sale_id" name="sale_id"
                                 required>
                                 <option value="">Select Invoice</option>
                                 @foreach ($sales as $s)
-                                    <option value="{{ $s->id }}"
-                                        {{ old('sale_id', request('sale_id')) == $s->id ? 'selected' : '' }}>
+                                    <option {{ old('sale_id', request('sale_id')) == $s->id ? 'selected' : '' }}
+                                        value="{{ $s->id }}">
                                         {{ $s->invoice_no }} — {{ $s->customer->name }}
                                     </option>
                                 @endforeach
@@ -72,16 +68,15 @@
                             @enderror
                         </div>
 
-                        <div id="customerInfoBox" class="alert alert-light border py-2 px-3 mb-3 d-none">
+                        <div class="alert alert-light d-none mb-3 border px-3 py-2" id="customerInfoBox">
                             <div class="small fw-semibold text-muted">Customer</div>
                             <div class="fw-bold" id="customerInfoName">—</div>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
-                            <input type="date" name="return_date"
-                                class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
-                                value="{{ old('return_date', date('Y-m-d')) }}" required>
+                            <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
+                                name="return_date" required type="date" value="{{ old('return_date', date('Y-m-d')) }}">
                             @error('return_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -89,16 +84,16 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Reference No</label>
-                            <input type="text" name="reference_no" class="form-control"
-                                value="{{ old('reference_no') }}" placeholder="Optional reference...">
+                            <input class="form-control" name="reference_no" placeholder="Optional reference..."
+                                type="text" value="{{ old('reference_no') }}">
                         </div>
 
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
-                            <select name="status" class="form-select" required>
-                                <option value="Completed"
-                                    {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Pending" {{ old('status') === 'Pending' ? 'selected' : '' }}>Pending
+                            <select class="form-select" name="status" required>
+                                <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
+                                    value="Completed">Completed</option>
+                                <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">Pending
                                 </option>
                             </select>
                         </div>
@@ -107,17 +102,17 @@
 
                 {{-- Refund Details --}}
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-money me-2 text-success"></i>Refund Details
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-money text-success me-2"></i>Refund Details
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" min="0" name="refunded_amount" id="refunded_amount"
-                                class="form-control @error('refunded_amount') is-invalid @enderror"
-                                value="{{ old('refunded_amount', '0.00') }}" required>
+                            <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
+                                min="0" name="refunded_amount" required step="0.01" type="number"
+                                value="{{ old('refunded_amount', '0.00') }}">
                             <div class="form-text">Total amount paid back to the customer.</div>
                             @error('refunded_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -132,45 +127,48 @@
             <div class="col-lg-9">
 
                 {{-- Invoice Return Items --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-list-ul me-2 text-info"></i>Invoice Return Items
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom d-flex align-items-center justify-content-between bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-list-ul text-info me-2"></i>Invoice Return Items
                         </h6>
                         <span class="badge bg-label-secondary" id="itemCountBadge">No invoice selected</span>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" id="itemsTableWrapper" style="display:none;">
-                            <table class="table table-hover align-middle mb-0" id="returnItemsTable">
-                                 <thead class="table-light">
-                                     <tr>
-                                         <th style="width:60px;">Image</th>
-                                         <th>Product</th>
-                                         <th class="text-center" style="width:130px;">Quantity</th>
-                                         <th class="text-center" style="width:180px;">Pricing</th>
-                                         <th class="text-end" style="width:120px;">Sub Total</th>
-                                     </tr>
-                                 </thead>
+                            <table class="table-hover mb-0 table align-middle" id="returnItemsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width:60px;">Image</th>
+                                        <th>Product</th>
+                                        <th class="text-center" style="width:130px;">Quantity</th>
+                                        <th class="text-center" style="width:180px;">Pricing</th>
+                                        <th class="text-end" style="width:120px;">Sub Total</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="returnItemsContainer"></tbody>
                             </table>
                         </div>
 
                         {{-- States --}}
-                        <div id="noInvoiceMsg" class="text-center py-5 text-muted d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                            id="noInvoiceMsg">
                             <i class="bx bx-file-blank mb-2" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="mb-0 small">Select a sales invoice to load line items.</p>
+                            <p class="small mb-0">Select a sales invoice to load line items.</p>
                         </div>
-                        <div id="loadingMsg" class="text-center py-5 text-muted d-none d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-muted d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                            id="loadingMsg">
                             <i class="bx bx-loader-alt bx-spin mb-2" style="font-size:2.5rem;opacity:.5;"></i>
-                            <p class="mb-0 small">Loading invoice items...</p>
+                            <p class="small mb-0">Loading invoice items...</p>
                         </div>
-                        <div id="emptyReturnMsg" class="text-center py-5 text-success d-none d-flex flex-column align-items-center justify-content-center">
+                        <div class="text-success d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                            id="emptyReturnMsg">
                             <i class="bx bx-check-circle mb-2" style="font-size:2.5rem;"></i>
-                            <p class="mb-0 small">All items from this invoice have already been returned.</p>
+                            <p class="small mb-0">All items from this invoice have already been returned.</p>
                         </div>
-                        <div id="errorMsg" class="text-center py-4 text-danger d-none">
+                        <div class="text-danger d-none py-4 text-center" id="errorMsg">
                             <i class="bx bx-error-circle d-block mb-2" style="font-size:2rem;"></i>
-                            <p class="mb-0 small">Failed to load invoice items. Please try again.</p>
+                            <p class="small mb-0">Failed to load invoice items. Please try again.</p>
                         </div>
                     </div>
                 </div>
@@ -178,33 +176,33 @@
                 {{-- Notes + Summary --}}
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white py-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold">
-                                    <i class="bx bx-note me-2 text-warning"></i>Return Notes
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header border-bottom bg-white py-3">
+                                <h6 class="fw-semibold mb-0">
+                                    <i class="bx bx-note text-warning me-2"></i>Return Notes
                                 </h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea name="notes" rows="5" class="form-control" placeholder="Return reasons, item conditions..."
+                                <textarea class="form-control" name="notes" placeholder="Return reasons, item conditions..." rows="5"
                                     style="resize:vertical;">{{ old('notes') }}</textarea>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white py-3 border-bottom">
-                                <h6 class="mb-0 fw-semibold">
-                                    <i class="bx bx-receipt me-2 text-info"></i>Refund Summary
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header border-bottom bg-white py-3">
+                                <h6 class="fw-semibold mb-0">
+                                    <i class="bx bx-receipt text-info me-2"></i>Refund Summary
                                 </h6>
                             </div>
                             <div class="card-body p-4">
                                 <ul class="list-unstyled mb-0">
-                                    <li class="d-flex justify-content-between py-2 border-bottom">
+                                    <li class="d-flex justify-content-between border-bottom py-2">
                                         <span class="text-muted small fw-semibold">Refund Subtotal</span>
                                         <span class="fw-bold" id="sum_subtotal">{{ format_currency(0) }}</span>
                                     </li>
                                     <li
-                                        class="d-flex justify-content-between py-2 border-bottom bg-label-primary rounded px-2">
+                                        class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
                                         <span class="fw-bold small">Grand Total Refund</span>
                                         <span class="fw-bold text-primary"
                                             id="sum_grandtotal">{{ format_currency(0) }}</span>
@@ -221,11 +219,11 @@
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary">
+                <div class="d-flex justify-content-end mt-4 gap-2">
+                    <a class="btn btn-outline-secondary" href="{{ route('sale-returns.index') }}">
                         <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
-                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                    <button class="btn btn-primary" disabled id="submitBtn" type="submit">
                         <i class="bx bx-save me-1"></i> Process Return
                     </button>
                 </div>
@@ -304,9 +302,10 @@
 
                             returnableCount++;
                             const max = parseInt(item.available_quantity);
-                            const imgHtml = `<img src="${item.image_url}" class="tbl-img rounded" onerror="imgError(this)">`;
+                            const imgHtml =
+                                `<img src="${item.image_url}" class="tbl-img rounded" onerror="imgError(this)">`;
 
-                             itemsContainer.append(`
+                            itemsContainer.append(`
                              <tr class="item-row" data-product-id="${item.product_id}">
                                  <td>${imgHtml}</td>
                                  <td>
@@ -380,7 +379,8 @@
                 const maxRefund = parseFloat($('#sum_grandtotal').text().replace(/[^\d.]/g, '')) || 0;
                 if (val > maxRefund) {
                     $(this).val(maxRefund.toFixed(2));
-                    showAdminToast(`Refund amount cannot exceed Grand Total Refund (${fmt(maxRefund)}).`, 'error');
+                    showAdminToast(`Refund amount cannot exceed Grand Total Refund (${fmt(maxRefund)}).`,
+                        'error');
                     val = maxRefund;
                 }
                 if (val < 0) $(this).val(0);
