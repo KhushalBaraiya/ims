@@ -274,6 +274,7 @@
                     search: "_INPUT_",
                     searchPlaceholder: "Search products...",
                     lengthMenu: "Show _MENU_ entries",
+                    emptyTable: '<div class="text-center py-5 text-muted"><i class="bx bx-inbox" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:8px;"></i>{{ __('messages.no_records') }}</div>',
                     paginate: {
                         previous: '<i class="bx bx-chevron-left"></i>',
                         next: '<i class="bx bx-chevron-right"></i>'
