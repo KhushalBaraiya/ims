@@ -165,95 +165,98 @@
             <span class="badge bg-label-primary">{{ $adjustmentsGrouped->count() }} vouchers</span>
         </div>
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" id="historyTable" style="width: 100%;">
-                    <thead class="table-light">
-                        <tr>
-                            <th style="width:50px;">#</th>
-                            <th>{{ __('messages.th_date') }}</th>
-                            <th>Voucher No</th>
-                            <th>Adjusted Products</th>
-                            <th>{{ __('messages.th_created_by') }}</th>
-                            <th>{{ __('messages.notes') }}</th>
-                            <th class="text-center no-sort" style="width:90px;">{{ __('messages.th_actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($adjustmentsGrouped as $voucherNo => $group)
-                            @php
-                                $firstAdj = $group->first();
-                                $date = $firstAdj->transaction_date
-                                    ? \Carbon\Carbon::parse($firstAdj->transaction_date)
-                                    : $firstAdj->created_at;
-                                $user = $firstAdj->user->name ?? 'System';
-                                $notes = $firstAdj->notes;
-                                $slug = \Str::slug($voucherNo);
-                            @endphp
+
+            @if ($adjustmentsGrouped->isEmpty())
+                {{-- Empty state — no DataTable, no column-count warning --}}
+                <div class="text-center py-5 text-muted">
+                    <i class="bx bx-slider" style="font-size:2.5rem;opacity:.3;"></i>
+                    <p class="mt-2 mb-0">{{ __('messages.no_records') }}</p>
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="historyTable" style="width: 100%;">
+                        <thead class="table-light">
                             <tr>
-                                <td class="text-muted fw-semibold">{{ $loop->iteration }}</td>
-                                <td class="text-muted small">{{ $date->format('d M Y') }}</td>
-                                <td>
-                                    <code class="fw-bold text-primary">{{ $voucherNo ?: '—' }}</code>
-                                </td>
-                                <td>
-                                    <ul class="list-unstyled mb-0" style="padding-left:0;">
-                                        @foreach ($group as $adj)
-                                            @php
-                                                $isPositive = $adj->quantity_change >= 0;
-                                                $qtySign = $isPositive ? '+' : '';
-                                                $colorClass = $isPositive ? 'text-success' : 'text-danger';
-                                            @endphp
-                                            <li class="mb-1" style="font-size:0.85rem;">
-                                                <i class="bx bx-subdirectory-right text-muted me-1"></i>
-                                                <strong>{{ $adj->product->name ?? 'Deleted Product' }}</strong>
-                                                (<code class="small text-muted">{{ $adj->product->code ?? '-' }}</code>)
-                                                &rarr;
-                                                <span class="fw-bold {{ $colorClass }}">
-                                                    {{ $qtySign }}{{ number_format($adj->quantity_change, 2) }}
-                                                </span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </td>
-                                <td class="fw-semibold small">{{ $user }}</td>
-                                <td class="text-muted small" title="{{ $notes }}">
-                                    {{ $notes ? \Str::limit($notes, 40) : '—' }}
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('stocks.create')
-                                            <a href="{{ route('stocks.edit_adjustment', $voucherNo) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="Edit Voucher" style="width:30px;height:30px;padding:0;">
-                                                <i class="bx bx-edit" style="font-size:1rem;"></i>
-                                            </a>
-                                            <form id="delete-form-{{ $slug }}"
-                                                action="{{ route('stocks.destroy_adjustment', $voucherNo) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $slug }}" data-no="{{ $voucherNo }}"
-                                                    title="Delete Voucher" style="width:30px;height:30px;padding:0;">
-                                                    <i class="bx bx-trash" style="font-size:1rem;"></i>
-                                                </button>
-                                            </form>
-                                        @endcan
-                                    </div>
-                                </td>
+                                <th style="width:50px;">#</th>
+                                <th>{{ __('messages.th_date') }}</th>
+                                <th>Voucher No</th>
+                                <th>Adjusted Products</th>
+                                <th>{{ __('messages.th_created_by') }}</th>
+                                <th>{{ __('messages.notes') }}</th>
+                                <th class="text-center no-sort" style="width:90px;">{{ __('messages.th_actions') }}</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-5">
-                                    <i class="bx bx-slider" style="font-size:2.5rem;opacity:.3;"></i>
-                                    <p class="mt-2 mb-0">No adjustments found. <a
-                                            href="{{ route('stocks.adjust') }}">Create one now.</a></p>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($adjustmentsGrouped as $voucherNo => $group)
+                                @php
+                                    $firstAdj = $group->first();
+                                    $date = $firstAdj->transaction_date
+                                        ? \Carbon\Carbon::parse($firstAdj->transaction_date)
+                                        : $firstAdj->created_at;
+                                    $user = $firstAdj->user->name ?? 'System';
+                                    $notes = $firstAdj->notes;
+                                    $slug = \Str::slug($voucherNo);
+                                @endphp
+                                <tr>
+                                    <td class="text-muted fw-semibold">{{ $loop->iteration }}</td>
+                                    <td class="text-muted small">{{ $date->format('d M Y') }}</td>
+                                    <td>
+                                        <code class="fw-bold text-primary">{{ $voucherNo ?: '—' }}</code>
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled mb-0" style="padding-left:0;">
+                                            @foreach ($group as $adj)
+                                                @php
+                                                    $isPositive = $adj->quantity_change >= 0;
+                                                    $qtySign = $isPositive ? '+' : '';
+                                                    $colorClass = $isPositive ? 'text-success' : 'text-danger';
+                                                @endphp
+                                                <li class="mb-1" style="font-size:0.85rem;">
+                                                    <i class="bx bx-subdirectory-right text-muted me-1"></i>
+                                                    <strong>{{ $adj->product->name ?? 'Deleted Product' }}</strong>
+                                                    (<code
+                                                        class="small text-muted">{{ $adj->product->code ?? '-' }}</code>)
+                                                    &rarr;
+                                                    <span class="fw-bold {{ $colorClass }}">
+                                                        {{ $qtySign }}{{ number_format($adj->quantity_change, 2) }}
+                                                    </span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td class="fw-semibold small">{{ $user }}</td>
+                                    <td class="text-muted small" title="{{ $notes }}">
+                                        {{ $notes ? \Str::limit($notes, 40) : '—' }}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center gap-1">
+                                            @can('stocks.create')
+                                                <a href="{{ route('stocks.edit_adjustment', $voucherNo) }}"
+                                                    class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                                    title="Edit Voucher" style="width:30px;height:30px;padding:0;">
+                                                    <i class="bx bx-edit" style="font-size:1rem;"></i>
+                                                </a>
+                                                <form id="delete-form-{{ $slug }}"
+                                                    action="{{ route('stocks.destroy_adjustment', $voucherNo) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf @method('DELETE')
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                        data-id="{{ $slug }}" data-no="{{ $voucherNo }}"
+                                                        title="Delete Voucher" style="width:30px;height:30px;padding:0;">
+                                                        <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
         </div>
     </div>
 
@@ -262,31 +265,34 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#historyTable').DataTable({
-                responsive: true,
-                autoWidth: false,
-                pageLength: 25,
-                order: [
-                    [0, 'asc']
-                ],
-                columnDefs: [{
-                    targets: 'no-sort',
-                    orderable: false
-                }],
-                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "{{ __('messages.search') }}...",
-                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
-                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
-                    infoEmpty: "{{ __('messages.no_entries') }}",
-                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
-                    paginate: {
-                        previous: '<i class="bx bx-chevron-left"></i>',
-                        next: '<i class="bx bx-chevron-right"></i>'
+            // Only init DataTable when records exist
+            if ($('#historyTable').length) {
+                $('#historyTable').DataTable({
+                    responsive: true,
+                    autoWidth: false,
+                    pageLength: 25,
+                    order: [
+                        [0, 'asc']
+                    ],
+                    columnDefs: [{
+                        targets: 'no-sort',
+                        orderable: false
+                    }],
+                    dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "{{ __('messages.search') }}...",
+                        lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                        info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                        infoEmpty: "{{ __('messages.no_entries') }}",
+                        infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
+                        paginate: {
+                            previous: '<i class="bx bx-chevron-left"></i>',
+                            next: '<i class="bx bx-chevron-right"></i>'
+                        }
                     }
-                }
-            });
+                });
+            }
 
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
