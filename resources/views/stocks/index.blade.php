@@ -232,9 +232,14 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="11" class="text-center text-muted py-5">
-                                    <i class="bx bx-package" style="font-size:2.5rem;opacity:.3;"></i>
-                                    <p class="mt-2 mb-0">{{ __('messages.no_records') }}</p>
+                                <td colspan="11" style="padding:0;">
+                                    <div style="width:100%;text-align:center;padding:2.5rem 0;">
+                                        <div class="text-muted"
+                                            style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
+                                            <i class="bx bx-cube" style="font-size:3rem;opacity:.3;line-height:1;"></i>
+                                            {{ __('messages.no_records') }}
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
@@ -286,6 +291,3 @@
         });
     </script>
 @endpush
-
-
-

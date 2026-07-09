@@ -15,12 +15,8 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bx bx-check-circle me-1"></i> {{ session('success') }}
-            <button class="btn-close" data-bs-dismiss="alert" type="button"></button>
-        </div>
-    @endif
+
+
 
     <form action="{{ route('settings.update') }}" method="POST">
         @csrf

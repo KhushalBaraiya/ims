@@ -21,15 +21,6 @@
         @endcan
     </div>
 
-    {{-- Alert Messages --}}
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2 mb-4 shadow-sm border-0"
-            role="alert">
-            <i class="bx bx-check-circle fs-4 text-success"></i>
-            <div>{{ session('success') }}</div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     @if ($errors->has('error'))
         <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2 mb-4 shadow-sm border-0"
             role="alert">
@@ -38,8 +29,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
-    {{-- Summary Cards --}}
     <div class="row g-4 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="card shadow-sm border-0 h-100">
@@ -167,10 +156,12 @@
         <div class="card-body p-0">
 
             @if ($adjustmentsGrouped->isEmpty())
-                {{-- Empty state — no DataTable, no column-count warning --}}
-                <div class="text-center py-5 text-muted">
-                    <i class="bx bx-slider" style="font-size:2.5rem;opacity:.3;"></i>
-                    <p class="mt-2 mb-0">{{ __('messages.no_records') }}</p>
+                {{-- Empty state —  no DataTable, no column-count warning --}}
+                <div style="width:100%;text-align:center;padding:2.5rem 0;">
+                    <div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
+                        <i class="bx bx-slider" style="font-size:3rem;opacity:.3;line-height:1;"></i>
+                        {{ __('messages.no_records') }}
+                    </div>
                 </div>
             @else
                 <div class="table-responsive">
