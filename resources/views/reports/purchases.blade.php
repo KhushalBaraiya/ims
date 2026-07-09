@@ -226,7 +226,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($purchases as $i => $p)
+                        @foreach ($purchases as $i => $p)
                             <tr>
                                 <td class="text-muted small ps-3">{{ $i + 1 }}</td>
                                 <td>
@@ -263,14 +263,7 @@
                                     @endif
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="12" class="text-center py-5 text-muted">
-                                    <i class="bx bx-cart-download d-block mb-2" style="font-size:2.5rem;opacity:.2;"></i>
-                                    No purchases found for the selected filters.
-                                </td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                     @if ($purchases->count())
                         <tfoot class="table-light fw-bold">
@@ -297,29 +290,31 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#purReportTable').DataTable({
-                responsive: true,
-                pageLength: 25,
-                order: [
-                    [2, 'desc']
-                ],
-                columnDefs: [{
-                    targets: [11],
-                    orderable: false
-                }],
-                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search purchases...",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    emptyTable: '<div class="text-center py-5 text-muted"><i class="bx bx-inbox" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:8px;"></i>{{ __('messages.no_records') }}</div>',
-                    paginate: {
-                        previous: '<i class="bx bx-chevron-left"></i>',
-                        next: '<i class="bx bx-chevron-right"></i>'
+            if ($('#purReportTable tbody tr').length) {
+                $('#purReportTable').DataTable({
+                    responsive: true,
+                    pageLength: 25,
+                    order: [
+                        [2, 'desc']
+                    ],
+                    columnDefs: [{
+                        targets: [11],
+                        orderable: false
+                    }],
+                    dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search purchases...",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        emptyTable: '<div class="text-center py-5 text-muted"><i class="bx bx-inbox" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:8px;"></i>{{ __('messages.no_records') }}</div>',
+                        paginate: {
+                            previous: '<i class="bx bx-chevron-left"></i>',
+                            next: '<i class="bx bx-chevron-right"></i>'
+                        }
                     }
-                }
-            });
+                });
+            } // end if rows exist
         });
     </script>
 @endpush
