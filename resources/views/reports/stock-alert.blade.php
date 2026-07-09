@@ -259,28 +259,32 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#stockAlertTable').DataTable({
-                responsive: true,
-                pageLength: 25,
-                order: [
-                    [5, 'asc']
-                ],
-                columnDefs: [{
-                    targets: 'no-sort',
-                    orderable: false
-                }],
-                dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search products...",
-                    lengthMenu: "Show _MENU_ entries",
-                    emptyTable: '<div class="text-center py-5 text-muted"><i class="bx bx-inbox" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:8px;"></i>{{ __('messages.no_records') }}</div>',
-                    paginate: {
-                        previous: '<i class="bx bx-chevron-left"></i>',
-                        next: '<i class="bx bx-chevron-right"></i>'
+            if ($('#stockAlertTable').length) {
+                $('#stockAlertTable').DataTable({
+                    responsive: true,
+                    pageLength: 25,
+                    order: [
+                        [5, 'asc']
+                    ],
+                    columnDefs: [{
+                        targets: 'no-sort',
+                        orderable: false
+                    }],
+                    dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search products...",
+                        lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                        info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                        infoEmpty: "{{ __('messages.no_entries') }}",
+                        infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
+                        paginate: {
+                            previous: '<i class="bx bx-chevron-left"></i>',
+                            next: '<i class="bx bx-chevron-right"></i>'
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     </script>
 @endpush

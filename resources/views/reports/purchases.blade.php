@@ -207,81 +207,96 @@
             @endif
         </div>
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" id="purReportTable">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-3">#</th>
-                            <th>Purchase No</th>
-                            <th>Date</th>
-                            <th>Supplier</th>
-                            <th>Payment</th>
-                            <th class="text-end">Sub Total</th>
-                            <th class="text-end">Tax</th>
-                            <th class="text-end">Discount</th>
-                            <th class="text-end">Grand Total</th>
-                            <th class="text-end">Paid</th>
-                            <th class="text-end">Due</th>
-                            <th class="text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($purchases as $i => $p)
+
+            @if ($purchases->isEmpty())
+                <div class="text-center py-5 text-muted">
+                    <i class="bx bx-cart-download" style="font-size:2.5rem;opacity:.3;"></i>
+                    <p class="mt-2 mb-0">{{ __('messages.no_records') }}</p>
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="purReportTable">
+                        <thead class="table-light">
                             <tr>
-                                <td class="text-muted small ps-3">{{ $i + 1 }}</td>
-                                <td>
-                                    <a href="{{ route('purchases.show', $p->id) }}" class="fw-semibold text-info">
-                                        <code>{{ $p->purchase_no }}</code>
-                                    </a>
-                                </td>
-                                <td class="text-muted small">{{ $p->purchase_date }}</td>
-                                <td class="fw-semibold small">{{ $p->supplier->name ?? '—' }}</td>
-                                <td>
-                                    @if ($p->payment_method)
-                                        <span class="badge bg-label-secondary">{{ $p->payment_method }}</span>
-                                    @else
-                                        <span class="text-muted small">—</span>
-                                    @endif
-                                </td>
-                                <td class="text-end small">{{ format_currency($p->sub_total) }}</td>
-                                <td class="text-end small text-warning">{{ format_currency($p->tax_amount) }}</td>
-                                <td class="text-end small text-danger">{{ format_currency($p->discount_amount) }}</td>
-                                <td class="text-end fw-bold">{{ format_currency($p->grand_total) }}</td>
-                                <td class="text-end small text-success fw-semibold">{{ format_currency($p->paid_amount) }}
-                                </td>
-                                <td
-                                    class="text-end small {{ $p->due_amount > 0 ? 'text-danger fw-bold' : 'text-muted' }}">
-                                    {{ format_currency($p->due_amount) }}
-                                </td>
-                                <td class="text-center">
-                                    @if ($p->status === 'Completed')
-                                        <span class="badge bg-success rounded-pill">Completed</span>
-                                    @elseif($p->status === 'Pending')
-                                        <span class="badge bg-warning text-dark rounded-pill">Pending</span>
-                                    @else
-                                        <span class="badge bg-danger rounded-pill">{{ $p->status }}</span>
-                                    @endif
-                                </td>
+                                <th class="ps-3">#</th>
+                                <th>Purchase No</th>
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Payment</th>
+                                <th class="text-end">Sub Total</th>
+                                <th class="text-end">Tax</th>
+                                <th class="text-end">Discount</th>
+                                <th class="text-end">Grand Total</th>
+                                <th class="text-end">Paid</th>
+                                <th class="text-end">Due</th>
+                                <th class="text-center no-sort">Status</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                    @if ($purchases->count())
+                        </thead>
+                        <tbody>
+                            @foreach ($purchases as $i => $p)
+                                <tr>
+                                    <td class="text-muted small ps-3">{{ $i + 1 }}</td>
+                                    <td>
+                                        <a href="{{ route('purchases.show', $p->id) }}" class="fw-semibold text-info">
+                                            <code>{{ $p->purchase_no }}</code>
+                                        </a>
+                                    </td>
+                                    <td class="text-muted small">
+                                        {{ \Carbon\Carbon::parse($p->purchase_date)->format('d M Y') }}
+                                    </td>
+                                    <td class="fw-semibold small">{{ $p->supplier->name ?? '—' }}</td>
+                                    <td>
+                                        @if ($p->payment_method)
+                                            <span class="badge bg-label-secondary">{{ $p->payment_method }}</span>
+                                        @else
+                                            <span class="text-muted small">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end small">{{ format_currency($p->sub_total) }}</td>
+                                    <td class="text-end small text-warning">{{ format_currency($p->tax_amount) }}</td>
+                                    <td class="text-end small text-danger">-{{ format_currency($p->discount_amount) }}
+                                    </td>
+                                    <td class="text-end fw-bold">{{ format_currency($p->grand_total) }}</td>
+                                    <td class="text-end small text-success fw-semibold">
+                                        {{ format_currency($p->paid_amount) }}</td>
+                                    <td
+                                        class="text-end small {{ $p->due_amount > 0 ? 'text-danger fw-bold' : 'text-muted' }}">
+                                        {{ format_currency($p->due_amount) }}
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($p->status === 'received' || $p->status === 'Completed')
+                                            <span class="badge bg-success rounded-pill">Received</span>
+                                        @elseif ($p->status === 'pending' || $p->status === 'Pending')
+                                            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                        @elseif ($p->status === 'ordered')
+                                            <span class="badge bg-primary rounded-pill">Ordered</span>
+                                        @elseif ($p->status === 'draft')
+                                            <span class="badge bg-secondary rounded-pill">Draft</span>
+                                        @else
+                                            <span class="badge bg-danger rounded-pill">{{ $p->status }}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                         <tfoot class="table-light fw-bold">
                             <tr>
-                                <td colspan="5" class="text-end ps-3 fw-bold">Totals ({{ $totals['count'] }} orders)
+                                <td colspan="5" class="text-end ps-3">
+                                    Totals <span class="text-muted fw-normal">({{ $totals['count'] }} orders)</span>
                                 </td>
                                 <td class="text-end">{{ format_currency($totals['sub_total']) }}</td>
                                 <td class="text-end text-warning">{{ format_currency($totals['tax_amount']) }}</td>
-                                <td class="text-end text-danger">{{ format_currency($totals['discount_amount']) }}</td>
-                                <td class="text-end text-info">{{ format_currency($totals['grand_total']) }}</td>
+                                <td class="text-end text-danger">-{{ format_currency($totals['discount_amount']) }}</td>
+                                <td class="text-end text-primary">{{ format_currency($totals['grand_total']) }}</td>
                                 <td class="text-end text-success">{{ format_currency($totals['paid_amount']) }}</td>
                                 <td class="text-end text-danger">{{ format_currency($totals['due_amount']) }}</td>
                                 <td></td>
                             </tr>
                         </tfoot>
-                    @endif
-                </table>
-            </div>
+                    </table>
+                </div>
+            @endif
+
         </div>
     </div>
 
@@ -290,7 +305,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            if ($('#purReportTable tbody tr').length) {
+            if ($('#purReportTable').length) {
                 $('#purReportTable').DataTable({
                     responsive: true,
                     pageLength: 25,
@@ -298,23 +313,24 @@
                         [2, 'desc']
                     ],
                     columnDefs: [{
-                        targets: [11],
+                        targets: 'no-sort',
                         orderable: false
                     }],
                     dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                     language: {
                         search: "_INPUT_",
                         searchPlaceholder: "Search purchases...",
-                        lengthMenu: "Show _MENU_ entries",
-                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                        emptyTable: '<div class="text-center py-5 text-muted"><i class="bx bx-inbox" style="font-size:2.5rem;opacity:.3;display:block;margin-bottom:8px;"></i>{{ __('messages.no_records') }}</div>',
+                        lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
+                        info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
+                        infoEmpty: "{{ __('messages.no_entries') }}",
+                        infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
                         paginate: {
                             previous: '<i class="bx bx-chevron-left"></i>',
                             next: '<i class="bx bx-chevron-right"></i>'
                         }
                     }
                 });
-            } // end if rows exist
+            }
         });
     </script>
 @endpush
