@@ -124,9 +124,14 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-5">
-                                    <i class="bx bx-history" style="font-size:2.5rem;opacity:.2;"></i>
-                                    <p class="mt-2 mb-0">{{ __('messages.no_records') }}</p>
+                                <td colspan="6" style="padding:0;">
+                                    <div style="width:100%;text-align:center;padding:2.5rem 0;">
+                                        <div class="text-muted"
+                                            style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
+                                            <i class="bx bx-history" style="font-size:3rem;opacity:.3;line-height:1;"></i>
+                                            <span>{{ __('messages.no_records') }}</span>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
