@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.edit_product') . ' — ' . $product->name)
 
 @section('content')
@@ -73,7 +73,7 @@
 
                 {{-- ── Card 1: Basic Info ──────────────────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-info-circle me-2 text-primary"></i>Basic Information
                         </h6>
@@ -193,7 +193,7 @@
 
                 {{-- ── Card 2: Pricing & Stock Alert ──────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
@@ -263,7 +263,7 @@
 
                 {{-- ── Card 3: Technical Specifications ───────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-chip me-2 text-info"></i>Technical Specifications
                             <span class="ms-2 badge bg-label-secondary small fw-normal">Optional</span>
@@ -315,7 +315,7 @@
 
                 {{-- ── Card 4: Media & Description ─────────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-image me-2 text-warning"></i>Media & Description
                         </h6>
@@ -436,7 +436,7 @@
 
                 {{-- ── Card: Publish ──────────────────────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-send me-2 text-primary"></i>Publish
                         </h6>
@@ -701,3 +701,4 @@
         });
     </script>
 @endpush
+

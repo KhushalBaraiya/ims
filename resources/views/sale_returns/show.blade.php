@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Sales Return — ' . $saleReturn->return_no)
 
 @section('content')
@@ -32,6 +32,33 @@
         </div>
     </div>
 
+    {{-- ── Hero Banner ── --}}
+    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+                style="width:54px;height:54px;background:rgba(255,255,255,.2)">
+                <i class="bx bx-undo text-white fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="text-white fw-bold fs-6 lh-sm">Sale Return</div>
+                <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
+                    <span><i class="bx bx-hash me-1"></i>{{ $saleReturn->return_no }}</span>
+                    <span>· {{ $saleReturn->customer->name ?? '—' }}</span>
+                    <span>· {{ $saleReturn->return_date }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <span
+                    class="badge bg-white fw-semibold {{ $saleReturn->status === 'Completed' ? 'text-success' : 'text-warning' }}">
+                    <i
+                        class="bx {{ $saleReturn->status === 'Completed' ? 'bx-check' : 'bx-time' }} me-1"></i>{{ $saleReturn->status }}
+                </span>
+                <span
+                    class="badge bg-white text-primary fw-semibold">{{ format_currency($saleReturn->grand_total) }}</span>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
 
         {{-- ── Left Column ─────────────────────────────────────── --}}
@@ -39,7 +66,7 @@
 
             {{-- Return Summary --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-info-circle me-2 text-primary"></i>Return Summary
                     </h6>
@@ -95,7 +122,7 @@
 
             {{-- Refund Summary --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-credit-card me-2 text-success"></i>Refund Summary
                     </h6>
@@ -125,7 +152,7 @@
             @if ($saleReturn->notes)
                 {{-- Notes --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-note me-2 text-warning"></i>Notes
                         </h6>
@@ -138,7 +165,7 @@
 
             {{-- Quick Actions --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-bolt-circle me-2 text-warning"></i>Quick Actions
                     </h6>
@@ -179,7 +206,7 @@
 
             {{-- Returned Items --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-undo me-2 text-primary"></i>Returned Items
                     </h6>
@@ -249,7 +276,7 @@
 
             {{-- Meta --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-user me-2 text-secondary"></i>Return Meta
                     </h6>

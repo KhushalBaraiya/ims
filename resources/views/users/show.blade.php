@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.user_details') . ' — ' . $user->name)
 
 @section('content')
@@ -26,12 +26,46 @@
         </div>
     </div>
 
+    {{-- ── Hero Banner ── --}}
+    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+            @if ($user->profile_photo)
+                <img src="{{ asset('uploads/profiles/' . $user->profile_photo) }}"
+                    class="rounded-circle border border-2 border-white flex-shrink-0"
+                    style="width:54px;height:54px;object-fit:cover;"
+                    onerror="this.outerHTML='<div class=\'rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center\' style=\'width:54px;height:54px;background:rgba(255,255,255,.2)\'><span class=\'text-white fw-bold fs-5\'>{{ strtoupper(substr($user->name, 0, 1)) }}</span></div>'">
+            @else
+                <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+                    style="width:54px;height:54px;background:rgba(255,255,255,.2)">
+                    <span class="text-white fw-bold fs-5">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                </div>
+            @endif
+            <div class="flex-grow-1">
+                <div class="text-white fw-bold fs-6 lh-sm">{{ $user->name }}</div>
+                <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
+                    <span><i class="bx bx-envelope me-1"></i>{{ $user->email }}</span>
+                    @if ($user->phone)
+                        <span>· {{ $user->phone }}</span>
+                    @endif
+                    <span>· {{ $user->roles->pluck('name')->implode(', ') ?: 'No Role' }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <span
+                    class="badge bg-white fw-semibold {{ $user->status === 'active' ? 'text-success' : 'text-secondary' }}">
+                    <i
+                        class="bx {{ $user->status === 'active' ? 'bx-check' : 'bx-x' }} me-1"></i>{{ ucfirst($user->status) }}
+                </span>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
 
         {{-- Left --}}
         <div class="col-lg-8">
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <div class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-user me-2 text-primary"></i>{{ __('messages.user_details') }}
                     </h6>
@@ -101,7 +135,7 @@
             {{-- Permissions / Role Details --}}
             @if ($user->roles->isNotEmpty())
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-shield me-2 text-warning"></i>{{ __('messages.role') }} &amp;
                             {{ __('messages.th_permissions') }}
@@ -133,7 +167,7 @@
         <div class="col-lg-4">
 
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.information') }}
                     </h6>
@@ -173,7 +207,7 @@
             </div>
 
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}
                     </h6>
@@ -222,3 +256,4 @@
         });
     </script>
 @endpush
+

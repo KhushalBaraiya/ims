@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Purchase Order — ' . $purchase->purchase_no)
 
 @section('content')
@@ -33,6 +33,42 @@
         </div>
     </div>
 
+    {{-- ── Hero Banner ── --}}
+    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+                style="width:54px;height:54px;background:rgba(255,255,255,.2)">
+                <i class="bx bx-cart text-white fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="text-white fw-bold fs-6 lh-sm">Purchase Order</div>
+                <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
+                    <span><i class="bx bx-hash me-1"></i>{{ $purchase->purchase_no }}</span>
+                    <span>· {{ $purchase->supplier->name ?? '—' }}</span>
+                    <span>· {{ $purchase->purchase_date }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                @if ($purchase->status === 'received')
+                    <span class="badge bg-success fw-semibold">Received</span>
+                @elseif($purchase->status === 'pending')
+                    <span class="badge bg-warning text-dark fw-semibold">Pending</span>
+                @elseif($purchase->status === 'ordered')
+                    <span class="badge bg-white text-primary fw-semibold">Ordered</span>
+                @else
+                    <span class="badge bg-white text-secondary fw-semibold">{{ ucfirst($purchase->status) }}</span>
+                @endif
+                @if ($purchase->payment_status === 'Paid')
+                    <span class="badge bg-success fw-semibold">Paid</span>
+                @elseif($purchase->payment_status === 'Partial')
+                    <span class="badge bg-warning text-dark fw-semibold">Partial</span>
+                @else
+                    <span class="badge bg-danger fw-semibold">Unpaid</span>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
 
         {{-- ── Left Column ─────────────────────────────────────── --}}
@@ -40,7 +76,7 @@
 
             {{-- Order Summary --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-info-circle text-primary me-2"></i>Order Summary
                     </h6>
@@ -97,7 +133,7 @@
 
             {{-- Payment Details --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-credit-card text-success me-2"></i>Payment Details
                     </h6>
@@ -142,7 +178,7 @@
             @if ($purchase->notes)
                 {{-- Notes --}}
                 <div class="card mb-4 shadow-sm">
-                    <div class="card-header border-bottom bg-white py-3">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-note text-warning me-2"></i>Notes
                         </h6>
@@ -155,7 +191,7 @@
 
             {{-- Quick Actions --}}
             <div class="card shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-bolt-circle text-warning me-2"></i>Quick Actions
                     </h6>
@@ -208,7 +244,7 @@
 
             {{-- Purchased Items --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header border-bottom d-flex align-items-center justify-content-between bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-package text-primary me-2"></i>Purchased Items
                     </h6>
@@ -275,7 +311,7 @@
 
             {{-- Created By / Meta --}}
             <div class="card shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-user text-secondary me-2"></i>Order Meta
                     </h6>
@@ -347,3 +383,4 @@
         });
     </script>
 @endpush
+

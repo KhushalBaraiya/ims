@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', isset($isCopy) ? 'Copy Product' : __('messages.create_product'))
 
 @section('content')
@@ -20,8 +20,26 @@
         </a>
     </div>
 
+    {{-- ── Hero Banner ── --}}
+    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+                style="width:46px;height:46px;background:rgba(255,255,255,.2);">
+                <i class="bx bx-package text-white" style="font-size:1.3rem;"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="text-white fw-bold">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</div>
+                <div class="text-white opacity-75 small">Fill in the details below to
+                    {{ isset($isCopy) ? 'copy this product' : 'add a new product to your catalog' }}</div>
+            </div>
+            <span class="badge bg-white text-primary fw-semibold">
+                <i class="bx bx-plus me-1"></i>{{ isset($isCopy) ? 'Copy' : 'New Product' }}
+            </span>
+        </div>
+    </div>
+
     @if ($errors->any())
-        <div class="alert  -danger alert-dismissible fade show mb-4" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
             <i class="bx bx-error-circle me-2"></i>
             <strong>{{ __('messages.fix_errors') }}:</strong>
             <ul class="mb-0 mt-1 ps-3">
@@ -42,7 +60,7 @@
 
                 {{-- ── Card 1: Basic Info ──────────────────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-info-circle me-2 text-primary"></i>Basic Information
                         </h6>
@@ -174,7 +192,7 @@
 
                 {{-- ── Card 2: Pricing & Stock Alert ──────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
@@ -250,7 +268,7 @@
                 @if (!$product->exists || isset($isCopy))
                     <div class="card shadow-sm mb-4">
                         <div
-                            class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                            class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                             <h6 class="mb-0 fw-semibold">
                                 <i class="bx bx-box me-2 text-warning"></i>Opening Stock
                             </h6>
@@ -323,7 +341,7 @@
 
                 {{-- ── Card 4: Technical Specifications ───────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-chip me-2 text-info"></i>Technical Specifications
                             <span class="ms-2 badge bg-label-secondary small fw-normal">Optional</span>
@@ -376,7 +394,7 @@
 
                 {{-- ── Card 5: Media & Description ─────────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-image me-2 text-warning"></i>Media & Description
                         </h6>
@@ -499,7 +517,7 @@
 
                 {{-- ── Card: Publish ──────────────────────────────────────────── --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-send me-2 text-primary"></i>Publish
                         </h6>
@@ -843,3 +861,4 @@
         });
     </script>
 @endpush
+

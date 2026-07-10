@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Purchase Return — ' . $purchaseReturn->return_no)
 
 @section('content')
@@ -34,6 +34,33 @@
         </div>
     </div>
 
+    {{-- ── Hero Banner ── --}}
+    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+                style="width:54px;height:54px;background:rgba(255,255,255,.2)">
+                <i class="bx bx-cart-download text-white fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="text-white fw-bold fs-6 lh-sm">Purchase Return</div>
+                <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
+                    <span><i class="bx bx-hash me-1"></i>{{ $purchaseReturn->return_no }}</span>
+                    <span>· {{ $purchaseReturn->supplier->name ?? '—' }}</span>
+                    <span>· {{ $purchaseReturn->return_date }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <span
+                    class="badge bg-white fw-semibold {{ $purchaseReturn->status === 'Completed' ? 'text-success' : 'text-warning' }}">
+                    <i
+                        class="bx {{ $purchaseReturn->status === 'Completed' ? 'bx-check' : 'bx-time' }} me-1"></i>{{ $purchaseReturn->status }}
+                </span>
+                <span
+                    class="badge bg-white text-primary fw-semibold">{{ format_currency($purchaseReturn->grand_total) }}</span>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
 
         {{-- ── Left Column ──────────────────────────────────────── --}}
@@ -41,7 +68,7 @@
 
             {{-- Return Summary --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-info-circle text-primary me-2"></i>Return Summary
                     </h6>
@@ -96,7 +123,7 @@
 
             {{-- Refund Details --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-credit-card text-success me-2"></i>Refund Details
                     </h6>
@@ -119,7 +146,7 @@
             @if ($purchaseReturn->notes)
                 {{-- Notes --}}
                 <div class="card mb-4 shadow-sm">
-                    <div class="card-header border-bottom bg-white py-3">
+                    <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-note text-warning me-2"></i>Notes
                         </h6>
@@ -132,7 +159,7 @@
 
             {{-- Quick Actions --}}
             <div class="card shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-bolt-circle text-warning me-2"></i>Quick Actions
                     </h6>
@@ -153,8 +180,8 @@
                         <form action="{{ route('purchase-returns.destroy', $purchaseReturn->id) }}" id="deleteForm"
                             method="POST">
                             @csrf @method('DELETE')
-                            <button class="btn btn-outline-danger w-100 delete-btn" data-no="{{ $purchaseReturn->return_no }}"
-                                type="button">
+                            <button class="btn btn-outline-danger w-100 delete-btn"
+                                data-no="{{ $purchaseReturn->return_no }}" type="button">
                                 <i class="bx bx-trash me-1"></i> Delete Return
                             </button>
                         </form>
@@ -169,7 +196,7 @@
 
             {{-- Returned Items Table --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header border-bottom d-flex align-items-center justify-content-between bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-undo text-primary me-2"></i>Returned Items
                     </h6>
@@ -212,7 +239,7 @@
 
             {{-- Meta Card --}}
             <div class="card shadow-sm">
-                <div class="card-header border-bottom bg-white py-3">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-user text-secondary me-2"></i>Return Meta
                     </h6>
@@ -261,3 +288,4 @@
         });
     </script>
 @endpush
+

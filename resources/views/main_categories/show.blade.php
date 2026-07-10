@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.category_details') . ' — ' . $mainCategory->name)
 
 @section('content')
@@ -28,6 +28,31 @@
         </div>
     </div>
 
+    {{-- ── Hero Banner ── --}}
+    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+                style="width:54px;height:54px;background:rgba(255,255,255,.2)">
+                <i class="bx bx-category text-white fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="text-white fw-bold fs-6 lh-sm">{{ $mainCategory->name }}</div>
+                <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
+                    <span><i class="bx bx-link me-1"></i>{{ $mainCategory->slug }}</span>
+                    <span>· {{ $mainCategory->products->count() }} {{ __('messages.total_products') }}</span>
+                    <span>· {{ $mainCategory->subCategories->count() }} {{ __('messages.sub_categories') }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <span
+                    class="badge bg-white fw-semibold {{ $mainCategory->status === 'active' ? 'text-success' : 'text-secondary' }}">
+                    <i
+                        class="bx {{ $mainCategory->status === 'active' ? 'bx-check' : 'bx-x' }} me-1"></i>{{ ucfirst($mainCategory->status) }}
+                </span>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
 
         {{-- Left Column --}}
@@ -35,7 +60,8 @@
 
             {{-- Category Header Card --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-category me-2 text-primary"></i>{{ __('messages.category_details') }}
                     </h6>
@@ -96,7 +122,8 @@
 
             {{-- Sub Categories --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-sitemap me-2 text-success"></i>{{ __('messages.sub_categories') }}
                         <span class="badge bg-label-success ms-1">{{ $mainCategory->subCategories->count() }}</span>
@@ -145,9 +172,12 @@
                             </table>
                         </div>
                     @else
-                        <div class="text-center py-5 text-muted">
-                            <i class="bx bx-folder-open" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="mt-2 mb-0 small">{{ __('messages.no_records') }}</p>
+                        <div style="width:100%;text-align:center;padding:2.5rem 0;">
+                            <div class="text-muted"
+                                style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
+                                <i class="bx bx-folder-open" style="font-size:3rem;opacity:.3;line-height:1;"></i>
+                                <span class="small">{{ __('messages.no_records') }}</span>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -155,7 +185,8 @@
 
             {{-- Recent Products --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-package me-2 text-info"></i>{{ __('messages.recent_products') }}
                         <span class="badge bg-label-info ms-1">{{ $mainCategory->products->count() }}</span>
@@ -213,9 +244,12 @@
                             </table>
                         </div>
                     @else
-                        <div class="text-center py-5 text-muted">
-                            <i class="bx bx-package" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="mt-2 mb-0 small">{{ __('messages.no_records') }}</p>
+                        <div style="width:100%;text-align:center;padding:2.5rem 0;">
+                            <div class="text-muted"
+                                style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
+                                <i class="bx bx-package" style="font-size:3rem;opacity:.3;line-height:1;"></i>
+                                <span class="small">{{ __('messages.no_records') }}</span>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -228,7 +262,7 @@
 
             {{-- Information Card --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.information') }}
                     </h6>
@@ -272,7 +306,7 @@
 
             {{-- Quick Actions --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
+                <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}
                     </h6>
