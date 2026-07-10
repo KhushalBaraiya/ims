@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
-@section('title', 'Sales Invoice — ' . $sale->invoice_no)
+@extends('layouts.admin')
+@section('title', 'Sales Invoice � ' . $sale->invoice_no)
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Sales Invoice Details</h4>
             <nav aria-label="breadcrumb">
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -43,8 +43,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Sales Invoice</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $sale->invoice_no }}</span>
-                    <span>· {{ $sale->customer->name ?? '—' }}</span>
-                    <span>· {{ $sale->invoice_date }}</span>
+                    <span>� {{ $sale->customer->name ?? '�' }}</span>
+                    <span>� {{ $sale->invoice_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -70,8 +70,8 @@
 
     <div class="row g-4">
 
-        {{-- ── Left Column ─────────────────────────────────────── --}}
-        <div class="col-lg-3">
+        {{-- -- Left Column --------------------------------------- --}}
+        <div class="col-lg-3 show-sidebar">
 
             {{-- Invoice Summary --}}
             <div class="card mb-4 shadow-sm">
@@ -251,12 +251,13 @@
 
         </div>
 
-        {{-- ── Right Column ─────────────────────────────────────── --}}
-        <div class="col-lg-9">
+        {{-- -- Right Column --------------------------------------- --}}
+        <div class="col-lg-9 show-main">
 
             {{-- Invoice Items --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-receipt text-primary me-2"></i>Invoice Items
                     </h6>
@@ -353,7 +354,7 @@
         </div>
     </div>
 
-    {{-- ── Payment Management Modal ─────────────────────────────────────── --}}
+    {{-- -- Payment Management Modal --------------------------------------- --}}
     <div aria-hidden="true" aria-labelledby="paymentModalLabel" class="modal fade" id="paymentModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -377,7 +378,7 @@
                                 <div class="bg-light rounded border p-3 text-center">
                                     <div class="text-muted small fw-semibold mb-1">Grand Total</div>
                                     <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
-                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
+                                        {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
                                 </div>
                             </div>
@@ -386,7 +387,7 @@
                                     id="modal_due_box">
                                     <div class="small fw-semibold text-danger mb-1" id="modal_due_label">Balance Due</div>
                                     <div class="fw-bold fs-5 text-danger" id="modal_balance_due_text">
-                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
+                                        {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                 </div>
                             </div>
                         </div>
@@ -426,7 +427,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            const sym = '{{ addslashes(optional(current_currency())->symbol ?? '?') }}';
             // Delete confirm
             $(document).on('click', '.delete-btn', function() {
                 const invoice = $(this).data('invoice');
@@ -444,7 +445,7 @@
                 });
             });
 
-            // ── Payment Modal ─────────────────────────────────────────────
+            // -- Payment Modal ---------------------------------------------
             $(document).on('click', '.btn-payment-modal', function(e) {
                 e.preventDefault();
                 const btn = $(this);
@@ -519,4 +520,3 @@
         });
     </script>
 @endpush
-

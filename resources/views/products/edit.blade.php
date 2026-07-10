@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.edit_product') . ' — ' . $product->name)
+@extends('layouts.admin')
+@section('title', __('messages.edit_product') . ' � ' . $product->name)
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.edit_product') }}</h4>
             <nav aria-label="breadcrumb">
@@ -42,7 +42,7 @@
             @endif
             <div>
                 <div class="text-white fw-bold">{{ $product->name }}</div>
-                <div class="text-white opacity-75 small">SKU: {{ $product->code }} &nbsp;·&nbsp;
+                <div class="text-white opacity-75 small">SKU: {{ $product->code }} &nbsp;�&nbsp;
                     {{ $product->mainCategory->name ?? 'Uncategorized' }}</div>
             </div>
             <span class="badge bg-white text-primary ms-auto">{{ ucfirst($product->status) }}</span>
@@ -68,10 +68,10 @@
         @method('PUT')
         <div class="row g-4">
 
-            {{-- ══ LEFT COLUMN ══════════════════════════════════════════════════ --}}
+            {{-- -- LEFT COLUMN -------------------------------------------------- --}}
             <div class="col-lg-8">
 
-                {{-- ── Card 1: Basic Info ──────────────────────────────────────── --}}
+                {{-- -- Card 1: Basic Info ---------------------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -191,13 +191,13 @@
                     </div>
                 </div>
 
-                {{-- ── Card 2: Pricing & Stock Alert ──────────────────────────── --}}
+                {{-- -- Card 2: Pricing & Stock Alert ---------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: —</span>
+                        <span class="badge bg-label-primary small" id="profitBadge">Profit: �</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -206,7 +206,7 @@
                                 <label class="form-label fw-semibold">Purchase Price <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span class="input-group-text">?</span>
                                     <input type="number" step="0.01" name="purchase_price" id="purchase_price"
                                         class="form-control @error('purchase_price') is-invalid @enderror"
                                         value="{{ old('purchase_price', $product->purchase_price) }}" required>
@@ -220,7 +220,7 @@
                                 <label class="form-label fw-semibold">Selling Price <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span class="input-group-text">?</span>
                                     <input type="number" step="0.01" name="selling_price" id="selling_price"
                                         class="form-control @error('selling_price') is-invalid @enderror"
                                         value="{{ old('selling_price', $product->selling_price) }}" required>
@@ -261,7 +261,7 @@
                     </div>
                 </div>
 
-                {{-- ── Card 3: Technical Specifications ───────────────────────── --}}
+                {{-- -- Card 3: Technical Specifications ------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -313,7 +313,7 @@
                     </div>
                 </div>
 
-                {{-- ── Card 4: Media & Description ─────────────────────────────── --}}
+                {{-- -- Card 4: Media & Description ------------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -323,7 +323,7 @@
                     <div class="card-body p-4">
                         <div class="row g-4">
 
-                            {{-- ── Left: Images ── --}}
+                            {{-- -- Left: Images -- --}}
                             <div class="col-md-5">
 
                                 {{-- Primary Image --}}
@@ -377,7 +377,7 @@
                                     <button type="button" id="triggerGalleryBtn" class="btn btn-outline-primary mt-1">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
-                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP · Max 2MB each</div>
+                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP � Max 2MB each</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -392,7 +392,7 @@
                                                 <button type="button"
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove">×</button>
+                                                    title="Remove">�</button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -404,7 +404,7 @@
                                 </button>
                             </div>
 
-                            {{-- ── Right: Descriptions ── --}}
+                            {{-- -- Right: Descriptions -- --}}
                             <div class="col-md-7">
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Short Description</label>
@@ -431,10 +431,10 @@
 
             </div>{{-- end col-lg-8 --}}
 
-            {{-- ══ RIGHT COLUMN ═════════════════════════════════════════════════ --}}
+            {{-- -- RIGHT COLUMN ------------------------------------------------- --}}
             <div class="col-lg-4">
 
-                {{-- ── Card: Publish ──────────────────────────────────────────── --}}
+                {{-- -- Card: Publish -------------------------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -475,7 +475,7 @@
                     </div>
                 </div>
 
-                {{-- ── Card: Quick Info ────────────────────────────────────────── --}}
+                {{-- -- Card: Quick Info ------------------------------------------ --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4">
                         <h6 class="fw-semibold mb-3">
@@ -516,7 +516,7 @@
     <script>
         $(document).ready(function() {
 
-            // ── Status toggle label ────────────────────────────────────────────────
+            // -- Status toggle label ------------------------------------------------
             $('#statusToggle').on('change', function() {
                 if (this.checked) {
                     $('#statusLabel').text('{{ __('messages.active') }}').removeClass('text-danger')
@@ -527,7 +527,7 @@
                 }
             });
 
-            // ── Sub-category dynamic load ──────────────────────────────────────────
+            // -- Sub-category dynamic load ------------------------------------------
             const subCategories = @json($subCategories);
             const selectedSubCategoryId = "{{ old('sub_category_id', $product->sub_category_id ?? '') }}";
 
@@ -561,7 +561,7 @@
                 loadSubcategories(initialMainCatId, selectedSubCategoryId);
             }
 
-            // ── Profit badge ───────────────────────────────────────────────────────
+            // -- Profit badge -------------------------------------------------------
             function updateProfitBadge() {
                 const buy = parseFloat($('#purchase_price').val()) || 0;
                 const sell = parseFloat($('#selling_price').val()) || 0;
@@ -570,17 +570,17 @@
                     const pct = ((profit / buy) * 100).toFixed(1);
                     const sign = profit >= 0 ? '+' : '';
                     $('#profitBadge')
-                        .text(`Profit: ${sign}₹${profit.toFixed(2)} (${sign}${pct}%)`)
+                        .text(`Profit: ${sign}?${profit.toFixed(2)} (${sign}${pct}%)`)
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: —');
+                    $('#profitBadge').text('Profit: �');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
             updateProfitBadge();
 
-            // ── Primary image upload ───────────────────────────────────────────────
+            // -- Primary image upload -----------------------------------------------
             $('#triggerImageBtn').on('click', () => $('#imageInput').trigger('click'));
 
             $('#imageInput').on('change', function(e) {
@@ -605,7 +605,7 @@
                 $('#remove_image').val('1');
             });
 
-            // ── Gallery management ─────────────────────────────────────────────────
+            // -- Gallery management -------------------------------------------------
             let removedGalleryImages = [];
 
             $('#triggerGalleryBtn').on('click', function(e) {
@@ -644,7 +644,7 @@
                         <button type="button"
                             class="remove-new-gallery-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                             style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                            title="Remove">×</button>
+                            title="Remove">�</button>
                     </div>`);
                         thumb.data('file', file);
                         $('#galleryPreviewContainer').append(thumb);

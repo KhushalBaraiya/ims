@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
-@section('title', 'Sales Return — ' . $saleReturn->return_no)
+@extends('layouts.admin')
+@section('title', 'Sales Return � ' . $saleReturn->return_no)
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Sales Return Details</h4>
             <nav aria-label="breadcrumb">
@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -43,8 +43,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Sale Return</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $saleReturn->return_no }}</span>
-                    <span>· {{ $saleReturn->customer->name ?? '—' }}</span>
-                    <span>· {{ $saleReturn->return_date }}</span>
+                    <span>� {{ $saleReturn->customer->name ?? '�' }}</span>
+                    <span>� {{ $saleReturn->return_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -61,8 +61,8 @@
 
     <div class="row g-4">
 
-        {{-- ── Left Column ─────────────────────────────────────── --}}
-        <div class="col-lg-3">
+        {{-- -- Left Column --------------------------------------- --}}
+        <div class="col-lg-3 show-sidebar">
 
             {{-- Return Summary --}}
             <div class="card shadow-sm mb-4">
@@ -88,7 +88,7 @@
                                     <code>{{ $saleReturn->sale->invoice_no }}</code>
                                 </a>
                             @else
-                                <span class="text-muted">—</span>
+                                <span class="text-muted">�</span>
                             @endif
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
@@ -102,11 +102,11 @@
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">Reference No</span>
-                            <span class="small">{{ $saleReturn->reference_no ?: '—' }}</span>
+                            <span class="small">{{ $saleReturn->reference_no ?: '�' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">Processed By</span>
-                            <span class="fw-semibold">{{ $saleReturn->user->name ?? '—' }}</span>
+                            <span class="fw-semibold">{{ $saleReturn->user->name ?? '�' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
                             <span class="text-muted small fw-semibold">Status</span>
@@ -201,12 +201,13 @@
 
         </div>
 
-        {{-- ── Right Column ─────────────────────────────────────── --}}
-        <div class="col-lg-9">
+        {{-- -- Right Column --------------------------------------- --}}
+        <div class="col-lg-9 show-main">
 
             {{-- Returned Items --}}
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-undo me-2 text-primary"></i>Returned Items
                     </h6>
@@ -256,7 +257,7 @@
                                                 class="text-muted fw-normal">{{ $item->product->unit_code ?? 'PCS' }}</small>
                                         </td>
                                         <td class="text-muted fst-italic small">
-                                            {{ $item->reason ?: '—' }}
+                                            {{ $item->reason ?: '�' }}
                                         </td>
                                         <td class="text-end fw-bold">{{ format_currency($item->total_amount) }}</td>
                                     </tr>
@@ -285,7 +286,7 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <p class="text-muted small fw-semibold mb-1">Processed By</p>
-                            <p class="fw-bold mb-0">{{ $saleReturn->user->name ?? '—' }}</p>
+                            <p class="fw-bold mb-0">{{ $saleReturn->user->name ?? '�' }}</p>
                         </div>
                         <div class="col-md-4">
                             <p class="text-muted small fw-semibold mb-1">Created At</p>
@@ -323,4 +324,3 @@
         });
     </script>
 @endpush
-

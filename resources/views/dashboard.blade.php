@@ -373,9 +373,9 @@
         <div class="row g-3 mb-4">
 
             {{-- Weekly Bar Chart --}}
-            <div class="col-lg-8">
+            <div class="col-lg-8 col-md-12">
                 <div class="inner-card card h-100">
-                    <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between">
+                    <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-bar-chart-alt-2 text-primary me-2"></i>
                             This Week · Sales vs Purchases
@@ -392,7 +392,7 @@
             </div>
 
             {{-- Top Products Doughnut --}}
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-12">
                 <div class="inner-card card h-100">
                     <div class="card-header border-0 py-3">
                         <h6 class="fw-semibold mb-0">
@@ -423,9 +423,9 @@
 
             {{-- Recent Sales --}}
             @can('sales.view')
-                <div class="col-lg-7">
+                <div class="col-lg-7 col-md-12">
                     <div class="inner-card card h-100">
-                        <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between">
+                        <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <h6 class="fw-semibold mb-0">
                                 <i class="bx bx-receipt text-primary me-2"></i> Recent Sales
                             </h6>
@@ -500,9 +500,9 @@
 
             {{-- Top Customers Doughnut --}}
             @can('customers.view')
-                <div class="col-lg-5">
+                <div class="col-lg-5 col-md-12">
                     <div class="inner-card card h-100">
-                        <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between">
+                        <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <h6 class="fw-semibold mb-0">
                                 <i class="bx bx-crown text-warning me-2"></i>
                                 Top Customers · {{ now()->format('M Y') }}
@@ -531,9 +531,9 @@
     <div class="row g-3 mb-4">
 
         {{-- Low Stock --}}
-        <div class="col-lg-8">
+        <div class="col-lg-8 col-md-12">
             <div class="inner-card card h-100">
-                <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between">
+                <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-error-circle text-danger me-2"></i>
                         Low Stock Alert
@@ -622,9 +622,9 @@
         </div>
 
         {{-- Activity Feed --}}
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-md-12">
             <div class="inner-card card h-100">
-                <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between">
+                <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-history text-secondary me-2"></i>Recent Activity
                     </h6>

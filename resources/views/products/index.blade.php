@@ -130,7 +130,7 @@
                 fn($q) => $q->whereHas('stock', fn($sq) => $sq->where('quantity', '<=', 0))->orWhereDoesntHave('stock'),
             )->count();
         @endphp
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -142,7 +142,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -154,7 +154,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -166,7 +166,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -222,7 +222,7 @@
                                 <option value="">All Sub-cats</option>
                             </select>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select name="status" class="form-select form-select-sm">
                                 <option value="">All</option>
@@ -232,13 +232,13 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-6 col-md-1">
                             <label class="form-label fw-semibold small">Min
                                 {{ optional(current_currency())->symbol ?? '₹' }}</label>
                             <input type="number" step="0.01" name="price_min" class="form-control form-control-sm"
                                 value="{{ request('price_min') }}" placeholder="0">
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-6 col-md-1">
                             <label class="form-label fw-semibold small">Max
                                 {{ optional(current_currency())->symbol ?? '₹' }}</label>
                             <input type="number" step="0.01" name="price_max" class="form-control form-control-sm"

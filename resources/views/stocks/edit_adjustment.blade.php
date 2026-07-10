@@ -4,7 +4,7 @@
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Edit Stock Adjustment</h4>
             <nav aria-label="breadcrumb">
@@ -42,7 +42,7 @@
         <div class="row g-4">
 
             {{-- ── Left: Voucher Details ── --}}
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold text-primary">
@@ -78,7 +78,7 @@
             </div>
 
             {{-- ── Right: Product Search & Table ── --}}
-            <div class="col-lg-8">
+            <div class="col-lg-8 col-md-8">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold text-primary">

@@ -1,9 +1,9 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.user_details') . ' — ' . $user->name)
+@extends('layouts.admin')
+@section('title', __('messages.user_details') . ' � ' . $user->name)
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.user_details') }}</h4>
             <nav aria-label="breadcrumb">
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             @if ($user->profile_photo)
@@ -45,9 +45,9 @@
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-envelope me-1"></i>{{ $user->email }}</span>
                     @if ($user->phone)
-                        <span>· {{ $user->phone }}</span>
+                        <span>� {{ $user->phone }}</span>
                     @endif
-                    <span>· {{ $user->roles->pluck('name')->implode(', ') ?: 'No Role' }}</span>
+                    <span>� {{ $user->roles->pluck('name')->implode(', ') ?: 'No Role' }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -115,7 +115,7 @@
                         <div class="col-4">
                             <div class="rounded-3 p-3 text-center bg-label-success">
                                 <div class="fw-bold fs-4 text-success">
-                                    {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : '—' }}
+                                    {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : '�' }}
                                 </div>
                                 <div class="text-muted small">{{ __('messages.last_login') }}</div>
                             </div>
@@ -185,7 +185,7 @@
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">{{ __('messages.role') }}</span>
                             <span class="badge bg-label-primary">
-                                {{ $user->roles->pluck('name')->implode(', ') ?: '—' }}
+                                {{ $user->roles->pluck('name')->implode(', ') ?: '�' }}
                             </span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">

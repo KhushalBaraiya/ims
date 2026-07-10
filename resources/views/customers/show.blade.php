@@ -1,9 +1,9 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.customer_details') . ' — ' . $customer->name)
+@extends('layouts.admin')
+@section('title', __('messages.customer_details') . ' � ' . $customer->name)
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.customer_details') }}</h4>
             <nav aria-label="breadcrumb">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -39,9 +39,9 @@
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-phone me-1"></i>{{ $customer->phone }}</span>
                     @if ($customer->email)
-                        <span>· {{ $customer->email }}</span>
+                        <span>� {{ $customer->email }}</span>
                     @endif
-                    <span>· {{ $customer->sales->count() }} {{ __('messages.total_sales') }}</span>
+                    <span>� {{ $customer->sales->count() }} {{ __('messages.total_sales') }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -135,7 +135,7 @@
                         @endif
                         <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
                             <span class="text-muted small fw-semibold">{{ __('messages.email_address') }}</span>
-                            <span>{{ $customer->email ?: '—' }}</span>
+                            <span>{{ $customer->email ?: '�' }}</span>
                         </li>
                         @if ($customer->gst_number)
                             <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
@@ -148,7 +148,7 @@
                                 <span
                                     class="text-muted small fw-semibold d-block mb-1">{{ __('messages.address_label') }}</span>
                                 <p class="mb-0 small">
-                                    {{ implode(', ', array_filter([$customer->address, $customer->city, $customer->state, $customer->pincode, $customer->country])) ?: '—' }}
+                                    {{ implode(', ', array_filter([$customer->address, $customer->city, $customer->state, $customer->pincode, $customer->country])) ?: '�' }}
                                 </p>
                             </li>
                         @endif

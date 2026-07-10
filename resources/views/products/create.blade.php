@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', isset($isCopy) ? 'Copy Product' : __('messages.create_product'))
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</h4>
             <nav aria-label="breadcrumb">
@@ -20,7 +20,7 @@
         </a>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -55,10 +55,10 @@
         @csrf
         <div class="row g-4">
 
-            {{-- ══ LEFT COLUMN ══════════════════════════════════════════════════ --}}
+            {{-- -- LEFT COLUMN -------------------------------------------------- --}}
             <div class="col-lg-8">
 
-                {{-- ── Card 1: Basic Info ──────────────────────────────────────── --}}
+                {{-- -- Card 1: Basic Info ---------------------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -190,13 +190,13 @@
                     </div>
                 </div>
 
-                {{-- ── Card 2: Pricing & Stock Alert ──────────────────────────── --}}
+                {{-- -- Card 2: Pricing & Stock Alert ---------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: —</span>
+                        <span class="badge bg-label-primary small" id="profitBadge">Profit: �</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -206,7 +206,7 @@
                                 <label class="form-label fw-semibold">Purchase Price <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span class="input-group-text">?</span>
                                     <input type="number" step="0.01" name="purchase_price" id="purchase_price"
                                         class="form-control @error('purchase_price') is-invalid @enderror"
                                         value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}" required>
@@ -221,7 +221,7 @@
                                 <label class="form-label fw-semibold">Selling Price <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span class="input-group-text">?</span>
                                     <input type="number" step="0.01" name="selling_price" id="selling_price"
                                         class="form-control @error('selling_price') is-invalid @enderror"
                                         value="{{ old('selling_price', $product->selling_price ?? '0.00') }}" required>
@@ -264,7 +264,7 @@
                     </div>
                 </div>
 
-                {{-- ── Card 3: Opening Stock (create / copy only) ──────────────── --}}
+                {{-- -- Card 3: Opening Stock (create / copy only) ---------------- --}}
                 @if (!$product->exists || isset($isCopy))
                     <div class="card shadow-sm mb-4">
                         <div
@@ -327,8 +327,8 @@
                                             <i class="bx bx-calculator text-info fs-5"></i>
                                             <div>
                                                 <div class="small fw-semibold text-info">Purchase Total</div>
-                                                <div class="fw-bold" id="openingStockTotal">—</div>
-                                                <div class="form-text mb-0">Qty × Purchase Price</div>
+                                                <div class="fw-bold" id="openingStockTotal">�</div>
+                                                <div class="form-text mb-0">Qty � Purchase Price</div>
                                             </div>
                                         </div>
                                     </div>
@@ -339,7 +339,7 @@
                     </div>
                 @endif
 
-                {{-- ── Card 4: Technical Specifications ───────────────────────── --}}
+                {{-- -- Card 4: Technical Specifications ------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -392,7 +392,7 @@
                     </div>
                 </div>
 
-                {{-- ── Card 5: Media & Description ─────────────────────────────── --}}
+                {{-- -- Card 5: Media & Description ------------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -402,7 +402,7 @@
                     <div class="card-body p-4">
                         <div class="row g-4">
 
-                            {{-- ── Left: Images ── --}}
+                            {{-- -- Left: Images -- --}}
                             <div class="col-md-5">
 
                                 {{-- Primary Image --}}
@@ -458,7 +458,7 @@
                                     <button type="button" id="triggerGalleryBtn" class="btn btn-outline-primary mt-1">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
-                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP · Max 2MB each</div>
+                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP � Max 2MB each</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -473,7 +473,7 @@
                                                 <button type="button"
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove">×</button>
+                                                    title="Remove">�</button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -512,10 +512,10 @@
 
             </div>{{-- end col-lg-8 --}}
 
-            {{-- ══ RIGHT COLUMN ═════════════════════════════════════════════════ --}}
+            {{-- -- RIGHT COLUMN ------------------------------------------------- --}}
             <div class="col-lg-4">
 
-                {{-- ── Card: Publish ──────────────────────────────────────────── --}}
+                {{-- -- Card: Publish -------------------------------------------- --}}
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -554,7 +554,7 @@
                     </div>
                 </div>
 
-                {{-- ── Card: Quick Tips ────────────────────────────────────────── --}}
+                {{-- -- Card: Quick Tips ------------------------------------------ --}}
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4">
                         <h6 class="fw-semibold mb-3">
@@ -584,7 +584,7 @@
     <script>
         $(document).ready(function() {
 
-            // ── SKU Auto-Generate ──────────────────────────────────────────────────
+            // -- SKU Auto-Generate --------------------------------------------------
             let skuManuallyEdited = $('#skuInput').val().trim() !== '';
 
             function generateSku(nameVal) {
@@ -639,7 +639,7 @@
                 }
             });
 
-            // ── Sub-category dynamic load ──────────────────────────────────────────
+            // -- Sub-category dynamic load ------------------------------------------
             const subCategories = @json($subCategories);
             const selectedSubCategoryId = "{{ old('sub_category_id', $product->sub_category_id ?? '') }}";
 
@@ -673,7 +673,7 @@
                 loadSubcategories(initialMainCatId, selectedSubCategoryId);
             }
 
-            // ── Profit badge ───────────────────────────────────────────────────────
+            // -- Profit badge -------------------------------------------------------
             function updateProfitBadge() {
                 const buy = parseFloat($('#purchase_price').val()) || 0;
                 const sell = parseFloat($('#selling_price').val()) || 0;
@@ -682,24 +682,24 @@
                     const pct = ((profit / buy) * 100).toFixed(1);
                     const sign = profit >= 0 ? '+' : '';
                     $('#profitBadge')
-                        .text(`Profit: ${sign}₹${profit.toFixed(2)} (${sign}${pct}%)`)
+                        .text(`Profit: ${sign}?${profit.toFixed(2)} (${sign}${pct}%)`)
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: —');
+                    $('#profitBadge').text('Profit: �');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
             updateProfitBadge();
 
-            // ── Opening stock toggle ───────────────────────────────────────────────
+            // -- Opening stock toggle -----------------------------------------------
             function syncOpeningStockRequired(checked) {
                 $('#supplier_id').prop('required', checked);
                 $('#initial_qty').prop('required', checked);
                 if (!checked) {
                     $('#supplier_id').val('').trigger('change');
                     $('#initial_qty').val('');
-                    $('#openingStockTotal').text('—');
+                    $('#openingStockTotal').text('�');
                 }
             }
 
@@ -713,23 +713,23 @@
                 syncOpeningStockRequired(true);
             }
 
-            // ── Opening stock live total ───────────────────────────────────────────
+            // -- Opening stock live total -------------------------------------------
             function updateOpeningTotal() {
                 const qty = parseFloat($('#initial_qty').val()) || 0;
                 const price = parseFloat($('#purchase_price').val()) || 0;
                 if (qty > 0 && price > 0) {
-                    const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+                    const sym = '{{ addslashes(optional(current_currency())->symbol ?? '?') }}';
                     $('#openingStockTotal').text(sym + (qty * price).toLocaleString('en-IN', {
                         minimumFractionDigits: 2
                     }));
                 } else {
-                    $('#openingStockTotal').text('—');
+                    $('#openingStockTotal').text('�');
                 }
             }
             $('#initial_qty, #purchase_price').on('input', updateOpeningTotal);
             updateOpeningTotal();
 
-            // ── Primary image upload ───────────────────────────────────────────────
+            // -- Primary image upload -----------------------------------------------
             $('#triggerImageBtn').on('click', () => $('#imageInput').trigger('click'));
 
             $('#imageInput').on('change', function(e) {
@@ -754,7 +754,7 @@
                 $('#remove_image').val('1');
             });
 
-            // ── Gallery management ─────────────────────────────────────────────────
+            // -- Gallery management -------------------------------------------------
             let removedGalleryImages = [];
 
             // Trigger hidden file input via button or clicking drop zone
@@ -798,7 +798,7 @@
                                 <button type="button"
                                     class="remove-new-gallery-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                    title="Remove">×</button>
+                                    title="Remove">�</button>
                             </div>`);
                         thumb.data('file', file);
                         $('#galleryPreviewContainer').append(thumb);
@@ -813,7 +813,7 @@
                 addGalleryFiles(this.files);
             });
 
-            // Remove a NEW (not-yet-uploaded) thumbnail — rebuild the FileList
+            // Remove a NEW (not-yet-uploaded) thumbnail � rebuild the FileList
             $(document).on('click', '.remove-new-gallery-btn', function() {
                 $(this).closest('.gallery-new').remove();
                 rebuildGalleryInput();

@@ -60,7 +60,7 @@
 
     <!-- Top Action bar (Hidden on print) -->
     <div
-        class="max-w-4xl mx-auto mb-6 px-4 no-print flex justify-between items-center bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
+        class="max-w-4xl mx-auto mb-6 px-4 no-print flex flex-wrap justify-between items-center gap-2 bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
         <span class="text-sm text-slate-500 font-medium">Sales Return Preview: <strong
                 class="text-slate-800 font-mono">{{ $saleReturn->return_no }}</strong></span>
         <div class="flex items-center gap-2">
@@ -80,7 +80,8 @@
         class="max-w-4xl mx-auto bg-white border border-slate-200 rounded-2xl shadow-sm p-8 print:border-0 print:shadow-none print:p-0 print:rounded-none">
 
         <!-- Header -->
-        <div class="flex justify-between items-start border-b border-slate-100 print:border-black pb-6 mb-6">
+        <div
+            class="flex flex-wrap justify-between items-start gap-4 border-b border-slate-100 print:border-black pb-6 mb-6">
             <div>
                 <span
                     class="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent print:text-black print:bg-none">
@@ -126,7 +127,8 @@
         </div>
 
         <!-- Customer & Processed By -->
-        <div class="grid grid-cols-2 gap-8 border-b border-slate-100 print:border-black pb-6 mb-6">
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 border-b border-slate-100 print:border-black pb-6 mb-6 print:grid-cols-2">
             <div>
                 <span
                     class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">Customer
@@ -203,9 +205,10 @@
         </div>
 
         <!-- Summary Totals -->
-        <div class="flex justify-between items-start border-t border-slate-100 print:border-black pt-6">
+        <div
+            class="flex flex-col gap-6 sm:flex-row sm:justify-between sm:items-start border-t border-slate-100 print:border-black pt-6 print:flex-row">
             <!-- Notes -->
-            <div class="w-1/2 pr-6">
+            <div class="w-full sm:w-1/2 pr-0 sm:pr-6">
                 <span
                     class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">Remarks
                     / Conditions</span>
@@ -214,7 +217,7 @@
                 </p>
             </div>
             <!-- Calculations -->
-            <div class="w-2/5 space-y-2.5 text-xs text-slate-600 print:text-black">
+            <div class="w-full sm:w-2/5 space-y-2.5 text-xs text-slate-600 print:text-black">
                 <div class="flex justify-between items-center border-b border-slate-50 print:border-slate-200 pb-1.5">
                     <span class="text-slate-400 print:text-black font-semibold uppercase text-[10px]">Return
                         Value</span>
@@ -243,7 +246,7 @@
         </div>
 
         <!-- Footer Signatures -->
-        <div class="mt-16 flex justify-between items-center text-xs">
+        <div class="mt-16 flex flex-wrap justify-between items-center gap-4 text-xs">
             <div>
                 <p class="text-slate-400 print:text-black">Store Inspector Signature</p>
                 <div class="w-48 border-b border-slate-300 print:border-black mt-10"></div>

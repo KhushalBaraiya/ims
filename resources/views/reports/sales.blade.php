@@ -4,7 +4,7 @@
 @section('content')
 
     {{-- ── Page Header ── --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Sales Report</h4>
             <nav aria-label="breadcrumb">
@@ -80,7 +80,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-1 d-flex align-items-end gap-1">
+                    <div class="col-md-2 d-flex align-items-end gap-1">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">
                             <i class="bx bx-search"></i>
                         </button>

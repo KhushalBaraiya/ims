@@ -1,77 +1,82 @@
 /*
- * admin-responsive.css
- * Admin Panel — Full Responsive Styles
- * Breakpoints: xs(0-575) | sm(576-767) | md(768-991) | lg(992+)
- * ---------------------------------------------------------------
- * DO NOT add non-responsive styles here.
- * Component/base styles → admin-custom.css
- * ---------------------------------------------------------------
+ * admin-responsive.css — IMS Admin Panel Full Responsive
+ * Covers: xs(0-575) | sm(576-767) | md(768-991) | lg(992-1199) | xl(1200+)
  */
 
 /* ================================================================
-   GLOBAL (all screen sizes)
+   GLOBAL — All screen sizes
    ================================================================ */
-
-/* Page header row */
-.admin-page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
 }
 
-/* Card header always wraps */
-.card-header.d-flex {
-    flex-wrap: wrap;
-    gap: 0.5rem;
+img {
+    max-width: 100%;
 }
 
-/* Breadcrumb always wraps */
-.breadcrumb {
-    flex-wrap: wrap;
+.table-responsive {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
 }
 
-/* DataTables wrapper scrollable */
 .dataTables_wrapper {
     overflow-x: auto;
 }
 
-/* DataTables controls spacing */
-div.dataTables_wrapper div.dataTables_length,
-div.dataTables_wrapper div.dataTables_filter {
-    margin-bottom: 0.5rem;
-}
-
-div.dataTables_wrapper div.dataTables_info,
-div.dataTables_wrapper div.dataTables_paginate {
-    margin-top: 0.5rem;
-}
-
-/* Table always scrollable on touch */
-.table-responsive {
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Select2 always full width */
 .select2-container {
     width: 100% !important;
+    max-width: 100% !important;
 }
 
-/* Form switch size */
+.pagination {
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.breadcrumb {
+    flex-wrap: wrap;
+}
+
+.card-header {
+    flex-wrap: wrap;
+}
+
+.input-group {
+    max-width: 100%;
+}
+
 .form-check-input.toggle-switch-input {
     width: 2.5rem;
     height: 1.35rem;
     cursor: pointer;
 }
 
+table .item-row td {
+    padding: 5px !important;
+}
+
+table .table-light th {
+    padding: 10px 12px !important;
+}
+
+#shipping_amount,
+#discount_amount,
+#tax_amount {
+    max-width: 120px;
+}
+
+.qty-input,
+.price-input,
+.discount-input,
+.tax-input {
+    min-width: 60px;
+}
+
 /* ================================================================
    DESKTOP ONLY (992px+)
    ================================================================ */
 @media (min-width: 992px) {
-
-    /* Publish sidebar card sticky */
     .publish-sticky {
         position: sticky;
         top: 80px;
@@ -79,26 +84,55 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 
 /* ================================================================
-   SIDEBAR OVERLAY Z-INDEX (< 1200px)
+   LARGE DESKTOP (1200px+)
    ================================================================ */
-@media (max-width: 1199.98px) {
+@media (min-width: 1200px) {
     .layout-menu {
-        z-index: 1100;
+        z-index: auto;
     }
 
     .layout-overlay {
-        z-index: 1099;
+        display: none !important;
     }
 }
 
 /* ================================================================
-   TABLET + MOBILE — Dashboard charts (< 1200px)
+   SIDEBAR overlay mode (< 1200px)
    ================================================================ */
-@media (min-width: 768px) and (max-width: 1199.98px) {
+@media (max-width: 1199.98px) {
+    .layout-menu {
+        z-index: 1100 !important;
+    }
+
+    .layout-overlay {
+        z-index: 1099 !important;
+    }
+}
+
+/* ================================================================
+   LARGE TABLET (992px – 1199px)
+   ================================================================ */
+@media (min-width: 992px) and (max-width: 1199.98px) {
 
     .col-xl-8,
-    .col-xl-4 {
+    .col-xl-4,
+    .col-xl-7,
+    .col-xl-5 {
         width: 100%;
+    }
+
+    .col-xl-3 {
+        width: 50%;
+    }
+
+    canvas#weekChart {
+        height: 220px !important;
+    }
+
+    .d-flex.align-items-center.justify-content-between.mb-4,
+    .d-flex.align-items-center.justify-content-between.mb-3 {
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
 }
 
@@ -107,22 +141,41 @@ div.dataTables_wrapper div.dataTables_paginate {
    ================================================================ */
 @media (min-width: 768px) and (max-width: 991.98px) {
 
-    /* Form layout — full width */
     .col-lg-8,
     .col-lg-4,
-    .col-xl-8.col-lg-7,
-    .col-xl-4.col-lg-5 {
+    .col-lg-7,
+    .col-lg-5,
+    .col-lg-3,
+    .col-lg-9,
+    .col-lg-6 {
         width: 100% !important;
         max-width: 100% !important;
+        flex: 0 0 100% !important;
     }
 
-    /* Table font */
+    .col-xl-8,
+    .col-xl-4,
+    .col-xl-7,
+    .col-xl-5 {
+        width: 100%;
+    }
+
+    .col-xl-3 {
+        width: 50%;
+    }
+
     .table td,
     .table th {
-        font-size: 0.9rem !important;
+        font-size: 0.875rem !important;
+        padding: 0.5rem 0.65rem !important;
     }
 
-    /* DataTables controls side-by-side */
+    .d-flex.align-items-center.justify-content-between.mb-4,
+    .d-flex.align-items-center.justify-content-between.mb-3 {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
     div.dataTables_wrapper div.dataTables_length {
         float: left;
     }
@@ -131,9 +184,31 @@ div.dataTables_wrapper div.dataTables_paginate {
         float: right;
     }
 
-    /* Stat cards — 2 per row */
-    .col-sm-6.col-xl-3 {
+    .col-sm-6.col-xl-3,
+    .col-6.col-xl-3 {
         width: 50%;
+    }
+
+    .report-filter-form .col-md-3,
+    .report-filter-form [class*="col-md-"] {
+        width: 50% !important;
+        max-width: 50% !important;
+    }
+
+    .report-summary-row .col-md-3,
+    .report-summary-row .col-md-4 {
+        width: 50% !important;
+    }
+
+    .permission-table th,
+    .permission-table td {
+        font-size: 0.82rem !important;
+        padding: 0.4rem 0.5rem !important;
+    }
+
+    /* Dashboard banner clock hidden on tablet */
+    #dashClock {
+        display: none !important;
     }
 }
 
@@ -142,23 +217,55 @@ div.dataTables_wrapper div.dataTables_paginate {
    ================================================================ */
 @media (min-width: 576px) and (max-width: 767.98px) {
 
-    /* Form layout — full width */
     .col-lg-8,
     .col-lg-4,
-    .col-xl-8.col-lg-7,
-    .col-xl-4.col-lg-5 {
+    .col-lg-7,
+    .col-lg-5,
+    .col-lg-3,
+    .col-lg-9,
+    .col-md-6,
+    .col-md-8,
+    .col-md-4,
+    .col-md-3 {
         width: 100% !important;
         max-width: 100% !important;
+        flex: 0 0 100% !important;
     }
 
-    /* Table font */
+    .col-xl-8,
+    .col-xl-4,
+    .col-xl-7,
+    .col-xl-5,
+    .col-lg-7,
+    .col-lg-5 {
+        width: 100% !important;
+    }
+
+    .col-6.col-xl-3,
+    .col-sm-6.col-xl-3 {
+        width: 50% !important;
+    }
+
     .table td,
     .table th {
-        font-size: 0.875rem !important;
-        padding: 0.5rem 0.6rem !important;
+        font-size: 0.84rem !important;
+        padding: 0.45rem 0.55rem !important;
     }
 
-    /* DataTables controls stack */
+    .layout-navbar {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .card-body.p-4 {
+        padding: 1.25rem !important;
+    }
+
+    .container-xxl.container-p-y {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_filter,
     div.dataTables_wrapper div.dataTables_info,
@@ -166,133 +273,278 @@ div.dataTables_wrapper div.dataTables_paginate {
         text-align: left !important;
         float: none !important;
         width: 100% !important;
+        margin-bottom: 0.35rem;
     }
 
-    /* Card body padding */
-    .card-body.p-4 {
-        padding: 1.5rem !important;
+    .report-filter-form .col-md-3,
+    .report-filter-form [class*="col-md-"] {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    /* Dashboard charts */
-    .col-xl-8,
-    .col-xl-4 {
-        width: 100%;
+    .d-flex.align-items-center.justify-content-between.mb-4,
+    .d-flex.align-items-center.justify-content-between.mb-3 {
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
 
-    /* Stat cards — 2 per row */
-    .col-sm-6.col-xl-3 {
-        width: 50%;
+    /* Roles permission table — horizontal scroll on small */
+    .permission-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* Navbar compact */
-    .layout-navbar {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
+    .permission-table th,
+    .permission-table td {
+        font-size: 0.8rem !important;
+        padding: 0.35rem 0.45rem !important;
+        white-space: nowrap;
     }
 
-    /* Dashboard welcome banner */
-    .card.overflow-hidden .card-body {
-        padding: 1.25rem !important;
+    /* Dashboard banner clock */
+    #dashClock {
+        display: none !important;
     }
 
-    /* List items */
-    .list-group-item.px-4 {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+    /* Purchase/sale form sidebar to top */
+    .col-lg-3.order-lg-first {
+        order: -1 !important;
     }
 }
 
 /* ================================================================
-   MOBILE (0 – 575px)
+   MOBILE (0 – 575px) — Main block
    ================================================================ */
 @media (max-width: 575.98px) {
 
-    /* ── Page header stacks ── */
+    /* ── Layout ── */
+    .container-xxl.container-p-y {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+        padding-top: 1.25rem !important;
+    }
+
+    .layout-page {
+        padding-left: 0 !important;
+    }
+
+    .content-wrapper {
+        padding: 0 !important;
+    }
+
+    /* ── Navbar ── */
+    .layout-navbar {
+        padding: 0 0.6rem !important;
+        min-height: 54px !important;
+    }
+
+    .navbar-nav.align-items-center.ms-auto.flex-row.gap-1 {
+        gap: 0 !important;
+    }
+
+    #navClock-time,
+    #navClock-date {
+        display: none !important;
+    }
+
+    .cs-dropdown-menu,
+    .ls-dropdown-menu {
+        min-width: 180px !important;
+        right: 0 !important;
+        left: auto !important;
+    }
+
+    .user-dropdown-menu {
+        min-width: 240px !important;
+        right: 0 !important;
+        left: auto !important;
+    }
+
+    /* ── Sidebar ── */
+    #layout-menu {
+        width: 240px !important;
+        max-width: 85vw;
+    }
+
+    .app-brand-text.demo {
+        font-size: 1.1rem !important;
+    }
+
+    /* ── Page header ── */
     .d-flex.align-items-center.justify-content-between.mb-4,
     .d-flex.align-items-center.justify-content-between.mb-3 {
-        flex-direction: column;
+        flex-direction: column !important;
         align-items: flex-start !important;
-        gap: 0.6rem;
+        gap: 0.5rem;
     }
 
-    .d-flex.align-items-center.justify-content-between.mb-4>a.btn,
-    .d-flex.align-items-center.justify-content-between.mb-3>a.btn {
+    .d-flex.align-items-center.justify-content-between.mb-4>*,
+    .d-flex.align-items-center.justify-content-between.mb-3>* {
+        width: 100%;
+    }
+
+    .d-flex.align-items-center.justify-content-between.mb-4 .d-flex.gap-2,
+    .d-flex.align-items-center.justify-content-between.mb-3 .d-flex.gap-2 {
+        flex-wrap: wrap;
+        gap: 0.4rem !important;
+    }
+
+    .d-flex.align-items-center.justify-content-between.mb-4 .btn,
+    .d-flex.align-items-center.justify-content-between.mb-3 .btn {
+        width: 100%;
+    }
+
+    /* ── Card header ── */
+    .card-header.d-flex {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .card-header.d-flex .btn {
         align-self: flex-start;
     }
 
-    /* ── Card header stacks ── */
-    .card-header.d-flex.justify-content-between {
-        flex-direction: column;
-        align-items: flex-start !important;
+    /* ── Card body ── */
+    .card-body {
+        padding: 1rem !important;
     }
 
-    .card-header.d-flex.justify-content-between>a.btn,
-    .card-header.d-flex.justify-content-between>.btn {
-        align-self: flex-start;
+    .card-body.p-4 {
+        padding: 0.9rem !important;
     }
 
-    /* ── Form columns — full width ── */
-    .col-lg-8,
-    .col-lg-4,
-    .col-xl-8.col-lg-7,
-    .col-xl-4.col-lg-5 {
+    .card.shadow-sm {
+        box-shadow: 0 1px 6px rgba(0, 0, 0, .07) !important;
+    }
+
+    /* ── Typography ── */
+    h4.fw-bold,
+    h4.fw-semibold {
+        font-size: 1.1rem !important;
+    }
+
+    .card-header h5,
+    .card-header h4 {
+        font-size: 0.95rem !important;
+    }
+
+    h3.fw-bold {
+        font-size: 1.4rem !important;
+    }
+
+    .breadcrumb {
+        font-size: 0.76rem;
+        flex-wrap: wrap;
+    }
+
+    /* ── Column resets ── */
+    [class*="col-lg-"],
+    [class*="col-md-"],
+    [class*="col-xl-"] {
         width: 100% !important;
         max-width: 100% !important;
+        flex: 0 0 100% !important;
     }
 
-    .row.g-3>[class*="col-md-"] {
+    .col-6,
+    .col-6.col-xl-3,
+    .col-6.col-md-3,
+    .col-6.col-md-4 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    .col-12 {
         width: 100% !important;
         max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* ── Forms ── */
+    .form-label {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem !important;
+    }
+
+    .form-control-lg,
+    .form-select-lg {
+        font-size: 0.88rem !important;
+        padding: 0.45rem 0.75rem !important;
+    }
+
+    textarea.form-control {
+        min-height: 100px !important;
     }
 
     /* ── Table ── */
     .table td,
     .table th {
-        font-size: 0.82rem !important;
-        padding: 0.45rem 0.5rem !important;
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.45rem !important;
         white-space: nowrap;
     }
 
-    .table.fs-5 {
-        font-size: 0.82rem !important;
-    }
-
-    .table-sm td,
-    .table-sm th {
-        font-size: 0.8rem !important;
-        padding: 0.3rem 0.4rem !important;
-    }
-
-    /* Table images smaller */
     .tbl-img {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
     }
 
     .tbl-img-wide {
-        width: 56px !important;
-        height: 36px !important;
-        min-width: 56px !important;
+        width: 52px !important;
+        height: 34px !important;
+        min-width: 52px !important;
     }
 
     .tbl-img-round {
-        width: 32px !important;
-        height: 32px !important;
-        min-width: 32px !important;
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px !important;
     }
 
-    /* Table p-3 reduce */
-    .table-responsive.p-3 {
-        padding: 0.5rem !important;
-    }
-
-    /* Dashboard recent orders table min-width */
     .table-responsive table.table {
-        min-width: 600px;
+        min-width: 540px;
     }
 
-    /* ── DataTables controls stack ── */
+    /* ── Buttons ── */
+    .btn {
+        font-size: 0.85rem !important;
+    }
+
+    .btn-lg {
+        font-size: 0.88rem !important;
+        padding: 0.45rem 0.9rem !important;
+    }
+
+    .btn-sm {
+        font-size: 0.78rem !important;
+        padding: 0.25rem 0.55rem !important;
+    }
+
+    .btn-action {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* ── Badges ── */
+    .badge {
+        font-size: 0.72rem !important;
+    }
+
+    .status-toggle-btn {
+        font-size: 0.72rem !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+
+    /* ── DataTables ── */
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_filter,
     div.dataTables_wrapper div.dataTables_info,
@@ -301,6 +553,10 @@ div.dataTables_wrapper div.dataTables_paginate {
         float: none !important;
         width: 100% !important;
         margin-bottom: 0.4rem;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: 100% !important;
     }
 
     div.dataTables_wrapper div.dataTables_paginate ul.pagination {
@@ -308,324 +564,516 @@ div.dataTables_wrapper div.dataTables_paginate {
         gap: 2px;
     }
 
-    .dataTables_paginate .paginate_button {
-        padding: 0.2rem 0.5rem !important;
-        font-size: 0.8rem !important;
-    }
-
     div.dataTables_length select {
         width: auto !important;
         display: inline-block !important;
     }
 
+    .dataTables_paginate .paginate_button {
+        font-size: 0.78rem !important;
+        padding: 0.2rem 0.45rem !important;
+    }
+
     /* ── Dashboard ── */
-    .col-6.col-xl-3,
-    .col-sm-6.col-xl-3 {
-        width: 50% !important;
+    #dashClock {
+        display: none !important;
     }
 
-    .col-xl-8,
-    .col-xl-4 {
-        width: 100%;
+    .dash-banner .card-body {
+        flex-direction: column !important;
+        align-items: flex-start !important;
     }
 
-    .card-body.text-white h4 {
-        font-size: 1.1rem;
+    .dash-banner h4 {
+        font-size: 1.1rem !important;
     }
 
-    .card.overflow-hidden .card-body {
-        padding: 1.25rem !important;
+    .dash-banner p {
+        font-size: 0.82rem !important;
     }
 
-    .list-group-item.px-4 {
+    .kpi-card .card-body {
+        padding: 0.75rem !important;
+    }
+
+    .kpi-icon {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 1.1rem !important;
+    }
+
+    .kpi-card .fw-bold[style*="1.1rem"] {
+        font-size: 0.95rem !important;
+    }
+
+    .kpi-card .fw-bold[style*="1.3rem"] {
+        font-size: 1.1rem !important;
+    }
+
+    /* ── Roles permission table ── */
+    .table-responsive.border.rounded {
+        border-radius: 6px !important;
+    }
+
+    .table.table-bordered th,
+    .table.table-bordered td {
+        font-size: 0.78rem !important;
+        padding: 0.35rem 0.4rem !important;
+        white-space: nowrap;
+    }
+
+    .table.table-bordered {
+        min-width: 480px;
+    }
+
+    /* ── Purchase / Sale create form ── */
+    .pur-qty-input {
+        width: 54px !important;
+    }
+
+    .pur-price-input {
+        width: 80px !important;
+    }
+
+    .pur-sm-input {
+        width: 64px !important;
+    }
+
+    #purchaseItemsTable,
+    #saleItemsTable {
+        min-width: 600px;
+    }
+
+    #shipping_amount {
+        width: 90px !important;
+    }
+
+    /* ── Summary totals row ── */
+    .d-flex.justify-content-between.align-items-center.border-bottom.py-2 .form-control-sm {
+        width: 90px !important;
+        font-size: 0.82rem !important;
+    }
+
+    /* ── Settings / Profile sidebar card ── */
+    .publish-sticky {
+        position: static !important;
+        top: auto !important;
+    }
+
+    .list-group-item {
         padding-left: 1rem !important;
         padding-right: 1rem !important;
     }
 
-    #revenueChart {
-        height: 180px !important;
-    }
-
-    /* ── Card ── */
-    .card-body.p-4 {
-        padding: 1rem !important;
-    }
-
-    .card.shadow-sm {
-        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07) !important;
-    }
-
-    .row.g-4 {
-        --bs-gutter-x: 0.75rem;
-        --bs-gutter-y: 0.75rem;
-    }
-
-    /* ── Typography ── */
-    h4.fw-bold.mb-1 {
-        font-size: 1.15rem !important;
-    }
-
-    .card-header h4.fs-4,
-    .card-header h4.fw-semibold {
-        font-size: 1rem !important;
-    }
-
-    .breadcrumb {
-        font-size: 0.78rem;
-    }
-
-    /* ── Form controls ── */
-    .form-control-lg,
-    .form-select-lg {
-        font-size: 0.9rem !important;
-        padding: 0.45rem 0.75rem !important;
-    }
-
-    textarea.form-control-lg {
-        min-height: 120px !important;
-    }
-
-    input[type="date"].form-control-lg,
-    input[type="datetime-local"].form-control-lg {
+    .list-group-item .fw-bold {
         font-size: 0.85rem !important;
     }
 
-    .input-group>.form-control,
-    .input-group>.btn {
-        font-size: 0.9rem !important;
+    /* ── Reports filter form ── */
+    .report-filter-form .col-md-3,
+    .report-filter-form [class*="col-md-"] {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    /* ── Buttons ── */
-    .btn-lg {
-        font-size: 0.9rem !important;
-        padding: 0.45rem 0.9rem !important;
-    }
-
-    a.btn.btn-outline-secondary.btn-lg {
-        font-size: 0.82rem !important;
-        padding: 0.35rem 0.7rem !important;
-    }
-
-    .btn-action {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 0.9rem !important;
-    }
-
-    /* ── Badges ── */
-    .status-toggle-btn {
-        font-size: 0.72rem !important;
-        padding: 0.25rem 0.6rem !important;
-    }
-
-    .badge.px-3.py-2.fs-6 {
-        font-size: 0.78rem !important;
-        padding: 0.25rem 0.6rem !important;
-    }
-
-    .badge.rounded-pill.px-3 {
-        font-size: 0.72rem !important;
-        padding: 0.2rem 0.5rem !important;
-    }
-
-    /* ── Toast ── */
-    #adminToast {
-        min-width: 200px;
-        max-width: calc(100vw - 1.5rem);
-        font-size: 0.95rem;
-        right: 0.75rem;
-        top: 0.75rem;
-    }
-
-    /* ── Content padding ── */
-    .container-xxl.container-p-y {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-    }
-
-    /* ── Navbar ── */
-    .layout-navbar {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-    }
-
-    /* ── Modal ── */
-    .modal-dialog {
-        margin: 0.5rem;
-    }
-
-    .modal-body {
-        padding: 1rem !important;
-    }
-
-    /* ── Accordion ── */
-    .accordion-button {
-        font-size: 0.9rem !important;
-        padding: 0.75rem 1rem !important;
-    }
-
-    /* ── Flex helpers ── */
-    .d-flex.gap-2.flex-wrap {
-        gap: 0.4rem !important;
-    }
-
-    .color-row-wrap {
+    /* ── Product form sections ── */
+    .form-section-header {
         flex-wrap: wrap;
-        gap: 0.4rem;
-    }
-
-    /* ── Order action buttons ── */
-    .order-action-btns {
-        flex-direction: column;
-        gap: 0.4rem;
-    }
-
-    .order-action-btns .btn {
-        width: 100%;
-    }
-
-    /* ── Order detail table ── */
-    .order-detail-table td:first-child {
-        font-weight: 600;
-        min-width: 110px;
-    }
-
-    /* ── Product ── */
-    .product-img-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    .product-info-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .product-gallery-thumb {
-        width: 50px !important;
-        height: 50px !important;
-    }
-
-    .drop-zone {
-        padding: 1.5rem !important;
-    }
-
-    .upload-icon {
-        font-size: 2rem !important;
-    }
-
-    /* ── Attributes ── */
-    .attr-table-wrap {
-        overflow-x: auto;
-    }
-
-    .attr-btn-text .bx {
-        margin-right: 0 !important;
-    }
-
-    /* ── Category image grid ── */
-    .category-img-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.5rem !important;
-    }
-
-    /* ── Text truncation helpers ── */
-    .content-preview-text,
-    .contact-msg-preview,
-    .delete-reason-text {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-    }
-
-    .content-preview-text {
-        max-width: 120px;
-    }
-
-    .contact-msg-preview {
-        max-width: 130px;
-    }
-
-    .delete-reason-text {
-        max-width: 100px;
-    }
-
-    /* ── Misc ── */
-    .review-stars i {
-        font-size: 0.85rem !important;
-    }
-
-    .return-status-select {
-        font-size: 0.85rem !important;
-    }
-
-    .payment-amount {
-        font-size: 0.85rem !important;
-    }
-
-    .address-text {
-        font-size: 0.82rem !important;
-    }
-
-    .tbl-card-number {
-        font-size: 0.78rem !important;
-        letter-spacing: 0.05em;
-    }
-
-    .role-permissions-list {
-        columns: 1 !important;
-    }
-
-    .policy-editor-wrap {
-        min-height: 150px !important;
-    }
-
-    .brand-logo-preview {
-        width: 80px !important;
-        height: 80px !important;
-    }
-
-    .shipping-row-wrap {
-        flex-direction: column;
         gap: 0.5rem;
     }
 
-    .stock-qty-input {
-        width: 80px !important;
-    }
-
-    .profile-header-wrap {
-        flex-direction: column;
-        align-items: flex-start !important;
-    }
-}
-
-/* ================================================================
-   VERY SMALL (0 – 400px)
-   ================================================================ */
-@media (max-width: 400px) {
-
-    .btn-responsive-full {
+    .form-section-body .row.g-3>[class*="col-md-"] {
         width: 100% !important;
-        margin-bottom: 0.4rem;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
     }
 
-    .dropdown-menu.dropdown-menu-end {
-        right: -0.5rem !important;
-        left: auto !important;
-        min-width: 200px;
+    /* ── Users / Customers / Suppliers show cards ── */
+    .d-flex.justify-content-between.py-2.border-bottom span {
+        font-size: 0.82rem !important;
     }
 
-    a.btn.btn-outline-secondary.btn-lg {
+    .d-flex.justify-content-between.py-2 span {
+        font-size: 0.82rem !important;
+    }
+
+    /* ── Stock adjust page ── */
+    .col-md-4.col-lg-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
+
+/* end @media max-width: 575.98px */
+
+/* ================================================================
+   VIEWPORT FIX — allow user zoom for accessibility
+   ================================================================ */
+/* Override is done via JS below — keep meta intact but allow zoom on md+ */
+
+/* ================================================================
+   NAVBAR — crowded icons fix on < 400px
+   ================================================================ */
+@media (max-width: 399.98px) {
+    .nav-item.dropdown.me-1 .nav-link {
+        padding: 0 0.3rem !important;
+    }
+
+    .cs-trigger span.fw-bold,
+    .ls-trigger span.fw-bold {
+        display: none !important;
+    }
+
+    .theme-toggle-btn {
+        width: 30px !important;
+    }
+
+    .avatar {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .avatar img,
+    .avatar>div {
+        width: 32px !important;
+        height: 32px !important;
         font-size: 0.8rem !important;
-        padding: 0.3rem 0.6rem !important;
+    }
+
+    .layout-navbar {
+        padding: 0 0.4rem !important;
     }
 }
 
 /* ================================================================
-   VERY SMALL (0 – 360px)
+   PRINT — hide sidebar & navbar
    ================================================================ */
-@media (max-width: 360px) {
-    .app-brand-text.demo {
-        font-size: 1.1rem !important;
+@media print {
+
+    #layout-menu,
+    .layout-navbar,
+    .layout-menu-toggle,
+    .layout-overlay,
+    .btn-action,
+    nav[aria-label="breadcrumb"] {
+        display: none !important;
+    }
+
+    .layout-page {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .content-wrapper {
+        padding: 0 !important;
+    }
+
+    .container-xxl {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    body {
+        font-size: 12px !important;
+    }
+}
+
+/* ================================================================
+   DARK MODE — responsive tweaks
+   ================================================================ */
+[data-bs-theme="dark"] .card-body.p-4,
+[data-bs-theme="dark"] .card-body {
+    background: transparent;
+}
+
+[data-bs-theme="dark"] .card-header.bg-white {
+    background: transparent !important;
+}
+
+/* ================================================================
+   UTILITY — mobile helper classes
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .mob-full {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    .mob-hide {
+        display: none !important;
+    }
+
+    .mob-text-sm {
+        font-size: 0.8rem !important;
+    }
+
+    .mob-p-sm {
+        padding: 0.6rem !important;
+    }
+
+    .mob-gap-sm {
+        gap: 0.4rem !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .tab-full {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   SHOW PAGES — sidebar (col-lg-3) first on mobile
+   purchases/show, sales/show, purchase_returns/show, sale_returns/show
+   ================================================================ */
+@media (max-width: 991.98px) {
+
+    /* Quick Actions sidebar comes first on mobile */
+    .show-sidebar {
+        order: -1 !important;
+    }
+
+    .show-main {
+        order: 0 !important;
+    }
+}
+
+/* ================================================================
+   STATS CARDS — col-6 col-xl-3 gap: add md breakpoint
+   Affects all index pages
+   ================================================================ */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+    .col-6.col-xl-3 {
+        width: 25% !important;
+        max-width: 25% !important;
+        flex: 0 0 25% !important;
+    }
+}
+
+/* ================================================================
+   FORM PAGES — col-lg-8/4 promote to col-md-8/4
+   so sidebar is side-by-side from 768px, not only from 992px
+   ================================================================ */
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+    /* Keep the publish/save card beside the form on tablet */
+    .form-publish-col {
+        width: 33.3333% !important;
+        max-width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+    }
+
+    .form-main-col {
+        width: 66.6666% !important;
+        max-width: 66.6666% !important;
+        flex: 0 0 66.6666% !important;
+    }
+}
+
+/* ================================================================
+   REPORTS — col-6 col-xl-2 (6 KPI cards): add col-md-4
+   ================================================================ */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+    .col-6.col-xl-2 {
+        width: 33.3333% !important;
+        max-width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+    }
+}
+
+/* ================================================================
+   PRODUCTS INDEX — filter col-md-1 price inputs too narrow
+   ================================================================ */
+@media (max-width: 991.98px) {
+
+    /* col-md-1 price min/max inputs: make them wider */
+    .product-filter-row [class*="col-md-1"] {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .product-filter-row [class*="col-md-1"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
+
+/* ================================================================
+   REPORTS — col-md-1 apply button too narrow
+   ================================================================ */
+@media (max-width: 991.98px) {
+    .report-filter-form .col-md-1 {
+        width: auto !important;
+        flex: 0 0 auto !important;
+    }
+}
+
+/* ================================================================
+   PURCHASE / SALE FORM — shipping input full-width on mobile
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .d-flex.justify-content-between.align-items-center.border-bottom.py-2 input[type="number"] {
+        width: 100px !important;
+        font-size: 0.82rem !important;
+    }
+
+    /* Summary totals section on create/edit forms */
+    #sum_subtotal,
+    #sum_grandtotal,
+    #sum_due,
+    #sum_change,
+    #lbl_discount_amount,
+    #lbl_tax_amount {
+        font-size: 0.88rem !important;
+    }
+}
+
+/* ================================================================
+   PRODUCTS FORM — col-md-5/3/4 stack on mobile
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    .col-md-5,
+    .col-md-3,
+    .col-md-4,
+    .col-md-2 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .col-md-5 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    .col-md-4 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    .col-md-3 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+}
+
+/* ================================================================
+   NAVBAR — items spacing on very small screens
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .layout-navbar .nav-item.dropdown {
+        margin-right: 0 !important;
+    }
+
+    .layout-navbar .nav-link {
+        padding-left: 0.35rem !important;
+        padding-right: 0.35rem !important;
+    }
+}
+
+/* ================================================================
+   CARD HEADER — align items + flex-wrap for all headers
+   ================================================================ */
+.card-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* ================================================================
+   STOCKS ADJUST — col-lg-4/8 at tablet
+   ================================================================ */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .col-lg-4.col-md-4 {
+        width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+        max-width: 33.3333% !important;
+    }
+
+    .col-lg-8.col-md-8 {
+        width: 66.6666% !important;
+        flex: 0 0 66.6666% !important;
+        max-width: 66.6666% !important;
+    }
+
+    .col-lg-3.col-md-4 {
+        width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+        max-width: 33.3333% !important;
+    }
+
+    .col-lg-9.col-md-8 {
+        width: 66.6666% !important;
+        flex: 0 0 66.6666% !important;
+        max-width: 66.6666% !important;
+    }
+}
+
+/* ================================================================
+   DASHBOARD BANNER — responsive button row
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .dash-banner .d-flex.flex-wrap.gap-2 {
+        width: 100%;
+    }
+
+    .dash-banner .d-flex.flex-wrap.gap-2 .btn {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    .dash-banner .card-body {
+        padding: 1.25rem !important;
+    }
+}
+
+/* ================================================================
+   ACTIVITY LOG — description cell wraps on mobile
+   ================================================================ */
+@media (max-width: 767.98px) {
+    .table td.description-cell {
+        white-space: normal !important;
+        max-width: 180px;
+        word-break: break-word;
+    }
+}
+
+/* ================================================================
+   AUTH PAGES — login / forgot-password
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .authentication-wrapper {
+        padding: 1rem !important;
+    }
+
+    .authentication-inner {
+        padding: 0 !important;
+    }
+
+    .card.authentication-card {
+        border-radius: 12px !important;
+    }
+
+    .demo-user-card {
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
     }
 }

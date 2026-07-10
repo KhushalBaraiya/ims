@@ -1,9 +1,9 @@
-ï»¿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.default_currency'))
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.default_currency') }}</h4>
             <nav aria-label="breadcrumb">
@@ -180,7 +180,7 @@
                                 return '<span class="badge rounded-pill bg-label-primary fw-semibold px-3 py-1">{{ __('messages.th_default') }}</span>';
                             if (canUpdate)
                                 return `<button type="button" class="btn btn-sm btn-outline-secondary set-default-btn rounded-pill" data-id="${r.id}" style="font-size:11px;padding:2px 12px;">{{ __('messages.set_default') }}</button>`;
-                            return '<span class="text-muted">â€”</span>';
+                            return '<span class="text-muted">—</span>';
                         }
                     },
                     {
@@ -201,7 +201,7 @@
                         className: 'text-center',
                         render: (d, t, r) => {
                             if (!canUpdate && !canDelete)
-                                return '<span class="text-muted small">â€”</span>';
+                                return '<span class="text-muted small">—</span>';
 
                             let editBtn = canUpdate ?
                                 `<a href="#" class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action edit-btn" data-id="${r.id}" title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;"><i class="bx bx-edit" style="font-size:1rem;"></i></a>` :

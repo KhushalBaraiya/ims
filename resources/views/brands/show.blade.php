@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.brand_details') . ' — ' . $brand->name)
+@extends('layouts.admin')
+@section('title', __('messages.brand_details') . ' � ' . $brand->name)
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.brand_details') }}</h4>
             <nav aria-label="breadcrumb">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             @if ($brand->image)
@@ -45,7 +45,7 @@
                 <div class="text-white fw-bold fs-6 lh-sm">{{ $brand->name }}</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-link me-1"></i>{{ $brand->slug }}</span>
-                    <span>· {{ $brand->products->count() }} {{ __('messages.total_products') }}</span>
+                    <span>� {{ $brand->products->count() }} {{ __('messages.total_products') }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">

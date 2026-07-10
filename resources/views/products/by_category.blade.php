@@ -316,7 +316,7 @@
 
     {{-- ── Summary Stats ──────────────────────────────── --}}
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -329,7 +329,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -342,7 +342,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -357,7 +357,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>

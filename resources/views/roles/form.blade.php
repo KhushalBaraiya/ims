@@ -32,7 +32,7 @@
 
 {{-- Permissions Matrix --}}
 <div class="mb-4">
-    <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
         <div>
             <h6 class="fw-bold mb-0">{{ __('messages.permissions') }}</h6>
             <small class="text-muted">{{ __('messages.permissions') }}</small>
@@ -49,12 +49,12 @@
             <thead class="table-light">
                 <tr>
                     <th>{{ __('messages.module_label') }}</th>
-                    <th class="text-center" style="width:70px;">{{ __('messages.select_all') }}</th>
-                    <th class="text-center" style="width:70px;">{{ __('messages.view') }}</th>
-                    <th class="text-center" style="width:70px;">Own</th>
-                    <th class="text-center" style="width:70px;">{{ __('messages.create') }}</th>
-                    <th class="text-center" style="width:70px;">{{ __('messages.update') }}</th>
-                    <th class="text-center" style="width:70px;">{{ __('messages.delete') }}</th>
+                    <th class="text-center" style="min-width:55px;">{{ __('messages.select_all') }}</th>
+                    <th class="text-center" style="min-width:55px;">{{ __('messages.view') }}</th>
+                    <th class="text-center" style="min-width:55px;">Own</th>
+                    <th class="text-center" style="min-width:55px;">{{ __('messages.create') }}</th>
+                    <th class="text-center" style="min-width:55px;">{{ __('messages.update') }}</th>
+                    <th class="text-center" style="min-width:55px;">{{ __('messages.delete') }}</th>
                 </tr>
             </thead>
             <tbody>

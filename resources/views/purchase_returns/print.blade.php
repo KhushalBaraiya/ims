@@ -51,7 +51,7 @@
 
     <!-- Top Action Bar -->
     <div
-        class="max-w-4xl mx-auto mb-6 px-4 no-print flex justify-between items-center bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
+        class="max-w-4xl mx-auto mb-6 px-4 no-print flex flex-wrap justify-between items-center gap-2 bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
         <span class="text-sm text-slate-500 font-medium">Purchase Return: <strong
                 class="text-slate-800 font-mono">{{ $purchaseReturn->return_no }}</strong></span>
         <div class="flex items-center gap-2">
@@ -84,7 +84,7 @@
         class="max-w-4xl mx-auto bg-white shadow-xl border border-slate-200 rounded-2xl p-10 print:shadow-none print:border-0 print:rounded-none">
 
         <!-- Header -->
-        <div class="flex justify-between items-start border-b border-slate-200 pb-8 mb-8">
+        <div class="flex flex-wrap justify-between items-start gap-4 border-b border-slate-200 pb-8 mb-8">
             <div>
                 <div
                     class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1 print:text-black print:bg-none">
@@ -121,7 +121,7 @@
         </div>
 
         <!-- Supplier & Return Details -->
-        <div class="grid grid-cols-2 gap-8 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 mb-8 print:grid-cols-2">
             <div>
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Supplier Details</h3>
                 <p class="font-bold text-slate-800 text-base">{{ $purchaseReturn->supplier->name ?? 'N/A' }}</p>

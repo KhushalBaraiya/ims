@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.sub_categories'))
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.sub_categories') }}</h4>
             <nav aria-label="breadcrumb">
@@ -78,7 +78,7 @@
 
     {{-- Summary Stats --}}
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body d-flex align-items-center gap-3 py-3">
                     <span class="avatar-initial rounded-circle bg-label-success flex-shrink-0"
@@ -92,7 +92,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body d-flex align-items-center gap-3 py-3">
                     <span class="avatar-initial rounded-circle bg-label-primary flex-shrink-0"
@@ -108,7 +108,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body d-flex align-items-center gap-3 py-3">
                     <span class="avatar-initial rounded-circle bg-label-danger flex-shrink-0"
@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body d-flex align-items-center gap-3 py-3">
                     <span class="avatar-initial rounded-circle bg-label-warning flex-shrink-0"
@@ -191,7 +191,7 @@
                                             {{ $subCategory->mainCategory->name }}
                                         </a>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">�</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -314,7 +314,7 @@
                                 btn.text('{{ __('messages.inactive') }}');
                             }
                             showAdminToast(res.message, 'success');
-                            // ── Update stat cards live ──────────────────
+                            // -- Update stat cards live ------------------
                             $('#statActiveCount').text($('.status-toggle-btn.border-success')
                                 .length);
                             $('#statInactiveCount').text($('.status-toggle-btn.border-danger')
@@ -375,7 +375,7 @@
                 });
             });
 
-            // ── Bulk Select ──────────────────────────────────────────────
+            // -- Bulk Select ----------------------------------------------
             $('#selectAll').on('change', function() {
                 $('.row-checkbox').prop('checked', this.checked);
                 toggleBulkBtn();
@@ -390,7 +390,7 @@
                 count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
             }
 
-            // ── Bulk Delete ──────────────────────────────────────────────
+            // -- Bulk Delete ----------------------------------------------
             $('#bulkDeleteBtn').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();

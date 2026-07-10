@@ -3,7 +3,7 @@
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Reports</h4>
             <nav aria-label="breadcrumb">
@@ -17,7 +17,7 @@
 
     {{-- Summary KPI Strip --}}
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -72,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-2">
+        <div class="col-6 col-md-4 col-xl-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>

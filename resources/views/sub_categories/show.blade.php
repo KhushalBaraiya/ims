@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.sub_category_details') . ' — ' . $subCategory->name)
+@extends('layouts.admin')
+@section('title', __('messages.sub_category_details') . ' � ' . $subCategory->name)
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.sub_category_details') }}</h4>
             <nav aria-label="breadcrumb">
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -40,9 +40,9 @@
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-link me-1"></i>{{ $subCategory->slug }}</span>
                     @if ($subCategory->mainCategory)
-                        <span>· {{ $subCategory->mainCategory->name }}</span>
+                        <span>� {{ $subCategory->mainCategory->name }}</span>
                     @endif
-                    <span>· {{ $subCategory->products->count() }} {{ __('messages.total_products') }}</span>
+                    <span>� {{ $subCategory->products->count() }} {{ __('messages.total_products') }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -219,7 +219,7 @@
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">{{ __('messages.main_category') }}</span>
-                            <span class="badge bg-label-primary">{{ $subCategory->mainCategory->name ?? '—' }}</span>
+                            <span class="badge bg-label-primary">{{ $subCategory->mainCategory->name ?? '�' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">{{ __('messages.th_status') }}</span>

@@ -4,7 +4,7 @@
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Edit Sales Return</h4>
             <nav aria-label="breadcrumb">
@@ -140,11 +140,11 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Product</th>
-                                        <th class="text-center" style="width:130px;">Return Qty</th>
-                                        <th class="text-center" style="width:110px;">Unit Price</th>
-                                        <th class="text-center" style="width:100px;">Discount</th>
-                                        <th class="text-center" style="width:100px;">Tax</th>
-                                        <th class="text-end" style="width:120px;">Sub Total</th>
+                                        <th class="text-center" style="min-width:90px;">Return Qty</th>
+                                        <th class="text-center" style="min-width:80px;">Unit Price</th>
+                                        <th class="text-center" style="min-width:75px;">Discount</th>
+                                        <th class="text-center" style="min-width:75px;">Tax</th>
+                                        <th class="text-end" style="min-width:85px;">Sub Total</th>
                                     </tr>
                                 </thead>
                                 <tbody id="returnItemsContainer">

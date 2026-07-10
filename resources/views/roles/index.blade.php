@@ -1,9 +1,9 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.role_management'))
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.role_management') }}</h4>
             <nav aria-label="breadcrumb">
@@ -197,7 +197,7 @@
                 });
             });
 
-            // ── Bulk Select ──────────────────────────────────────────────
+            // -- Bulk Select ----------------------------------------------
             $('#selectAll').on('change', function() {
                 $('.row-checkbox').prop('checked', this.checked);
                 toggleBulkBtn();
@@ -212,7 +212,7 @@
                 count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
             }
 
-            // ── Bulk Delete ──────────────────────────────────────────────
+            // -- Bulk Delete ----------------------------------------------
             $('#bulkDeleteBtn').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();

@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.stock_overview'))
 
 @section('content')
 
-    {{-- ── Page Header ── --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    {{-- -- Page Header -- --}}
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.stock_overview') }}</h4>
             <nav aria-label="breadcrumb">
@@ -21,7 +21,7 @@
         @endcan
     </div>
 
-    {{-- ── Summary Cards ── --}}
+    {{-- -- Summary Cards -- --}}
     <div class="row g-4 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="card shadow-sm border-0 h-100">
@@ -81,7 +81,7 @@
         </div>
     </div>
 
-    {{-- ── Filter Bar ── --}}
+    {{-- -- Filter Bar -- --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body py-3 px-4">
             <form method="GET" action="{{ route('stocks.index') }}" class="row g-2 align-items-end">
@@ -90,7 +90,7 @@
                     <div class="input-group input-group-sm">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                            placeholder="{{ __('messages.product_name') }}, SKU…">
+                            placeholder="{{ __('messages.product_name') }}, SKU�">
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -109,11 +109,11 @@
                     <label class="form-label fw-semibold small mb-1">Stock Status</label>
                     <select name="stock_status" class="form-select form-select-sm">
                         <option value="">All Status</option>
-                        <option value="ok" {{ request('stock_status') === 'ok' ? 'selected' : '' }}>✅ In Stock
+                        <option value="ok" {{ request('stock_status') === 'ok' ? 'selected' : '' }}>? In Stock
                         </option>
-                        <option value="low" {{ request('stock_status') === 'low' ? 'selected' : '' }}>⚠️ Low Stock
+                        <option value="low" {{ request('stock_status') === 'low' ? 'selected' : '' }}>?? Low Stock
                         </option>
-                        <option value="out" {{ request('stock_status') === 'out' ? 'selected' : '' }}>🔴 Out of Stock
+                        <option value="out" {{ request('stock_status') === 'out' ? 'selected' : '' }}>?? Out of Stock
                         </option>
                     </select>
                 </div>
@@ -129,7 +129,7 @@
         </div>
     </div>
 
-    {{-- ── Inventory Table ── --}}
+    {{-- -- Inventory Table -- --}}
     <div class="card shadow-sm">
         <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
             <h6 class="mb-0 fw-semibold">
@@ -190,7 +190,7 @@
                                             {{ number_format($qty, 2) }}
                                         </span>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">�</span>
                                     @endif
                                 </td>
                                 <td class="text-end text-muted small">{{ number_format($alert, 2) }}</td>
@@ -199,7 +199,7 @@
                                     @if ($product->hasTransactions())
                                         <span class="fw-bold">{{ format_currency($invVal) }}</span>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">�</span>
                                     @endif
                                 </td>
                                 <td class="text-center">

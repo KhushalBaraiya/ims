@@ -1,9 +1,9 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.supplier_details') . ' — ' . $supplier->name)
+@extends('layouts.admin')
+@section('title', __('messages.supplier_details') . ' � ' . $supplier->name)
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.supplier_details') }}</h4>
             <nav aria-label="breadcrumb">
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -41,7 +41,7 @@
                         <span><i class="bx bx-buildings me-1"></i>{{ $supplier->company_name }}</span>
                     @endif
                     <span><i class="bx bx-phone me-1"></i>{{ $supplier->phone }}</span>
-                    <span>· {{ $supplier->purchases->count() }} {{ __('messages.total_purchases') }}</span>
+                    <span>� {{ $supplier->purchases->count() }} {{ __('messages.total_purchases') }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -138,7 +138,7 @@
                         @endif
                         <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
                             <span class="text-muted small fw-semibold">{{ __('messages.email_address') }}</span>
-                            <span>{{ $supplier->email ?: '—' }}</span>
+                            <span>{{ $supplier->email ?: '�' }}</span>
                         </li>
                         @if ($supplier->gst_number)
                             <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
@@ -157,7 +157,7 @@
                                 <span
                                     class="text-muted small fw-semibold d-block mb-1">{{ __('messages.address_label') }}</span>
                                 <p class="mb-0 small">
-                                    {{ implode(', ', array_filter([$supplier->address, $supplier->city, $supplier->state, $supplier->pincode, $supplier->country])) ?: '—' }}
+                                    {{ implode(', ', array_filter([$supplier->address, $supplier->city, $supplier->state, $supplier->pincode, $supplier->country])) ?: '�' }}
                                 </p>
                             </li>
                         @endif

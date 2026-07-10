@@ -3,7 +3,7 @@
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.add_supplier') }}</h4>
             <nav aria-label="breadcrumb">
@@ -25,7 +25,7 @@
         <div class="row g-4">
 
             {{-- Left: Supplier Details --}}
-            <div class="col-lg-8">
+            <div class="col-lg-8 col-md-8">
 
                 {{-- Basic Info --}}
                 <div class="card shadow-sm mb-4">
@@ -203,7 +203,7 @@
             </div>
 
             {{-- Right: Publish --}}
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">

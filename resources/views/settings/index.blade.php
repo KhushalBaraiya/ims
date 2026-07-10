@@ -3,7 +3,7 @@
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.settings') }}</h4>
             <nav aria-label="breadcrumb">
@@ -25,7 +25,7 @@
         <div class="row g-4">
 
             {{-- Company Information --}}
-            <div class="col-lg-8">
+            <div class="col-lg-8 col-md-8">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">
@@ -159,7 +159,7 @@
             </div>
 
             {{-- Save Card --}}
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-4">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">

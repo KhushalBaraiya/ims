@@ -3,7 +3,7 @@
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.add_role_title') }}</h4>
             <nav aria-label="breadcrumb">

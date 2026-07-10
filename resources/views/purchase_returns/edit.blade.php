@@ -4,7 +4,7 @@
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Edit Purchase Return</h4>
             <nav aria-label="breadcrumb">
@@ -84,7 +84,7 @@
         <div class="row g-4">
 
             {{-- ══ LEFT COLUMN ══ --}}
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-md-4">
 
                 {{-- Return Details Card --}}
                 <div class="card mb-4 shadow-sm">
@@ -165,7 +165,7 @@
             </div>{{-- /col-lg-3 --}}
 
             {{-- ══ RIGHT COLUMN ══ --}}
-            <div class="col-lg-9">
+            <div class="col-lg-9 col-md-8">
 
                 {{-- Search / Products Card --}}
                 <div class="card mb-4 shadow-sm">

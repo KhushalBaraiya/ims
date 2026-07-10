@@ -60,7 +60,7 @@
 
     <!-- Top Action bar (Hidden on print) -->
     <div
-        class="no-print mx-auto mb-6 flex max-w-4xl items-center justify-between rounded-2xl border border-slate-200 bg-white p-3.5 px-4 shadow-sm">
+        class="no-print mx-auto mb-6 flex max-w-4xl flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white p-3.5 px-4 shadow-sm">
         <span class="text-sm font-medium text-slate-500">Invoice Preview: <strong
                 class="font-mono text-slate-800">{{ $sale->invoice_no }}</strong></span>
         <div class="flex items-center gap-2">
@@ -123,7 +123,8 @@
         </div>
 
         <!-- Billing details -->
-        <div class="mb-6 grid grid-cols-2 gap-8 border-b border-slate-100 pb-6 print:border-black">
+        <div
+            class="mb-6 grid grid-cols-1 gap-4 border-b border-slate-100 pb-6 sm:grid-cols-2 sm:gap-8 print:grid-cols-2 print:border-black">
             <div>
                 <span
                     class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Billing
@@ -202,9 +203,10 @@
         </div>
 
         <!-- Summary Totals -->
-        <div class="flex items-start justify-between border-t border-slate-100 pt-6 print:border-black">
+        <div
+            class="flex flex-col gap-6 border-t border-slate-100 pt-6 sm:flex-row sm:items-start sm:justify-between print:flex-row print:border-black">
             <!-- Notes -->
-            <div class="w-1/2 pr-6">
+            <div class="w-full sm:w-1/2 pr-0 sm:pr-6">
                 <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Terms
                     & Notes</span>
                 <p class="mt-1.5 whitespace-pre-line text-[11px] leading-relaxed text-slate-500 print:text-black">
@@ -213,7 +215,7 @@
             </div>
 
             <!-- Calculations -->
-            <div class="w-2/5 space-y-2.5 text-xs text-slate-600 print:text-black">
+            <div class="w-full sm:w-2/5 space-y-2.5 text-xs text-slate-600 print:text-black">
                 <div class="flex items-center justify-between border-b border-slate-50 pb-1.5 print:border-slate-200">
                     <span class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">Subtotal</span>
                     <span
@@ -254,7 +256,7 @@
         </div>
 
         <!-- Footer Signatures -->
-        <div class="mt-16 flex items-center justify-between text-xs">
+        <div class="mt-16 flex flex-wrap items-center justify-between gap-4 text-xs">
             <div>
                 <p class="text-slate-400 print:text-black">Authorized Signatory</p>
                 <div class="mt-10 w-48 border-b border-slate-300 print:border-black"></div>

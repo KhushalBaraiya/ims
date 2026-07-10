@@ -1,10 +1,10 @@
-﻿@extends('layouts.admin')
-@section('title', 'Purchase Return — ' . $purchaseReturn->return_no)
+@extends('layouts.admin')
+@section('title', 'Purchase Return � ' . $purchaseReturn->return_no)
 
 @section('content')
 
     {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">Purchase Return Details</h4>
             <nav aria-label="breadcrumb">
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -45,8 +45,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Purchase Return</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $purchaseReturn->return_no }}</span>
-                    <span>· {{ $purchaseReturn->supplier->name ?? '—' }}</span>
-                    <span>· {{ $purchaseReturn->return_date }}</span>
+                    <span>� {{ $purchaseReturn->supplier->name ?? '�' }}</span>
+                    <span>� {{ $purchaseReturn->return_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -63,8 +63,8 @@
 
     <div class="row g-4">
 
-        {{-- ── Left Column ──────────────────────────────────────── --}}
-        <div class="col-lg-3">
+        {{-- -- Left Column ---------------------------------------- --}}
+        <div class="col-lg-3 show-sidebar">
 
             {{-- Return Summary --}}
             <div class="card mb-4 shadow-sm">
@@ -191,12 +191,13 @@
 
         </div>
 
-        {{-- ── Right Column ─────────────────────────────────────── --}}
-        <div class="col-lg-9">
+        {{-- -- Right Column --------------------------------------- --}}
+        <div class="col-lg-9 show-main">
 
             {{-- Returned Items Table --}}
             <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-undo text-primary me-2"></i>Returned Items
                     </h6>
@@ -288,4 +289,3 @@
         });
     </script>
 @endpush
-

@@ -1,9 +1,9 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.sale_returns'))
 
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.sale_returns') }}</h4>
             <nav aria-label="breadcrumb">
@@ -40,7 +40,7 @@
         $totalSaleRefunded = SaleReturn::where('status', 'Completed')->sum('refunded_amount');
     @endphp
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-xl-3">
+        <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -332,7 +332,7 @@
                 });
             });
 
-            // ── Bulk Select ──────────────────────────────────────────────
+            // -- Bulk Select ----------------------------------------------
             $('#selectAll').on('change', function() {
                 $('.row-checkbox').prop('checked', this.checked);
                 toggleBulkBtn();
@@ -347,7 +347,7 @@
                 count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
             }
 
-            // ── Bulk Delete ──────────────────────────────────────────────
+            // -- Bulk Delete ----------------------------------------------
             $('#bulkDeleteBtn').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();

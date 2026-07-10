@@ -1,7 +1,6 @@
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
-        name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <meta content="{{ csrf_token() }}" name="csrf-token" />
 
     <title>@yield('title', 'Admin Dashboard')</title>
@@ -1100,4 +1099,7 @@
 
     <!-- Config -->
     <script src="{{ asset('assets/js/config.js') }}"></script>
+
+    <!-- Admin Responsive Styles — loaded last so it overrides everything -->
+    <link href="{{ asset('assets/css/admin-responsive.css') }}" rel="stylesheet" />
 </head>
