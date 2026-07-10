@@ -139,7 +139,6 @@ class RolePermissionSeeder extends Seeder
 
             return false;
         });
-        // kev ne
         $managerRole->syncPermissions($managerPermissions);
 
         // Define Staff permissions
@@ -169,8 +168,33 @@ class RolePermissionSeeder extends Seeder
                 'currency' => 'INR',
             ]
         );
-
         $admin->assignRole($superAdminRole);
+
+        // Create Manager user
+        $manager = User::updateOrCreate(
+            ['email' => 'manager@gmail.com'],
+            [
+                'name' => 'Manager',
+                'password' => Hash::make('Manager@123'),
+                'status' => 'active',
+                'language' => 'en',
+                'currency' => 'INR',
+            ]
+        );
+        $manager->assignRole($managerRole);
+
+        // Create Staff user
+        $staff = User::updateOrCreate(
+            ['email' => 'staff@gmail.com'],
+            [
+                'name' => 'Staff',
+                'password' => Hash::make('Staff@123'),
+                'status' => 'active',
+                'language' => 'en',
+                'currency' => 'INR',
+            ]
+        );
+        $staff->assignRole($staffRole);
     }
 }
 //
