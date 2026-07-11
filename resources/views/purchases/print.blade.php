@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -232,11 +232,11 @@
                         class="font-black text-lg">{{ $sym }}{{ number_format($purchase->grand_total, 2) }}</span>
                 </div>
                 <div class="flex justify-between text-emerald-600 font-semibold pt-1">
-                    <span>Paid Amount</span>
+                    <span>{{ __('messages.paid_amount_label') }}</span>
                     <span>{{ $sym }}{{ number_format($purchase->paid_amount, 2) }}</span>
                 </div>
                 <div class="flex justify-between text-red-500 font-semibold">
-                    <span>Balance Due</span>
+                    <span>{{ __('messages.balance_due') }}</span>
                     <span>{{ $sym }}{{ number_format($purchase->due_amount, 2) }}</span>
                 </div>
             </div>
@@ -266,3 +266,4 @@
 </body>
 
 </html>
+

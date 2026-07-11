@@ -196,7 +196,7 @@
                             <table class="table-hover mb-0 table align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Product</th>
+                                        <th>{{ __('messages.product') }}</th>
                                         <th class="text-center">Unit Price</th>
                                         @if ($purchaseReturn->purchase_id)
                                             <th class="text-center">Purchased Qty</th>
@@ -206,7 +206,7 @@
                                             <th class="text-center">In Stock</th>
                                         @endif
                                         <th class="text-center" style="width:110px;">Return Qty</th>
-                                        <th>Reason</th>
+                                        <th>{{ __('messages.reason') }}</th>
                                         <th class="text-end">Subtotal</th>
                                         <th style="width:40px;"></th>
                                     </tr>
@@ -611,3 +611,4 @@
         });
     </script>
 @endpush
+

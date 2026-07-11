@@ -126,7 +126,7 @@
                     <li class="menu-item {{ request()->routeIs('products.by-category') ? 'active' : '' }}">
                         <a href="{{ route('products.by-category') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-category-alt"></i>
-                            <div class="text-truncate">By Category</div>
+                            <div class="text-truncate">{{ __('messages.prod_by_category') }}</div>
                         </a>
                     </li>
                 </ul>
@@ -141,7 +141,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-cart-download" style="font-size:20px;"></i>
-                    Stock In
+                    {{ __('messages.menu_purchases') }} / {{ __('messages.menu_purchase_returns') }}
                 </span>
             </li>
         @endcanany
@@ -172,7 +172,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-cart-alt" style="font-size:20px;"></i>
-                    Stock Out
+                    {{ __('messages.menu_sales') }} / {{ __('messages.menu_sale_returns') }}
                 </span>
             </li>
         @endcanany
@@ -203,7 +203,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-layer" style="font-size:20px;"></i>
-                    Stock Management
+                    {{ __('messages.stock_adjustments') }}
                 </span>
             </li>
         @endcanany
@@ -222,7 +222,7 @@
             <li class="menu-item {{ $adjustmentsActive ? 'active' : '' }}">
                 <a href="{{ route('stocks.history') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-slider"></i>
-                    <div class="text-truncate">Adjustments</div>
+                    <div class="text-truncate">{{ __('messages.stock_adjustments') }}</div>
                 </a>
             </li>
         @endcan
@@ -235,7 +235,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-group" style="font-size:20px;"></i>
-                    Peoples
+                    {{ __('messages.menu_suppliers') }} / {{ __('messages.menu_customers') }}
                 </span>
             </li>
         @endcanany
@@ -324,7 +324,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-cog" style="font-size:20px;"></i>
-                    Management &amp; Settings
+                    {{ __('messages.role_management') }} &amp; {{ __('messages.settings') }}
                 </span>
             </li>
         @endcanany
@@ -371,7 +371,7 @@
         <li class="menu-header small text-uppercase mt-1">
             <span class="menu-header-text d-flex align-items-center gap-2">
                 <i class="bx bx-user-circle" style="font-size:20px;"></i>
-                Account
+                {{ __('messages.profile') }}
             </span>
         </li>
 
@@ -422,14 +422,14 @@
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2"
                         href="{{ route('profile.show') }}#edit-profile">
                         <i class="bx bx-edit"></i>
-                        Edit Profile
+                        {{ __('messages.profile_information') }}
                     </a>
                 </li>
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2"
                         href="{{ route('profile.show') }}#change-password">
                         <i class="bx bx-lock-alt"></i>
-                        Change Password
+                        {{ __('messages.change_password') }}
                     </a>
                 </li>
                 <li>

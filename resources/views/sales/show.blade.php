@@ -269,8 +269,8 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Product</th>
-                                    <th>SKU</th>
+                                    <th>{{ __('messages.product') }}</th>
+                                    <th>{{ __('messages.sku') }}</th>
                                     <th class="text-center">Qty</th>
                                     <th class="text-end">Unit Price</th>
                                     <th class="text-end">Discount</th>
@@ -520,3 +520,4 @@
         });
     </script>
 @endpush
+

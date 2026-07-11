@@ -172,7 +172,7 @@
                         <a class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
                             href="javascript:void(0);" id="userDDLangTrigger">
                             <i class="bx bx-globe user-dd-icon"></i>
-                            <span>Change Language</span>
+                            <span>{{ __('messages.language') }}</span>
                         </a>
                     </li>
 

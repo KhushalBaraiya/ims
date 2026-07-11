@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', __('messages.edit_product') . ' — ' . $product->name)
+ï»¿@extends('layouts.admin')
+@section('title', __('messages.edit_product') . ' ï¿½ ' . $product->name)
 
 @section('content')
 
@@ -42,7 +42,7 @@
             @endif
             <div>
                 <div class="text-white fw-bold">{{ $product->name }}</div>
-                <div class="text-white opacity-75 small">SKU: {{ $product->code }} &nbsp;·&nbsp;
+                <div class="text-white opacity-75 small">SKU: {{ $product->code }} &nbsp;ï¿½&nbsp;
                     {{ $product->mainCategory->name ?? 'Uncategorized' }}</div>
             </div>
             <span class="badge bg-white text-primary ms-auto">{{ ucfirst($product->status) }}</span>
@@ -197,7 +197,7 @@
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: —</span>
+                        <span class="badge bg-label-primary small" id="profitBadge">Profit: ï¿½</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -377,7 +377,7 @@
                                     <button type="button" id="triggerGalleryBtn" class="btn btn-outline-primary mt-1">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
-                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP · Max 2MB each</div>
+                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP ï¿½ Max 2MB each</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -392,7 +392,7 @@
                                                 <button type="button"
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove">×</button>
+                                                    title="Remove">ï¿½</button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -483,22 +483,22 @@
                         </h6>
                         <ul class="list-unstyled mb-0 small text-muted">
                             <li class="mb-2 d-flex justify-content-between">
-                                <span>Created</span>
+                                <span>{{ __('messages.created') }}</span>
                                 <strong class="text-body">{{ $product->created_at->format('d M Y') }}</strong>
                             </li>
                             <li class="mb-2 d-flex justify-content-between">
-                                <span>Last Updated</span>
+                                <span>{{ __('messages.last_updated') }}</span>
                                 <strong class="text-body">{{ $product->updated_at->format('d M Y') }}</strong>
                             </li>
                             <li class="mb-2 d-flex justify-content-between">
-                                <span>Current Stock</span>
+                                <span>{{ __('messages.current_stock') }}</span>
                                 <strong
                                     class="{{ ($product->stock->quantity ?? 0) > 0 ? 'text-success' : 'text-danger' }}">
                                     {{ number_format($product->stock->quantity ?? 0) }} {{ $product->unit_code }}
                                 </strong>
                             </li>
                             <li class="d-flex justify-content-between">
-                                <span>Stock Note</span>
+                                <span>{{ __('messages.stock_note') }}</span>
                                 <span class="text-warning small">Adjust via Stock page</span>
                             </li>
                         </ul>
@@ -574,7 +574,7 @@
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: —');
+                    $('#profitBadge').text('Profit: ï¿½');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
@@ -644,7 +644,7 @@
                         <button type="button"
                             class="remove-new-gallery-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                             style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                            title="Remove">×</button>
+                            title="Remove">ï¿½</button>
                     </div>`);
                         thumb.data('file', file);
                         $('#galleryPreviewContainer').append(thumb);
@@ -701,4 +701,5 @@
         });
     </script>
 @endpush
+
 

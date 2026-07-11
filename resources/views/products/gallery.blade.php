@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Product Gallery')
 
 @push('styles')
@@ -771,9 +771,9 @@
                             @if ($product->image)
                                 <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}"
                                     loading="lazy"
-                                    onerror="this.parentElement.innerHTML='<div class=\'pg-no-img\'><i class=\'bx bx-package\'></i><span>No Image</span></div>'">
+                                    onerror="this.parentElement.innerHTML='<div class=\'pg-no-img\'><i class=\'bx bx-package\'></i><span>{{ __('messages.no_image') }}</span></div>'">
                             @else
-                                <div class="pg-no-img"><i class="bx bx-package"></i><span>No Image</span></div>
+                                <div class="pg-no-img"><i class="bx bx-package"></i><span>{{ __('messages.no_image') }}</span></div>
                             @endif
 
                             {{-- stock badge TL --}}
@@ -945,3 +945,4 @@
         });
     </script>
 @endpush
+

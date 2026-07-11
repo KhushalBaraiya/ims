@@ -239,7 +239,7 @@
                     <table class="table-hover mb-0 table align-middle" id="purchaseItemsTable">
                         <thead class="table-light">
                             <tr>
-                                <th>Product</th>
+                                <th>{{ __('messages.product') }}</th>
                                 <th class="text-center">Qty</th>
                                 <th class="text-center">Purchase Price</th>
                                 <th class="text-muted text-center">Discount</th>
@@ -666,3 +666,4 @@
         });
     </script>
 @endpush
+

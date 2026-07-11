@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -182,7 +182,7 @@
                         class="font-black text-lg">{{ $sym }}{{ number_format($purchaseReturn->grand_total, 2) }}</span>
                 </div>
                 <div class="flex justify-between text-violet-600 font-semibold pt-1">
-                    <span>Refunded Amount</span>
+                    <span>{{ __('messages.refunded_amount') }}</span>
                     <span>{{ $sym }}{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
                 </div>
             </div>
@@ -206,3 +206,4 @@
 </body>
 
 </html>
+

@@ -219,11 +219,11 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Product</th>
-                                    <th>SKU</th>
+                                    <th>{{ __('messages.product') }}</th>
+                                    <th>{{ __('messages.sku') }}</th>
                                     <th class="text-end">Unit Price</th>
                                     <th class="text-center">Return Qty</th>
-                                    <th>Reason</th>
+                                    <th>{{ __('messages.reason') }}</th>
                                     <th class="text-end">Subtotal</th>
                                 </tr>
                             </thead>
@@ -324,3 +324,4 @@
         });
     </script>
 @endpush
+

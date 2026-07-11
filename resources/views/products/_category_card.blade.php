@@ -1,4 +1,4 @@
-@php
+﻿@php
     $qty = (float) ($product->stock->quantity ?? 0);
     $alert = (float) ($product->minimum_stock_alert ?? 0);
     $isOut = $qty <= 0;
@@ -20,11 +20,11 @@
         <div class="pc-img-wrap">
             @if ($product->image)
                 <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy"
-                    onerror="this.parentElement.innerHTML='<div class=\'pc-no-img\'><i class=\'bx bx-package\'></i><span>No Image</span></div>'">
+                    onerror="this.parentElement.innerHTML='<div class=\'pc-no-img\'><i class=\'bx bx-package\'></i><span>{{ __('messages.no_image') }}</span></div>'">
             @else
                 <div class="pc-no-img">
                     <i class="bx bx-package"></i>
-                    <span>No Image</span>
+                    <span>{{ __('messages.no_image') }}</span>
                 </div>
             @endif
 
@@ -134,3 +134,4 @@
         </div>
     </div>
 </div>
+

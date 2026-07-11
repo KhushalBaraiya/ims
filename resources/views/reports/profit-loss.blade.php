@@ -222,7 +222,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th class="ps-3">#</th>
-                                        <th>Month</th>
+                                        <th>{{ __('messages.month') }}</th>
                                         <th class="text-end">Invoices</th>
                                         <th class="text-end">Revenue</th>
                                         <th style="min-width:140px;">Share</th>
@@ -272,7 +272,7 @@
                         <div class="text-center py-5 text-muted">
                             <i class="bx bx-bar-chart-alt-2 d-block mb-2" style="font-size:3rem;opacity:.15;"></i>
                             <p class="mt-2 mb-1 fw-semibold">No data for selected period.</p>
-                            <small>Apply a date filter to see monthly breakdown.</small>
+                            <small>{{ __('messages.apply_date_filter') }}</small>
                         </div>
                     @endif
                 </div>
@@ -305,3 +305,4 @@
         }
     </style>
 @endpush
+

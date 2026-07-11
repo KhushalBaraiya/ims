@@ -172,9 +172,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="ps-3 text-center" style="width:60px;">Rank</th>
-                                <th>Product</th>
-                                <th>Brand</th>
-                                <th>Category</th>
+                                <th>{{ __('messages.product') }}</th>
+                                <th>{{ __('messages.brand') }}</th>
+                                <th>{{ __('messages.category') }}</th>
                                 <th class="text-end">Qty Sold</th>
                                 <th class="text-end">Orders</th>
                                 <th class="text-end">Revenue</th>
@@ -310,3 +310,4 @@
         });
     </script>
 @endpush
+

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Edit Purchase Order — ' . $purchase->purchase_no)
 
 @section('content')
@@ -32,7 +32,7 @@
         <div class="alert alert-warning border border-warning d-flex align-items-center gap-2 mb-4">
             <i class="bx bx-error-circle fs-4 text-warning"></i>
             <div>
-                <strong>Notice:</strong> This purchase has already been returned and cannot be edited.
+                <strong>{{ __('messages.notice') }}:</strong> {{ __('messages.already_returned') }}
             </div>
         </div>
     @endif
@@ -64,3 +64,4 @@
     </form>
 
 @endsection
+
