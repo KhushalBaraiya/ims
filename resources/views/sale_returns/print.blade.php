@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -169,12 +169,12 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-200 print:bg-transparent print:border-black">
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-8 text-center">#</th>
-                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">Product Details</th>
+                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">{{ __('messages.product_details_th') }}</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-center">SKU</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-right">Price</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-center">Return Qty
                         </th>
-                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">Return Reason</th>
+                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">{{ __('messages.return_reason_th') }}</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-right">Subtotal</th>
                     </tr>
                 </thead>
@@ -248,7 +248,7 @@
         <!-- Footer Signatures -->
         <div class="mt-16 flex flex-wrap justify-between items-center gap-4 text-xs">
             <div>
-                <p class="text-slate-400 print:text-black">Store Inspector Signature</p>
+                <p class="text-slate-400 print:text-black">{{ __('messages.store_inspector_sig') }}</p>
                 <div class="w-48 border-b border-slate-300 print:border-black mt-10"></div>
             </div>
             <div class="text-right">
@@ -267,3 +267,4 @@
 </body>
 
 </html>
+

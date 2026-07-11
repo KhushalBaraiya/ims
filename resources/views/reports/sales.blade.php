@@ -262,11 +262,11 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($sale->status === 'Completed')
-                                            <span class="badge bg-success rounded-pill">Completed</span>
+                                            <span class="badge bg-success rounded-pill">{{ __('messages.completed_label') }}</span>
                                         @elseif ($sale->status === 'Pending')
-                                            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                            <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
                                         @elseif ($sale->status === 'Draft')
-                                            <span class="badge bg-secondary rounded-pill">Draft</span>
+                                            <span class="badge bg-secondary rounded-pill">{{ __('messages.draft') }}</span>
                                         @else
                                             <span class="badge bg-danger rounded-pill">{{ $sale->status }}</span>
                                         @endif
@@ -362,3 +362,5 @@
         });
     </script>
 @endpush
+
+

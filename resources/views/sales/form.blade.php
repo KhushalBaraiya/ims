@@ -275,7 +275,7 @@
                     <label class="form-label fw-semibold">Customer <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('customer_id') is-invalid @enderror" name="customer_id" required>
-                        <option value="">Select Customer</option>
+                        <option value="">{{ __('messages.select_customer') }}</option>
                         @foreach ($customers as $c)
                             <option {{ old('customer_id', $sale->customer_id ?? '') == $c->id ? 'selected' : '' }}
                                 value="{{ $c->id }}">
@@ -296,7 +296,7 @@
                         <label class="form-label fw-semibold">Sales Person</label>
                         <select {{ $isReturned ? 'disabled' : '' }}
                             class="form-select @error('sales_person_id') is-invalid @enderror" name="sales_person_id">
-                            <option value="">Select Sales Person</option>
+                            <option value="">{{ __('messages.select_sales_person') }}</option>
                             @foreach ($salesPersons as $sp)
                                 <option
                                     {{ old('sales_person_id', $sale->sales_person_id ?? auth()->id()) == $sp->id ? 'selected' : '' }}
@@ -342,7 +342,7 @@
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
-                        <option value="">Select Method</option>
+                        <option value="">{{ __('messages.select_method') }}</option>
                         @foreach (['Cash', 'Bank Transfer', 'Card' => 'Credit/Debit Card', 'UPI / QR' => 'UPI / QR Code', 'Cheque'] as $val => $label)
                             @php
                                 $optVal = is_string($val) ? $val : $label;
@@ -360,7 +360,7 @@
                     @enderror
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
                         name="paid_amount" required step="0.01" type="number"
@@ -937,4 +937,6 @@
         });
     </script>
 @endpush
+
+
 

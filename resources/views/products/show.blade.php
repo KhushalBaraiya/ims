@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Product — ' . $product->name)
 
 @section('content')
@@ -621,12 +621,12 @@
                             <span class="fw-bold">#{{ $product->id }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">SKU</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.sku') }}</span>
                             <code class="fw-semibold text-primary">{{ $product->code }}</code>
                         </li>
                         @if ($product->barcode)
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small fw-semibold">Barcode</span>
+                                <span class="text-muted small fw-semibold">{{ __('messages.barcode') }}</span>
                                 <code>{{ $product->barcode }}</code>
                             </li>
                         @endif
@@ -638,7 +638,7 @@
                             </span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Stock Status</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.stock_status_col') }}</span>
                             <span class="badge rounded-pill {{ $sBadge }}">{{ $sLabel }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
@@ -648,36 +648,36 @@
                         </li>
                         @if ($alert > 0)
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small fw-semibold">Min Stock Alert</span>
+                                <span class="text-muted small fw-semibold">{{ __('messages.min_stock_alert') }}</span>
                                 <span class="fw-semibold text-warning">{{ number_format($alert, 0) }}
                                     {{ $product->unit_code ?? '' }}</span>
                             </li>
                         @endif
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Purchase Price</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.purchase_price') }}</span>
                             <span class="fw-semibold">{{ format_currency($product->purchase_price) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Selling Price</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.selling_price') }}</span>
                             <span class="fw-bold text-primary">{{ format_currency($product->selling_price) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Tax</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.tax_label') }}</span>
                             <span class="fw-semibold">{{ number_format($product->tax_percentage ?? 0, 2) }}%</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Unit</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.unit_label') }}</span>
                             <span>{{ $product->unit_name ?? '—' }} ({{ $product->unit_code ?? '—' }})</span>
                         </li>
                         @if ($product->brand)
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small fw-semibold">Brand</span>
+                                <span class="text-muted small fw-semibold">{{ __('messages.brand') }}</span>
                                 <span class="badge bg-label-primary">{{ $product->brand->name }}</span>
                             </li>
                         @endif
                         @if ($product->mainCategory)
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small fw-semibold">Category</span>
+                                <span class="text-muted small fw-semibold">{{ __('messages.category') }}</span>
                                 <span class="badge bg-label-secondary">{{ $product->mainCategory->name }}</span>
                             </li>
                         @endif
@@ -820,3 +820,4 @@
         });
     </script>
 @endpush
+

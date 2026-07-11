@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Stock Alert Report</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.stock_alert_menu') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
@@ -39,7 +39,7 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-muted small mb-0">Total Alerts</p>
+                        <p class="text-muted small mb-0">{{ __('messages.total_alerts') }}</p>
                         <h4 class="fw-bold text-danger mb-0">{{ $summary['total'] }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1rem;">
@@ -52,7 +52,7 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-muted small mb-0">Out of Stock</p>
+                        <p class="text-muted small mb-0">{{ __('messages.out_of_stock') }}</p>
                         <h4 class="fw-bold text-danger mb-0">{{ $summary['out_of_stock'] }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1rem;">
@@ -65,7 +65,7 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-muted small mb-0">Low Stock</p>
+                        <p class="text-muted small mb-0">{{ __('messages.low_stock') }}</p>
                         <h4 class="fw-bold text-warning mb-0">{{ $summary['low_stock'] }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1rem;">
@@ -78,7 +78,7 @@
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-muted small mb-0">Restock Value</p>
+                        <p class="text-muted small mb-0">{{ __('messages.restock_value') }}</p>
                         <h4 class="fw-bold text-primary mb-0">{{ format_currency($summary['restock_value']) }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1rem;">
@@ -98,7 +98,7 @@
             <form method="GET">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Alert Type</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.alert_type') }}</label>
                         <select name="filter" class="form-select form-select-sm">
                             <option value="all" {{ $filter === 'all' ? 'selected' : '' }}>All Alerts (Low + Out)</option>
                             <option value="out" {{ $filter === 'out' ? 'selected' : '' }}>Out of Stock Only</option>
@@ -106,9 +106,9 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Brand</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
                         <select name="brand_id" class="form-select form-select-sm">
-                            <option value="">All Brands</option>
+                            <option value="">{{ __('messages.all_brands') }}</option>
                             @foreach ($brands as $b)
                                 <option value="{{ $b->id }}" {{ request('brand_id') == $b->id ? 'selected' : '' }}>
                                     {{ $b->name }}</option>
@@ -116,9 +116,9 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Category</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.category') }}</label>
                         <select name="main_category_id" class="form-select form-select-sm">
-                            <option value="">All Categories</option>
+                            <option value="">{{ __('messages.all_categories') }}</option>
                             @foreach ($categories as $c)
                                 <option value="{{ $c->id }}"
                                     {{ request('main_category_id') == $c->id ? 'selected' : '' }}>
@@ -167,13 +167,13 @@
                                 <th>{{ __('messages.product') }}</th>
                                 <th>{{ __('messages.brand') }}</th>
                                 <th>{{ __('messages.category') }}</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-end">Current Qty</th>
-                                <th class="text-end">Alert Level</th>
-                                <th class="text-end">Qty Needed</th>
-                                <th class="text-end">Purchase Price</th>
-                                <th class="text-end">Restock Value</th>
-                                <th class="text-center no-sort">Action</th>
+                                <th class="text-center">{{ __('messages.status') }}</th>
+                                <th class="text-end">{{ __('messages.current_qty') }}</th>
+                                <th class="text-end">{{ __('messages.th_alert_level') }}</th>
+                                <th class="text-end">{{ __('messages.qty_needed') }}</th>
+                                <th class="text-end">{{ __('messages.purchase_price') }}</th>
+                                <th class="text-end">{{ __('messages.restock_value') }}</th>
+                                <th class="text-center no-sort">{{ __('messages.action_label') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,7 +237,7 @@
                         </tbody>
                         <tfoot class="table-light fw-bold">
                             <tr>
-                                <td colspan="9" class="text-end ps-3">Total Restock Value</td>
+                                <td colspan="9" class="text-end ps-3">{{ __('messages.total_restock_value') }}</td>
                                 <td class="text-end text-primary">{{ format_currency($summary['restock_value']) }}</td>
                                 <td></td>
                             </tr>
@@ -247,8 +247,8 @@
             @else
                 <div class="text-center py-5">
                     <i class="bx bx-check-circle text-success d-block mb-2" style="font-size:4rem;opacity:.4;"></i>
-                    <p class="mt-2 fw-semibold text-success mb-1">All Stock Healthy!</p>
-                    <p class="text-muted small mb-0">No products are below their alert threshold.</p>
+                    <p class="mt-2 fw-semibold text-success mb-1">{{ __('messages.all_stock_healthy') }}</p>
+                    <p class="text-muted small mb-0">{{ __('messages.no_products_alert') }}</p>
                 </div>
             @endif
         </div>
@@ -308,4 +308,7 @@
         }
     </style>
 @endpush
+
+
+
 

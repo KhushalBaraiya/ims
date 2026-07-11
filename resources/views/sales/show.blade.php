@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Sales Invoice Details</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.sales_invoice_details') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -40,7 +40,7 @@
                 <i class="bx bx-receipt text-white fs-4"></i>
             </div>
             <div class="flex-grow-1">
-                <div class="text-white fw-bold fs-6 lh-sm">Sales Invoice</div>
+                <div class="text-white fw-bold fs-6 lh-sm">{{ __('messages.sales_invoice_badge') }}</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $sale->invoice_no }}</span>
                     <span>� {{ $sale->customer->name ?? '�' }}</span>
@@ -49,20 +49,20 @@
             </div>
             <div class="d-flex gap-2 flex-wrap">
                 @if ($sale->status === 'Completed')
-                    <span class="badge bg-success fw-semibold">Completed</span>
+                    <span class="badge bg-success fw-semibold">{{ __('messages.completed_label') }}</span>
                 @elseif($sale->status === 'Pending')
-                    <span class="badge bg-white text-warning fw-semibold">Pending</span>
+                    <span class="badge bg-white text-warning fw-semibold">{{ __('messages.pending') }}</span>
                 @elseif($sale->status === 'Draft')
-                    <span class="badge bg-white text-secondary fw-semibold">Draft</span>
+                    <span class="badge bg-white text-secondary fw-semibold">{{ __('messages.draft') }}</span>
                 @else
                     <span class="badge bg-white text-secondary fw-semibold">{{ $sale->status }}</span>
                 @endif
                 @if ($sale->payment_status === 'Paid')
-                    <span class="badge bg-success fw-semibold">Paid</span>
+                    <span class="badge bg-success fw-semibold">{{ __('messages.paid') }}</span>
                 @elseif($sale->payment_status === 'Partial')
-                    <span class="badge bg-warning text-dark fw-semibold">Partial</span>
+                    <span class="badge bg-warning text-dark fw-semibold">{{ __('messages.partial') }}</span>
                 @else
-                    <span class="badge bg-danger fw-semibold">Unpaid</span>
+                    <span class="badge bg-danger fw-semibold">{{ __('messages.unpaid') }}</span>
                 @endif
             </div>
         </div>
@@ -83,15 +83,15 @@
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Invoice No</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.invoice_no_short') }}</span>
                             <code class="fw-bold text-primary">{{ $sale->invoice_no }}</code>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Date</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.date_label') }}</span>
                             <span class="fw-semibold">{{ $sale->invoice_date }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Customer</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.customer') }}</span>
                             <div class="text-end">
                                 <span class="fw-bold d-block">{{ $sale->customer->name }}</span>
                                 @if ($sale->customer->phone)
@@ -100,37 +100,37 @@
                             </div>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Sales Person</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.sales_person') }}</span>
                             <span class="fw-semibold">{{ $sale->salesPerson->name ?? '-' }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Payment Method</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.payment_method_meta') }}</span>
                             <span class="small fw-semibold">{{ $sale->payment_method ?: '-' }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Status</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.status') }}</span>
                             @if ($sale->status === 'Completed')
-                                <span class="badge bg-success rounded-pill">Completed</span>
+                                <span class="badge bg-success rounded-pill">{{ __('messages.completed_label') }}</span>
                             @elseif ($sale->status === 'Pending')
-                                <span class="badge bg-info text-dark rounded-pill">Pending</span>
+                                <span class="badge bg-info text-dark rounded-pill">{{ __('messages.pending') }}</span>
                             @elseif ($sale->status === 'Draft')
                                 <span class="badge bg-warning text-dark rounded-pill">Draft</span>
                             @elseif ($sale->status === 'Repair')
-                                <span class="badge bg-secondary rounded-pill">Repair</span>
+                                <span class="badge bg-secondary rounded-pill">{{ __('messages.repair_badge') }}</span>
                             @elseif ($sale->status === 'Ordered')
-                                <span class="badge bg-primary rounded-pill">Ordered</span>
+                                <span class="badge bg-primary rounded-pill">{{ __('messages.ordered_badge') }}</span>
                             @else
                                 <span class="badge bg-secondary rounded-pill">{{ $sale->status }}</span>
                             @endif
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Payment Status</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.payment_status') }}</span>
                             @if ($sale->payment_status === 'Paid')
-                                <span class="badge bg-success rounded-pill">Paid</span>
+                                <span class="badge bg-success rounded-pill">{{ __('messages.paid') }}</span>
                             @elseif ($sale->payment_status === 'Partial')
-                                <span class="badge bg-warning text-dark rounded-pill">Partial</span>
+                                <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.partial') }}</span>
                             @else
-                                <span class="badge bg-danger rounded-pill">Unpaid</span>
+                                <span class="badge bg-danger rounded-pill">{{ __('messages.unpaid') }}</span>
                             @endif
                         </li>
                     </ul>
@@ -147,11 +147,11 @@
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Subtotal</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.subtotal') }}</span>
                             <span class="fw-semibold">{{ format_currency($sale->sub_total) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Discount (-)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.discount_label') }}</span>
                             <span class="fw-semibold text-danger">- {{ format_currency($sale->discount_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
@@ -163,15 +163,15 @@
                             <span class="fw-semibold">+ {{ format_currency($sale->shipping_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
-                            <span class="fw-bold small">Grand Total</span>
+                            <span class="fw-bold small">{{ __('messages.grand_total_label') }}</span>
                             <span class="fw-bold text-primary">{{ format_currency($sale->grand_total) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Paid Amount</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.paid_amount_meta') }}</span>
                             <span class="fw-bold text-success">{{ format_currency($sale->paid_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Balance Due</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.balance_due_label') }}</span>
                             <span class="fw-bold {{ $sale->due_amount > 0 ? 'text-danger' : 'text-success' }}">
                                 {{ format_currency($sale->due_amount) }}
                             </span>
@@ -271,11 +271,11 @@
                                     <th>#</th>
                                     <th>{{ __('messages.product') }}</th>
                                     <th>{{ __('messages.sku') }}</th>
-                                    <th class="text-center">Qty</th>
-                                    <th class="text-end">Unit Price</th>
-                                    <th class="text-end">Discount</th>
-                                    <th class="text-end">Tax</th>
-                                    <th class="text-end">Total</th>
+                                    <th class="text-center">{{ __('messages.qty') }}</th>
+                                    <th class="text-end">{{ __('messages.unit_price') }}</th>
+                                    <th class="text-end">{{ __('messages.discount') }}</th>
+                                    <th class="text-end">{{ __('messages.tax_label') }}</th>
+                                    <th class="text-end">{{ __('messages.th_total') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -315,7 +315,7 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td class="fw-bold text-end" colspan="7">Grand Total</td>
+                                    <td class="fw-bold text-end" colspan="7">{{ __('messages.grand_total_label') }}</td>
                                     <td class="fw-bold text-primary fs-6 text-end">
                                         {{ format_currency($sale->grand_total) }}
                                     </td>
@@ -336,15 +336,15 @@
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Created By</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.th_created_by') }}</p>
                             <p class="fw-bold mb-0">{{ $sale->user->name ?? '-' }}</p>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Created At</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.created_at') }}</p>
                             <p class="fw-semibold mb-0">{{ $sale->created_at->format('d M Y, h:i A') }}</p>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Last Updated</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.last_updated') }}</p>
                             <p class="fw-semibold mb-0">{{ $sale->updated_at->format('d M Y, h:i A') }}</p>
                         </div>
                     </div>
@@ -369,14 +369,14 @@
                     @csrf
                     <div class="modal-body p-4">
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Invoice No</label>
+                            <label class="form-label text-muted small fw-bold">{{ __('messages.invoice_no_short') }}</label>
                             <input class="form-control bg-light fw-bold text-dark border-0" id="modal_invoice_no" readonly
                                 type="text">
                         </div>
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="bg-light rounded border p-3 text-center">
-                                    <div class="text-muted small fw-semibold mb-1">Grand Total</div>
+                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}</div>
                                     <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
@@ -385,14 +385,14 @@
                             <div class="col-6">
                                 <div class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-3 text-center"
                                     id="modal_due_box">
-                                    <div class="small fw-semibold text-danger mb-1" id="modal_due_label">Balance Due</div>
+                                    <div class="small fw-semibold text-danger mb-1" id="modal_due_label">{{ __('messages.balance_due_label') }}</div>
                                     <div class="fw-bold fs-5 text-danger" id="modal_balance_due_text">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
                             <input class="form-control form-control-lg fw-bold" id="modal_paid_amount" min="0"
                                 name="paid_amount" required step="0.01" type="number">
                         </div>
@@ -401,11 +401,11 @@
                                     class="text-danger">*</span></label>
                             <select class="form-select form-select-lg" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required>
-                                <option value="Cash">Cash</option>
-                                <option value="Bank Transfer">Bank Transfer</option>
-                                <option value="Card">Credit/Debit Card</option>
-                                <option value="UPI / QR">UPI / QR Code</option>
-                                <option value="Cheque">Cheque</option>
+                                <option value="Cash">{{ __('messages.pm_cash') }}</option>
+                                <option value="Bank Transfer">{{ __('messages.pm_bank') }}</option>
+                                <option value="Card">{{ __('messages.pm_card') }}</option>
+                                <option value="UPI / QR">{{ __('messages.pm_upi') }}</option>
+                                <option value="Cheque">{{ __('messages.pm_cheque') }}</option>
                             </select>
                         </div>
                     </div>
@@ -520,4 +520,7 @@
         });
     </script>
 @endpush
+
+
+
 

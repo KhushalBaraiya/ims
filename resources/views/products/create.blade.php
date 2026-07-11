@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+ï»¿@extends('layouts.admin')
 @section('title', isset($isCopy) ? 'Copy Product' : __('messages.create_product'))
 
 @section('content')
@@ -119,7 +119,7 @@
                                         class="text-danger">*</span></label>
                                 <select name="main_category_id" id="main_category_id"
                                     class="form-select @error('main_category_id') is-invalid @enderror" required>
-                                    <option value="">Select Category</option>
+                                    <option value="">{{ __('messages.select_category') }}</option>
                                     @foreach ($categories as $c)
                                         <option value="{{ $c->id }}"
                                             {{ old('main_category_id', $product->main_category_id ?? '') == $c->id ? 'selected' : '' }}>
@@ -137,7 +137,7 @@
                                 <label class="form-label fw-semibold">Sub Category</label>
                                 <select name="sub_category_id" id="sub_category_id"
                                     class="form-select @error('sub_category_id') is-invalid @enderror">
-                                    <option value="">Select Sub Category</option>
+                                    <option value="">{{ __('messages.select_sub_category') }}</option>
                                 </select>
                                 @error('sub_category_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -149,7 +149,7 @@
                                 <label class="form-label fw-semibold">Brand <span class="text-danger">*</span></label>
                                 <select name="brand_id" class="form-select @error('brand_id') is-invalid @enderror"
                                     required>
-                                    <option value="">Select Brand</option>
+                                    <option value="">{{ __('messages.select_brand') }}</option>
                                     @foreach ($brands as $b)
                                         <option value="{{ $b->id }}"
                                             {{ old('brand_id', $product->brand_id ?? '') == $b->id ? 'selected' : '' }}>
@@ -196,7 +196,7 @@
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: —</span>
+                        <span class="badge bg-label-primary small" id="profitBadge">Profit: ï¿½</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -280,7 +280,7 @@
                                     id="addOpeningStock" value="1" {{ old('add_opening_stock') ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold" for="addOpeningStock">
                                     <i class="bx bx-plus-circle me-1 text-success"></i>
-                                    Add initial stock while creating this product
+                                    {{ __(\'messages.add_initial_stock_hint\') }}
                                 </label>
                                 <div class="form-text">When enabled, a Purchase record will be created automatically for
                                     traceability.</div>
@@ -295,7 +295,7 @@
                                                 class="text-danger">*</span></label>
                                         <select name="supplier_id" id="supplier_id"
                                             class="form-select @error('supplier_id') is-invalid @enderror">
-                                            <option value="">Select Supplier</option>
+                                            <option value="">{{ __('messages.select_supplier') }}</option>
                                             @foreach ($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}"
                                                     {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
@@ -327,8 +327,8 @@
                                             <i class="bx bx-calculator text-info fs-5"></i>
                                             <div>
                                                 <div class="small fw-semibold text-info">Purchase Total</div>
-                                                <div class="fw-bold" id="openingStockTotal">—</div>
-                                                <div class="form-text mb-0">Qty × Purchase Price</div>
+                                                <div class="fw-bold" id="openingStockTotal">ï¿½</div>
+                                                <div class="form-text mb-0">Qty ï¿½ Purchase Price</div>
                                             </div>
                                         </div>
                                     </div>
@@ -458,7 +458,7 @@
                                     <button type="button" id="triggerGalleryBtn" class="btn btn-outline-primary mt-1">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
-                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP · Max 2MB each</div>
+                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP ï¿½ Max 2MB each</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -473,7 +473,7 @@
                                                 <button type="button"
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove">×</button>
+                                                    title="Remove">ï¿½</button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -648,7 +648,7 @@
                 if (subSelect.hasClass('select2-hidden-accessible')) {
                     subSelect.select2('destroy');
                 }
-                subSelect.html('<option value="">Select Sub Category</option>');
+                subSelect.html('<option value="">{{ __('messages.select_sub_category') }}</option>');
                 subCategories
                     .filter(s => s.main_category_id == mainCategoryId)
                     .forEach(s => {
@@ -686,7 +686,7 @@
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: —');
+                    $('#profitBadge').text('Profit: ï¿½');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
@@ -699,7 +699,7 @@
                 if (!checked) {
                     $('#supplier_id').val('').trigger('change');
                     $('#initial_qty').val('');
-                    $('#openingStockTotal').text('—');
+                    $('#openingStockTotal').text('ï¿½');
                 }
             }
 
@@ -723,7 +723,7 @@
                         minimumFractionDigits: 2
                     }));
                 } else {
-                    $('#openingStockTotal').text('—');
+                    $('#openingStockTotal').text('ï¿½');
                 }
             }
             $('#initial_qty, #purchase_price').on('input', updateOpeningTotal);
@@ -798,7 +798,7 @@
                                 <button type="button"
                                     class="remove-new-gallery-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                    title="Remove">×</button>
+                                    title="Remove">ï¿½</button>
                             </div>`);
                         thumb.data('file', file);
                         $('#galleryPreviewContainer').append(thumb);
@@ -813,7 +813,7 @@
                 addGalleryFiles(this.files);
             });
 
-            // Remove a NEW (not-yet-uploaded) thumbnail — rebuild the FileList
+            // Remove a NEW (not-yet-uploaded) thumbnail ï¿½ rebuild the FileList
             $(document).on('click', '.remove-new-gallery-btn', function() {
                 $(this).closest('.gallery-new').remove();
                 rebuildGalleryInput();
@@ -861,4 +861,5 @@
         });
     </script>
 @endpush
+
 

@@ -114,7 +114,7 @@
                     <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('supplier_id') is-invalid @enderror" name="supplier_id" required>
-                        <option value="">Select Supplier</option>
+                        <option value="">{{ __('messages.select_supplier') }}</option>
                         @foreach ($suppliers as $s)
                             <option {{ old('supplier_id', $purchase->supplier_id ?? '') == $s->id ? 'selected' : '' }}
                                 value="{{ $s->id }}">
@@ -136,7 +136,7 @@
                     <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('status') is-invalid @enderror" name="status" required>
-                        <option value="">Select Status</option>
+                        <option value="">{{ __('messages.select_status') }}</option>
                         <option {{ old('status', $purchase->status ?? 'received') === 'received' ? 'selected' : '' }}
                             value="received">
                             Received</option>
@@ -167,7 +167,7 @@
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
-                        <option value="">Select Payment Method</option>
+                        <option value="">{{ __('messages.select_payment_method') }}</option>
                         <option
                             {{ old('payment_method', $purchase->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}
                             value="Cash">
@@ -194,7 +194,7 @@
                     @enderror
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
                         name="paid_amount" required step="0.01" type="number"
@@ -240,7 +240,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>{{ __('messages.product') }}</th>
-                                <th class="text-center">Qty</th>
+                                <th class="text-center">{{ __('messages.qty') }}</th>
                                 <th class="text-center">Purchase Price</th>
                                 <th class="text-muted text-center">Discount</th>
                                 <th class="text-muted text-center">Tax</th>
@@ -278,7 +278,7 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Subtotal</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.subtotal') }}</span>
                             <span class="fw-bold"
                                 id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
@@ -666,4 +666,7 @@
         });
     </script>
 @endpush
+
+
+
 

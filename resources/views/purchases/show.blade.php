@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Purchase Order Details</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.purchase_order_details') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -41,7 +41,7 @@
                 <i class="bx bx-cart text-white fs-4"></i>
             </div>
             <div class="flex-grow-1">
-                <div class="text-white fw-bold fs-6 lh-sm">Purchase Order</div>
+                <div class="text-white fw-bold fs-6 lh-sm">{{ __('messages.purchase_order_badge') }}</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $purchase->purchase_no }}</span>
                     <span>� {{ $purchase->supplier->name ?? '�' }}</span>
@@ -50,20 +50,20 @@
             </div>
             <div class="d-flex gap-2 flex-wrap">
                 @if ($purchase->status === 'received')
-                    <span class="badge bg-success fw-semibold">Received</span>
+                    <span class="badge bg-success fw-semibold">{{ __('messages.received_badge') }}</span>
                 @elseif($purchase->status === 'pending')
-                    <span class="badge bg-warning text-dark fw-semibold">Pending</span>
+                    <span class="badge bg-warning text-dark fw-semibold">{{ __('messages.pending') }}</span>
                 @elseif($purchase->status === 'ordered')
-                    <span class="badge bg-white text-primary fw-semibold">Ordered</span>
+                    <span class="badge bg-white text-primary fw-semibold">{{ __('messages.ordered_badge') }}</span>
                 @else
                     <span class="badge bg-white text-secondary fw-semibold">{{ ucfirst($purchase->status) }}</span>
                 @endif
                 @if ($purchase->payment_status === 'Paid')
-                    <span class="badge bg-success fw-semibold">Paid</span>
+                    <span class="badge bg-success fw-semibold">{{ __('messages.paid') }}</span>
                 @elseif($purchase->payment_status === 'Partial')
-                    <span class="badge bg-warning text-dark fw-semibold">Partial</span>
+                    <span class="badge bg-warning text-dark fw-semibold">{{ __('messages.partial') }}</span>
                 @else
-                    <span class="badge bg-danger fw-semibold">Unpaid</span>
+                    <span class="badge bg-danger fw-semibold">{{ __('messages.unpaid') }}</span>
                 @endif
             </div>
         </div>
@@ -84,33 +84,33 @@
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Purchase No</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.purchase_no_short') }}</span>
                             <code class="fw-bold text-primary">{{ $purchase->purchase_no }}</code>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Date</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.date_label') }}</span>
                             <span class="fw-semibold">{{ $purchase->purchase_date }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Supplier</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.supplier') }}</span>
                             <span class="fw-bold text-end">{{ $purchase->supplier->name ?? '-' }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Reference No</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.reference_no') }}</span>
                             <span class="small">{{ $purchase->reference_no ?: '-' }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Payment Method</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.payment_method_meta') }}</span>
                             <span class="small fw-semibold">{{ $purchase->payment_method ?: '-' }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Status</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.status') }}</span>
                             @if ($purchase->status === 'received')
-                                <span class="badge bg-success rounded-pill">Received</span>
+                                <span class="badge bg-success rounded-pill">{{ __('messages.received_badge') }}</span>
                             @elseif ($purchase->status === 'pending')
-                                <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
                             @elseif ($purchase->status === 'ordered')
-                                <span class="badge bg-primary rounded-pill">Ordered</span>
+                                <span class="badge bg-primary rounded-pill">{{ __('messages.ordered_badge') }}</span>
                             @elseif ($purchase->status === 'draft')
                                 <span class="badge bg-secondary text-dark">{{ __("messages.draft") }}</span>
                             @else
@@ -118,13 +118,13 @@
                             @endif
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Payment Status</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.payment_status') }}</span>
                             @if ($purchase->payment_status === 'Paid')
-                                <span class="badge bg-success rounded-pill">Paid</span>
+                                <span class="badge bg-success rounded-pill">{{ __('messages.paid') }}</span>
                             @elseif ($purchase->payment_status === 'Partial')
-                                <span class="badge bg-warning text-dark rounded-pill">Partial</span>
+                                <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.partial') }}</span>
                             @else
-                                <span class="badge bg-danger rounded-pill">Unpaid</span>
+                                <span class="badge bg-danger rounded-pill">{{ __('messages.unpaid') }}</span>
                             @endif
                         </li>
                     </ul>
@@ -141,11 +141,11 @@
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Subtotal</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.subtotal') }}</span>
                             <span class="fw-semibold">{{ format_currency($purchase->sub_total) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Discount (-)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.discount_label') }}</span>
                             <span class="fw-semibold text-danger">-
                                 {{ format_currency($purchase->discount_amount) }}</span>
                         </li>
@@ -158,15 +158,15 @@
                             <span class="fw-semibold">+ {{ format_currency($purchase->shipping_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
-                            <span class="fw-bold small">Grand Total</span>
+                            <span class="fw-bold small">{{ __('messages.grand_total_label') }}</span>
                             <span class="fw-bold text-primary">{{ format_currency($purchase->grand_total) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Paid Amount</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.paid_amount_meta') }}</span>
                             <span class="fw-bold text-success">{{ format_currency($purchase->paid_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Balance Due</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.balance_due_label') }}</span>
                             <span class="fw-bold {{ $purchase->due_amount > 0 ? 'text-danger' : 'text-success' }}">
                                 {{ format_currency($purchase->due_amount) }}
                             </span>
@@ -259,11 +259,11 @@
                                     <th>#</th>
                                     <th>{{ __('messages.product') }}</th>
                                     <th>{{ __('messages.sku') }}</th>
-                                    <th class="text-center">Qty</th>
-                                    <th class="text-end">Unit Price</th>
-                                    <th class="text-end">Discount</th>
-                                    <th class="text-end">Tax</th>
-                                    <th class="text-end">Total</th>
+                                    <th class="text-center">{{ __('messages.qty') }}</th>
+                                    <th class="text-end">{{ __('messages.unit_price') }}</th>
+                                    <th class="text-end">{{ __('messages.discount') }}</th>
+                                    <th class="text-end">{{ __('messages.tax_label') }}</th>
+                                    <th class="text-end">{{ __('messages.th_total') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -300,7 +300,7 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td class="fw-bold text-end" colspan="7">Grand Total</td>
+                                    <td class="fw-bold text-end" colspan="7">{{ __('messages.grand_total_label') }}</td>
                                     <td class="fw-bold text-primary fs-6 text-end">
                                         {{ format_currency($purchase->grand_total) }}</td>
                                 </tr>
@@ -320,15 +320,15 @@
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Created By</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.th_created_by') }}</p>
                             <p class="fw-bold mb-0">{{ $purchase->user->name ?? '-' }}</p>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Created At</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.created_at') }}</p>
                             <p class="fw-semibold mb-0">{{ $purchase->created_at->format('d M Y, h:i A') }}</p>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Last Updated</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.last_updated') }}</p>
                             <p class="fw-semibold mb-0">{{ $purchase->updated_at->format('d M Y, h:i A') }}</p>
                         </div>
                     </div>
@@ -383,4 +383,6 @@
         });
     </script>
 @endpush
+
+
 

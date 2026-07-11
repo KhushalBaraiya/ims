@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Sales Return Details</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.sales_return_details') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -40,7 +40,7 @@
                 <i class="bx bx-undo text-white fs-4"></i>
             </div>
             <div class="flex-grow-1">
-                <div class="text-white fw-bold fs-6 lh-sm">Sale Return</div>
+                <div class="text-white fw-bold fs-6 lh-sm">{{ __('messages.sale_return_badge') }}</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $saleReturn->return_no }}</span>
                     <span>� {{ $saleReturn->customer->name ?? '�' }}</span>
@@ -74,15 +74,15 @@
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Return No</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.return_no_label') }}</span>
                             <code class="fw-bold text-primary">{{ $saleReturn->return_no }}</code>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Return Date</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.return_date') }}</span>
                             <span class="fw-semibold">{{ $saleReturn->return_date }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Original Invoice</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.original_invoice') }}</span>
                             @if ($saleReturn->sale)
                                 <a href="{{ route('sales.show', $saleReturn->sale_id) }}" class="fw-bold text-primary">
                                     <code>{{ $saleReturn->sale->invoice_no }}</code>
@@ -92,7 +92,7 @@
                             @endif
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Customer</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.customer') }}</span>
                             <div class="text-end">
                                 <span class="fw-bold d-block">{{ $saleReturn->customer->name }}</span>
                                 @if ($saleReturn->customer->phone)
@@ -101,19 +101,19 @@
                             </div>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Reference No</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.reference_no') }}</span>
                             <span class="small">{{ $saleReturn->reference_no ?: '�' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Processed By</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.processed_by') }}</span>
                             <span class="fw-semibold">{{ $saleReturn->user->name ?? '�' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Status</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.status') }}</span>
                             @if ($saleReturn->status === 'Completed')
-                                <span class="badge bg-success rounded-pill">Completed</span>
+                                <span class="badge bg-success rounded-pill">{{ __('messages.completed_label') }}</span>
                             @else
-                                <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
                             @endif
                         </li>
                     </ul>
@@ -130,19 +130,19 @@
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Return Value</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.return_value') }}</span>
                             <span class="fw-semibold">{{ format_currency($saleReturn->sub_total) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
-                            <span class="text-muted small fw-semibold">Tax Adjusted</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.tax_adjusted') }}</span>
                             <span class="fw-semibold">{{ format_currency($saleReturn->tax_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom bg-label-primary rounded px-2">
-                            <span class="fw-bold small">Grand Refund Total</span>
+                            <span class="fw-bold small">{{ __('messages.grand_refund_total') }}</span>
                             <span class="fw-bold text-primary">{{ format_currency($saleReturn->grand_total) }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted small fw-semibold">Refunded to Customer</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.refunded_to_customer') }}</span>
                             <span class="fw-bold text-success">{{ format_currency($saleReturn->refunded_amount) }}</span>
                         </li>
                     </ul>
@@ -221,10 +221,10 @@
                                     <th>#</th>
                                     <th>{{ __('messages.product') }}</th>
                                     <th>{{ __('messages.sku') }}</th>
-                                    <th class="text-end">Unit Price</th>
-                                    <th class="text-center">Return Qty</th>
+                                    <th class="text-end">{{ __('messages.unit_price') }}</th>
+                                    <th class="text-center">{{ __('messages.return_qty') }}</th>
                                     <th>{{ __('messages.reason') }}</th>
-                                    <th class="text-end">Subtotal</th>
+                                    <th class="text-end">{{ __('messages.subtotal') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -265,7 +265,7 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td colspan="6" class="text-end fw-bold">Grand Refund Total</td>
+                                    <td colspan="6" class="text-end fw-bold">{{ __('messages.grand_refund_total') }}</td>
                                     <td class="text-end fw-bold text-primary fs-6">
                                         {{ format_currency($saleReturn->grand_total) }}</td>
                                 </tr>
@@ -285,15 +285,15 @@
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Processed By</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.processed_by') }}</p>
                             <p class="fw-bold mb-0">{{ $saleReturn->user->name ?? '�' }}</p>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Created At</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.created_at') }}</p>
                             <p class="fw-semibold mb-0">{{ $saleReturn->created_at->format('d M Y, h:i A') }}</p>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-muted small fw-semibold mb-1">Last Updated</p>
+                            <p class="text-muted small fw-semibold mb-1">{{ __('messages.last_updated') }}</p>
                             <p class="fw-semibold mb-0">{{ $saleReturn->updated_at->format('d M Y, h:i A') }}</p>
                         </div>
                     </div>
@@ -324,4 +324,7 @@
         });
     </script>
 @endpush
+
+
+
 

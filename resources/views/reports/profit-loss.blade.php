@@ -35,12 +35,12 @@
             <form method="GET">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Date From</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
                         <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ $dateFrom }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Date To</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
                         <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ $dateTo }}">
                     </div>
@@ -74,7 +74,7 @@
                         style="font-size:1.5rem;">
                         <i class="bx bx-trending-up"></i>
                     </span>
-                    <p class="text-muted small mb-1">Total Revenue</p>
+                    <p class="text-muted small mb-1">{{ __('messages.total_revenue_rpt') }}</p>
                     <h4 class="fw-bold text-primary mb-1">{{ format_currency($totalRevenue) }}</h4>
                     <small class="text-muted">{{ $totalSalesCount }} completed invoices</small>
                 </div>
@@ -87,9 +87,9 @@
                         style="font-size:1.5rem;">
                         <i class="bx bx-package"></i>
                     </span>
-                    <p class="text-muted small mb-1">Cost of Goods Sold</p>
+                    <p class="text-muted small mb-1">{{ __('messages.cogs_label') }}</p>
                     <h4 class="fw-bold text-danger mb-1">{{ format_currency($totalCogs) }}</h4>
-                    <small class="text-muted">Purchase cost of sold items</small>
+                    <small class="text-muted">{{ __('messages.purchase_cost_note') }}</small>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
                         style="font-size:1.5rem;">
                         <i class="bx bx-dollar-circle"></i>
                     </span>
-                    <p class="text-muted small mb-1">Gross Profit</p>
+                    <p class="text-muted small mb-1">{{ __('messages.gross_profit_rpt') }}</p>
                     <h4 class="fw-bold {{ $grossProfit >= 0 ? 'text-success' : 'text-danger' }} mb-1">
                         {{ format_currency($grossProfit) }}</h4>
                     <small class="text-muted">Revenue − COGS</small>
@@ -116,7 +116,7 @@
                         style="font-size:1.5rem;">
                         <i class="bx {{ $netProfit >= 0 ? 'bx-award' : 'bx-trending-down' }}"></i>
                     </span>
-                    <p class="text-muted small mb-1">Net Profit</p>
+                    <p class="text-muted small mb-1">{{ __('messages.net_profit_rpt') }}</p>
                     <h4 class="fw-bold {{ $netProfit >= 0 ? 'text-success' : 'text-danger' }} mb-1">
                         {{ format_currency($netProfit) }}</h4>
                     <small class="{{ $netProfit >= 0 ? 'text-success' : 'text-danger' }} fw-semibold">
@@ -146,7 +146,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="ps-4">Gross Revenue</td>
+                                <td class="ps-4">{{ __('messages.gross_revenue') }}</td>
                                 <td class="text-end fw-semibold text-primary">{{ format_currency($totalRevenue) }}</td>
                             </tr>
                             <tr>
@@ -154,7 +154,7 @@
                                 <td class="text-end text-danger small">({{ format_currency($totalSaleReturns) }})</td>
                             </tr>
                             <tr class="border-top">
-                                <td class="ps-4 fw-bold">Net Revenue</td>
+                                <td class="ps-4 fw-bold">{{ __('messages.net_revenue') }}</td>
                                 <td class="text-end fw-bold text-primary">{{ format_currency($netRevenue) }}</td>
                             </tr>
 
@@ -164,11 +164,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="ps-4">Cost of Goods Sold (COGS)</td>
+                                <td class="ps-4">{{ __('messages.cogs_full') }}</td>
                                 <td class="text-end text-danger">{{ format_currency($totalCogs) }}</td>
                             </tr>
                             <tr class="border-top">
-                                <td class="ps-4 fw-bold">Gross Profit</td>
+                                <td class="ps-4 fw-bold">{{ __('messages.gross_profit') }}</td>
                                 <td class="text-end fw-bold {{ $grossProfit >= 0 ? 'text-success' : 'text-danger' }}">
                                     {{ format_currency($grossProfit) }}
                                 </td>
@@ -180,19 +180,19 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="ps-4">Purchase Returns (Recovered)</td>
+                                <td class="ps-4">{{ __('messages.purchase_returns_rec') }}</td>
                                 <td class="text-end text-success">+{{ format_currency($totalPurchaseReturns) }}</td>
                             </tr>
                             <tr>
-                                <td class="ps-4 text-muted small">Tax Collected</td>
+                                <td class="ps-4 text-muted small">{{ __('messages.tax_collected_th') }}</td>
                                 <td class="text-end small text-muted">{{ format_currency($totalTaxCollected) }}</td>
                             </tr>
                             <tr>
-                                <td class="ps-4 text-muted small">Discounts Given</td>
+                                <td class="ps-4 text-muted small">{{ __('messages.discounts_given') }}</td>
                                 <td class="text-end small text-danger">({{ format_currency($totalDiscounts) }})</td>
                             </tr>
                             <tr class="border-top bg-label-{{ $netProfit >= 0 ? 'success' : 'danger' }}">
-                                <td class="ps-4 fw-bold fs-6">Net Profit / (Loss)</td>
+                                <td class="ps-4 fw-bold fs-6">{{ __('messages.net_profit_loss') }}</td>
                                 <td class="text-end fw-bold fs-6 {{ $netProfit >= 0 ? 'text-success' : 'text-danger' }}">
                                     {{ format_currency($netProfit) }}
                                     <br><small class="fw-normal text-muted">Margin: {{ $profitMargin }}%</small>
@@ -223,9 +223,9 @@
                                     <tr>
                                         <th class="ps-3">#</th>
                                         <th>{{ __('messages.month') }}</th>
-                                        <th class="text-end">Invoices</th>
-                                        <th class="text-end">Revenue</th>
-                                        <th style="min-width:140px;">Share</th>
+                                        <th class="text-end">{{ __('messages.invoices_th') }}</th>
+                                        <th class="text-end">{{ __('messages.revenue_label') }}</th>
+                                        <th style="min-width:140px;">{{ __('messages.share_th') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -259,7 +259,7 @@
                                 </tbody>
                                 <tfoot class="table-light fw-bold">
                                     <tr>
-                                        <td colspan="2" class="text-end ps-3">Total</td>
+                                        <td colspan="2" class="text-end ps-3">{{ __('messages.totals_label') }}</td>
                                         <td class="text-end">{{ $monthlyData->sum('count') }}</td>
                                         <td class="text-end text-primary">
                                             {{ format_currency($monthlyData->sum('revenue')) }}</td>
@@ -271,7 +271,7 @@
                     @else
                         <div class="text-center py-5 text-muted">
                             <i class="bx bx-bar-chart-alt-2 d-block mb-2" style="font-size:3rem;opacity:.15;"></i>
-                            <p class="mt-2 mb-1 fw-semibold">No data for selected period.</p>
+                            <p class="mt-2 mb-1 fw-semibold">{{ __('messages.no_data_period') }}</p>
                             <small>{{ __('messages.apply_date_filter') }}</small>
                         </div>
                     @endif
@@ -305,4 +305,6 @@
         }
     </style>
 @endpush
+
+
 

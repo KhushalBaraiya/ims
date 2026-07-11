@@ -166,7 +166,7 @@
                             @if (isset($selectedPurchase))
                                 Products from Purchase #{{ $selectedPurchase->purchase_no }}
                             @else
-                                Search Products to Return
+                                {{ __(\'messages.search_products_return\') }}
                             @endif
                         </h6>
                     </div>
@@ -200,7 +200,7 @@
                                         @endif
                                         <th class="text-center" style="width:110px;">Return Qty</th>
                                         <th>{{ __('messages.reason') }}</th>
-                                        <th class="text-end">Subtotal</th>
+                                        <th class="text-end">{{ __('messages.subtotal') }}</th>
                                         <th style="width:40px;"></th>
                                     </tr>
                                 </thead>
@@ -624,4 +624,6 @@
         });
     </script>
 @endpush
+
+
 

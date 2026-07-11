@@ -55,7 +55,7 @@
                             <label class="form-label fw-semibold">Sales Invoice <span class="text-danger">*</span></label>
                             <select class="form-select @error('sale_id') is-invalid @enderror" id="sale_id" name="sale_id"
                                 required>
-                                <option value="">Select Invoice</option>
+                                <option value="">{{ __('messages.select_invoice') }}</option>
                                 @foreach ($sales as $s)
                                     <option {{ old('sale_id', request('sale_id')) == $s->id ? 'selected' : '' }}
                                         value="{{ $s->id }}">
@@ -92,7 +92,7 @@
                             <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
-                                    value="Completed">Completed</option>
+                                    value="Completed">{{ __('messages.completed_label') }}</option>
                                 <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">Pending
                                 </option>
                             </select>
@@ -452,4 +452,5 @@
         });
     </script>
 @endpush
+
 

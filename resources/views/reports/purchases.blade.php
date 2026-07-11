@@ -259,13 +259,13 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($p->status === 'received' || $p->status === 'Completed')
-                                            <span class="badge bg-success rounded-pill">Received</span>
+                                            <span class="badge bg-success rounded-pill">{{ __('messages.received_badge') }}</span>
                                         @elseif ($p->status === 'pending' || $p->status === 'Pending')
-                                            <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                            <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
                                         @elseif ($p->status === 'ordered')
-                                            <span class="badge bg-primary rounded-pill">Ordered</span>
+                                            <span class="badge bg-primary rounded-pill">{{ __('messages.ordered_badge') }}</span>
                                         @elseif ($p->status === 'draft')
-                                            <span class="badge bg-secondary rounded-pill">Draft</span>
+                                            <span class="badge bg-secondary rounded-pill">{{ __('messages.draft') }}</span>
                                         @else
                                             <span class="badge bg-danger rounded-pill">{{ $p->status }}</span>
                                         @endif
@@ -352,3 +352,4 @@
         }
     </style>
 @endpush
+

@@ -43,7 +43,7 @@
             <div>
                 <div class="text-white fw-bold">{{ $product->name }}</div>
                 <div class="text-white opacity-75 small">SKU: {{ $product->code }} &nbsp;�&nbsp;
-                    {{ $product->mainCategory->name ?? 'Uncategorized' }}</div>
+                    {{ $product->mainCategory->name ?? '{{ __(\'messages.uncategorized\') }}' }}</div>
             </div>
             <span class="badge bg-white text-primary ms-auto">{{ ucfirst($product->status) }}</span>
         </div>
@@ -122,7 +122,7 @@
                                         class="text-danger">*</span></label>
                                 <select name="main_category_id" id="main_category_id"
                                     class="form-select @error('main_category_id') is-invalid @enderror" required>
-                                    <option value="">Select Category</option>
+                                    <option value="">{{ __('messages.select_category') }}</option>
                                     @foreach ($categories as $c)
                                         <option value="{{ $c->id }}"
                                             {{ old('main_category_id', $product->main_category_id) == $c->id ? 'selected' : '' }}>
@@ -140,7 +140,7 @@
                                 <label class="form-label fw-semibold">Sub Category</label>
                                 <select name="sub_category_id" id="sub_category_id"
                                     class="form-select @error('sub_category_id') is-invalid @enderror">
-                                    <option value="">Select Sub Category</option>
+                                    <option value="">{{ __('messages.select_sub_category') }}</option>
                                 </select>
                                 @error('sub_category_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -152,7 +152,7 @@
                                 <label class="form-label fw-semibold">Brand <span class="text-danger">*</span></label>
                                 <select name="brand_id" class="form-select @error('brand_id') is-invalid @enderror"
                                     required>
-                                    <option value="">Select Brand</option>
+                                    <option value="">{{ __('messages.select_brand') }}</option>
                                     @foreach ($brands as $b)
                                         <option value="{{ $b->id }}"
                                             {{ old('brand_id', $product->brand_id) == $b->id ? 'selected' : '' }}>
@@ -536,7 +536,7 @@
                 if (subSelect.hasClass('select2-hidden-accessible')) {
                     subSelect.select2('destroy');
                 }
-                subSelect.html('<option value="">Select Sub Category</option>');
+                subSelect.html('<option value="">{{ __('messages.select_sub_category') }}</option>');
                 subCategories
                     .filter(s => s.main_category_id == mainCategoryId)
                     .forEach(s => {
@@ -701,5 +701,6 @@
         });
     </script>
 @endpush
+
 
 

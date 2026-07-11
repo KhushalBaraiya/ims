@@ -310,7 +310,7 @@
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="bg-light rounded border p-3 text-center">
-                                    <div class="text-muted small fw-semibold mb-1">Grand Total</div>
+                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}</div>
                                     <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
@@ -326,7 +326,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Paid Amount <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
                             <input class="form-control form-control-lg fw-bold" id="modal_paid_amount" min="0"
                                 name="paid_amount" required step="0.01" type="number">
                         </div>
@@ -335,11 +335,11 @@
                                     class="text-danger">*</span></label>
                             <select class="form-select form-select-lg" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required>
-                                <option value="Cash">Cash</option>
-                                <option value="Bank Transfer">Bank Transfer</option>
-                                <option value="Card">Credit/Debit Card</option>
-                                <option value="UPI / QR">UPI / QR Code</option>
-                                <option value="Cheque">Cheque</option>
+                                <option value="Cash">{{ __('messages.pm_cash') }}</option>
+                                <option value="Bank Transfer">{{ __('messages.pm_bank') }}</option>
+                                <option value="Card">{{ __('messages.pm_card') }}</option>
+                                <option value="UPI / QR">{{ __('messages.pm_upi') }}</option>
+                                <option value="Cheque">{{ __('messages.pm_cheque') }}</option>
                             </select>
                         </div>
                     </div>
@@ -591,3 +591,5 @@
         });
     </script>
 @endpush
+
+

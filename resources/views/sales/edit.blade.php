@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Edit Sales Invoice')
 
@@ -13,7 +13,7 @@
         <div class="alert alert-warning border border-warning d-flex align-items-center gap-2 mb-4">
             <i class="bx bx-error-circle fs-4 text-warning"></i>
             <div>
-                This sale has already been returned and cannot be edited.
+                {{ __(\'messages.sale_already_returned\') }}
             </div>
         </div>
     @endif
@@ -24,3 +24,4 @@
         @include('sales.form')
     </form>
 @endsection
+

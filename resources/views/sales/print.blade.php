@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -258,11 +258,11 @@
         <!-- Footer Signatures -->
         <div class="mt-16 flex flex-wrap items-center justify-between gap-4 text-xs">
             <div>
-                <p class="text-slate-400 print:text-black">Authorized Signatory</p>
+                <p class="text-slate-400 print:text-black">{{ __('messages.authorized_signatory') }}</p>
                 <div class="mt-10 w-48 border-b border-slate-300 print:border-black"></div>
             </div>
             <div class="text-right">
-                <p class="text-slate-400 print:text-black">Thank you for your business!</p>
+                <p class="text-slate-400 print:text-black">{{ __('messages.thank_you_business') }}</p>
                 <p class="mt-1 text-[10px] text-slate-400 print:text-black">Generated via {{ $companyName }} ERP</p>
             </div>
         </div>
@@ -277,3 +277,4 @@
 </body>
 
 </html>
+

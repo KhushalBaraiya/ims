@@ -657,7 +657,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
                             <select name="brand_id" class="form-select form-select-sm">
-                                <option value="">All Brands</option>
+                                <option value="">{{ __('messages.all_brands') }}</option>
                                 @foreach ($brands as $b)
                                     <option value="{{ $b->id }}"
                                         {{ request('brand_id') == $b->id ? 'selected' : '' }}>
@@ -668,7 +668,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.category') }}</label>
                             <select name="main_category_id" class="form-select form-select-sm">
-                                <option value="">All Categories</option>
+                                <option value="">{{ __('messages.all_categories') }}</option>
                                 @foreach ($categories as $c)
                                     <option value="{{ $c->id }}"
                                         {{ request('main_category_id') == $c->id ? 'selected' : '' }}>
@@ -679,7 +679,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">Stock</label>
                             <select name="stock_filter" class="form-select form-select-sm">
-                                <option value="">All Stock</option>
+                                <option value="">{{ __('messages.all_stock') }}</option>
                                 <option value="ok" {{ request('stock_filter') === 'ok' ? 'selected' : '' }}>In Stock
                                 </option>
                                 <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock
@@ -691,7 +691,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.th_status') }}</label>
                             <select name="status" class="form-select form-select-sm">
-                                <option value="">All</option>
+                                <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>
                                     {{ __('messages.active') }}</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>
@@ -945,4 +945,5 @@
         });
     </script>
 @endpush
+
 

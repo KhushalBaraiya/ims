@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Top Selling Products</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.top_selling') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
@@ -34,17 +34,17 @@
             <form method="GET">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Date From</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
                         <input type="date" name="date_from" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ $dateFrom }}">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Date To</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
                         <input type="date" name="date_to" class="form-control form-control-sm flatpickr-filter-date"
                             value="{{ $dateTo }}">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Sort By</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.sort_by_label') }}</label>
                         <select name="sort_by" class="form-select form-select-sm">
                             <option value="quantity" {{ $sortBy === 'quantity' ? 'selected' : '' }}>Most Sold (Qty)</option>
                             <option value="revenue" {{ $sortBy === 'revenue' ? 'selected' : '' }}>Highest Revenue</option>
@@ -52,7 +52,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Show Top</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.show_top') }}</label>
                         <select name="limit" class="form-select form-select-sm">
                             <option value="10" {{ $limit == 10 ? 'selected' : '' }}>Top 10</option>
                             <option value="20" {{ $limit == 20 ? 'selected' : '' }}>Top 20</option>
@@ -85,7 +85,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Products Ranked</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.products_ranked') }}</p>
                         <h5 class="mb-0 fw-bold text-warning">{{ $topProducts->count() }}</h5>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1rem;">
@@ -98,7 +98,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total Qty Sold</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.total_qty_sold') }}</p>
                         <h5 class="mb-0 fw-bold text-info">{{ number_format($grandTotal['qty']) }}</h5>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1rem;">
@@ -111,7 +111,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total Revenue</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.total_revenue') }}</p>
                         <h5 class="mb-0 fw-bold text-primary">{{ format_currency($grandTotal['revenue']) }}</h5>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1rem;">
@@ -124,7 +124,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total Cost</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.total_cost') }}</p>
                         <h5 class="mb-0 fw-bold text-danger">{{ format_currency($grandTotal['cost']) }}</h5>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1rem;">
@@ -137,7 +137,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total Profit</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.rpt_net_profit') }}</p>
                         <h5 class="mb-0 fw-bold {{ $grandTotal['profit'] >= 0 ? 'text-success' : 'text-danger' }}">
                             {{ format_currency($grandTotal['profit']) }}</h5>
                     </div>
@@ -171,17 +171,17 @@
                     <table class="table table-hover align-middle mb-0" id="topSellingTable">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-3 text-center" style="width:60px;">Rank</th>
+                                <th class="ps-3 text-center" style="width:60px;">{{ __('messages.rank_label') }}</th>
                                 <th>{{ __('messages.product') }}</th>
                                 <th>{{ __('messages.brand') }}</th>
                                 <th>{{ __('messages.category') }}</th>
-                                <th class="text-end">Qty Sold</th>
-                                <th class="text-end">Orders</th>
-                                <th class="text-end">Revenue</th>
-                                <th class="text-end">Cost</th>
-                                <th class="text-end">Profit</th>
-                                <th class="text-center">Margin</th>
-                                <th class="text-end">Stock</th>
+                                <th class="text-end">{{ __('messages.qty_sold') }}</th>
+                                <th class="text-end">{{ __('messages.rpt_orders') }}</th>
+                                <th class="text-end">{{ __('messages.revenue_label') }}</th>
+                                <th class="text-end">{{ __('messages.prod_cost') }}</th>
+                                <th class="text-end">{{ __('messages.rpt_net_profit') }}</th>
+                                <th class="text-center">{{ __('messages.margin_label') }}</th>
+                                <th class="text-end">{{ __('messages.th_stock') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -257,7 +257,7 @@
                         </tbody>
                         <tfoot class="table-light fw-bold">
                             <tr>
-                                <td colspan="4" class="text-end ps-3">Totals</td>
+                                <td colspan="4" class="text-end ps-3">{{ __('messages.totals_label') }}</td>
                                 <td class="text-end">{{ number_format($grandTotal['qty'], 0) }}</td>
                                 <td></td>
                                 <td class="text-end text-primary">{{ format_currency($grandTotal['revenue']) }}</td>
@@ -272,8 +272,8 @@
             @else
                 <div class="text-center py-5 text-muted">
                     <i class="bx bx-trophy d-block mb-2" style="font-size:3.5rem;opacity:.12;"></i>
-                    <p class="mt-2 fw-semibold mb-1">No sales data found.</p>
-                    <p class="small mb-0">Add completed sales to see top selling products.</p>
+                    <p class="mt-2 fw-semibold mb-1">{{ __('messages.no_sales_data') }}</p>
+                    <p class="small mb-0">{{ __('messages.add_sales_for_top') }}</p>
                 </div>
             @endif
         </div>
@@ -310,4 +310,7 @@
         });
     </script>
 @endpush
+
+
+
 

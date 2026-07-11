@@ -1,4 +1,4 @@
-@csrf
+﻿@csrf
 
 {{-- ══ SECTION 1 : Basic Information ══════════════════════════════════════════ --}}
 <div class="form-section">
@@ -54,7 +54,7 @@
             <div class="col-md-4">
                 <label class="form-label fw-semibold small">Brand <span class="text-danger">*</span></label>
                 <select name="brand_id" class="form-select @error('brand_id') is-invalid @enderror" required>
-                    <option value="">Select Brand</option>
+                    <option value="">{{ __('messages.select_brand') }}</option>
                     @foreach ($brands as $b)
                         <option value="{{ $b->id }}"
                             {{ old('brand_id', $product->brand_id ?? '') == $b->id ? 'selected' : '' }}>
@@ -71,7 +71,7 @@
                 <label class="form-label fw-semibold small">Main Category <span class="text-danger">*</span></label>
                 <select name="main_category_id" id="main_category_id"
                     class="form-select @error('main_category_id') is-invalid @enderror" required>
-                    <option value="">Select Category</option>
+                    <option value="">{{ __('messages.select_category') }}</option>
                     @foreach ($categories as $c)
                         <option value="{{ $c->id }}"
                             {{ old('main_category_id', $product->main_category_id ?? '') == $c->id ? 'selected' : '' }}>
@@ -88,7 +88,7 @@
                 <label class="form-label fw-semibold small">Sub Category</label>
                 <select name="sub_category_id" id="sub_category_id"
                     class="form-select @error('sub_category_id') is-invalid @enderror">
-                    <option value="">Select Sub Category</option>
+                    <option value="">{{ __('messages.select_sub_category') }}</option>
                 </select>
                 @error('sub_category_id')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -214,7 +214,7 @@
                 <input class="form-check-input" type="checkbox" role="switch" name="add_opening_stock"
                     id="addOpeningStock" value="1" {{ old('add_opening_stock') ? 'checked' : '' }}>
                 <label class="form-check-label fw-semibold" for="addOpeningStock">
-                    <i class="bx bx-plus-circle me-1 text-success"></i> Add initial stock while creating this product
+                    <i class="bx bx-plus-circle me-1 text-success"></i> {{ __(\'messages.add_initial_stock_hint\') }}
                 </label>
                 <div class="form-text">When enabled, a Purchase record will be created automatically for traceability.
                 </div>
@@ -229,7 +229,7 @@
                         </label>
                         <select name="supplier_id" id="supplier_id"
                             class="form-select @error('supplier_id') is-invalid @enderror">
-                            <option value="">Select Supplier</option>
+                            <option value="">{{ __('messages.select_supplier') }}</option>
                             @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}"
                                     {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
@@ -480,7 +480,7 @@
                     subSelect.select2('destroy');
                 }
 
-                subSelect.html('<option value="">Select Sub Category</option>');
+                subSelect.html('<option value="">{{ __('messages.select_sub_category') }}</option>');
 
                 subCategories
                     .filter(s => s.main_category_id == mainCategoryId)
@@ -625,3 +625,4 @@
         });
     </script>
 @endpush
+
