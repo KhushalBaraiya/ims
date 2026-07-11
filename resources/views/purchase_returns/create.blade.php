@@ -107,7 +107,7 @@
                         @endif
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span class="text-danger">*</span></label>
                             <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 name="return_date" required type="date" value="{{ old('return_date', date('Y-m-d')) }}">
                             @error('return_date')
@@ -116,13 +116,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Reference No</label>
+                            <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
                             <input class="form-control" name="reference_no" placeholder="Optional reference..."
                                 type="text" value="{{ old('reference_no') }}">
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
                                     value="Completed">
@@ -141,7 +141,7 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span class="text-danger">*</span></label>
                             <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
                                 min="0" name="refunded_amount" required step="0.01" type="number"
                                 value="{{ old('refunded_amount', '0.00') }}">
@@ -624,6 +624,7 @@
         });
     </script>
 @endpush
+
 
 
 

@@ -218,7 +218,7 @@
                                                 class="badge rounded-pill bg-success">{{ __('messages.in_stock') }}</span>
                                         @endif
                                     @else
-                                        <span class="badge rounded-pill bg-secondary bg-opacity-75">N/A</span>
+                                        <span class="badge rounded-pill bg-secondary bg-opacity-75">{{ __('messages.na_label') }}</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -294,3 +294,4 @@
         });
     </script>
 @endpush
+

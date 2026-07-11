@@ -170,12 +170,12 @@
                     <tr class="bg-slate-50 border-b border-slate-200 print:bg-transparent print:border-black">
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-8 text-center">#</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">{{ __('messages.product_details_th') }}</th>
-                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-center">SKU</th>
-                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-right">Price</th>
+                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-center">{{ __('messages.sku') }}</th>
+                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-right">{{ __('messages.price_th_print') }}</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-center">Return Qty
                         </th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">{{ __('messages.return_reason_th') }}</th>
-                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-right">Subtotal</th>
+                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-right">{{ __('messages.subtotal_th_print') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 print:border-b print:border-black">
@@ -267,4 +267,5 @@
 </body>
 
 </html>
+
 

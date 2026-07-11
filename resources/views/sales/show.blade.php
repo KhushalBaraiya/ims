@@ -114,7 +114,7 @@
                             @elseif ($sale->status === 'Pending')
                                 <span class="badge bg-info text-dark rounded-pill">{{ __('messages.pending') }}</span>
                             @elseif ($sale->status === 'Draft')
-                                <span class="badge bg-warning text-dark rounded-pill">Draft</span>
+                                <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.draft') }}</span>
                             @elseif ($sale->status === 'Repair')
                                 <span class="badge bg-secondary rounded-pill">{{ __('messages.repair_badge') }}</span>
                             @elseif ($sale->status === 'Ordered')
@@ -155,11 +155,11 @@
                             <span class="fw-semibold text-danger">- {{ format_currency($sale->discount_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Tax (+)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.tax_plus') }}</span>
                             <span class="fw-semibold text-warning">+ {{ format_currency($sale->tax_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Shipping (+)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.shipping_plus') }}</span>
                             <span class="fw-semibold">+ {{ format_currency($sale->shipping_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
@@ -520,6 +520,7 @@
         });
     </script>
 @endpush
+
 
 
 

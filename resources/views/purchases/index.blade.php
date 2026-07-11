@@ -84,7 +84,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">Total Due</p>
+                        <p class="text-muted small mb-0">{{ __('messages.total_due') }}</p>
                         <h4 class="fw-bold {{ $totalDue > 0 ? 'text-danger' : 'text-success' }} mb-0">
                             {{ format_currency($totalDue) }}</h4>
                     </div>
@@ -591,5 +591,6 @@
         });
     </script>
 @endpush
+
 
 

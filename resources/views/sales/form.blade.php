@@ -313,7 +313,7 @@
 
                 {{-- Status --}}
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('status') is-invalid @enderror" name="status" required>
                         @foreach (['Completed', 'Pending', 'Draft', 'Repair', 'Ordered'] as $statusOpt)
@@ -507,7 +507,7 @@
 
                         {{-- Shipping --}}
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Shipping (+)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.shipping_plus') }}</span>
                             <input {{ $isReturned ? 'disabled' : '' }} class="form-control form-control-sm text-end"
                                 id="shipping_amount" min="0" name="shipping_amount" step="0.01"
                                 style="width:120px;" type="number"
@@ -937,6 +937,7 @@
         });
     </script>
 @endpush
+
 
 
 

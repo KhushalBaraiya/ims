@@ -84,7 +84,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total Refunded</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.total_refunded') }}</p>
                         <h4 class="mb-0 fw-bold text-info">{{ format_currency($totalRefunded) }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
@@ -403,6 +403,7 @@
         });
     </script>
 @endpush
+
 
 
 

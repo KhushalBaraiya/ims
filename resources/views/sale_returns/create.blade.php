@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Create Sales Return</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.create_sales_return') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -52,7 +52,7 @@
                     <div class="card-body p-4">
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Sales Invoice <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.sales_invoice_label') }} <span class="text-danger">*</span></label>
                             <select class="form-select @error('sale_id') is-invalid @enderror" id="sale_id" name="sale_id"
                                 required>
                                 <option value="">{{ __('messages.select_invoice') }}</option>
@@ -69,12 +69,12 @@
                         </div>
 
                         <div class="alert alert-light d-none mb-3 border px-3 py-2" id="customerInfoBox">
-                            <div class="small fw-semibold text-muted">Customer</div>
+                            <div class="small fw-semibold text-muted">{{ __('messages.customer_label') }}</div>
                             <div class="fw-bold" id="customerInfoName">—</div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span class="text-danger">*</span></label>
                             <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 name="return_date" required type="date" value="{{ old('return_date', date('Y-m-d')) }}">
                             @error('return_date')
@@ -83,13 +83,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Reference No</label>
+                            <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
                             <input class="form-control" name="reference_no" placeholder="Optional reference..."
                                 type="text" value="{{ old('reference_no') }}">
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
                                     value="Completed">{{ __('messages.completed_label') }}</option>
@@ -109,11 +109,11 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span class="text-danger">*</span></label>
                             <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
                                 min="0" name="refunded_amount" required step="0.01" type="number"
                                 value="{{ old('refunded_amount', '0.00') }}">
-                            <div class="form-text">Total amount paid back to the customer.</div>
+                            <div class="form-text">{{ __('messages.total_paid_back') }}</div>
                             @error('refunded_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -132,7 +132,7 @@
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-list-ul text-info me-2"></i>Invoice Return Items
                         </h6>
-                        <span class="badge bg-label-secondary" id="itemCountBadge">No invoice selected</span>
+                        <span class="badge bg-label-secondary" id="itemCountBadge">{{ __('messages.no_invoice_selected') }}</span>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" id="itemsTableWrapper" style="display:none;">
@@ -140,11 +140,11 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.product') }}</th>
-                                        <th class="text-center" style="min-width:90px;">Return Qty</th>
-                                        <th class="text-center" style="min-width:80px;">Unit Price</th>
-                                        <th class="text-center" style="min-width:75px;">Discount</th>
-                                        <th class="text-center" style="min-width:75px;">Tax</th>
-                                        <th class="text-end" style="min-width:85px;">Sub Total</th>
+                                        <th class="text-center" style="min-width:90px;">{{ __('messages.return_qty') }}</th>
+                                        <th class="text-center" style="min-width:80px;">{{ __('messages.unit_price') }}</th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.discount') }}</th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.tax_label') }}</th>
+                                        <th class="text-end" style="min-width:85px;">{{ __('messages.sub_total_th') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="returnItemsContainer"></tbody>
@@ -155,22 +155,22 @@
                         <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center w-100"
                             id="noInvoiceMsg">
                             <i class="bx bx-file-blank mb-2 d-block mx-auto" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="small mb-0">Select a sales invoice to load line items.</p>
+                            <p class="small mb-0">{{ __('messages.select_invoice_hint') }}</p>
                         </div>
                         <div class="text-muted d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"
                             id="loadingMsg">
                             <i class="bx bx-loader-alt bx-spin mb-2" style="font-size:2.5rem;opacity:.5;"></i>
-                            <p class="small mb-0">Loading invoice items...</p>
+                            <p class="small mb-0">{{ __('messages.loading_invoice') }}</p>
                         </div>
                         <div class="text-success d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"
                             id="emptyReturnMsg">
                             <i class="bx bx-check-circle mb-2" style="font-size:2.5rem;"></i>
-                            <p class="small mb-0">All items from this invoice have already been returned.</p>
+                            <p class="small mb-0">{{ __('messages.all_items_returned') }}</p>
                         </div>
                         <div class="text-danger d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"
                             id="errorMsg">
                             <i class="bx bx-error-circle d-block mb-2" style="font-size:2rem;"></i>
-                            <p class="small mb-0">Failed to load invoice items. Please try again.</p>
+                            <p class="small mb-0">{{ __('messages.failed_load_invoice') }}</p>
                         </div>
                     </div>
                 </div>
@@ -200,17 +200,17 @@
                             <div class="card-body p-4">
                                 <ul class="list-unstyled mb-0">
                                     <li class="d-flex justify-content-between border-bottom py-2">
-                                        <span class="text-muted small fw-semibold">Refund Subtotal</span>
+                                        <span class="text-muted small fw-semibold">{{ __('messages.refund_subtotal') }}</span>
                                         <span class="fw-bold" id="sum_subtotal">{{ format_currency(0) }}</span>
                                     </li>
                                     <li
                                         class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
-                                        <span class="fw-bold small">Grand Total Refund</span>
+                                        <span class="fw-bold small">{{ __('messages.grand_total_refund') }}</span>
                                         <span class="fw-bold text-primary"
                                             id="sum_grandtotal">{{ format_currency(0) }}</span>
                                     </li>
                                     <li class="d-flex justify-content-between py-2">
-                                        <span class="text-muted small fw-semibold">Customer Refund</span>
+                                        <span class="text-muted small fw-semibold">{{ __('messages.customer_refund') }}</span>
                                         <span class="fw-bold text-success"
                                             id="summary_refunded">{{ format_currency(0) }}</span>
                                     </li>
@@ -452,5 +452,6 @@
         });
     </script>
 @endpush
+
 
 

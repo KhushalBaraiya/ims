@@ -951,6 +951,11 @@ return [
     'prod_low_stock'            => 'Low Stock',
     'prod_out_of_stock'         => 'Out of Stock',
 
+    // Product views (sidebar & header buttons)
+    'product_gallery'           => 'Product Gallery',
+    'list_view'                 => 'List View',
+    'gallery_view'              => 'Gallery View',
+
     // Index page — header buttons
     'prod_gallery'              => 'Gallery',
     'prod_by_category'          => 'By Category',

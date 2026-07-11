@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Edit Sales Return</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.edit_sales_return') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -52,26 +52,26 @@
                     <div class="card-body p-4">
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Return No</label>
+                            <label class="form-label fw-semibold">{{ __('messages.return_no_label') }}</label>
                             <input class="form-control bg-light fw-bold" readonly type="text"
                                 value="{{ $saleReturn->return_no }}">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Invoice No</label>
+                            <label class="form-label fw-semibold">{{ __('messages.invoice_no_short') }}</label>
                             <input class="form-control bg-light fw-bold text-primary" readonly type="text"
                                 value="{{ $saleReturn->sale->invoice_no }}">
                             <input name="sale_id" type="hidden" value="{{ $saleReturn->sale_id }}">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Customer</label>
+                            <label class="form-label fw-semibold">{{ __('messages.customer') }}</label>
                             <input class="form-control bg-light fw-bold" readonly type="text"
                                 value="{{ $saleReturn->customer->name }}">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Return Date <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span class="text-danger">*</span></label>
                             <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 name="return_date" required type="date"
                                 value="{{ old('return_date', $saleReturn->return_date) }}">
@@ -81,13 +81,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Reference No</label>
+                            <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
                             <input class="form-control" name="reference_no" placeholder="Optional reference..."
                                 type="text" value="{{ old('reference_no', $saleReturn->reference_no) }}">
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', $saleReturn->status) === 'Completed' ? 'selected' : '' }}
                                     value="Completed">Completed
@@ -109,11 +109,11 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Refunded Amount <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span class="text-danger">*</span></label>
                             <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
                                 min="0" name="refunded_amount" required step="0.01" type="number"
                                 value="{{ old('refunded_amount', $saleReturn->refunded_amount) }}">
-                            <div class="form-text">Total amount paid back to the customer.</div>
+                            <div class="form-text">{{ __('messages.total_paid_back') }}</div>
                             @error('refunded_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -140,11 +140,11 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.product') }}</th>
-                                        <th class="text-center" style="min-width:90px;">Return Qty</th>
-                                        <th class="text-center" style="min-width:80px;">Unit Price</th>
-                                        <th class="text-center" style="min-width:75px;">Discount</th>
-                                        <th class="text-center" style="min-width:75px;">Tax</th>
-                                        <th class="text-end" style="min-width:85px;">Sub Total</th>
+                                        <th class="text-center" style="min-width:90px;">{{ __('messages.return_qty') }}</th>
+                                        <th class="text-center" style="min-width:80px;">{{ __('messages.unit_price') }}</th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.discount') }}</th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.tax_label') }}</th>
+                                        <th class="text-end" style="min-width:85px;">{{ __('messages.sub_total_th') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="returnItemsContainer">
@@ -260,18 +260,18 @@
                             <div class="card-body p-4">
                                 <ul class="list-unstyled mb-0">
                                     <li class="d-flex justify-content-between border-bottom py-2">
-                                        <span class="text-muted small fw-semibold">Refund Subtotal</span>
+                                        <span class="text-muted small fw-semibold">{{ __('messages.refund_subtotal') }}</span>
                                         <span class="fw-bold"
                                             id="sum_subtotal">{{ format_currency($saleReturn->sub_total) }}</span>
                                     </li>
                                     <li
                                         class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
-                                        <span class="fw-bold small">Grand Total Refund</span>
+                                        <span class="fw-bold small">{{ __('messages.grand_total_refund') }}</span>
                                         <span class="fw-bold text-primary"
                                             id="sum_grandtotal">{{ format_currency($saleReturn->grand_total) }}</span>
                                     </li>
                                     <li class="d-flex justify-content-between py-2">
-                                        <span class="text-muted small fw-semibold">Customer Refund</span>
+                                        <span class="text-muted small fw-semibold">{{ __('messages.customer_refund') }}</span>
                                         <span class="fw-bold text-success"
                                             id="summary_refunded">{{ format_currency($saleReturn->refunded_amount) }}</span>
                                     </li>
@@ -382,4 +382,5 @@
         });
     </script>
 @endpush
+
 

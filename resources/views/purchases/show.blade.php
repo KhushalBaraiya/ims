@@ -150,11 +150,11 @@
                                 {{ format_currency($purchase->discount_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Tax (+)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.tax_plus') }}</span>
                             <span class="fw-semibold text-warning">+ {{ format_currency($purchase->tax_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Shipping (+)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.shipping_plus') }}</span>
                             <span class="fw-semibold">+ {{ format_currency($purchase->shipping_amount) }}</span>
                         </li>
                         <li class="d-flex justify-content-between border-bottom bg-label-primary rounded px-2 py-2">
@@ -383,6 +383,7 @@
         });
     </script>
 @endpush
+
 
 
 

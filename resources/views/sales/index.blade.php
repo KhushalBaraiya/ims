@@ -70,7 +70,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">Total Revenue</p>
+                        <p class="text-muted small mb-0">{{ __('messages.total_revenue') }}</p>
                         <h4 class="fw-bold text-info mb-0">{{ format_currency($totalSaleAmount) }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
@@ -83,7 +83,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">Total Due</p>
+                        <p class="text-muted small mb-0">{{ __('messages.total_due') }}</p>
                         <h4 class="fw-bold {{ $totalSaleDue > 0 ? 'text-danger' : 'text-success' }} mb-0">
                             {{ format_currency($totalSaleDue) }}</h4>
                     </div>
@@ -133,7 +133,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">Payment Status</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.payment_status_label') }}</label>
                             <select class="form-select form-select-sm" name="payment_status">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option {{ request('payment_status') === 'Unpaid' ? 'selected' : '' }} value="Unpaid">
@@ -205,14 +205,14 @@
                                     @if ($sale->status === 'Completed')
                                         <span class="badge rounded-pill bg-success">{{ __("messages.completed") }}</span>
                                     @elseif($sale->status === 'Pending')
-                                        <span class="badge rounded-pill bg-info text-dark">Pending</span>
+                                        <span class="badge rounded-pill bg-info text-dark">{{ __('messages.pending') }}</span>
                                     @elseif($sale->status === 'Draft')
                                         <span
                                             class="badge rounded-pill bg-warning text-dark">{{ __('messages.draft') }}</span>
                                     @elseif($sale->status === 'Repair')
                                         <span class="badge rounded-pill bg-secondary">{{ __("messages.repair") }}</span>
                                     @elseif($sale->status === 'Ordered')
-                                        <span class="badge rounded-pill bg-primary">Ordered</span>
+                                        <span class="badge rounded-pill bg-primary">{{ __('messages.ordered_badge') }}</span>
                                     @else
                                         <span class="badge rounded-pill bg-secondary">{{ $sale->status }}</span>
                                     @endif
@@ -584,6 +584,7 @@
         });
     </script>
 @endpush
+
 
 
 
