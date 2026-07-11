@@ -2628,3 +2628,16 @@ table .table-light th {
     font-size: 1.4rem;
     line-height: 1;
 }
+
+
+/* ── Mobile navbar hamburger button ──────────────────────────────────── */
+.menu-toggle-btn {
+    transition: background .15s;
+    color: inherit;
+    text-decoration: none !important;
+}
+
+.menu-toggle-btn:hover {
+    background: rgba(105, 108, 255, .09) !important;
+    color: #696cff !important;
+}

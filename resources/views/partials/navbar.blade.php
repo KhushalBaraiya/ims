@@ -7,9 +7,10 @@
 <nav class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme"
     id="layout-navbar">
 
-    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-xl-0 d-xl-none me-4">
-        <a class="nav-item nav-link me-xl-6 px-0" href="javascript:void(0)">
-            <i class="icon-base bx bx-menu icon-md"></i>
+    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-xl-0 d-xl-none me-3">
+        <a class="nav-item nav-link px-2 d-flex align-items-center justify-content-center menu-toggle-btn"
+            href="javascript:void(0)" style="width:38px;height:38px;border-radius:8px;">
+            <i class="bx bx-menu" style="font-size:1.4rem;line-height:1;"></i>
         </a>
     </div>
 

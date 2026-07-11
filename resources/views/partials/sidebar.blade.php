@@ -29,8 +29,9 @@
             </span>
             <span class="app-brand-text demo menu-text fw-bold ms-2">IMS</span>
         </a>
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
-            <i class="bx bx-chevron-left d-block d-xl-none align-middle"></i>
+        {{-- Close button (visible on mobile) --}}
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+            <i class="bx bx-x align-middle" style="font-size:1.4rem;"></i>
         </a>
     </div>
 
@@ -39,30 +40,22 @@
 
     <ul class="menu-inner py-1">
 
-        {{-- ════════════════════════════════════════
-             1. DASHBOARD  (flat, non-collapsible)
-             ════════════════════════════════════════ --}}
+        {{-- ── DASHBOARD ── --}}
         <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-dashboard"></i>
-                <div class="text-truncate">{{ __('messages.menu_dashboard') }}</div>
+                <div>{{ __('messages.menu_dashboard') }}</div>
             </a>
         </li>
 
-        {{-- ════════════════════════════════════════
-             2. INVENTORY  (non-collapsible group)
-             Sub-items: Categories → Brands → Products
-             ════════════════════════════════════════ --}}
+        {{-- ── INVENTORY header ── --}}
         @canany(['main_categories.view', 'sub_categories.view', 'brands.view', 'products.view'])
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-3">
-                    <i class="bx bx-box" style="font-size:20px;"></i>
-                    {{ __('messages.section_inventory') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.section_inventory') }}</span>
             </li>
         @endcanany
 
-        {{-- Categories --}}
+        {{-- Categories collapsible --}}
         @php
             $catActive = request()->routeIs('main-categories.*', 'sub-categories.*');
             $showCatMenu = auth()->user()->can('main_categories.view') || auth()->user()->can('sub_categories.view');
@@ -71,22 +64,22 @@
             <li class="menu-item {{ $catActive ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-category"></i>
-                    <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
+                    <div>{{ __('messages.menu_categories') }}</div>
                 </a>
                 <ul class="menu-sub">
                     @can('main_categories.view')
                         <li class="menu-item {{ request()->routeIs('main-categories.*') ? 'active' : '' }}">
-                            <a href="{{ route('main-categories.index') }}" class="menu-link sidebar-sub-link">
-                                <i class="sidebar-sub-icon bx bx-category"></i>
-                                <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
+                            <a href="{{ route('main-categories.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-category" style="font-size:0.9rem;"></i>
+                                <div>{{ __('messages.menu_categories') }}</div>
                             </a>
                         </li>
                     @endcan
                     @can('sub_categories.view')
                         <li class="menu-item {{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
-                            <a href="{{ route('sub-categories.index') }}" class="menu-link sidebar-sub-link">
-                                <i class="sidebar-sub-icon bx bx-sitemap"></i>
-                                <div class="text-truncate">{{ __('messages.menu_sub_categories') }}</div>
+                            <a href="{{ route('sub-categories.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-sitemap" style="font-size:0.9rem;"></i>
+                                <div>{{ __('messages.menu_sub_categories') }}</div>
                             </a>
                         </li>
                     @endcan
@@ -99,52 +92,46 @@
             <li class="menu-item {{ request()->routeIs('brands.*') ? 'active' : '' }}">
                 <a href="{{ route('brands.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-award"></i>
-                    <div class="text-truncate">{{ __('messages.menu_brands') }}</div>
+                    <div>{{ __('messages.menu_brands') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- Products --}}
+        {{-- Products collapsible --}}
         @can('products.view')
             @php $productsActive = request()->routeIs('products.*'); @endphp
             <li class="menu-item {{ $productsActive ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-package"></i>
-                    <div class="text-truncate">{{ __('messages.menu_products') }}</div>
+                    <div>{{ __('messages.menu_products') }}</div>
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
-                        <a href="{{ route('products.index') }}" class="menu-link sidebar-sub-link">
-                            <i class="sidebar-sub-icon bx bx-list-ul"></i>
-                            <div class="text-truncate">{{ __('messages.list_view') }}</div>
+                        <a href="{{ route('products.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul" style="font-size:0.9rem;"></i>
+                            <div>{{ __('messages.list_view') }}</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('products.gallery') ? 'active' : '' }}">
-                        <a href="{{ route('products.gallery') }}" class="menu-link sidebar-sub-link">
-                            <i class="sidebar-sub-icon bx bx-grid-alt"></i>
-                            <div class="text-truncate">{{ __('messages.gallery_view') }}</div>
+                        <a href="{{ route('products.gallery') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-grid-alt" style="font-size:0.9rem;"></i>
+                            <div>{{ __('messages.gallery_view') }}</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('products.by-category') ? 'active' : '' }}">
-                        <a href="{{ route('products.by-category') }}" class="menu-link sidebar-sub-link">
-                            <i class="sidebar-sub-icon bx bx-category-alt"></i>
-                            <div class="text-truncate">{{ __('messages.prod_by_category') }}</div>
+                        <a href="{{ route('products.by-category') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-category-alt" style="font-size:0.9rem;"></i>
+                            <div>{{ __('messages.prod_by_category') }}</div>
                         </a>
                     </li>
                 </ul>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             4. STOCK IN  (group)
-             Sub-items: Purchase → Purchase Return
-             ════════════════════════════════════════ --}}
+        {{-- ── PURCHASES header ── --}}
         @canany(['purchases.view', 'purchase_returns.view'])
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-cart-download" style="font-size:20px;"></i>
-                    {{ __('messages.menu_purchases') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.menu_purchases') }}</span>
             </li>
         @endcanany
 
@@ -152,7 +139,7 @@
             <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
                 <a href="{{ route('purchases.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart-download"></i>
-                    <div class="text-truncate">{{ __('messages.menu_purchases') }}</div>
+                    <div>{{ __('messages.menu_purchases') }}</div>
                 </a>
             </li>
         @endcan
@@ -161,21 +148,15 @@
             <li class="menu-item {{ request()->routeIs('purchase-returns.*') ? 'active' : '' }}">
                 <a href="{{ route('purchase-returns.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-revision"></i>
-                    <div class="text-truncate">{{ __('messages.menu_purchase_returns') }}</div>
+                    <div>{{ __('messages.menu_purchase_returns') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             4. STOCK OUT  (group)
-             Sub-items: Sale → Sale Return
-             ════════════════════════════════════════ --}}
+        {{-- ── SALES header ── --}}
         @canany(['sales.view', 'sale_returns.view'])
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-cart-alt" style="font-size:20px;"></i>
-                    {{ __('messages.menu_sales') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.menu_sales') }}</span>
             </li>
         @endcanany
 
@@ -183,7 +164,7 @@
             <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
                 <a href="{{ route('sales.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart-alt"></i>
-                    <div class="text-truncate">{{ __('messages.menu_sales') }}</div>
+                    <div>{{ __('messages.menu_sales') }}</div>
                 </a>
             </li>
         @endcan
@@ -192,53 +173,43 @@
             <li class="menu-item {{ request()->routeIs('sale-returns.*') ? 'active' : '' }}">
                 <a href="{{ route('sale-returns.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-transfer"></i>
-                    <div class="text-truncate">{{ __('messages.menu_sale_returns') }}</div>
+                    <div>{{ __('messages.menu_sale_returns') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             3.5 STOCK MANAGEMENT
-             Single flat item: Adjustments
-             ════════════════════════════════════════ --}}
+        {{-- ── STOCK header ── --}}
         @canany(['stocks.view', 'stocks.create'])
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-layer" style="font-size:20px;"></i>
-                    {{ __('messages.stock_adjustments') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.stock_adjustments') }}</span>
             </li>
         @endcanany
 
         @can('stocks.view')
             @php
-                $adjustmentsActive =
-                    request()->routeIs('stocks.history') ||
-                    request()->routeIs('stocks.adjust') ||
-                    request()->routeIs('stocks.store_adjustment') ||
-                    request()->routeIs('stocks.edit_adjustment') ||
-                    request()->routeIs('stocks.show_adjustment') ||
-                    request()->routeIs('stocks.update_adjustment') ||
-                    request()->routeIs('stocks.index');
+                $adjustmentsActive = request()->routeIs(
+                    'stocks.history',
+                    'stocks.adjust',
+                    'stocks.store_adjustment',
+                    'stocks.edit_adjustment',
+                    'stocks.show_adjustment',
+                    'stocks.update_adjustment',
+                    'stocks.index',
+                );
             @endphp
             <li class="menu-item {{ $adjustmentsActive ? 'active' : '' }}">
                 <a href="{{ route('stocks.history') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-slider"></i>
-                    <div class="text-truncate">{{ __('messages.stock_adjustments') }}</div>
+                    <div>{{ __('messages.stock_adjustments') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             5. PEOPLES  (group)
-             Sub-items: Supplier → Customer → Users
-             ════════════════════════════════════════ --}}
-        @canany(['suppliers.view', 'customers.view'])
+        {{-- ── PARTIES header ── --}}
+        @canany(['suppliers.view', 'customers.view', 'users.view'])
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-group" style="font-size:20px;"></i>
-                    {{ __('messages.menu_suppliers') }} / {{ __('messages.menu_customers') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.menu_suppliers') }} &amp;
+                    {{ __('messages.menu_customers') }}</span>
             </li>
         @endcanany
 
@@ -246,7 +217,7 @@
             <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
                 <a href="{{ route('suppliers.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-store"></i>
-                    <div class="text-truncate">{{ __('messages.menu_suppliers') }}</div>
+                    <div>{{ __('messages.menu_suppliers') }}</div>
                 </a>
             </li>
         @endcan
@@ -255,86 +226,67 @@
             <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
                 <a href="{{ route('customers.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                    <div class="text-truncate">{{ __('messages.menu_customers') }}</div>
+                    <div>{{ __('messages.menu_customers') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- User Accounts - separate section --}}
         @can('users.view')
-            <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-user" style="font-size:20px;"></i>
-                    {{ __('messages.user_accounts') }}
-                </span>
-            </li>
             <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                 <a href="{{ route('users.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-user"></i>
-                    <div class="text-truncate">{{ __('messages.user_accounts') }}</div>
+                    <div>{{ __('messages.user_accounts') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             6. REPORTS  (group)
-             ════════════════════════════════════════ --}}
+        {{-- ── REPORTS header ── --}}
         @can('reports.view')
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-bar-chart-alt-2" style="font-size:20px;"></i>
-                    {{ __('messages.section_reports') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.section_reports') }}</span>
             </li>
-
             <li class="menu-item {{ request()->routeIs('reports.index') ? 'active' : '' }}">
                 <a href="{{ route('reports.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-                    <div class="text-truncate">{{ __('messages.all_reports') }}</div>
+                    <div>{{ __('messages.all_reports') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
                 <a href="{{ route('reports.sales') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart-alt"></i>
-                    <div class="text-truncate">{{ __('messages.sales_report') }}</div>
+                    <div>{{ __('messages.sales_report') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
                 <a href="{{ route('reports.purchases') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart-download"></i>
-                    <div class="text-truncate">{{ __('messages.purchase_report') }}</div>
+                    <div>{{ __('messages.purchase_report') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('reports.profit-loss') ? 'active' : '' }}">
                 <a href="{{ route('reports.profit-loss') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-trending-up"></i>
-                    <div class="text-truncate">{{ __('messages.profit_loss') }}</div>
+                    <div>{{ __('messages.profit_loss') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('reports.top-selling') ? 'active' : '' }}">
                 <a href="{{ route('reports.top-selling') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-trophy"></i>
-                    <div class="text-truncate">{{ __('messages.top_selling') }}</div>
+                    <div>{{ __('messages.top_selling') }}</div>
                 </a>
             </li>
             <li class="menu-item {{ request()->routeIs('reports.stock-alert') ? 'active' : '' }}">
                 <a href="{{ route('reports.stock-alert') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-error"></i>
-                    <div class="text-truncate">{{ __('messages.stock_alert_menu') }}</div>
+                    <div>{{ __('messages.stock_alert_menu') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             7. MANAGEMENT & SETTINGS  (bottom group)
-             Sub-items: Roles & Permissions → Activity Logs → Settings
-             ════════════════════════════════════════ --}}
+        {{-- ── MANAGEMENT header ── --}}
         @canany(['roles.view', 'activity_logs.view', 'settings.view', 'currencies.view'])
             <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text d-flex align-items-center gap-2">
-                    <i class="bx bx-cog" style="font-size:20px;"></i>
-                    {{ __('messages.role_management') }} &amp; {{ __('messages.settings') }}
-                </span>
+                <span class="menu-header-text">{{ __('messages.section_management') }}</span>
             </li>
         @endcanany
 
@@ -342,7 +294,7 @@
             <li class="menu-item {{ request()->routeIs('roles.*') ? 'active' : '' }}">
                 <a href="{{ route('roles.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-shield"></i>
-                    <div class="text-truncate">{{ __('messages.menu_roles') }}</div>
+                    <div>{{ __('messages.menu_roles') }}</div>
                 </a>
             </li>
         @endcan
@@ -351,7 +303,7 @@
             <li class="menu-item {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
                 <a href="{{ route('activity-logs.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-history"></i>
-                    <div class="text-truncate">{{ __('messages.activity_logs') }}</div>
+                    <div>{{ __('messages.activity_logs') }}</div>
                 </a>
             </li>
         @endcan
@@ -360,7 +312,7 @@
             <li class="menu-item {{ request()->routeIs('currencies.*') ? 'active' : '' }}">
                 <a href="{{ route('currencies.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-money"></i>
-                    <div class="text-truncate">{{ __('messages.menu_currencies') }}</div>
+                    <div>{{ __('messages.menu_currencies') }}</div>
                 </a>
             </li>
         @endcan
@@ -369,28 +321,21 @@
             <li class="menu-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                 <a href="{{ route('settings.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cog"></i>
-                    <div class="text-truncate">{{ __('messages.menu_settings') }}</div>
+                    <div>{{ __('messages.menu_settings') }}</div>
                 </a>
             </li>
         @endcan
 
-        {{-- ════════════════════════════════════════
-             8. USER PROFILE  (bottom-most)
-             ════════════════════════════════════════ --}}
+        {{-- ── PROFILE (bottom) ── --}}
         <li class="menu-header small text-uppercase mt-1">
-            <span class="menu-header-text d-flex align-items-center gap-2">
-                <i class="bx bx-user-circle" style="font-size:20px;"></i>
-                {{ __('messages.profile') }}
-            </span>
+            <span class="menu-header-text">{{ __('messages.profile') }}</span>
         </li>
 
-        {{-- Profile card with dropdown --}}
         <li
             class="menu-item nav-item dropdown sidebar-user-dropdown {{ request()->routeIs('profile.*') ? 'active' : '' }}">
             <a href="javascript:void(0);"
                 class="menu-link d-flex align-items-center gap-2 px-3 py-2 sidebar-profile-trigger"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                {{-- Avatar --}}
                 @if (Auth::user()->profile_photo)
                     <img src="{{ asset('uploads/profiles/' . Auth::user()->profile_photo) }}"
                         class="rounded-circle flex-shrink-0 sidebar-avatar" alt="{{ Auth::user()->name }}"
@@ -401,7 +346,6 @@
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                 @endif
-                {{-- Name + caret --}}
                 <div class="flex-grow-1 overflow-hidden">
                     <div class="fw-semibold text-truncate sidebar-user-name"
                         style="font-size:.87rem;max-width:120px;">
@@ -422,24 +366,20 @@
                     </div>
                 </li>
                 <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                        href="{{ route('profile.show') }}">
-                        <i class="bx bx-user"></i>
-                        {{ __('messages.profile') }}
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.show') }}">
+                        <i class="bx bx-user"></i> {{ __('messages.profile') }}
                     </a>
                 </li>
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2"
                         href="{{ route('profile.show') }}#edit-profile">
-                        <i class="bx bx-edit"></i>
-                        {{ __('messages.profile_information') }}
+                        <i class="bx bx-edit"></i> {{ __('messages.profile_information') }}
                     </a>
                 </li>
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2"
                         href="{{ route('profile.show') }}#change-password">
-                        <i class="bx bx-lock-alt"></i>
-                        {{ __('messages.change_password') }}
+                        <i class="bx bx-lock-alt"></i> {{ __('messages.change_password') }}
                     </a>
                 </li>
                 <li>
@@ -449,8 +389,7 @@
                     <form method="POST" action="{{ route('logout') }}" id="sidebar-profile-logout">
                         @csrf
                         <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger">
-                            <i class="bx bx-power-off"></i>
-                            {{ __('messages.logout') }}
+                            <i class="bx bx-power-off"></i> {{ __('messages.logout') }}
                         </button>
                     </form>
                 </li>
@@ -459,7 +398,6 @@
 
     </ul>
 
-    {{-- Hidden logout form kept for any legacy references --}}
     <form id="sidebar-logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">@csrf
     </form>
 
@@ -467,48 +405,65 @@
 
 @push('styles')
     <style>
-        /* ── Sidebar section header icons ───────────────────────── */
+        /* ════════════════════════════════════════════
+       SIDEBAR — Sneat overrides
+       ════════════════════════════════════════════ */
+
+        /* Section headers — no icon, clean text only */
         .menu-header-text {
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            opacity: 0.55;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
         }
 
-        .menu-header-text .bx {
-            opacity: .65;
-        }
+        /* ── Sub-menu: show icons using menu-icon class ─────────────────────── */
 
-        /* ── Sub-menu items — icon + label layout ───────────────── */
-        .sidebar-sub-link {
+        /* Sneat hides .menu-icon inside .menu-sub by default — override it */
+        .menu-vertical .menu-sub .menu-item .menu-link .menu-icon {
             display: flex !important;
             align-items: center;
-            gap: 0.5rem;
-            padding-left: 1.5rem !important;
-        }
-
-        .sidebar-sub-icon {
-            font-size: 1rem;
-            width: 18px;
+            justify-content: center;
+            width: 1.25rem !important;
             flex-shrink: 0;
-            text-align: center;
+            margin-right: 0.5rem;
             opacity: 0.7;
-            color: inherit;
+            font-size: 0.9rem !important;
         }
 
-        /* Remove default Sneat bullet from sub items */
-        .menu-sub .menu-item .menu-link:not(.sidebar-sub-link)::before,
-        .menu-sub .menu-item .sidebar-sub-link::before {
+        /* Remove the default bullet ::before on sub-items */
+        .menu-vertical .menu-sub .menu-item .menu-link::before {
             display: none !important;
             content: none !important;
         }
 
-        /* Active sub-item icon highlight */
-        .menu-sub .menu-item.active .sidebar-sub-icon {
+        /* Reduce sub-item left padding so icon aligns nicely */
+        .menu-vertical .menu-sub .menu-item .menu-link {
+            padding-left: 1.25rem !important;
+        }
+
+        /* Active sub-item icon: full opacity + primary colour */
+        .menu-vertical .menu-sub .menu-item.active>.menu-link .menu-icon,
+        .menu-vertical .menu-sub .menu-item.active>.menu-link:hover .menu-icon {
             opacity: 1;
             color: #696cff;
         }
 
-        /* ── User profile trigger ───────────────────────────────── */
+        /* Hover */
+        .menu-vertical .menu-sub .menu-item>.menu-link:hover .menu-icon {
+            opacity: 0.9;
+        }
+
+        /* Dark mode */
+        [data-bs-theme="dark"] .menu-vertical .menu-sub .menu-item.active>.menu-link .menu-icon {
+            color: #696cff;
+        }
+
+        /* ── Profile trigger ────────────────────────────────────────────────── */
         .sidebar-profile-trigger {
             border-radius: 8px !important;
             transition: background .15s;
@@ -519,7 +474,6 @@
             background: rgba(105, 108, 255, .09) !important;
         }
 
-        /* Avatar placeholder circle */
         .sidebar-avatar-placeholder {
             background: rgba(105, 108, 255, .15);
             color: #696cff;
@@ -532,7 +486,6 @@
             border: 2px solid rgba(105, 108, 255, .25);
         }
 
-        /* Name / role text */
         .sidebar-user-name {
             color: inherit;
             line-height: 1.2;
@@ -543,7 +496,6 @@
             line-height: 1.2;
         }
 
-        /* Caret rotation when open */
         .sidebar-profile-trigger[aria-expanded="true"] .sidebar-user-caret {
             transform: rotate(90deg);
         }
@@ -582,28 +534,6 @@
         .sidebar-profile-dropdown .dropdown-item .bx {
             font-size: 1rem;
             opacity: .75;
-        }
-
-        /* ── Mobile menu toggle button ──────────────────────────── */
-        .layout-menu-toggle .nav-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            transition: background .15s;
-            color: inherit;
-        }
-
-        .layout-menu-toggle .nav-link:hover {
-            background: rgba(105, 108, 255, .09);
-            color: #696cff;
-        }
-
-        .layout-menu-toggle .nav-link i {
-            font-size: 1.4rem;
-            line-height: 1;
         }
     </style>
 @endpush
