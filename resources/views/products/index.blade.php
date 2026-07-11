@@ -98,10 +98,10 @@
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             <a href="{{ route('products.gallery') }}" class="btn btn-outline-info d-flex align-items-center gap-1">
-                <i class="bx bx-grid-alt"></i> Gallery
+                <i class="bx bx-grid-alt"></i> {{ __('messages.prod_gallery') }}
             </a>
             <a href="{{ route('products.by-category') }}" class="btn btn-outline-success d-flex align-items-center gap-1">
-                <i class="bx bx-category"></i> By Category
+                <i class="bx bx-category"></i> {{ __('messages.prod_by_category') }}
             </a>
             @can('products.delete')
                 <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
@@ -134,7 +134,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total Products</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_total_products') }}</p>
                         <h4 class="mb-0 fw-bold text-primary">{{ $total }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;"><i
@@ -146,7 +146,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Active</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_active') }}</p>
                         <h4 class="mb-0 fw-bold text-success" id="statActiveCount">{{ $active }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;"><i
@@ -158,7 +158,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Low Stock</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_low_stock') }}</p>
                         <h4 class="mb-0 fw-bold text-warning">{{ $lowStock }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.1rem;"><i
@@ -170,7 +170,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Out of Stock</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_out_of_stock') }}</p>
                         <h4 class="mb-0 fw-bold text-danger">{{ $outStock }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1.1rem;"><i
@@ -198,7 +198,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
                             <select name="brand_id" class="form-select form-select-sm">
-                                <option value="">All Brands</option>
+                                <option value="">{{ __('messages.prod_all_brands') }}</option>
                                 @foreach ($brands as $b)
                                     <option value="{{ $b->id }}"
                                         {{ request('brand_id') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
@@ -208,7 +208,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.category') }}</label>
                             <select name="main_category_id" id="filter_main_category_id" class="form-select form-select-sm">
-                                <option value="">All Categories</option>
+                                <option value="">{{ __('messages.prod_all_categories') }}</option>
                                 @foreach ($categories as $c)
                                     <option value="{{ $c->id }}"
                                         {{ request('main_category_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}
@@ -219,27 +219,27 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.sub_category') }}</label>
                             <select name="sub_category_id" id="filter_sub_category_id" class="form-select form-select-sm">
-                                <option value="">All Sub-cats</option>
+                                <option value="">{{ __('messages.prod_all_subcats') }}</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select name="status" class="form-select form-select-sm">
-                                <option value="">All</option>
-                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active
-                                </option>
-                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive
-                                </option>
+                                <option value="">{{ __('messages.prod_all_statuses') }}</option>
+                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>
+                                    {{ __('messages.active') }}</option>
+                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>
+                                    {{ __('messages.inactive') }}</option>
                             </select>
                         </div>
                         <div class="col-6 col-md-1">
-                            <label class="form-label fw-semibold small">Min
+                            <label class="form-label fw-semibold small">{{ __('messages.prod_price_min') }}
                                 {{ optional(current_currency())->symbol ?? '₹' }}</label>
                             <input type="number" step="0.01" name="price_min" class="form-control form-control-sm"
                                 value="{{ request('price_min') }}" placeholder="0">
                         </div>
                         <div class="col-6 col-md-1">
-                            <label class="form-label fw-semibold small">Max
+                            <label class="form-label fw-semibold small">{{ __('messages.prod_price_max') }}
                                 {{ optional(current_currency())->symbol ?? '₹' }}</label>
                             <input type="number" step="0.01" name="price_max" class="form-control form-control-sm"
                                 value="{{ request('price_max') }}" placeholder="∞">
@@ -306,15 +306,15 @@
                         <tr>
                             <th style="width:40px">#</th>
                             <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
-                            <th class="no-sort" style="width:80px">Image</th>
+                            <th class="no-sort" style="width:80px">{{ __('messages.prod_image_col') }}</th>
                             <th>{{ __('messages.th_name') }}</th>
                             <th>{{ __('messages.sku') }}</th>
-                            <th>Brand / Category</th>
-                            <th class="text-end">Cost</th>
-                            <th class="text-end">Sell</th>
-                            <th class="text-center">Stock</th>
+                            <th>{{ __('messages.prod_brand_category') }}</th>
+                            <th class="text-end">{{ __('messages.prod_cost') }}</th>
+                            <th class="text-end">{{ __('messages.prod_sell') }}</th>
+                            <th class="text-center">{{ __('messages.prod_stock_col') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th class="text-center no-sort" style="width:130px">Actions</th>
+                            <th class="text-center no-sort" style="width:130px">{{ __('messages.prod_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -445,9 +445,9 @@
                                                     'price_min',
                                                     'price_max',
                                                 ]))
-                                                No products match your filters
+                                                {{ __('messages.prod_no_match_filters') }}
                                             @else
-                                                No products yet
+                                                {{ __('messages.prod_no_products_yet') }}
                                             @endif
                                         </h6>
                                         <p class="text-muted small mb-3">
@@ -460,9 +460,9 @@
                                                     'price_min',
                                                     'price_max',
                                                 ]))
-                                                Try adjusting or clearing your filters to find what you're looking for.
+                                                {{ __('messages.prod_clear_filters_hint') }}
                                             @else
-                                                Get started by adding your first product to the catalog.
+                                                {{ __('messages.prod_get_started_hint') }}
                                             @endif
                                         </p>
                                         <div class="d-flex justify-content-center gap-2 flex-wrap">
@@ -477,12 +477,13 @@
                                                 ]))
                                                 <a href="{{ route('products.index') }}"
                                                     class="btn btn-outline-secondary">
-                                                    <i class="bx bx-reset me-1"></i> Clear Filters
+                                                    <i class="bx bx-reset me-1"></i>
+                                                    {{ __('messages.prod_clear_filters_btn') }}
                                                 </a>
                                             @endif
                                             @can('products.create')
                                                 <a href="{{ route('products.create') }}" class="btn btn-primary">
-                                                    <i class="bx bx-plus me-1"></i> Add Product
+                                                    <i class="bx bx-plus me-1"></i> {{ __('messages.prod_add_product_btn') }}
                                                 </a>
                                             @endcan
                                         </div>
@@ -498,10 +499,12 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-top">
                 <p class="text-muted small mb-0">
                     @if ($products->total() > 0)
-                        Showing <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
-                        of <strong>{{ $products->total() }}</strong> results
+                        {{ __('messages.prod_showing_results') }}
+                        <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                        {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
+                        {{ __('messages.prod_results') }}
                     @else
-                        No results found
+                        {{ __('messages.prod_no_results') }}
                     @endif
                 </p>
                 {{ $products->appends(request()->query())->links() }}
@@ -638,7 +641,7 @@
                             success: res => {
                                 if (res.success) {
                                     Swal.fire({
-                                        title: '{{ __("messages.deleted_title") }}',
+                                        title: '{{ __('messages.deleted_title') }}',
                                         text: res.message,
                                         icon: 'success',
                                         confirmButtonColor: '#696cff'
@@ -676,13 +679,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
-                    text: '{{ __("messages.confirm_delete") }}',
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: '{{ __('messages.confirm_delete') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -696,7 +699,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'

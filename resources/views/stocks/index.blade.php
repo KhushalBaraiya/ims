@@ -155,7 +155,7 @@
                             <th class="text-end">{{ __('messages.th_buy_price') }}</th>
                             <th class="text-end">{{ __('messages.th_inv_value') }}</th>
                             <th class="text-center no-sort">{{ __('messages.th_status') }}</th>
-                            <th class="text-center no-sort">Action</th>
+                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>

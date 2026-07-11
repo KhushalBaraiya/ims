@@ -46,7 +46,7 @@
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Product Detail</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.prod_detail') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -59,12 +59,12 @@
         <div class="d-flex gap-2">
             @can('stocks.create')
                 <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}" class="btn btn-outline-warning">
-                    <i class="bx bx-slider me-1"></i> Adjust Stock
+                    <i class="bx bx-slider me-1"></i> {{ __('messages.prod_adjust_stock_btn') }}
                 </a>
             @endcan
             @can('products.create')
                 <a href="{{ route('products.copy', $product->id) }}" class="btn btn-outline-secondary">
-                    <i class="bx bx-copy me-1"></i> Copy
+                    <i class="bx bx-copy me-1"></i> {{ __('messages.prod_copy_label') }}
                 </a>
             @endcan
             @can('products.update')
@@ -130,7 +130,7 @@
                 <div
                     class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-package me-2 text-primary"></i>Product Details
+                        <i class="bx bx-package me-2 text-primary"></i>{{ __('messages.prod_product_details_card') }}
                     </h6>
                     <span class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-danger' }}">
                         {{ $product->status === 'active' ? __('messages.active') : __('messages.inactive') }}
@@ -204,21 +204,22 @@
                         <div class="col-6 col-md-3">
                             <div class="rounded-3 p-3 text-center bg-label-success">
                                 <div class="fw-bold fs-5 text-success">{{ format_currency($product->selling_price) }}</div>
-                                <div class="text-muted small">Sell Price</div>
+                                <div class="text-muted small">{{ __('messages.prod_sell_price') }}</div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="rounded-3 p-3 text-center bg-label-warning">
                                 <div class="fw-bold fs-5 text-warning">{{ format_currency($product->purchase_price) }}
                                 </div>
-                                <div class="text-muted small">Cost Price</div>
+                                <div class="text-muted small">{{ __('messages.prod_cost_price') }}</div>
                             </div>
                         </div>
                         <div class="col-6 col-md-3">
                             <div class="rounded-3 p-3 text-center bg-label-info">
                                 <div class="fw-bold fs-5 {{ $profit >= 0 ? 'text-info' : 'text-danger' }}">
                                     {{ format_currency($profit) }}</div>
-                                <div class="text-muted small">Profit ({{ $margin }}%)</div>
+                                <div class="text-muted small">{{ __('messages.prod_profit_lbl') }} ({{ $margin }}%)
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -243,7 +244,7 @@
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-chip me-2 text-warning"></i>Technical Specifications
+                            <i class="bx bx-chip me-2 text-warning"></i>{{ __('messages.prod_tech_specs_card') }}
                         </h6>
                     </div>
                     <div class="card-body p-0">
@@ -265,35 +266,35 @@
                         <li class="nav-item">
                             <button class="nav-link active px-3 py-2 small fw-semibold" data-bs-toggle="tab"
                                 data-bs-target="#tab-pur" type="button">
-                                <i class="bx bx-cart-add me-1"></i>Purchases <span
+                                <i class="bx bx-cart-add me-1"></i>{{ __('messages.prod_tab_purchases') }} <span
                                     class="badge bg-label-primary ms-1">{{ $purchases->count() }}</span>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link px-3 py-2 small fw-semibold" data-bs-toggle="tab"
                                 data-bs-target="#tab-sal" type="button">
-                                <i class="bx bx-receipt me-1"></i>Sales <span
+                                <i class="bx bx-receipt me-1"></i>{{ __('messages.prod_tab_sales') }} <span
                                     class="badge bg-label-success ms-1">{{ $sales->count() }}</span>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link px-3 py-2 small fw-semibold" data-bs-toggle="tab"
                                 data-bs-target="#tab-adj" type="button">
-                                <i class="bx bx-slider me-1"></i>Adjustments <span
+                                <i class="bx bx-slider me-1"></i>{{ __('messages.prod_tab_adjustments') }} <span
                                     class="badge bg-label-warning ms-1">{{ $adjustments->count() }}</span>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link px-3 py-2 small fw-semibold" data-bs-toggle="tab"
                                 data-bs-target="#tab-pr" type="button">
-                                <i class="bx bx-undo me-1"></i>P. Returns <span
+                                <i class="bx bx-undo me-1"></i>{{ __('messages.prod_tab_pur_returns') }} <span
                                     class="badge bg-label-info ms-1">{{ $purReturns->count() }}</span>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link px-3 py-2 small fw-semibold" data-bs-toggle="tab"
                                 data-bs-target="#tab-sr" type="button">
-                                <i class="bx bx-undo me-1"></i>S. Returns <span
+                                <i class="bx bx-undo me-1"></i>{{ __('messages.prod_tab_sal_returns') }} <span
                                     class="badge bg-label-danger ms-1">{{ $saleReturns->count() }}</span>
                             </button>
                         </li>
@@ -308,7 +309,7 @@
                                 <div class="text-muted"
                                     style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
                                     <i class="bx bx-cart-add" style="font-size:3rem;opacity:.25;line-height:1;"></i>
-                                    <span class="small">No purchase records yet.</span>
+                                    <span class="small">{{ __('messages.prod_no_purchase_records') }}</span>
                                 </div>
                             </div>
                         @else
@@ -316,13 +317,13 @@
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Purchase #</th>
-                                            <th>Date</th>
-                                            <th>Supplier</th>
-                                            <th class="text-end">Qty</th>
-                                            <th class="text-end">Price</th>
-                                            <th class="text-end">Total</th>
-                                            <th class="text-center">Status</th>
+                                            <th>{{ __('messages.prod_pur_hash') }}</th>
+                                            <th>{{ __('messages.prod_date_col') }}</th>
+                                            <th>{{ __('messages.prod_supplier_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_qty_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_price_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_total_col') }}</th>
+                                            <th class="text-center">{{ __('messages.th_status') }}</th>
                                             <th class="text-center"></th>
                                         </tr>
                                     </thead>
@@ -346,12 +347,14 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($pur?->status === 'received')
-                                                        <span class="badge bg-success rounded-pill">Received</span>
+                                                        <span
+                                                            class="badge bg-success rounded-pill">{{ __('messages.prod_received') }}</span>
                                                     @elseif($pur?->status === 'pending')
                                                         <span
-                                                            class="badge bg-warning text-dark rounded-pill">Pending</span>
+                                                            class="badge bg-warning text-dark rounded-pill">{{ __('messages.prod_pending_status') }}</span>
                                                     @elseif($pur?->status === 'ordered')
-                                                        <span class="badge bg-primary rounded-pill">Ordered</span>
+                                                        <span
+                                                            class="badge bg-primary rounded-pill">{{ __('messages.prod_ordered') }}</span>
                                                     @elseif($pur?->status)
                                                         <span
                                                             class="badge bg-secondary rounded-pill">{{ $pur->status }}</span>
@@ -383,7 +386,7 @@
                                 <div class="text-muted"
                                     style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
                                     <i class="bx bx-receipt" style="font-size:3rem;opacity:.25;line-height:1;"></i>
-                                    <span class="small">No sales records yet.</span>
+                                    <span class="small">{{ __('messages.prod_no_sales_records') }}</span>
                                 </div>
                             </div>
                         @else
@@ -391,13 +394,13 @@
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Invoice #</th>
-                                            <th>Date</th>
-                                            <th>Customer</th>
-                                            <th class="text-end">Qty</th>
-                                            <th class="text-end">Price</th>
-                                            <th class="text-end">Total</th>
-                                            <th class="text-center">Payment</th>
+                                            <th>{{ __('messages.prod_inv_hash') }}</th>
+                                            <th>{{ __('messages.prod_date_col') }}</th>
+                                            <th>{{ __('messages.prod_customer_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_qty_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_price_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_total_col') }}</th>
+                                            <th class="text-center">{{ __('messages.prod_payment_col') }}</th>
                                             <th class="text-center"></th>
                                         </tr>
                                     </thead>
@@ -411,7 +414,8 @@
                                                 <td class="text-muted small">
                                                     {{ $sale?->invoice_date ? \Carbon\Carbon::parse($sale->invoice_date)->format('d M Y') : '—' }}
                                                 </td>
-                                                <td class="fw-semibold small">{{ $sale?->customer?->name ?? 'Walk-in' }}
+                                                <td class="fw-semibold small">
+                                                    {{ $sale?->customer?->name ?? __('messages.prod_walk_in') }}
                                                 </td>
                                                 <td class="text-end fw-semibold">{{ number_format($item->quantity, 2) }}
                                                 </td>
@@ -422,12 +426,14 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($sale?->payment_status === 'Paid')
-                                                        <span class="badge bg-success rounded-pill">Paid</span>
+                                                        <span
+                                                            class="badge bg-success rounded-pill">{{ __('messages.paid') }}</span>
                                                     @elseif($sale?->payment_status === 'Partial')
                                                         <span
-                                                            class="badge bg-warning text-dark rounded-pill">Partial</span>
+                                                            class="badge bg-warning text-dark rounded-pill">{{ __('messages.partial') }}</span>
                                                     @elseif($sale)
-                                                        <span class="badge bg-danger rounded-pill">Unpaid</span>
+                                                        <span
+                                                            class="badge bg-danger rounded-pill">{{ __('messages.unpaid') }}</span>
                                                     @else
                                                         <span class="text-muted">—</span>
                                                     @endif
@@ -456,7 +462,7 @@
                                 <div class="text-muted"
                                     style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
                                     <i class="bx bx-slider" style="font-size:3rem;opacity:.25;line-height:1;"></i>
-                                    <span class="small">No stock adjustments yet.</span>
+                                    <span class="small">{{ __('messages.prod_no_adj_records') }}</span>
                                 </div>
                             </div>
                         @else
@@ -464,12 +470,12 @@
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Voucher #</th>
-                                            <th>Date</th>
-                                            <th>Type</th>
-                                            <th class="text-end">Change</th>
-                                            <th>By</th>
-                                            <th>Notes</th>
+                                            <th>{{ __('messages.prod_voucher_hash') }}</th>
+                                            <th>{{ __('messages.prod_date_col') }}</th>
+                                            <th>{{ __('messages.prod_type_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_change_col') }}</th>
+                                            <th>{{ __('messages.prod_by_col') }}</th>
+                                            <th>{{ __('messages.prod_notes_col') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -489,8 +495,10 @@
                                                     class="text-end fw-bold {{ $adj->quantity_change >= 0 ? 'text-success' : 'text-danger' }}">
                                                     {{ $adj->quantity_change >= 0 ? '+' : '' }}{{ number_format($adj->quantity_change, 2) }}
                                                 </td>
-                                                <td class="text-muted small">{{ $adj->user?->name ?? 'System' }}</td>
-                                                <td class="text-muted small">{{ Str::limit($adj->notes ?? '—', 35) }}</td>
+                                                <td class="text-muted small">
+                                                    {{ $adj->user?->name ?? __('messages.system') }}</td>
+                                                <td class="text-muted small">{{ Str::limit($adj->notes ?? '—', 35) }}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -506,7 +514,7 @@
                                 <div class="text-muted"
                                     style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
                                     <i class="bx bx-cart-download" style="font-size:3rem;opacity:.25;line-height:1;"></i>
-                                    <span class="small">No purchase returns yet.</span>
+                                    <span class="small">{{ __('messages.prod_no_pur_return_records') }}</span>
                                 </div>
                             </div>
                         @else
@@ -514,11 +522,11 @@
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Return #</th>
-                                            <th>Date</th>
-                                            <th>Supplier</th>
-                                            <th class="text-end">Qty</th>
-                                            <th class="text-end">Total</th>
+                                            <th>{{ __('messages.return_no') }}</th>
+                                            <th>{{ __('messages.prod_date_col') }}</th>
+                                            <th>{{ __('messages.prod_supplier_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_qty_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_total_col') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -552,7 +560,7 @@
                                 <div class="text-muted"
                                     style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;">
                                     <i class="bx bx-undo" style="font-size:3rem;opacity:.25;line-height:1;"></i>
-                                    <span class="small">No sale returns yet.</span>
+                                    <span class="small">{{ __('messages.prod_no_sal_return_records') }}</span>
                                 </div>
                             </div>
                         @else
@@ -560,11 +568,11 @@
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Return #</th>
-                                            <th>Date</th>
-                                            <th>Customer</th>
-                                            <th class="text-end">Qty</th>
-                                            <th class="text-end">Total</th>
+                                            <th>{{ __('messages.return_no') }}</th>
+                                            <th>{{ __('messages.prod_date_col') }}</th>
+                                            <th>{{ __('messages.prod_customer_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_qty_col') }}</th>
+                                            <th class="text-end">{{ __('messages.prod_total_col') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>

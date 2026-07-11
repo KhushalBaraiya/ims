@@ -921,4 +921,177 @@ return [
     'dash_recent_activity' => 'તાજેતરની પ્રવૃત્તિ',
     'dash_no_recent_activity' => 'કોઈ તાજેતરની પ્રવૃત્તિ નથી',
 
+    // ── Products Module ────────────────────────────────────────────────────
+
+    // Index page — summary stats
+    'prod_total_products' => 'કુલ ઉત્પાદ',
+    'prod_active' => 'સક્રિય',
+    'prod_low_stock' => 'ઓછો સ્ટૉક',
+    'prod_out_of_stock' => 'સ્ટૉક ખૂટ્યો',
+
+    // Index page — header buttons
+    'prod_gallery' => 'ગૅલેરી',
+    'prod_by_category' => 'શ્રેણી પ્રમાણે',
+
+    // Index page — table headers
+    'prod_image_col' => 'છબી',
+    'prod_brand_category' => 'બ્રાન્ડ / શ્રેણી',
+    'prod_cost' => 'ખર્ચ',
+    'prod_sell' => 'વેચાણ',
+    'prod_stock_col' => 'સ્ટૉક',
+    'prod_actions' => 'ક્રિયાઓ',
+
+    // Index page — filter dropdowns
+    'prod_all_brands' => 'બધા બ્રાન્ડ',
+    'prod_all_categories' => 'બધી શ્રેણી',
+    'prod_all_subcats' => 'બધી પેટા-શ્રેણી',
+    'prod_all_statuses' => 'બધા',
+    'prod_price_min' => 'ન્યૂ.',
+    'prod_price_max' => 'મહ.',
+
+    // Index page — empty state
+    'prod_no_match_filters' => 'ફિલ્ટર સાથે કોઈ ઉત્પાદ મળ્યા નહીં',
+    'prod_no_products_yet' => 'હજી કોઈ ઉત્પાદ નથી',
+    'prod_clear_filters_hint' => 'ફિલ્ટર સુધારો અથવા હટાવો.',
+    'prod_get_started_hint' => 'કૅટલૉગ માં પ્રથમ ઉત્પાદ ઉમેરો.',
+    'prod_clear_filters_btn' => 'ફિલ્ટર હટાવો',
+    'prod_add_product_btn' => 'ઉત્પાદ ઉમેરો',
+
+    // Index page — pagination
+    'prod_showing_results' => 'બતાવી રહ્યું છે',
+    'prod_to' => 'થી',
+    'prod_of' => 'માંથી',
+    'prod_results' => 'પરિણામ',
+    'prod_no_results' => 'કોઈ પરિણામ મળ્યા નહીં',
+
+    // Create / Edit — section headings
+    'prod_basic_info' => 'મૂળ માહિતી',
+    'prod_pricing_stock' => 'ભાવ અને સ્ટૉક ચેતવણી',
+    'prod_opening_stock' => 'શરૂઆતી સ્ટૉક',
+    'prod_tech_specs' => 'ટૅક્નિકલ વિગત',
+    'prod_media_desc' => 'છબી અને વર્ણન',
+    'prod_publish_card' => 'પ્રકાશિત',
+
+    // Create / Edit — field labels
+    'prod_name' => 'ઉત્પાદ નામ',
+    'prod_sku_code' => 'SKU / કોડ',
+    'prod_sku_hint' => '(સ્વ અથવા મૅન્યુઅલ)',
+    'prod_sku_auto_title' => 'SKU સ્વ-બનાવો',
+    'prod_barcode' => 'બારકૉડ',
+    'prod_main_category' => 'મુખ્ય શ્રેણી',
+    'prod_sub_category' => 'પેટા-શ્રેણી',
+    'prod_brand_label' => 'બ્રાન્ડ',
+    'prod_unit_name' => 'એકમ નામ',
+    'prod_unit_code' => 'એકમ કોડ',
+    'prod_purchase_price' => 'ખરીદ ભાવ',
+    'prod_selling_price' => 'વેચાણ ભાવ',
+    'prod_tax_pct' => 'ટૅક્સ %',
+    'prod_tax_max' => 'મહ. 100%',
+    'prod_min_stock_alert' => 'ન્યૂ. સ્ટૉક ચેતવણી',
+    'prod_profit_badge' => 'નફો',
+
+    // Create — select placeholders
+    'prod_select_category' => 'શ્રેણી પસંદ કરો',
+    'prod_select_sub_category' => 'પેટા-શ્રેણી પસંદ કરો',
+    'prod_select_brand' => 'બ્રાન્ડ પસંદ કરો',
+    'prod_select_supplier' => 'સપ્લાયર પસંદ કરો',
+
+    // Create — opening stock
+    'prod_create_only' => 'ફક્ત બનાવટ',
+    'prod_opening_stock_toggle' => 'ઉત્પાદ બનાવતા શરૂઆતી સ્ટૉક ઉમેરો',
+    'prod_opening_stock_hint' => 'ચાલુ હોય ત્યારે, ટ્રૅકિંગ માટે ખરીદ નોંધ સ્વ-બને.',
+    'prod_supplier' => 'સપ્લાયર',
+    'prod_opening_qty' => 'શરૂઆતી જથ્થો',
+    'prod_purchase_total' => 'ખરીદ કુલ',
+    'prod_qty_x_price' => 'જથ્થો × ખરીદ ભાવ',
+
+    // Create / Edit — tech specs
+    'prod_manufacturer' => 'ઉત્પાદક',
+    'prod_model_number' => 'મૉડેલ નંબર',
+    'prod_part_serial' => 'ભાગ / સિરિઅલ નં.',
+    'prod_warranty' => 'વૉરન્ટી',
+    'prod_color' => 'રંગ',
+    'prod_weight' => 'વજન',
+    'prod_country_origin' => 'ઉત્પત્તિ દેશ',
+    'prod_optional' => 'વૈકલ્પિક',
+
+    // Create / Edit — media
+    'prod_primary_image' => 'મૂળ છબી',
+    'prod_gallery_images' => 'ગૅલેરી છબી',
+    'prod_no_image' => 'કોઈ છબી નથી',
+    'prod_upload' => 'અપલોડ',
+    'prod_remove' => 'હટાવો',
+    'prod_drop_here' => 'છબી અહીં છોડો અથવા',
+    'prod_browse_files' => 'ફાઇલ શોધો',
+    'prod_clear_all' => 'બધું સાફ',
+    'prod_short_desc' => 'ટૂંકું વર્ણન',
+    'prod_full_desc' => 'સંપૂર્ણ વર્ણન / વિગત',
+
+    // Edit — breadcrumb / buttons
+    'prod_view_product' => 'ઉત્પાદ જુઓ',
+    'prod_copy_product' => 'ઉત્પાદ કૉપિ',
+    'prod_new_product' => 'નવું ઉત્પાદ',
+    'prod_copy_label' => 'કૉપિ',
+    'prod_view_btn_txt' => 'જુઓ',
+    'prod_edit_breadcrumb' => 'સુધારો',
+    'prod_uncategorized' => 'અવર્ગીકૃત',
+    'prod_adjust_stock_btn' => 'સ્ટૉક ઍડ્જસ્ટ',
+
+    // Show — page title & header
+    'prod_detail' => 'ઉત્પાદ વિગત',
+    'prod_product_details_card' => 'ઉત્પાદ વિગત',
+
+    // Show — stat card labels
+    'prod_sell_price' => 'વેચાણ ભાવ',
+    'prod_cost_price' => 'ખર્ચ ભાવ',
+    'prod_profit_lbl' => 'નફો',
+
+    // Show — tech specs card
+    'prod_tech_specs_card' => 'ટૅક્નિકલ વિગત',
+
+    // Show — transaction tabs
+    'prod_tab_purchases' => 'ખરીદી',
+    'prod_tab_sales' => 'વેચાણ',
+    'prod_tab_adjustments' => 'ઍડ્જસ્ટ',
+    'prod_tab_pur_returns' => 'ખ. પરત',
+    'prod_tab_sal_returns' => 'વ. પરત',
+
+    // Show — transaction table headers
+    'prod_pur_hash' => 'ખરીદ #',
+    'prod_inv_hash' => 'ઇન્વૉઇસ #',
+    'prod_voucher_hash' => 'વાઉચર #',
+    'prod_date_col' => 'તારીખ',
+    'prod_supplier_col' => 'સપ્લાયર',
+    'prod_customer_col' => 'ગ્રાહક',
+    'prod_qty_col' => 'જથ્થો',
+    'prod_price_col' => 'ભાવ',
+    'prod_total_col' => 'કુલ',
+    'prod_payment_col' => 'ચૂકવણી',
+    'prod_type_col' => 'પ્રકાર',
+    'prod_change_col' => 'ફેરફાર',
+    'prod_by_col' => 'દ્વારા',
+    'prod_notes_col' => 'નોંધ',
+
+    // Show — empty tab messages
+    'prod_no_purchase_records' => 'હજી કોઈ ખરીદ નોંધ નથી.',
+    'prod_no_sales_records' => 'હજી કોઈ વેચાણ નોંધ નથી.',
+    'prod_no_adj_records' => 'હજી કોઈ સ્ટૉક ઍડ્જસ્ટ નથી.',
+    'prod_no_pur_return_records' => 'હજી કોઈ ખરીદ પરત નોંધ નથી.',
+    'prod_no_sal_return_records' => 'હજી કોઈ વેચાણ પરત નોંધ નથી.',
+
+    // Show — inline status labels
+    'prod_received' => 'પ્રાપ્ત',
+    'prod_ordered' => 'ઓર્ડર',
+    'prod_pending_status' => 'બાકી',
+    'prod_walk_in' => 'વૉક-ઇન',
+
+    // Show — right panel info card
+    'prod_info_card' => 'માહિતી',
+    'prod_quick_actions_card' => 'ઝડપી ક્રિયાઓ',
+    'prod_barcode_label' => 'બારકૉડ',
+    'prod_unit_label' => 'એકમ',
+
+    // Stock index — tooltip
+    'stock_adjust_title' => 'સ્ટૉક ઍડ્જસ્ટ',
+
 ];

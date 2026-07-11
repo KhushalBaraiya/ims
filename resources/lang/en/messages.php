@@ -943,5 +943,179 @@ return [
     'units'                     => 'Units',
     'avail'                     => 'avail',
 
+    // ── Products Module ────────────────────────────────────────────────────
+
+    // Index page — summary stats
+    'prod_total_products'       => 'Total Products',
+    'prod_active'               => 'Active',
+    'prod_low_stock'            => 'Low Stock',
+    'prod_out_of_stock'         => 'Out of Stock',
+
+    // Index page — header buttons
+    'prod_gallery'              => 'Gallery',
+    'prod_by_category'          => 'By Category',
+
+    // Index page — table headers
+    'prod_image_col'            => 'Image',
+    'prod_brand_category'       => 'Brand / Category',
+    'prod_cost'                 => 'Cost',
+    'prod_sell'                 => 'Sell',
+    'prod_stock_col'            => 'Stock',
+    'prod_actions'              => 'Actions',
+
+    // Index page — filter dropdowns
+    'prod_all_brands'           => 'All Brands',
+    'prod_all_categories'       => 'All Categories',
+    'prod_all_subcats'          => 'All Sub-categories',
+    'prod_all_statuses'         => 'All',
+    'prod_price_min'            => 'Min',
+    'prod_price_max'            => 'Max',
+
+    // Index page — empty state
+    'prod_no_match_filters'     => 'No products match your filters',
+    'prod_no_products_yet'      => 'No products yet',
+    'prod_clear_filters_hint'   => 'Try adjusting or clearing your filters.',
+    'prod_get_started_hint'     => 'Get started by adding your first product to the catalog.',
+    'prod_clear_filters_btn'    => 'Clear Filters',
+    'prod_add_product_btn'      => 'Add Product',
+
+    // Index page — pagination
+    'prod_showing_results'      => 'Showing',
+    'prod_to'                   => 'to',
+    'prod_of'                   => 'of',
+    'prod_results'              => 'results',
+    'prod_no_results'           => 'No results found',
+
+    // Create / Edit — section headings
+    'prod_basic_info'           => 'Basic Information',
+    'prod_pricing_stock'        => 'Pricing & Stock Alert',
+    'prod_opening_stock'        => 'Opening Stock',
+    'prod_tech_specs'           => 'Technical Specifications',
+    'prod_media_desc'           => 'Media & Description',
+    'prod_publish_card'         => 'Publish',
+
+    // Create / Edit — field labels
+    'prod_name'                 => 'Product Name',
+    'prod_sku_code'             => 'SKU / Code',
+    'prod_sku_hint'             => '(auto or manual)',
+    'prod_sku_auto_title'       => 'Auto-generate SKU',
+    'prod_barcode'              => 'Barcode',
+    'prod_main_category'        => 'Main Category',
+    'prod_sub_category'         => 'Sub Category',
+    'prod_brand_label'          => 'Brand',
+    'prod_unit_name'            => 'Unit Name',
+    'prod_unit_code'            => 'Unit Code',
+    'prod_purchase_price'       => 'Purchase Price',
+    'prod_selling_price'        => 'Selling Price',
+    'prod_tax_pct'              => 'Tax %',
+    'prod_tax_max'              => 'Max 100%',
+    'prod_min_stock_alert'      => 'Min Stock Alert',
+    'prod_profit_badge'         => 'Profit',
+
+    // Create — select placeholders
+    'prod_select_category'      => 'Select Category',
+    'prod_select_sub_category'  => 'Select Sub Category',
+    'prod_select_brand'         => 'Select Brand',
+    'prod_select_supplier'      => 'Select Supplier',
+
+    // Create — opening stock
+    'prod_create_only'          => 'Create only',
+    'prod_opening_stock_toggle' => 'Add initial stock while creating this product',
+    'prod_opening_stock_hint'   => 'When enabled, a Purchase record will be created automatically for traceability.',
+    'prod_supplier'             => 'Supplier',
+    'prod_opening_qty'          => 'Opening Qty',
+    'prod_purchase_total'       => 'Purchase Total',
+    'prod_qty_x_price'          => 'Qty × Purchase Price',
+
+    // Create / Edit — tech specs
+    'prod_manufacturer'         => 'Manufacturer',
+    'prod_model_number'         => 'Model Number',
+    'prod_part_serial'          => 'Part / Serial No.',
+    'prod_warranty'             => 'Warranty',
+    'prod_color'                => 'Color',
+    'prod_weight'               => 'Weight',
+    'prod_country_origin'       => 'Country of Origin',
+    'prod_optional'             => 'Optional',
+
+    // Create / Edit — media
+    'prod_primary_image'        => 'Primary Image',
+    'prod_gallery_images'       => 'Gallery Images',
+    'prod_no_image'             => 'No Image',
+    'prod_upload'               => 'Upload',
+    'prod_remove'               => 'Remove',
+    'prod_drop_here'            => 'Drop images here or',
+    'prod_browse_files'         => 'Browse Files',
+    'prod_clear_all'            => 'Clear All',
+    'prod_short_desc'           => 'Short Description',
+    'prod_full_desc'            => 'Full Description / Specifications',
+
+    // Edit — breadcrumb / buttons
+    'prod_view_product'         => 'View Product',
+    'prod_copy_product'         => 'Copy Product',
+    'prod_new_product'          => 'New Product',
+    'prod_copy_label'           => 'Copy',
+    'prod_view_btn_txt'         => 'View',
+    'prod_edit_breadcrumb'      => 'Edit',
+    'prod_uncategorized'        => 'Uncategorized',
+    'prod_adjust_stock_btn'     => 'Adjust Stock',
+
+    // Show — page title & header
+    'prod_detail'               => 'Product Detail',
+    'prod_product_details_card' => 'Product Details',
+
+    // Show — stat card labels
+    'prod_sell_price'           => 'Sell Price',
+    'prod_cost_price'           => 'Cost Price',
+    'prod_profit_lbl'           => 'Profit',
+
+    // Show — tech specs card
+    'prod_tech_specs_card'      => 'Technical Specifications',
+
+    // Show — transaction tabs
+    'prod_tab_purchases'        => 'Purchases',
+    'prod_tab_sales'            => 'Sales',
+    'prod_tab_adjustments'      => 'Adjustments',
+    'prod_tab_pur_returns'      => 'P. Returns',
+    'prod_tab_sal_returns'      => 'S. Returns',
+
+    // Show — transaction table headers
+    'prod_pur_hash'             => 'Purchase #',
+    'prod_inv_hash'             => 'Invoice #',
+    'prod_voucher_hash'         => 'Voucher #',
+    'prod_date_col'             => 'Date',
+    'prod_supplier_col'         => 'Supplier',
+    'prod_customer_col'         => 'Customer',
+    'prod_qty_col'              => 'Qty',
+    'prod_price_col'            => 'Price',
+    'prod_total_col'            => 'Total',
+    'prod_payment_col'          => 'Payment',
+    'prod_type_col'             => 'Type',
+    'prod_change_col'           => 'Change',
+    'prod_by_col'               => 'By',
+    'prod_notes_col'            => 'Notes',
+
+    // Show — empty tab messages
+    'prod_no_purchase_records'  => 'No purchase records yet.',
+    'prod_no_sales_records'     => 'No sales records yet.',
+    'prod_no_adj_records'       => 'No stock adjustments yet.',
+    'prod_no_pur_return_records'=> 'No purchase return records yet.',
+    'prod_no_sal_return_records'=> 'No sale return records yet.',
+
+    // Show — inline status labels (in transaction tabs)
+    'prod_received'             => 'Received',
+    'prod_ordered'              => 'Ordered',
+    'prod_pending_status'       => 'Pending',
+    'prod_walk_in'              => 'Walk-in',
+
+    // Show — right panel info card
+    'prod_info_card'            => 'Information',
+    'prod_quick_actions_card'   => 'Quick Actions',
+    'prod_barcode_label'        => 'Barcode',
+    'prod_unit_label'           => 'Unit',
+
+    // Stock index — "Adjust Stock" tooltip
+    'stock_adjust_title'        => 'Adjust Stock',
+
 ];
+
 

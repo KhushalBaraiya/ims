@@ -929,4 +929,177 @@ return [
     'units'                     => 'इकाइयां',
     'avail'                     => 'उपलब्ध',
 
+    // ── Products Module ────────────────────────────────────────────────────
+
+    // Index — summary stats
+    'prod_total_products'       => 'कुल उत्पाद',
+    'prod_active'               => 'सक्रिय',
+    'prod_low_stock'            => 'कम स्टॉक',
+    'prod_out_of_stock'         => 'स्टॉक खत्म',
+
+    // Index — header buttons
+    'prod_gallery'              => 'गैलरी',
+    'prod_by_category'          => 'श्रेणी अनुसार',
+
+    // Index — table headers
+    'prod_image_col'            => 'छवि',
+    'prod_brand_category'       => 'ब्रांड / श्रेणी',
+    'prod_cost'                 => 'लागत',
+    'prod_sell'                 => 'बिक्री',
+    'prod_stock_col'            => 'स्टॉक',
+    'prod_actions'              => 'कार्य',
+
+    // Index — filter dropdowns
+    'prod_all_brands'           => 'सभी ब्रांड',
+    'prod_all_categories'       => 'सभी श्रेणियाँ',
+    'prod_all_subcats'          => 'सभी उप-श्रेणियाँ',
+    'prod_all_statuses'         => 'सभी',
+    'prod_price_min'            => 'न्यूनतम',
+    'prod_price_max'            => 'अधिकतम',
+
+    // Index — empty state
+    'prod_no_match_filters'     => 'फ़िल्टर से कोई उत्पाद नहीं मिला',
+    'prod_no_products_yet'      => 'अभी कोई उत्पाद नहीं',
+    'prod_clear_filters_hint'   => 'फ़िल्टर सुधारें या हटाएं।',
+    'prod_get_started_hint'     => 'कैटलॉग में पहला उत्पाद जोड़कर शुरू करें।',
+    'prod_clear_filters_btn'    => 'फ़िल्टर हटाएं',
+    'prod_add_product_btn'      => 'उत्पाद जोड़ें',
+
+    // Index — pagination
+    'prod_showing_results'      => 'दिखा रहा है',
+    'prod_to'                   => 'से',
+    'prod_of'                   => 'का',
+    'prod_results'              => 'परिणाम',
+    'prod_no_results'           => 'कोई परिणाम नहीं मिला',
+
+    // Create / Edit — section headings
+    'prod_basic_info'           => 'मूल जानकारी',
+    'prod_pricing_stock'        => 'मूल्य और स्टॉक चेतावनी',
+    'prod_opening_stock'        => 'शुरुआती स्टॉक',
+    'prod_tech_specs'           => 'तकनीकी विवरण',
+    'prod_media_desc'           => 'छवि और विवरण',
+    'prod_publish_card'         => 'प्रकाशित करें',
+
+    // Create / Edit — field labels
+    'prod_name'                 => 'उत्पाद नाम',
+    'prod_sku_code'             => 'SKU / कोड',
+    'prod_sku_hint'             => '(स्वतः या मैन्युअल)',
+    'prod_sku_auto_title'       => 'SKU स्वतः बनाएं',
+    'prod_barcode'              => 'बारकोड',
+    'prod_main_category'        => 'मुख्य श्रेणी',
+    'prod_sub_category'         => 'उप-श्रेणी',
+    'prod_brand_label'          => 'ब्रांड',
+    'prod_unit_name'            => 'इकाई नाम',
+    'prod_unit_code'            => 'इकाई कोड',
+    'prod_purchase_price'       => 'खरीद मूल्य',
+    'prod_selling_price'        => 'बिक्री मूल्य',
+    'prod_tax_pct'              => 'कर %',
+    'prod_tax_max'              => 'अधिकतम 100%',
+    'prod_min_stock_alert'      => 'न्यूनतम स्टॉक चेतावनी',
+    'prod_profit_badge'         => 'लाभ',
+
+    // Create — select placeholders
+    'prod_select_category'      => 'श्रेणी चुनें',
+    'prod_select_sub_category'  => 'उप-श्रेणी चुनें',
+    'prod_select_brand'         => 'ब्रांड चुनें',
+    'prod_select_supplier'      => 'आपूर्तिकर्ता चुनें',
+
+    // Create — opening stock
+    'prod_create_only'          => 'केवल बनाते समय',
+    'prod_opening_stock_toggle' => 'उत्पाद बनाते समय शुरुआती स्टॉक जोड़ें',
+    'prod_opening_stock_hint'   => 'सक्षम होने पर ट्रेसेबिलिटी के लिए खरीद रिकॉर्ड स्वतः बनेगा।',
+    'prod_supplier'             => 'आपूर्तिकर्ता',
+    'prod_opening_qty'          => 'शुरुआती मात्रा',
+    'prod_purchase_total'       => 'खरीद कुल',
+    'prod_qty_x_price'          => 'मात्रा × खरीद मूल्य',
+
+    // Create / Edit — tech specs
+    'prod_manufacturer'         => 'निर्माता',
+    'prod_model_number'         => 'मॉडल नंबर',
+    'prod_part_serial'          => 'भाग / सीरियल नं.',
+    'prod_warranty'             => 'वारंटी',
+    'prod_color'                => 'रंग',
+    'prod_weight'               => 'वजन',
+    'prod_country_origin'       => 'उत्पत्ति देश',
+    'prod_optional'             => 'वैकल्पिक',
+
+    // Create / Edit — media
+    'prod_primary_image'        => 'मुख्य छवि',
+    'prod_gallery_images'       => 'गैलरी छवियाँ',
+    'prod_no_image'             => 'कोई छवि नहीं',
+    'prod_upload'               => 'अपलोड',
+    'prod_remove'               => 'हटाएं',
+    'prod_drop_here'            => 'छवियाँ यहाँ छोड़ें या',
+    'prod_browse_files'         => 'फ़ाइल खोजें',
+    'prod_clear_all'            => 'सब साफ',
+    'prod_short_desc'           => 'संक्षिप्त विवरण',
+    'prod_full_desc'            => 'पूर्ण विवरण / विनिर्देश',
+
+    // Edit — breadcrumb / buttons
+    'prod_view_product'         => 'उत्पाद देखें',
+    'prod_copy_product'         => 'उत्पाद कॉपी',
+    'prod_new_product'          => 'नया उत्पाद',
+    'prod_copy_label'           => 'कॉपी',
+    'prod_view_btn_txt'         => 'देखें',
+    'prod_edit_breadcrumb'      => 'संपादित',
+    'prod_uncategorized'        => 'अवर्गीकृत',
+    'prod_adjust_stock_btn'     => 'स्टॉक समायोजन',
+
+    // Show — page title & header
+    'prod_detail'               => 'उत्पाद विवरण',
+    'prod_product_details_card' => 'उत्पाद विवरण',
+
+    // Show — stat card labels
+    'prod_sell_price'           => 'बिक्री मूल्य',
+    'prod_cost_price'           => 'लागत मूल्य',
+    'prod_profit_lbl'           => 'लाभ',
+
+    // Show — tech specs card
+    'prod_tech_specs_card'      => 'तकनीकी विवरण',
+
+    // Show — transaction tabs
+    'prod_tab_purchases'        => 'खरीद',
+    'prod_tab_sales'            => 'बिक्री',
+    'prod_tab_adjustments'      => 'समायोजन',
+    'prod_tab_pur_returns'      => 'ख. वापसी',
+    'prod_tab_sal_returns'      => 'बि. वापसी',
+
+    // Show — transaction table headers
+    'prod_pur_hash'             => 'खरीद #',
+    'prod_inv_hash'             => 'इनवॉइस #',
+    'prod_voucher_hash'         => 'वाउचर #',
+    'prod_date_col'             => 'तारीख',
+    'prod_supplier_col'         => 'आपूर्तिकर्ता',
+    'prod_customer_col'         => 'ग्राहक',
+    'prod_qty_col'              => 'मात्रा',
+    'prod_price_col'            => 'मूल्य',
+    'prod_total_col'            => 'कुल',
+    'prod_payment_col'          => 'भुगतान',
+    'prod_type_col'             => 'प्रकार',
+    'prod_change_col'           => 'परिवर्तन',
+    'prod_by_col'               => 'द्वारा',
+    'prod_notes_col'            => 'नोट्स',
+
+    // Show — empty tab messages
+    'prod_no_purchase_records'  => 'अभी कोई खरीद रिकॉर्ड नहीं।',
+    'prod_no_sales_records'     => 'अभी कोई बिक्री रिकॉर्ड नहीं।',
+    'prod_no_adj_records'       => 'अभी कोई स्टॉक समायोजन नहीं।',
+    'prod_no_pur_return_records'=> 'अभी कोई खरीद वापसी रिकॉर्ड नहीं।',
+    'prod_no_sal_return_records'=> 'अभी कोई बिक्री वापसी रिकॉर्ड नहीं।',
+
+    // Show — inline status labels
+    'prod_received'             => 'प्राप्त',
+    'prod_ordered'              => 'ऑर्डर',
+    'prod_pending_status'       => 'लंबित',
+    'prod_walk_in'              => 'वॉक-इन',
+
+    // Show — right panel
+    'prod_info_card'            => 'जानकारी',
+    'prod_quick_actions_card'   => 'त्वरित क्रियाएं',
+    'prod_barcode_label'        => 'बारकोड',
+    'prod_unit_label'           => 'इकाई',
+
+    // Stock index — tooltip
+    'stock_adjust_title'        => 'स्टॉक समायोजन',
+
 ];

@@ -42,9 +42,9 @@
                             value="{{ request('search') }}" placeholder="Sub category name...">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Main Category</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.main_category') }}</label>
                         <select name="main_category_id" class="form-select form-select-sm">
-                            <option value="">All Categories</option>
+                            <option value="">{{ __('messages.all_categories') }}</option>
                             @foreach ($mainCategories as $cat)
                                 <option value="{{ $cat->id }}"
                                     {{ request('main_category_id') == $cat->id ? 'selected' : '' }}>
@@ -57,8 +57,10 @@
                         <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                         <select name="status" class="form-select form-select-sm">
                             <option value="">{{ __('messages.all_statuses') }}</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
+                                {{ __('messages.active') }}</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                                {{ __('messages.inactive') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex gap-2">
@@ -396,13 +398,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
-                    text: '{{ __("messages.confirm_delete") }}',
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: '{{ __('messages.confirm_delete') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -416,7 +418,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -437,6 +439,3 @@
         });
     </script>
 @endpush
-
-
-
