@@ -143,12 +143,10 @@
                                 </div>
                                 <div>
                                     <label class="form-check-label fw-semibold mb-0" for="show_out_of_stock_products">
-                                        Show Out of Stock Products
+                                        {{ __('messages.show_out_of_stock_products') }}
                                     </label>
                                     <div class="form-text mt-0">
-                                        When enabled, out-of-stock products will appear in the sales product search — but
-                                        cannot be added to a cart. When disabled, only products with available stock are
-                                        shown.
+                                        {{ __('messages.show_out_of_stock_products_hint') }}
                                     </div>
                                 </div>
                             </div>

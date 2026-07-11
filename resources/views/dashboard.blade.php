@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Dashboard')
+@section('title', __('messages.dashboard'))
 
 @push('styles')
     <style>
@@ -168,33 +168,33 @@
             style="position:relative;z-index:1;">
             <div>
                 <h4 class="fw-bold text-white mb-1">
-                    👋 Welcome back, {{ $user->name }}!
+                    👋 {{ __('messages.welcome_back') }}, {{ $user->name }}!
                 </h4>
                 <p class="text-white mb-3" style="opacity:.82;font-size:.88rem;">
-                    {{ now()->format('l, d F Y') }} &nbsp;·&nbsp; Here's your store at a glance
+                    {{ now()->format('l, d F Y') }} &nbsp;·&nbsp; {{ __('messages.store_overview') }}
                 </p>
                 <div class="d-flex flex-wrap gap-2">
                     @can('purchases.create')
                         <a href="{{ route('purchases.create') }}" class="btn btn-light btn-sm fw-semibold shadow-sm">
-                            <i class="bx bx-cart-download me-1"></i> New Purchase
+                            <i class="bx bx-cart-download me-1"></i> {{ __('messages.add_purchase') }}
                         </a>
                     @endcan
                     @can('sales.create')
                         <a href="{{ route('sales.create') }}" class="btn btn-sm fw-semibold"
                             style="background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.3);">
-                            <i class="bx bx-receipt me-1"></i> New Sale
+                            <i class="bx bx-receipt me-1"></i> {{ __('messages.add_sale') }}
                         </a>
                     @endcan
                     @can('products.create')
                         <a href="{{ route('products.create') }}" class="btn btn-sm fw-semibold"
                             style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);">
-                            <i class="bx bx-package me-1"></i> Add Product
+                            <i class="bx bx-package me-1"></i> {{ __('messages.add_products') }}
                         </a>
                     @endcan
                     @can('stocks.create')
                         <a href="{{ route('stocks.adjust') }}" class="btn btn-sm fw-semibold"
                             style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15);">
-                            <i class="bx bx-slider me-1"></i> Adjust Stock
+                            <i class="bx bx-slider me-1"></i> {{ __('messages.dash_adjust_stock_title') }}
                         </a>
                     @endcan
                 </div>
@@ -218,12 +218,13 @@
                     <div class="kpi-accent bg-success w-100"></div>
                     <div class="card-body p-3">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <span class="text-muted" style="font-size:.73rem;font-weight:600;">Total Revenue</span>
+                            <span class="text-muted"
+                                style="font-size:.73rem;font-weight:600;">{{ __('messages.kpi_total_revenue') }}</span>
                             <div class="kpi-icon bg-label-success"><i class="bx bx-trending-up text-success fs-5"></i></div>
                         </div>
                         <div class="fw-bold text-success" style="font-size:1.1rem;">{{ format_currency($totalRevenue ?? 0) }}
                         </div>
-                        <small class="text-muted">{{ $completedSalesCount ?? 0 }} completed</small>
+                        <small class="text-muted">{{ $completedSalesCount ?? 0 }} {{ __('messages.kpi_completed') }}</small>
                     </div>
                 </div>
             </div>
@@ -236,12 +237,14 @@
                     <div class="kpi-accent w-100" style="background:linear-gradient(90deg,#71dd37,#29c770);"></div>
                     <div class="card-body p-3">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <span class="text-muted" style="font-size:.73rem;font-weight:600;">Today Sales</span>
+                            <span class="text-muted"
+                                style="font-size:.73rem;font-weight:600;">{{ __('messages.kpi_today_sales') }}</span>
                             <div class="kpi-icon bg-label-success"><i class="bx bx-dollar-circle text-success fs-5"></i></div>
                         </div>
                         <div class="fw-bold text-success" style="font-size:1.1rem;">{{ format_currency($todaySales ?? 0) }}
                         </div>
-                        <small class="text-muted">{{ $todayPurchases ?? 0 }} purchases today</small>
+                        <small class="text-muted">{{ $todayPurchases ?? 0 }} {{ __('messages.kpi_purchases') }}
+                            {{ __('messages.today') }}</small>
                     </div>
                 </div>
             </div>
@@ -254,12 +257,13 @@
                     <div class="kpi-accent bg-info w-100"></div>
                     <div class="card-body p-3">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <span class="text-muted" style="font-size:.73rem;font-weight:600;">Purchases</span>
+                            <span class="text-muted"
+                                style="font-size:.73rem;font-weight:600;">{{ __('messages.kpi_purchases') }}</span>
                             <div class="kpi-icon bg-label-info"><i class="bx bx-cart-download text-info fs-5"></i></div>
                         </div>
                         <div class="fw-bold text-info" style="font-size:1.1rem;">
                             {{ format_currency($totalPurchaseValue ?? 0) }}</div>
-                        <small class="text-muted">{{ $totalPurchases ?? 0 }} orders</small>
+                        <small class="text-muted">{{ $totalPurchases ?? 0 }} {{ __('messages.kpi_orders') }}</small>
                     </div>
                 </div>
             </div>
@@ -271,12 +275,13 @@
                 <div class="kpi-accent bg-warning w-100"></div>
                 <div class="card-body p-3">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <span class="text-muted" style="font-size:.73rem;font-weight:600;">Inventory</span>
+                        <span class="text-muted"
+                            style="font-size:.73rem;font-weight:600;">{{ __('messages.kpi_inventory') }}</span>
                         <div class="kpi-icon bg-label-warning"><i class="bx bx-store text-warning fs-5"></i></div>
                     </div>
                     <div class="fw-bold text-warning" style="font-size:1.1rem;">{{ format_currency($inventoryValue ?? 0) }}
                     </div>
-                    <small class="text-muted">{{ $totalProducts ?? 0 }} products</small>
+                    <small class="text-muted">{{ $totalProducts ?? 0 }} {{ __('messages.kpi_products_label') }}</small>
                 </div>
             </div>
         </div>
@@ -287,11 +292,12 @@
                 <div class="kpi-accent bg-primary w-100"></div>
                 <div class="card-body p-3">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <span class="text-muted" style="font-size:.73rem;font-weight:600;">Customers</span>
+                        <span class="text-muted"
+                            style="font-size:.73rem;font-weight:600;">{{ __('messages.kpi_customers_label') }}</span>
                         <div class="kpi-icon bg-label-primary"><i class="bx bx-user-circle text-primary fs-5"></i></div>
                     </div>
                     <div class="fw-bold text-primary" style="font-size:1.1rem;">{{ $totalCustomers ?? 0 }}</div>
-                    <small class="text-muted">{{ $totalSuppliers ?? 0 }} suppliers</small>
+                    <small class="text-muted">{{ $totalSuppliers ?? 0 }} {{ __('messages.kpi_suppliers_label') }}</small>
                 </div>
             </div>
         </div>
@@ -303,11 +309,12 @@
                     <div class="kpi-accent bg-danger w-100"></div>
                     <div class="card-body p-3">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <span class="text-muted" style="font-size:.73rem;font-weight:600;">Pending</span>
+                            <span class="text-muted"
+                                style="font-size:.73rem;font-weight:600;">{{ __('messages.kpi_pending') }}</span>
                             <div class="kpi-icon bg-label-danger"><i class="bx bx-time-five text-danger fs-5"></i></div>
                         </div>
                         <div class="fw-bold text-danger" style="font-size:1.1rem;">{{ $pendingSales ?? 0 }}</div>
-                        <small class="text-muted">draft invoices</small>
+                        <small class="text-muted">{{ __('messages.kpi_draft_invoices') }}</small>
                     </div>
                 </div>
             </div>
@@ -324,7 +331,7 @@
                     <div>
                         <div class="fw-bold text-primary" style="font-size:1.3rem;line-height:1;">
                             {{ $totalProducts ?? 0 }}</div>
-                        <div class="text-muted small">Products</div>
+                        <div class="text-muted small">{{ __('messages.qs_products') }}</div>
                     </div>
                 </div>
             </div>
@@ -336,7 +343,7 @@
                     <div>
                         <div class="fw-bold text-warning" style="font-size:1.3rem;line-height:1;">{{ $totalBrands ?? 0 }}
                         </div>
-                        <div class="text-muted small">Brands</div>
+                        <div class="text-muted small">{{ __('messages.qs_brands') }}</div>
                     </div>
                 </div>
             </div>
@@ -348,7 +355,7 @@
                     <div>
                         <div class="fw-bold text-info" style="font-size:1.3rem;line-height:1;">
                             {{ $totalCategories ?? 0 }}</div>
-                        <div class="text-muted small">Categories</div>
+                        <div class="text-muted small">{{ __('messages.qs_categories') }}</div>
                     </div>
                 </div>
             </div>
@@ -360,7 +367,7 @@
                     <div>
                         <div class="fw-bold text-secondary" style="font-size:1.3rem;line-height:1;">
                             {{ $totalUsers ?? 0 }}</div>
-                        <div class="text-muted small">Users</div>
+                        <div class="text-muted small">{{ __('messages.qs_users') }}</div>
                     </div>
                 </div>
             </div>
@@ -369,20 +376,23 @@
 
     {{-- ════ ROW 3 · CHARTS ════ --}}
     @if ($user->can('sales.view') || $user->can('purchases.view'))
-        <div class="sec-hd"><i class="bx bx-bar-chart-alt-2"></i> Analytics</div>
+        <div class="sec-hd"><i class="bx bx-bar-chart-alt-2"></i> {{ __('messages.dash_analytics') }}</div>
         <div class="row g-3 mb-4">
 
             {{-- Weekly Bar Chart --}}
             <div class="col-lg-8 col-md-12">
                 <div class="inner-card card h-100">
-                    <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div
+                        class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-bar-chart-alt-2 text-primary me-2"></i>
-                            This Week · Sales vs Purchases
+                            {{ __('messages.dash_week_chart_title') }}
                         </h6>
                         <div class="d-flex gap-2">
-                            <span class="badge bg-label-primary" style="font-size:.65rem;">● Sales</span>
-                            <span class="badge bg-label-info" style="font-size:.65rem;">● Purchases</span>
+                            <span class="badge bg-label-primary" style="font-size:.65rem;">●
+                                {{ __('messages.dash_sales_legend') }}</span>
+                            <span class="badge bg-label-info" style="font-size:.65rem;">●
+                                {{ __('messages.dash_purchases_legend') }}</span>
                         </div>
                     </div>
                     <div class="card-body pt-0">
@@ -397,7 +407,7 @@
                     <div class="card-header border-0 py-3">
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-trophy text-warning me-2"></i>
-                            Top Products · {{ now()->format('M Y') }}
+                            {{ __('messages.dash_top_products_title') }} · {{ now()->format('M Y') }}
                         </h6>
                     </div>
                     <div class="card-body d-flex flex-column align-items-center justify-content-center py-2">
@@ -406,7 +416,7 @@
                         @else
                             <div class="text-center text-muted py-4">
                                 <i class="bx bx-package d-block mb-2" style="font-size:2.5rem;opacity:.2;"></i>
-                                <p class="small mb-0">No sales data this month</p>
+                                <p class="small mb-0">{{ __('messages.dash_no_sales_data') }}</p>
                             </div>
                         @endif
                     </div>
@@ -418,30 +428,32 @@
 
     {{-- ════ ROW 4 · RECENT SALES + TOP CUSTOMERS ════ --}}
     @if ($user->can('sales.view') || $user->can('customers.view'))
-        <div class="sec-hd"><i class="bx bx-receipt"></i> Sales & Customers</div>
+        <div class="sec-hd"><i class="bx bx-receipt"></i> {{ __('messages.dash_sales_customers') }}</div>
         <div class="row g-3 mb-4">
 
             {{-- Recent Sales --}}
             @can('sales.view')
                 <div class="col-lg-7 col-md-12">
                     <div class="inner-card card h-100">
-                        <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div
+                            class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <h6 class="fw-semibold mb-0">
-                                <i class="bx bx-receipt text-primary me-2"></i> Recent Sales
+                                <i class="bx bx-receipt text-primary me-2"></i> {{ __('messages.dash_recent_sales') }}
                             </h6>
-                            <a href="{{ route('sales.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                            <a href="{{ route('sales.index') }}"
+                                class="btn btn-sm btn-outline-primary">{{ __('messages.dash_view_all') }}</a>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table d-tbl mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Invoice</th>
-                                            <th>Customer</th>
-                                            <th>Amount</th>
-                                            <th>Payment</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
+                                            <th>{{ __('messages.dash_col_invoice') }}</th>
+                                            <th>{{ __('messages.dash_col_customer') }}</th>
+                                            <th>{{ __('messages.dash_col_amount') }}</th>
+                                            <th>{{ __('messages.dash_col_payment') }}</th>
+                                            <th>{{ __('messages.dash_col_status') }}</th>
+                                            <th>{{ __('messages.dash_col_date') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -458,21 +470,25 @@
                                                 <td class="fw-bold small">{{ format_currency($sale->grand_total) }}</td>
                                                 <td>
                                                     @if ($sale->payment_status === 'Paid')
-                                                        <span class="s-pill bg-success bg-opacity-10 text-success">Paid</span>
+                                                        <span
+                                                            class="s-pill bg-success bg-opacity-10 text-success">{{ __('messages.dash_status_paid') }}</span>
                                                     @elseif($sale->payment_status === 'Partial')
                                                         <span
-                                                            class="s-pill bg-warning bg-opacity-10 text-warning">Partial</span>
+                                                            class="s-pill bg-warning bg-opacity-10 text-warning">{{ __('messages.dash_status_partial') }}</span>
                                                     @else
-                                                        <span class="s-pill bg-danger bg-opacity-10 text-danger">Unpaid</span>
+                                                        <span
+                                                            class="s-pill bg-danger bg-opacity-10 text-danger">{{ __('messages.dash_status_unpaid') }}</span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($sale->status === 'Completed')
                                                         <span class="s-pill bg-success bg-opacity-10 text-success"><i
-                                                                class="bx bx-check-circle"></i> Done</span>
+                                                                class="bx bx-check-circle"></i>
+                                                            {{ __('messages.dash_status_done') }}</span>
                                                     @elseif($sale->status === 'Draft')
                                                         <span class="s-pill bg-warning bg-opacity-10 text-warning"><i
-                                                                class="bx bx-edit"></i> Draft</span>
+                                                                class="bx bx-edit"></i>
+                                                            {{ __('messages.dash_status_draft') }}</span>
                                                     @else
                                                         <span class="s-pill bg-secondary bg-opacity-10 text-secondary"><i
                                                                 class="bx bx-dots-horizontal"></i> {{ $sale->status }}</span>
@@ -486,7 +502,7 @@
                                                 <td colspan="6" class="text-center text-muted py-5">
                                                     <i class="bx bx-receipt d-block mb-2"
                                                         style="font-size:2.5rem;opacity:.2;"></i>
-                                                    No recent sales
+                                                    {{ __('messages.dash_no_recent_sales') }}
                                                 </td>
                                             </tr>
                                         @endforelse
@@ -502,12 +518,14 @@
             @can('customers.view')
                 <div class="col-lg-5 col-md-12">
                     <div class="inner-card card h-100">
-                        <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div
+                            class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <h6 class="fw-semibold mb-0">
                                 <i class="bx bx-crown text-warning me-2"></i>
-                                Top Customers · {{ now()->format('M Y') }}
+                                {{ __('messages.dash_top_customers_title') }} · {{ now()->format('M Y') }}
                             </h6>
-                            <a href="{{ route('customers.index') }}" class="btn btn-sm btn-outline-warning">All</a>
+                            <a href="{{ route('customers.index') }}"
+                                class="btn btn-sm btn-outline-warning">{{ __('messages.dash_all_btn') }}</a>
                         </div>
                         <div class="card-body d-flex align-items-center justify-content-center py-2">
                             @if (isset($topCustomers) && $topCustomers->count())
@@ -515,7 +533,7 @@
                             @else
                                 <div class="text-center text-muted py-4">
                                     <i class="bx bx-user d-block mb-2" style="font-size:2.5rem;opacity:.2;"></i>
-                                    <p class="small mb-0">No customer data this month</p>
+                                    <p class="small mb-0">{{ __('messages.dash_no_customer_data') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -527,7 +545,7 @@
     @endif
 
     {{-- ════ ROW 5 · STOCK ALERT + ACTIVITY ════ --}}
-    <div class="sec-hd"><i class="bx bx-error-circle"></i> Alerts & Activity</div>
+    <div class="sec-hd"><i class="bx bx-error-circle"></i> {{ __('messages.dash_alerts_activity') }}</div>
     <div class="row g-3 mb-4">
 
         {{-- Low Stock --}}
@@ -536,25 +554,26 @@
                 <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <h6 class="fw-semibold mb-0">
                         <i class="bx bx-error-circle text-danger me-2"></i>
-                        Low Stock Alert
+                        {{ __('messages.dash_low_stock_alert') }}
                         @php $stockCount = ($lowStockProducts ?? collect())->count(); @endphp
                         @if ($stockCount > 0)
                             <span class="badge bg-danger ms-1"
                                 style="font-size:.62rem;border-radius:99px;">{{ $stockCount }}</span>
                         @endif
                     </h6>
-                    <a href="{{ route('stocks.index') }}" class="btn btn-sm btn-outline-danger">Manage</a>
+                    <a href="{{ route('stocks.index') }}"
+                        class="btn btn-sm btn-outline-danger">{{ __('messages.dash_manage_btn') }}</a>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table d-tbl mb-0">
                             <thead>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>SKU</th>
-                                    <th>Alert</th>
-                                    <th>Stock</th>
-                                    <th>Status</th>
+                                    <th>{{ __('messages.dash_col_product') }}</th>
+                                    <th>{{ __('messages.dash_col_sku') }}</th>
+                                    <th>{{ __('messages.dash_col_alert') }}</th>
+                                    <th>{{ __('messages.dash_col_stock') }}</th>
+                                    <th>{{ __('messages.dash_col_status') }}</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -589,17 +608,20 @@
                                         <td>
                                             @if ($qty <= 0)
                                                 <span class="s-pill bg-danger bg-opacity-10 text-danger"><i
-                                                        class="bx bx-x-circle"></i> Out</span>
+                                                        class="bx bx-x-circle"></i>
+                                                    {{ __('messages.dash_stock_out') }}</span>
                                             @else
                                                 <span class="s-pill bg-warning bg-opacity-10 text-warning"><i
-                                                        class="bx bx-error"></i> Low</span>
+                                                        class="bx bx-error"></i>
+                                                    {{ __('messages.dash_stock_low') }}</span>
                                             @endif
                                         </td>
                                         <td>
                                             @can('stocks.create')
                                                 <a href="{{ route('stocks.adjust', ['product_id' => $p->id]) }}"
                                                     class="btn btn-outline-primary btn-sm"
-                                                    style="padding:.15rem .4rem;font-size:.7rem;" title="Adjust Stock">
+                                                    style="padding:.15rem .4rem;font-size:.7rem;"
+                                                    title="{{ __('messages.dash_adjust_stock_title') }}">
                                                     <i class="bx bx-slider"></i>
                                                 </a>
                                             @endcan
@@ -610,7 +632,7 @@
                                         <td colspan="6" class="text-center py-5 text-muted">
                                             <i class="bx bx-check-shield text-success d-block mb-2"
                                                 style="font-size:2.5rem;"></i>
-                                            All stock levels are healthy!
+                                            {{ __('messages.dash_all_stock_healthy') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -626,10 +648,11 @@
             <div class="inner-card card h-100">
                 <div class="card-header border-0 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-history text-secondary me-2"></i>Recent Activity
+                        <i class="bx bx-history text-secondary me-2"></i>{{ __('messages.dash_recent_activity') }}
                     </h6>
                     @can('activity_logs.view')
-                        <a href="{{ route('activity-logs.index') }}" class="btn btn-sm btn-outline-secondary">All</a>
+                        <a href="{{ route('activity-logs.index') }}"
+                            class="btn btn-sm btn-outline-secondary">{{ __('messages.dash_all_btn') }}</a>
                     @endcan
                 </div>
                 <div class="card-body py-1 px-3" style="max-height:360px;overflow-y:auto;">
@@ -648,7 +671,7 @@
                     @empty
                         <div class="text-center text-muted py-5">
                             <i class="bx bx-history d-block mb-2" style="font-size:2.5rem;opacity:.2;"></i>
-                            <p class="small mb-0">No recent activity</p>
+                            <p class="small mb-0">{{ __('messages.dash_no_recent_activity') }}</p>
                         </div>
                     @endforelse
                 </div>

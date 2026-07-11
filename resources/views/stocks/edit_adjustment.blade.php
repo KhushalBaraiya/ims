@@ -1,17 +1,18 @@
 ﻿@extends('layouts.admin')
-@section('title', __('messages.adjust_stock'))
+@section('title', __('messages.edit_adjustment'))
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Edit Stock Adjustment</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.edit_adjustment') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('stocks.history') }}">Adjustments</a></li>
-                    <li class="breadcrumb-item active">Edit — {{ $voucherNo }}</li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('stocks.history') }}">{{ __('messages.stock_adjustments') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.edit_label') }} — {{ $voucherNo }}</li>
                 </ol>
             </nav>
         </div>
@@ -25,7 +26,7 @@
         <div class="alert alert-danger d-flex align-items-start gap-2 mb-4 py-2 px-3 shadow-sm border-0">
             <i class="bx bx-error-circle fs-5 mt-1 flex-shrink-0 text-danger"></i>
             <div>
-                <strong class="text-danger">Please fix the following errors:</strong>
+                <strong class="text-danger">{{ __('messages.fix_errors') }}</strong>
                 <ul class="mb-0 mt-1 ps-3 text-danger">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -46,17 +47,17 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold text-primary">
-                            <i class="bx bx-info-circle me-2"></i>Voucher Details
+                            <i class="bx bx-info-circle me-2"></i>{{ __('messages.voucher_details') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Voucher No</label>
+                            <label class="form-label fw-semibold">{{ __('messages.voucher_no') }}</label>
                             <input type="text" class="form-control bg-light fw-bold" value="{{ $voucherNo }}"
                                 readonly>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Transaction Date <span
+                            <label class="form-label fw-semibold">{{ __('messages.transaction_date') }} <span
                                     class="text-danger">*</span></label>
                             <input type="date" name="transaction_date"
                                 class="form-control @error('transaction_date') is-invalid @enderror"
@@ -66,9 +67,9 @@
                             @enderror
                         </div>
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Global Remarks / Notes</label>
+                            <label class="form-label fw-semibold">{{ __('messages.global_remarks') }}</label>
                             <textarea name="notes" rows="4" class="form-control @error('notes') is-invalid @enderror"
-                                placeholder="Reason for adjustment, e.g. Year-end inventory audit...">{{ old('notes', $notes) }}</textarea>
+                                placeholder="{{ __('messages.adj_reason_ph') }}">{{ old('notes', $notes) }}</textarea>
                             @error('notes')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -82,19 +83,19 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold text-primary">
-                            <i class="bx bx-list-ol me-2"></i>Adjust Products
+                            <i class="bx bx-list-ol me-2"></i>{{ __('messages.adjust_products') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
 
                         {{-- Live search input --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Select Product to Add</label>
+                            <label class="form-label fw-semibold">{{ __('messages.select_product_to_add') }}</label>
                             <div class="position-relative">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bx bx-search"></i></span>
                                     <input type="text" id="adjProductSearch" class="form-control"
-                                        placeholder="Type product name, SKU or barcode..." autocomplete="off">
+                                        placeholder="{{ __('messages.type_product_barcode') }}" autocomplete="off">
                                 </div>
                                 <div id="adjAutocompleteResults" class="position-absolute w-100 d-none rounded"
                                     style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;left:0;">
@@ -107,10 +108,10 @@
                             <table class="table table-hover align-middle mb-0" id="adjustmentItemsTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Current Stock</th>
-                                        <th class="text-center" style="width:190px;">Type (+ / -)</th>
-                                        <th class="text-center" style="width:140px;">Quantity</th>
+                                        <th>{{ __('messages.adj_product_col') }}</th>
+                                        <th>{{ __('messages.current_stock') }}</th>
+                                        <th class="text-center" style="width:190px;">{{ __('messages.adj_type') }}</th>
+                                        <th class="text-center" style="width:140px;">{{ __('messages.adj_quantity') }}</th>
                                         <th class="text-center" style="width:50px;"></th>
                                     </tr>
                                 </thead>
@@ -118,7 +119,7 @@
                             </table>
                             <div id="emptyTableMsg" class="text-center py-5 text-muted d-none">
                                 <i class="bx bx-package" style="font-size:2.5rem;opacity:.3;"></i>
-                                <p class="mt-2 mb-0">No products added yet. Search a product above to add.</p>
+                                <p class="mt-2 mb-0">{{ __('messages.no_products_adj') }}</p>
                             </div>
                         </div>
 
@@ -128,10 +129,10 @@
                 {{-- Action buttons --}}
                 <div class="d-flex justify-content-end gap-2 mt-4">
                     <a href="{{ route('stocks.history') }}" class="btn btn-outline-secondary">
-                        <i class="bx bx-x me-1"></i> Cancel
+                        <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
                     <button type="submit" class="btn btn-primary px-4">
-                        <i class="bx bx-save me-1"></i> Update Stock Adjustment
+                        <i class="bx bx-save me-1"></i> {{ __('messages.update_stock_adj') }}
                     </button>
                 </div>
             </div>
@@ -249,15 +250,15 @@
                         resultsBox.empty();
                         if (!data.length) {
                             resultsBox.append(
-                                '<div class="adj-ac-no-results">No products found.</div>'
+                                '<div class="adj-ac-no-results">{{ __('messages.no_products_found') }}</div>'
                             );
                             resultsBox.removeClass('d-none');
                             return;
                         }
                         data.forEach(function(p) {
                             const stockLabel = p.out_of_stock ?
-                                '<span class="badge bg-danger" style="font-size:10px;">Out of Stock</span>' :
-                                `<span class="adj-ac-stock">${parseFloat(p.stock).toFixed(2)} ${p.unit || 'Units'} avail.</span>`;
+                                '<span class="badge bg-danger" style="font-size:10px;">{{ __('messages.out_of_stock') }}</span>' :
+                                `<span class="adj-ac-stock">${parseFloat(p.stock).toFixed(2)} ${p.unit || '{{ __('messages.units') }}'} {{ __('messages.avail') }}.</span>`;
 
                             const $item = $(`
                         <div class="adj-ac-item"
@@ -285,7 +286,8 @@
                                         }
                                     });
                                 if (dup) {
-                                    showAdminToast('Product already added.',
+                                    showAdminToast(
+                                        '{{ __('messages.product_already_added') }}',
                                         'warning');
                                     searchInput.val('').focus();
                                     resultsBox.addClass('d-none').empty();

@@ -1,22 +1,22 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Stock Adjustments')
+@section('title', __('messages.stock_adjustments'))
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Stock Adjustments</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.stock_adjustments') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item active">Adjustments</li>
+                    <li class="breadcrumb-item active">{{ __('messages.stock_adjustments') }}</li>
                 </ol>
             </nav>
         </div>
         @can('stocks.create')
             <a href="{{ route('stocks.adjust') }}" class="btn btn-primary">
-                <i class="bx bx-plus me-1"></i> Create Adjustment
+                <i class="bx bx-plus me-1"></i> {{ __('messages.create_adjustment') }}
             </a>
         @endcan
     </div>
@@ -38,7 +38,7 @@
                         <i class="bx bx-slider fs-4 text-primary"></i>
                     </div>
                     <div>
-                        <div class="text-muted small fw-semibold">Total Vouchers</div>
+                        <div class="text-muted small fw-semibold">{{ __('messages.total_vouchers') }}</div>
                         <div class="fw-bold fs-4">{{ $adjustmentsGrouped->count() }}</div>
                     </div>
                 </div>
@@ -111,9 +111,9 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Adjustment Direction</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.adj_directions') }}</label>
                         <select name="adjustment_type" class="form-select form-select-sm">
-                            <option value="">All Directions</option>
+                            <option value="">{{ __('messages.all_directions') }}</option>
                             @foreach ($types as $type)
                                 <option value="{{ $type }}"
                                     {{ request('adjustment_type') === $type ? 'selected' : '' }}>
@@ -149,9 +149,9 @@
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
             <h6 class="mb-0 fw-semibold text-primary">
-                <i class="bx bx-slider me-2"></i>Adjustment Vouchers
+                <i class="bx bx-slider me-2"></i>{{ __('messages.adjustment_vouchers') }}
             </h6>
-            <span class="badge bg-label-primary">{{ $adjustmentsGrouped->count() }} vouchers</span>
+            <span class="badge bg-label-primary">{{ $adjustmentsGrouped->count() }} {{ __('messages.vouchers') }}</span>
         </div>
         <div class="card-body p-0">
 
@@ -170,8 +170,8 @@
                             <tr>
                                 <th style="width:50px;">#</th>
                                 <th>{{ __('messages.th_date') }}</th>
-                                <th>Voucher No</th>
-                                <th>Adjusted Products</th>
+                                <th>{{ __('messages.voucher_no') }}</th>
+                                <th>{{ __('messages.adjusted_products') }}</th>
                                 <th>{{ __('messages.th_created_by') }}</th>
                                 <th>{{ __('messages.notes') }}</th>
                                 <th class="text-center no-sort" style="width:90px;">{{ __('messages.th_actions') }}</th>
@@ -224,7 +224,8 @@
                                             @can('stocks.create')
                                                 <a href="{{ route('stocks.edit_adjustment', $voucherNo) }}"
                                                     class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                    title="Edit Voucher" style="width:30px;height:30px;padding:0;">
+                                                    title="{{ __('messages.edit_adjustment') }}"
+                                                    style="width:30px;height:30px;padding:0;">
                                                     <i class="bx bx-edit" style="font-size:1rem;"></i>
                                                 </a>
                                                 <form id="delete-form-{{ $slug }}"
@@ -234,7 +235,8 @@
                                                     <button type="button"
                                                         class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
                                                         data-id="{{ $slug }}" data-no="{{ $voucherNo }}"
-                                                        title="Delete Voucher" style="width:30px;height:30px;padding:0;">
+                                                        title="{{ __('messages.delete') }}"
+                                                        style="width:30px;height:30px;padding:0;">
                                                         <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                     </button>
                                                 </form>
@@ -291,13 +293,13 @@
                     no = $(this).data('no'),
                     form = $(`#delete-form-${id}`);
                 Swal.fire({
-                    title: 'Delete Voucher?',
-                    text: `This will revert all stock changes for voucher "${no}". Continue?`,
+                    title: '{{ __('messages.delete_voucher_title') }}',
+                    text: `{{ __('messages.delete_voucher_text') }} "${no}". {{ __('messages.confirm') }}?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, Delete',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) form.submit();

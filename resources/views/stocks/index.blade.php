@@ -106,14 +106,17 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold small mb-1">Stock Status</label>
+                    <label class="form-label fw-semibold small mb-1">{{ __('messages.stock_status_col') }}</label>
                     <select name="stock_status" class="form-select form-select-sm">
                         <option value="">{{ __('messages.all_statuses') }}</option>
-                        <option value="ok" {{ request('stock_status') === 'ok' ? 'selected' : '' }}>? In Stock
+                        <option value="ok" {{ request('stock_status') === 'ok' ? 'selected' : '' }}>✅
+                            {{ __('messages.stock_status_ok') }}
                         </option>
-                        <option value="low" {{ request('stock_status') === 'low' ? 'selected' : '' }}>?? Low Stock
+                        <option value="low" {{ request('stock_status') === 'low' ? 'selected' : '' }}>⚠️
+                            {{ __('messages.stock_status_low') }}
                         </option>
-                        <option value="out" {{ request('stock_status') === 'out' ? 'selected' : '' }}>?? Out of Stock
+                        <option value="out" {{ request('stock_status') === 'out' ? 'selected' : '' }}>🔴
+                            {{ __('messages.stock_status_out') }}
                         </option>
                     </select>
                 </div>

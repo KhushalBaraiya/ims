@@ -1,26 +1,27 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Profit & Loss Report')
+@section('title', __('messages.profit_loss'))
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Profit &amp; Loss Report</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.profit_loss') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('reports.index') }}">Reports</a></li>
-                    <li class="breadcrumb-item active">Profit &amp; Loss</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('reports.index') }}">{{ __('messages.all_reports') }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ __('messages.profit_loss') }}</li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2">
             <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-printer me-1"></i> Print
+                <i class="bx bx-printer me-1"></i> {{ __('messages.print') }}
             </button>
             <a href="{{ route('reports.index') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-arrow-back me-1"></i> All Reports
+                <i class="bx bx-arrow-back me-1"></i> {{ __('messages.all_reports') }}
             </a>
         </div>
     </div>
