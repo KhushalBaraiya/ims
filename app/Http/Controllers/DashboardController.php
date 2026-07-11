@@ -40,6 +40,9 @@ class DashboardController extends Controller
         $todaySales = $user->can('sales.view')
             ? Sale::whereDate('created_at', today())->sum('grand_total')
             : null;
+        $todaySalesCount = $user->can('sales.view')
+            ? Sale::whereDate('created_at', today())->count()
+            : null;
         $pendingSales = $user->can('sales.view')
             ? Sale::where('status', 'Draft')->count()
             : null;
@@ -148,6 +151,7 @@ class DashboardController extends Controller
             'totalUsers',
             'todayPurchases',
             'todaySales',
+            'todaySalesCount',
             'pendingSales',
             'totalRevenue',
             'totalPurchases',

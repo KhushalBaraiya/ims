@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.dashboard'))
 
 @push('styles')
@@ -243,8 +243,7 @@
                         </div>
                         <div class="fw-bold text-success" style="font-size:1.1rem;">{{ format_currency($todaySales ?? 0) }}
                         </div>
-                        <small class="text-muted">{{ $todayPurchases ?? 0 }} {{ __('messages.kpi_purchases') }}
-                            {{ __('messages.today') }}</small>
+                        <small class="text-muted">{{ $todaySalesCount ?? 0 }} {{ __('messages.kpi_today_sales') }}</small>
                     </div>
                 </div>
             </div>

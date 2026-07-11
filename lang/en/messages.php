@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
 
@@ -27,6 +27,7 @@ return [
     'dashboard'             => 'Dashboard',
     'welcome_back'          => 'Welcome back',
     'kpi_today_sales'       => "Today's Sales",
+    'kpi_sales_today'       => 'Sales Today',
     'kpi_total_revenue'     => 'Total Revenue',
     'kpi_orders'            => 'Orders',
     'kpi_purchases'         => 'Purchases',

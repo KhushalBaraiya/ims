@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 return [
     'menu_dashboard'        => 'ડૅશબૉર્ડ',
     'menu_categories'       => 'શ્રેણીઓ',
@@ -20,6 +20,7 @@ return [
     'dashboard'             => 'ડૅશબૉર્ડ',
     'welcome_back'          => 'પાછા સ્વાગત',
     'kpi_today_sales'       => 'આજના વેચ.',
+    'kpi_sales_today'       => 'વેચ. આજ',
     'kpi_total_revenue'     => 'કુલ આવક',
     'kpi_orders'            => 'ઓર્ડર',
     'kpi_purchases'         => 'ખ.',

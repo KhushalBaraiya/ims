@@ -143,7 +143,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-cart-download" style="font-size:20px;"></i>
-                    {{ __('messages.menu_purchases') }} / {{ __('messages.menu_purchase_returns') }}
+                    {{ __('messages.menu_purchases') }}
                 </span>
             </li>
         @endcanany
@@ -174,7 +174,7 @@
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-cart-alt" style="font-size:20px;"></i>
-                    {{ __('messages.menu_sales') }} / {{ __('messages.menu_sale_returns') }}
+                    {{ __('messages.menu_sales') }}
                 </span>
             </li>
         @endcanany
@@ -233,7 +233,7 @@
              5. PEOPLES  (group)
              Sub-items: Supplier → Customer → Users
              ════════════════════════════════════════ --}}
-        @canany(['suppliers.view', 'customers.view', 'users.view'])
+        @canany(['suppliers.view', 'customers.view'])
             <li class="menu-header small text-uppercase mt-1">
                 <span class="menu-header-text d-flex align-items-center gap-2">
                     <i class="bx bx-group" style="font-size:20px;"></i>
@@ -260,7 +260,14 @@
             </li>
         @endcan
 
+        {{-- User Accounts - separate section --}}
         @can('users.view')
+            <li class="menu-header small text-uppercase mt-1">
+                <span class="menu-header-text d-flex align-items-center gap-2">
+                    <i class="bx bx-user" style="font-size:20px;"></i>
+                    {{ __('messages.user_accounts') }}
+                </span>
+            </li>
             <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                 <a href="{{ route('users.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-user"></i>

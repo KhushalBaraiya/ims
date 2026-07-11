@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
 
@@ -27,6 +27,7 @@ return [
     'dashboard'             => 'डैशबोर्ड',
     'welcome_back'          => 'वापस स्वागत है',
     'kpi_today_sales'       => 'आज की बिक्री',
+    'kpi_sales_today'       => 'बिक्री आज',
     'kpi_total_revenue'     => 'कुल राजस्व',
     'kpi_orders'            => 'ऑर्डर',
     'kpi_purchases'         => 'खरीद',
