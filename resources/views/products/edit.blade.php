@@ -445,7 +445,7 @@
 
                         {{-- Status toggle --}}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold d-block">Status</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <div class="d-flex align-items-center gap-3">
                                 <input type="hidden" name="status" value="inactive">
                                 <div class="form-check form-switch mb-0">

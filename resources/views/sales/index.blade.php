@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.sales_invoices'))
 
 @section('content')
@@ -19,8 +19,7 @@
                 <i class="bx bx-chevron-down" id="filtersChevron"></i>
             </button>
             @can('sales.delete')
-                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button">
-                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button"><i class="bx bx-trash me-1"></i> {{ __("messages.delete_multiples") }}
                 </button>
             @endcan
             @can('sales.create')
@@ -183,7 +182,7 @@
                             <th class="text-end">{{ __('messages.th_paid') }}</th>
                             <th class="text-end">{{ __('messages.th_due') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th class="text-center">Payment</th>
+                            <th class="text-center">{{ __("messages.payment_label") }}</th>
                             <th>{{ __('messages.th_created_by') }}</th>
                             <th class="no-sort text-center">{{ __('messages.th_actions') }}</th>
                         </tr>
@@ -204,14 +203,14 @@
                                 <td class="text-danger fw-semibold text-end">{{ format_currency($sale->due_amount) }}</td>
                                 <td class="text-center">
                                     @if ($sale->status === 'Completed')
-                                        <span class="badge rounded-pill bg-success">Completed</span>
+                                        <span class="badge rounded-pill bg-success">{{ __("messages.completed") }}</span>
                                     @elseif($sale->status === 'Pending')
                                         <span class="badge rounded-pill bg-info text-dark">Pending</span>
                                     @elseif($sale->status === 'Draft')
                                         <span
                                             class="badge rounded-pill bg-warning text-dark">{{ __('messages.draft') }}</span>
                                     @elseif($sale->status === 'Repair')
-                                        <span class="badge rounded-pill bg-secondary">Repair</span>
+                                        <span class="badge rounded-pill bg-secondary">{{ __("messages.repair") }}</span>
                                     @elseif($sale->status === 'Ordered')
                                         <span class="badge rounded-pill bg-primary">Ordered</span>
                                     @else
@@ -220,11 +219,11 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($sale->payment_status === 'Paid')
-                                        <span class="badge rounded-pill bg-success">Paid</span>
+                                        <span class="badge rounded-pill bg-success">{{ __("messages.paid") }}</span>
                                     @elseif($sale->payment_status === 'Partial')
-                                        <span class="badge rounded-pill bg-warning text-dark">Partial</span>
+                                        <span class="badge rounded-pill bg-warning text-dark">{{ __("messages.partial") }}</span>
                                     @else
-                                        <span class="badge rounded-pill bg-danger">Unpaid</span>
+                                        <span class="badge rounded-pill bg-danger">{{ __("messages.unpaid") }}</span>
                                     @endif
                                 </td>
                                 <td class="text-muted small">{{ $sale->user->name ?? '-' }}</td>
@@ -467,13 +466,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: 'Delete ' + ids.length + ' sale(s)?',
-                    text: 'Stock will be restored for Completed invoices. This cannot be undone.',
+                    title: '{{ __("messages.confirm_delete") }}',
+                    text: '{{ __("messages.confirm_delete") }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete all!',
+                    confirmButtonText: '{{ __("messages.yes_delete") }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -487,7 +486,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: 'Deleted!',
+                                            title: '{{ __("messages.deleted_title") }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -525,7 +524,8 @@
                 $('#paymentForm').attr('action', btn.data('action'));
 
                 updateModalDue();
-                $('#paymentModal').modal('show');
+                const modalEl = document.getElementById('paymentModal');
+                bootstrap.Modal.getOrCreateInstance(modalEl).show();
             });
 
             $('#modal_paid_amount').on('input change', updateModalDue);
@@ -564,7 +564,8 @@
                     data: form.serialize(),
                     success: function(res) {
                         if (res.success) {
-                            $('#paymentModal').modal('hide');
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById(
+                                'paymentModal')).hide();
                             showAdminToast(res.message, 'success');
                             setTimeout(() => window.location.reload(), 1200);
                         } else {
@@ -583,6 +584,3 @@
         });
     </script>
 @endpush
-
-
-

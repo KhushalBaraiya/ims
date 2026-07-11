@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Create Sales Return')
 
 @section('content')
@@ -152,9 +152,9 @@
                         </div>
 
                         {{-- States --}}
-                        <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                        <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center w-100"
                             id="noInvoiceMsg">
-                            <i class="bx bx-file-blank mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                            <i class="bx bx-file-blank mb-2 d-block mx-auto" style="font-size:2.5rem;opacity:.3;"></i>
                             <p class="small mb-0">Select a sales invoice to load line items.</p>
                         </div>
                         <div class="text-muted d-none d-flex flex-column align-items-center justify-content-center py-5 text-center"

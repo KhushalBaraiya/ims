@@ -23,7 +23,7 @@
     <div class="col-12">
         <label class="form-label fw-semibold">{{ __('messages.description_label') }}</label>
         <textarea name="description" rows="3" class="form-control @error('description') is-invalid @enderror"
-            placeholder="Describe this category...">{{ old('description', $mainCategory->description ?? '') }}</textarea>
+            placeholder="{{ __('messages.ph_category_description') }}">{{ old('description', $mainCategory->description ?? '') }}</textarea>
         @error('description')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror

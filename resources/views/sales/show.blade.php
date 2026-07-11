@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Sales Invoice — ' . $sale->invoice_no)
+ï»¿@extends('layouts.admin')
+@section('title', 'Sales Invoice ï¿½ ' . $sale->invoice_no)
 
 @section('content')
 
@@ -31,7 +31,7 @@
             </a>
         </div>
     </div>
-
+10*12
     {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
@@ -43,8 +43,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Sales Invoice</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $sale->invoice_no }}</span>
-                    <span>· {{ $sale->customer->name ?? '—' }}</span>
-                    <span>· {{ $sale->invoice_date }}</span>
+                    <span>ï¿½ {{ $sale->customer->name ?? 'ï¿½' }}</span>
+                    <span>ï¿½ {{ $sale->invoice_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">

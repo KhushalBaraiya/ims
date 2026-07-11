@@ -9,8 +9,8 @@
         <span class="brand-name">Kalathiya POS</span>
     </div>
 
-    <div class="auth-title">Welcome back! 👋</div>
-    <div class="auth-subtitle">Please sign in to your account</div>
+    <div class="auth-title">{{ __('messages.welcome_back') }} 👋</div>
+    <div class="auth-subtitle">{{ __('messages.sign_in') }}</div>
 
     {{-- Status / logout alert --}}
     @if (session('status'))
@@ -77,7 +77,7 @@
                 <div class="demo-password">Admin@123</div>
             </div>
             <button class="demo-copy-btn" onclick="fillCredentials('admin@gmail.com', 'Admin@123')" type="button">
-                <i class="bx bx-copy"></i> Copy
+                <i class="bx bx-copy"></i> {{ __('messages.copy') }}
             </button>
         </div>
 
@@ -88,7 +88,7 @@
                 <div class="demo-password">Manager@123</div>
             </div>
             <button class="demo-copy-btn" onclick="fillCredentials('manager@gmail.com', 'Manager@123')" type="button">
-                <i class="bx bx-copy"></i> Copy
+                <i class="bx bx-copy"></i> {{ __('messages.copy') }}
             </button>
         </div>
 
@@ -99,7 +99,7 @@
                 <div class="demo-password">Staff@123</div>
             </div>
             <button class="demo-copy-btn" onclick="fillCredentials('staff@gmail.com', 'Staff@123')" type="button">
-                <i class="bx bx-copy"></i> Copy
+                <i class="bx bx-copy"></i> {{ __('messages.copy') }}
             </button>
         </div>
     </div>

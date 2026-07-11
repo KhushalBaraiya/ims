@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Purchase Return — ' . $purchaseReturn->return_no)
+ï»¿@extends('layouts.admin')
+@section('title', 'Purchase Return ï¿½ ' . $purchaseReturn->return_no)
 
 @section('content')
 
@@ -45,8 +45,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Purchase Return</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $purchaseReturn->return_no }}</span>
-                    <span>· {{ $purchaseReturn->supplier->name ?? '—' }}</span>
-                    <span>· {{ $purchaseReturn->return_date }}</span>
+                    <span>ï¿½ {{ $purchaseReturn->supplier->name ?? 'ï¿½' }}</span>
+                    <span>ï¿½ {{ $purchaseReturn->return_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">

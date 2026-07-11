@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+ï»¿@extends('layouts.admin')
 @section('title', __('messages.stock_overview'))
 
 @section('content')
@@ -90,7 +90,7 @@
                     <div class="input-group input-group-sm">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                            placeholder="{{ __('messages.product_name') }}, SKU…">
+                            placeholder="{{ __('messages.product_name') }}, SKUï¿½">
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -108,7 +108,7 @@
                 <div class="col-md-3">
                     <label class="form-label fw-semibold small mb-1">Stock Status</label>
                     <select name="stock_status" class="form-select form-select-sm">
-                        <option value="">All Status</option>
+                        <option value="">{{ __('messages.all_statuses') }}</option>
                         <option value="ok" {{ request('stock_status') === 'ok' ? 'selected' : '' }}>? In Stock
                         </option>
                         <option value="low" {{ request('stock_status') === 'low' ? 'selected' : '' }}>?? Low Stock
@@ -190,7 +190,7 @@
                                             {{ number_format($qty, 2) }}
                                         </span>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">ï¿½</span>
                                     @endif
                                 </td>
                                 <td class="text-end text-muted small">{{ number_format($alert, 2) }}</td>
@@ -199,7 +199,7 @@
                                     @if ($product->hasTransactions())
                                         <span class="fw-bold">{{ format_currency($invVal) }}</span>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">ï¿½</span>
                                     @endif
                                 </td>
                                 <td class="text-center">

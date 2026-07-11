@@ -391,7 +391,7 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.th_status') }}</label>
                             <select name="status" class="form-select form-select-sm">
-                                <option value="">All Status</option>
+                                <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="active" {{ $statusFilter === 'active' ? 'selected' : '' }}>
                                     {{ __('messages.active') }}</option>
                                 <option value="inactive" {{ $statusFilter === 'inactive' ? 'selected' : '' }}>

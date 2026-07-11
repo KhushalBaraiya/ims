@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.brands'))
 
 @section('content')
@@ -18,7 +18,7 @@
             <div class="d-flex gap-2 align-items-center">
                 @can('brands.delete')
                     <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                        <i class="bx bx-trash me-1"></i> Delete Multiples
+                        <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
                     </button>
                 @endcan
                 <a href="{{ route('brands.create') }}" class="btn btn-outline-primary">
@@ -31,28 +31,27 @@
     {{-- Filters --}}
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>Filters</h6>
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filters') }}</h6>
         </div>
         <div class="card-body p-4">
             <form method="GET" action="{{ route('brands.index') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-5">
-                        <label class="form-label fw-semibold small">Search</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
                             value="{{ request('search') }}" placeholder="Brand name or code...">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">Status</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                         <select name="status" class="form-select form-select-sm">
-                            <option value="">All Status</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive
-                            </option>
+                            <option value="">{{ __('messages.all_statuses') }}</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                            <i class="bx bx-search me-1"></i>Apply
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
                         </button>
                         <a href="{{ route('brands.index') }}" class="btn btn-outline-secondary btn-sm" title="Reset">
                             <i class="bx bx-reset"></i>
@@ -380,13 +379,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: 'Delete ' + ids.length + ' item(s)?',
-                    text: 'This action cannot be undone.',
+                    title: '{{ __("messages.confirm_delete") }}',
+                    text: '{{ __("messages.confirm_delete") }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete all!',
+                    confirmButtonText: '{{ __("messages.yes_delete") }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -400,7 +399,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: 'Deleted!',
+                                            title: '{{ __("messages.deleted_title") }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'

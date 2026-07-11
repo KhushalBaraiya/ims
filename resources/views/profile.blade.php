@@ -106,7 +106,7 @@
                                 <input type="file" name="profile_photo"
                                     class="form-control @error('profile_photo') is-invalid @enderror"
                                     accept="image/jpeg,image/png,image/gif">
-                                <div class="form-text">JPG, PNG, GIF — max 2MB</div>
+                                <div class="form-text">{{ __('messages.image_hint') }}</div>
                                 @error('profile_photo')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

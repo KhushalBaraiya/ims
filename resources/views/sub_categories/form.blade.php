@@ -32,7 +32,7 @@
                 class="text-danger">*</span></label>
         <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
             value="{{ old('slug', $subCategory->slug ?? '') }}" placeholder="e.g. LAPTOP" required>
-        <div class="form-text">Unique identifier (letters, numbers, dashes only).</div>
+        <div class="form-text">{{ __('messages.slug_hint') }}</div>
         @error('slug')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -53,7 +53,7 @@
     <div class="col-12">
         <label class="form-label fw-semibold">{{ __('messages.description_label') }}</label>
         <textarea name="description" rows="3" class="form-control @error('description') is-invalid @enderror"
-            placeholder="Describe this sub category...">{{ old('description', $subCategory->description ?? '') }}</textarea>
+            placeholder="{{ __('messages.ph_sub_category_description') }}">{{ old('description', $subCategory->description ?? '') }}</textarea>
         @error('description')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror

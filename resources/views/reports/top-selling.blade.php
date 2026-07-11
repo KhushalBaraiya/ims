@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Top Selling Products')
 
 @section('content')
@@ -11,7 +11,7 @@
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('reports.index') }}">Reports</a></li>
-                    <li class="breadcrumb-item active">Top Selling</li>
+                    <li class="breadcrumb-item active">{{ __('messages.top_selling') }}</li>
                 </ol>
             </nav>
         </div>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-md-2 d-flex gap-1">
                         <button type="submit" class="btn btn-warning btn-sm flex-fill">
-                            <i class="bx bx-search me-1"></i>Apply
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
                         </button>
                         <a href="{{ route('reports.top-selling') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="bx bx-reset"></i>

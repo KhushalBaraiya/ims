@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Profit & Loss Report')
 
 @section('content')
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-md-2 d-flex gap-1">
                         <button type="submit" class="btn btn-success btn-sm flex-fill">
-                            <i class="bx bx-search me-1"></i>Apply
+                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
                         </button>
                         <a href="{{ route('reports.profit-loss') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="bx bx-reset"></i>

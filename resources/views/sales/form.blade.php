@@ -1,4 +1,4 @@
-@php
+﻿@php
     $isReturned = isset($sale) && $sale->returns->isNotEmpty();
     $showOutOfStock = $showOutOfStock ?? false;
 @endphp
@@ -234,7 +234,7 @@
         {{-- Invoice Info Card --}}
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-file text-primary me-2"></i>Invoice Info</h6>
+                <h6 class="fw-semibold mb-0"><i class="bx bx-file text-primary me-2"></i>{{ __("messages.invoice_info") }}</h6>
             </div>
             <div class="card-body p-4">
 
@@ -334,7 +334,7 @@
         {{-- Payment Details Card --}}
         <div class="card shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>Payment Details</h6>
+                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>{{ __("messages.payment_details") }}</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
@@ -440,7 +440,7 @@
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0">Calculation Summary</h6>
+                        <h6 class="fw-semibold mb-0">{{ __("messages.calculation_summary") }}</h6>
                     </div>
                     <div class="card-body p-4">
 

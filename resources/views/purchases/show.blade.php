@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Purchase Order — ' . $purchase->purchase_no)
+ï»¿@extends('layouts.admin')
+@section('title', 'Purchase Order ï¿½ ' . $purchase->purchase_no)
 
 @section('content')
 
@@ -44,8 +44,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Purchase Order</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $purchase->purchase_no }}</span>
-                    <span>· {{ $purchase->supplier->name ?? '—' }}</span>
-                    <span>· {{ $purchase->purchase_date }}</span>
+                    <span>ï¿½ {{ $purchase->supplier->name ?? 'ï¿½' }}</span>
+                    <span>ï¿½ {{ $purchase->purchase_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -112,7 +112,7 @@
                             @elseif ($purchase->status === 'ordered')
                                 <span class="badge bg-primary rounded-pill">Ordered</span>
                             @elseif ($purchase->status === 'draft')
-                                <span class="badge bg-secondary text-dark rounded-pill">Draft</span>
+                                <span class="badge bg-secondary text-dark">{{ __("messages.draft") }}</span>
                             @else
                                 <span class="badge bg-danger rounded-pill">{{ $purchase->status }}</span>
                             @endif
@@ -228,8 +228,8 @@
                     @can('purchases.delete')
                         <form action="{{ route('purchases.destroy', $purchase->id) }}" id="deleteForm" method="POST">
                             @csrf @method('DELETE')
-                            <button class="btn btn-outline-danger w-100 delete-btn" data-no="{{ $purchase->purchase_no }}"
-                                type="button">
+                            <button class="btn btn-outline-danger w-100" id="deletePurchaseBtn"
+                                data-no="{{ $purchase->purchase_no }}" type="button">
                                 <i class="bx bx-trash me-1"></i> Delete Order
                             </button>
                         </form>
@@ -343,9 +343,9 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $(document).on('click', '.delete-btn', function() {
+            // Delete Order
+            $('#deletePurchaseBtn').on('click', function() {
                 const no = $(this).data('no');
-                const form = $('#deleteForm');
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
                     text: `{{ __('messages.delete') }} "${no}"?`,
@@ -357,27 +357,26 @@
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
-                        $.ajax({
-                            url: form.attr('action'),
-                            type: 'POST',
-                            data: form.serialize(),
-                            success: function(res) {
-                                if (res.success) {
-                                    showAdminToast(res.message, 'success');
-                                    setTimeout(() => window.location.href =
-                                        "{{ route('purchases.index') }}", 1200);
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
+                        const form = document.getElementById('deleteForm');
+                        const formData = new FormData(form);
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
                             },
-                            error: function(xhr) {
-                                let msg = '{{ __('messages.error_occurred') }}';
-                                if (xhr.responseJSON && xhr.responseJSON.message) {
-                                    msg = xhr.responseJSON.message;
-                                }
-                                showAdminToast(msg, 'error');
+                            body: formData
+                        }).then(res => res.json()).then(data => {
+                            if (data.success) {
+                                showAdminToast(data.message, 'success');
+                                setTimeout(() => window.location.href =
+                                    "{{ route('purchases.index') }}", 1200);
+                            } else {
+                                showAdminToast(data.message ||
+                                    '{{ __('messages.error_occurred') }}', 'error');
                             }
-                        });
+                        }).catch(() => showAdminToast('{{ __('messages.error_occurred') }}',
+                            'error'));
                     }
                 });
             });

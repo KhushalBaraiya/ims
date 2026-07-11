@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.purchase_orders'))
 
 @section('content')
@@ -19,8 +19,7 @@
                 <i class="bx bx-chevron-down" id="filtersChevron"></i>
             </button>
             @can('purchases.delete')
-                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button">
-                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button"><i class="bx bx-trash me-1"></i> {{ __("messages.delete_multiples") }}
                 </button>
             @endcan
             @can('purchases.create')
@@ -172,7 +171,7 @@
                             <th class="text-end">{{ __('messages.th_total') }}</th>
                             <th class="text-end">{{ __('messages.th_paid') }}</th>
                             <th class="text-end">{{ __('messages.th_due') }}</th>
-                            <th class="text-center">Payment Status</th>
+                            <th class="text-center">{{ __("messages.payment_status_label") }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
                             <th class="no-sort text-center">{{ __('messages.th_actions') }}</th>
                         </tr>
@@ -196,22 +195,22 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($purchase->payment_status === 'Paid')
-                                        <span class="badge rounded-pill bg-success">Paid</span>
+                                        <span class="badge rounded-pill bg-success">{{ __("messages.paid") }}</span>
                                     @elseif($purchase->payment_status === 'Partial')
-                                        <span class="badge rounded-pill bg-warning text-dark">Partial</span>
+                                        <span class="badge rounded-pill bg-warning text-dark">{{ __("messages.partial") }}</span>
                                     @else
-                                        <span class="badge rounded-pill bg-danger">Unpaid</span>
+                                        <span class="badge rounded-pill bg-danger">{{ __("messages.unpaid") }}</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     @if ($purchase->status === 'received')
-                                        <span class="badge rounded-pill bg-success">Received</span>
+                                        <span class="badge rounded-pill bg-success">{{ __("messages.received") }}</span>
                                     @elseif($purchase->status === 'pending')
-                                        <span class="badge rounded-pill bg-warning text-dark">Pending</span>
+                                        <span class="badge rounded-pill bg-warning text-dark">{{ __("messages.pending") }}</span>
                                     @elseif($purchase->status === 'ordered')
-                                        <span class="badge rounded-pill bg-primary">Ordered</span>
+                                        <span class="badge rounded-pill bg-primary">{{ __("messages.ordered") }}</span>
                                     @elseif($purchase->status === 'draft')
-                                        <span class="badge rounded-pill bg-secondary text-dark">Draft</span>
+                                        <span class="badge rounded-pill bg-secondary text-dark">{{ __("messages.draft") }}</span>
                                     @else
                                         <span class="badge rounded-pill bg-danger">{{ $purchase->status }}</span>
                                     @endif
@@ -466,13 +465,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: 'Delete ' + ids.length + ' purchase(s)?',
+                    title: '{{ __("messages.confirm_delete") }}',
                     text: 'Stock will be reversed for Received orders. This cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete all!',
+                    confirmButtonText: '{{ __("messages.yes_delete") }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -486,7 +485,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: 'Deleted!',
+                                            title: '{{ __("messages.deleted_title") }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -527,7 +526,9 @@
                 $('#paymentForm').attr('action', action);
 
                 updateModalDue();
-                $('#paymentModal').modal('show');
+                const modalEl = document.getElementById('paymentModal');
+                const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                bsModal.show();
             });
 
             $('#modal_paid_amount').on('input change', updateModalDue);
@@ -568,7 +569,8 @@
                     data: form.serialize(),
                     success: function(res) {
                         if (res.success) {
-                            $('#paymentModal').modal('hide');
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById(
+                                'paymentModal')).hide();
                             showAdminToast(res.message, 'success');
                             setTimeout(() => window.location.reload(), 1200);
                         } else {
@@ -589,6 +591,3 @@
         });
     </script>
 @endpush
-
-
-

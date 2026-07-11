@@ -114,13 +114,13 @@
                     <li class="menu-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
                         <a href="{{ route('products.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-list-ul"></i>
-                            <div class="text-truncate">List View</div>
+                            <div class="text-truncate">{{ __('messages.list_view') }}</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('products.gallery') ? 'active' : '' }}">
                         <a href="{{ route('products.gallery') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-grid-alt"></i>
-                            <div class="text-truncate">Gallery View</div>
+                            <div class="text-truncate">{{ __('messages.gallery_view') }}</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('products.by-category') ? 'active' : '' }}">

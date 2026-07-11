@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Sales Report')
 
 @section('content')
@@ -6,7 +6,7 @@
     {{-- ── Page Header ── --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Sales Report</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.sales_report') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -61,7 +61,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Status</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                         <select name="status" class="form-select form-select-sm">
                             <option value="">All Statuses</option>
                             @foreach (['Completed', 'Pending', 'Draft', 'Cancelled'] as $s)

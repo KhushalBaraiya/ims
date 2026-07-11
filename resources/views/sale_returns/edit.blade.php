@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Edit Sales Return — ' . $saleReturn->return_no)
 
 @section('content')

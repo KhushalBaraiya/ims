@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Sales Return — ' . $saleReturn->return_no)
+ï»¿@extends('layouts.admin')
+@section('title', 'Sales Return ï¿½ ' . $saleReturn->return_no)
 
 @section('content')
 
@@ -43,8 +43,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">Sale Return</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $saleReturn->return_no }}</span>
-                    <span>· {{ $saleReturn->customer->name ?? '—' }}</span>
-                    <span>· {{ $saleReturn->return_date }}</span>
+                    <span>ï¿½ {{ $saleReturn->customer->name ?? 'ï¿½' }}</span>
+                    <span>ï¿½ {{ $saleReturn->return_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -88,7 +88,7 @@
                                     <code>{{ $saleReturn->sale->invoice_no }}</code>
                                 </a>
                             @else
-                                <span class="text-muted">—</span>
+                                <span class="text-muted">ï¿½</span>
                             @endif
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
@@ -102,11 +102,11 @@
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">Reference No</span>
-                            <span class="small">{{ $saleReturn->reference_no ?: '—' }}</span>
+                            <span class="small">{{ $saleReturn->reference_no ?: 'ï¿½' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">Processed By</span>
-                            <span class="fw-semibold">{{ $saleReturn->user->name ?? '—' }}</span>
+                            <span class="fw-semibold">{{ $saleReturn->user->name ?? 'ï¿½' }}</span>
                         </li>
                         <li class="d-flex justify-content-between py-2">
                             <span class="text-muted small fw-semibold">Status</span>
@@ -257,7 +257,7 @@
                                                 class="text-muted fw-normal">{{ $item->product->unit_code ?? 'PCS' }}</small>
                                         </td>
                                         <td class="text-muted fst-italic small">
-                                            {{ $item->reason ?: '—' }}
+                                            {{ $item->reason ?: 'ï¿½' }}
                                         </td>
                                         <td class="text-end fw-bold">{{ format_currency($item->total_amount) }}</td>
                                     </tr>
@@ -286,7 +286,7 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <p class="text-muted small fw-semibold mb-1">Processed By</p>
-                            <p class="fw-bold mb-0">{{ $saleReturn->user->name ?? '—' }}</p>
+                            <p class="fw-bold mb-0">{{ $saleReturn->user->name ?? 'ï¿½' }}</p>
                         </div>
                         <div class="col-md-4">
                             <p class="text-muted small fw-semibold mb-1">Created At</p>

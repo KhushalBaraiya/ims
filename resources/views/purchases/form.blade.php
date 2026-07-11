@@ -1,4 +1,4 @@
-@csrf
+﻿@csrf
 @php
     $isReturned = isset($purchase) && $purchase->returns->isNotEmpty();
 @endphp
@@ -80,7 +80,7 @@
 
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-info-circle text-primary me-2"></i>Order Info</h6>
+                <h6 class="fw-semibold mb-0"><i class="bx bx-info-circle text-primary me-2"></i>{{ __("messages.order_info") }}</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
@@ -159,7 +159,7 @@
 
         <div class="card shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>Payment Details</h6>
+                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>{{ __("messages.payment_details") }}</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
@@ -213,7 +213,7 @@
 
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-search text-primary me-2"></i>Add Products to Order</h6>
+                <h6 class="fw-semibold mb-0"><i class="bx bx-search text-primary me-2"></i>{{ __("messages.add_products_to_order") }}</h6>
             </div>
             <div class="card-body p-4">
                 {{-- Products validation error --}}
@@ -228,7 +228,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
                         <input {{ $isReturned ? 'disabled' : '' }} class="form-control" id="productSearchInput"
-                            placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
+                            placeholder="{{ __('messages.type_product_sku_barcode') }}" type="text">
                     </div>
                     <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
                         id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
@@ -251,9 +251,9 @@
                         <tbody id="purchaseItemsContainer"></tbody>
                     </table>
                 </div>
-                <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center"
+                <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center w-100"
                     id="emptyTableMsg">
-                    <i class="bx bx-package mb-2" style="font-size:2.5rem;opacity:.3;"></i>
+                    <i class="bx bx-package mb-2 d-block mx-auto" style="font-size:2.5rem;opacity:.3;"></i>
                     <p class="small mb-0">No products added yet. Search above to add products.</p>
                 </div>
             </div>
@@ -263,7 +263,7 @@
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0">Order Notes</h6>
+                        <h6 class="fw-semibold mb-0">{{ __("messages.order_notes") }}</h6>
                     </div>
                     <div class="card-body p-3">
                         <textarea {{ $isReturned ? 'disabled' : '' }} class="form-control" name="notes"
@@ -274,7 +274,7 @@
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0">Calculation Summary</h6>
+                        <h6 class="fw-semibold mb-0">{{ __("messages.calculation_summary") }}</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between border-bottom py-2">
@@ -604,10 +604,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                style="width:28px;height:28px;padding:0;">
-                                            <i class="bx bx-trash" style="font-size:13px;"></i>
-                                        </button>`}
+                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                    style="width:28px;height:28px;padding:0;">
+                                                <i class="bx bx-trash" style="font-size:13px;"></i>
+                                            </button>`}
                     </td>
                 </tr>`);
                 rowCount++;

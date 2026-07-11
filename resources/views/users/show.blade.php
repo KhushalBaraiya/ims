@@ -47,7 +47,7 @@
                     @if ($user->phone)
                         <span>· {{ $user->phone }}</span>
                     @endif
-                    <span>· {{ $user->roles->pluck('name')->implode(', ') ?: 'No Role' }}</span>
+                    <span>· {{ $user->roles->pluck('name')->implode(', ') ?: '{{ __("messages.role") }}' }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -97,7 +97,7 @@
                                 <p class="text-muted mb-1 small"><i class="bx bx-phone me-1"></i>{{ $user->phone }}</p>
                             @endif
                             <span class="badge bg-label-primary">
-                                {{ $user->roles->pluck('name')->implode(', ') ?: 'No Role' }}
+                                {{ $user->roles->pluck('name')->implode(', ') ?: '{{ __("messages.role") }}' }}
                             </span>
                         </div>
                     </div>

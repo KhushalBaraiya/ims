@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', 'Reports')
 
 @section('content')
@@ -113,7 +113,7 @@
                             <i class="bx bx-cart-alt text-white" style="font-size:1.6rem;"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fw-bold mb-1">Sales Report</h5>
+                            <h5 class="fw-bold mb-1">{{ __('messages.sales_report') }}</h5>
                             <p class="text-muted small mb-3">Invoices, totals, payment status by date range &amp; customer.
                             </p>
                             <div class="d-flex gap-2 flex-wrap">
@@ -144,7 +144,7 @@
                             <i class="bx bx-cart-download text-white" style="font-size:1.6rem;"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fw-bold mb-1">Purchase Report</h5>
+                            <h5 class="fw-bold mb-1">{{ __('messages.purchase_report') }}</h5>
                             <p class="text-muted small mb-3">Purchase orders, supplier-wise spending by date range.</p>
                             <div class="d-flex gap-2 flex-wrap">
                                 <span class="badge bg-label-info">Date Filter</span>

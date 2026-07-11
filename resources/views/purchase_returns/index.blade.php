@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+ï»¿@extends('layouts.admin')
 @section('title', __('messages.purchase_returns'))
 
 @section('content')
@@ -20,7 +20,7 @@
             </button>
             @can('purchase_returns.delete')
                 <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
                 </button>
             @endcan
             @can('purchase_returns.create')
@@ -284,7 +284,7 @@
                 }
             });
 
-            // Filters toggle — persist state
+            // Filters toggle ï¿½ persist state
             let filtersOpen = localStorage.getItem('pur_returns_filters_open') === 'true';
             if (filtersOpen) {
                 $('#filtersCard').removeClass('d-none');
@@ -361,13 +361,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: 'Delete ' + ids.length + ' return(s)?',
+                    title: '{{ __("messages.confirm_delete") }}',
                     text: 'Stock will be reversed for Completed returns. This cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete all!',
+                    confirmButtonText: '{{ __("messages.yes_delete") }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -381,7 +381,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: 'Deleted!',
+                                            title: '{{ __("messages.deleted_title") }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.sale_returns'))
 
 @section('content')
@@ -20,7 +20,7 @@
             </button>
             @can('sale_returns.delete')
                 <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                    <i class="bx bx-trash me-1"></i> Delete Multiples
+                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
                 </button>
             @endcan
             @can('sale_returns.create')
@@ -136,9 +136,9 @@
                                 value="{{ request('end_date') }}">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">Status</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select name="status" class="form-select form-select-sm">
-                                <option value="">All Status</option>
+                                <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>
                                     Completed</option>
                                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending
@@ -354,13 +354,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: 'Delete ' + ids.length + ' return(s)?',
+                    title: '{{ __("messages.confirm_delete") }}',
                     text: 'Stock will be reversed for Completed returns. This cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete all!',
+                    confirmButtonText: '{{ __("messages.yes_delete") }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -374,7 +374,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: 'Deleted!',
+                                            title: '{{ __("messages.deleted_title") }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'

@@ -1,10 +1,10 @@
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white py-3 border-bottom">
-        <h6 class="mb-0 fw-semibold"><i class="bx bx-send me-2 text-primary"></i>Publish</h6>
+        <h6 class="mb-0 fw-semibold"><i class="bx bx-send me-2 text-primary"></i>{{ __('messages.publish') }}</h6>
     </div>
     <div class="card-body p-4">
         <div class="mb-4">
-            <label class="form-label fw-semibold d-block">Status</label>
+            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
             <div class="d-flex align-items-center gap-3">
                 <input type="hidden" name="status" value="inactive">
                 <div class="form-check form-switch mb-0">
