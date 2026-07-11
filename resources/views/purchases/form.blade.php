@@ -80,7 +80,8 @@
 
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-info-circle text-primary me-2"></i>{{ __("messages.order_info") }}</h6>
+                <h6 class="fw-semibold mb-0"><i
+                        class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.order_info') }}</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
@@ -133,7 +134,8 @@
                         value="{{ old('reference_no', $purchase->reference_no ?? '') }}">
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.status') }} <span
+                            class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('status') is-invalid @enderror" name="status" required>
                         <option value="">{{ __('messages.select_status') }}</option>
@@ -159,7 +161,8 @@
 
         <div class="card shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>{{ __("messages.payment_details") }}</h6>
+                <h6 class="fw-semibold mb-0"><i
+                        class="bx bx-credit-card text-success me-2"></i>{{ __('messages.payment_details') }}</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
@@ -194,7 +197,8 @@
                     @enderror
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span
+                            class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
                         name="paid_amount" required step="0.01" type="number"
@@ -213,7 +217,8 @@
 
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-search text-primary me-2"></i>{{ __("messages.add_products_to_order") }}</h6>
+                <h6 class="fw-semibold mb-0"><i
+                        class="bx bx-search text-primary me-2"></i>{{ __('messages.add_products_to_order') }}</h6>
             </div>
             <div class="card-body p-4">
                 {{-- Products validation error --}}
@@ -263,7 +268,7 @@
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0">{{ __("messages.order_notes") }}</h6>
+                        <h6 class="fw-semibold mb-0">{{ __('messages.order_notes') }}</h6>
                     </div>
                     <div class="card-body p-3">
                         <textarea {{ $isReturned ? 'disabled' : '' }} class="form-control" name="notes"
@@ -274,7 +279,7 @@
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0">{{ __("messages.calculation_summary") }}</h6>
+                        <h6 class="fw-semibold mb-0">{{ __('messages.calculation_summary') }}</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between border-bottom py-2">
@@ -604,10 +609,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                    style="width:28px;height:28px;padding:0;">
-                                                <i class="bx bx-trash" style="font-size:13px;"></i>
-                                            </button>`}
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                        style="width:28px;height:28px;padding:0;">
+                                                    <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                </button>`}
                     </td>
                 </tr>`);
                 rowCount++;
@@ -666,8 +671,3 @@
         });
     </script>
 @endpush
-
-
-
-
-

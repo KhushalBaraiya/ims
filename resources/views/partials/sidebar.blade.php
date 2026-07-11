@@ -76,14 +76,16 @@
                 <ul class="menu-sub">
                     @can('main_categories.view')
                         <li class="menu-item {{ request()->routeIs('main-categories.*') ? 'active' : '' }}">
-                            <a href="{{ route('main-categories.index') }}" class="menu-link">
+                            <a href="{{ route('main-categories.index') }}" class="menu-link sidebar-sub-link">
+                                <i class="sidebar-sub-icon bx bx-category"></i>
                                 <div class="text-truncate">{{ __('messages.menu_categories') }}</div>
                             </a>
                         </li>
                     @endcan
                     @can('sub_categories.view')
                         <li class="menu-item {{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
-                            <a href="{{ route('sub-categories.index') }}" class="menu-link">
+                            <a href="{{ route('sub-categories.index') }}" class="menu-link sidebar-sub-link">
+                                <i class="sidebar-sub-icon bx bx-sitemap"></i>
                                 <div class="text-truncate">{{ __('messages.menu_sub_categories') }}</div>
                             </a>
                         </li>
@@ -112,20 +114,20 @@
                 </a>
                 <ul class="menu-sub">
                     <li class="menu-item {{ request()->routeIs('products.index') ? 'active' : '' }}">
-                        <a href="{{ route('products.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                        <a href="{{ route('products.index') }}" class="menu-link sidebar-sub-link">
+                            <i class="sidebar-sub-icon bx bx-list-ul"></i>
                             <div class="text-truncate">{{ __('messages.list_view') }}</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('products.gallery') ? 'active' : '' }}">
-                        <a href="{{ route('products.gallery') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-grid-alt"></i>
+                        <a href="{{ route('products.gallery') }}" class="menu-link sidebar-sub-link">
+                            <i class="sidebar-sub-icon bx bx-grid-alt"></i>
                             <div class="text-truncate">{{ __('messages.gallery_view') }}</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('products.by-category') ? 'active' : '' }}">
-                        <a href="{{ route('products.by-category') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-category-alt"></i>
+                        <a href="{{ route('products.by-category') }}" class="menu-link sidebar-sub-link">
+                            <i class="sidebar-sub-icon bx bx-category-alt"></i>
                             <div class="text-truncate">{{ __('messages.prod_by_category') }}</div>
                         </a>
                     </li>
@@ -413,7 +415,8 @@
                     </div>
                 </li>
                 <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.show') }}">
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                        href="{{ route('profile.show') }}">
                         <i class="bx bx-user"></i>
                         {{ __('messages.profile') }}
                     </a>
@@ -450,7 +453,8 @@
     </ul>
 
     {{-- Hidden logout form kept for any legacy references --}}
-    <form id="sidebar-logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">@csrf</form>
+    <form id="sidebar-logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">@csrf
+    </form>
 
 </aside>
 
@@ -465,6 +469,36 @@
 
         .menu-header-text .bx {
             opacity: .65;
+        }
+
+        /* ── Sub-menu items — icon + label layout ───────────────── */
+        .sidebar-sub-link {
+            display: flex !important;
+            align-items: center;
+            gap: 0.5rem;
+            padding-left: 1.5rem !important;
+        }
+
+        .sidebar-sub-icon {
+            font-size: 1rem;
+            width: 18px;
+            flex-shrink: 0;
+            text-align: center;
+            opacity: 0.7;
+            color: inherit;
+        }
+
+        /* Remove default Sneat bullet from sub items */
+        .menu-sub .menu-item .menu-link:not(.sidebar-sub-link)::before,
+        .menu-sub .menu-item .sidebar-sub-link::before {
+            display: none !important;
+            content: none !important;
+        }
+
+        /* Active sub-item icon highlight */
+        .menu-sub .menu-item.active .sidebar-sub-icon {
+            opacity: 1;
+            color: #696cff;
         }
 
         /* ── User profile trigger ───────────────────────────────── */
@@ -541,6 +575,28 @@
         .sidebar-profile-dropdown .dropdown-item .bx {
             font-size: 1rem;
             opacity: .75;
+        }
+
+        /* ── Mobile menu toggle button ──────────────────────────── */
+        .layout-menu-toggle .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            transition: background .15s;
+            color: inherit;
+        }
+
+        .layout-menu-toggle .nav-link:hover {
+            background: rgba(105, 108, 255, .09);
+            color: #696cff;
+        }
+
+        .layout-menu-toggle .nav-link i {
+            font-size: 1.4rem;
+            line-height: 1;
         }
     </style>
 @endpush

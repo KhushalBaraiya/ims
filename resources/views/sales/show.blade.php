@@ -31,7 +31,7 @@
             </a>
         </div>
     </div>
-10*12
+    10*12
     {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
@@ -315,7 +315,8 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td class="fw-bold text-end" colspan="7">{{ __('messages.grand_total_label') }}</td>
+                                    <td class="fw-bold text-end" colspan="7">{{ __('messages.grand_total_label') }}
+                                    </td>
                                     <td class="fw-bold text-primary fs-6 text-end">
                                         {{ format_currency($sale->grand_total) }}
                                     </td>
@@ -369,14 +370,16 @@
                     @csrf
                     <div class="modal-body p-4">
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">{{ __('messages.invoice_no_short') }}</label>
+                            <label
+                                class="form-label text-muted small fw-bold">{{ __('messages.invoice_no_short') }}</label>
                             <input class="form-control bg-light fw-bold text-dark border-0" id="modal_invoice_no" readonly
                                 type="text">
                         </div>
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="bg-light rounded border p-3 text-center">
-                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}</div>
+                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}
+                                    </div>
                                     <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
@@ -385,14 +388,16 @@
                             <div class="col-6">
                                 <div class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-3 text-center"
                                     id="modal_due_box">
-                                    <div class="small fw-semibold text-danger mb-1" id="modal_due_label">{{ __('messages.balance_due_label') }}</div>
+                                    <div class="small fw-semibold text-danger mb-1" id="modal_due_label">
+                                        {{ __('messages.balance_due_label') }}</div>
                                     <div class="fw-bold fs-5 text-danger" id="modal_balance_due_text">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span
+                                    class="text-danger">*</span></label>
                             <input class="form-control form-control-lg fw-bold" id="modal_paid_amount" min="0"
                                 name="paid_amount" required step="0.01" type="number">
                         </div>
@@ -446,8 +451,7 @@
             });
 
             // -- Payment Modal ---------------------------------------------
-            $(document).on('click', '.btn-payment-modal', function(e) {
-                e.preventDefault();
+            $(document).on('click', '.btn-payment-modal', function() {
                 const btn = $(this);
                 const grandTotal = parseFloat(btn.data('grand-total')) || 0;
                 const paidAmount = parseFloat(btn.data('paid-amount')) || 0;
@@ -457,13 +461,11 @@
                 $('#modal_grand_total').val(grandTotal);
                 $('#modal_grand_total_text').text(sym + grandTotal.toFixed(2));
                 $('#modal_paid_amount').val(paidAmount.toFixed(2));
-                // Restore exact saved payment method; only fall back to Cash if truly blank
-                const pmSelect = $('#modal_payment_method');
-                pmSelect.val(paymentMethod || '');
+                $('#modal_payment_method').val(paymentMethod || 'Cash');
                 $('#paymentForm').attr('action', btn.data('action'));
 
                 updateModalDue();
-                $('#paymentModal').modal('show');
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('paymentModal')).show();
             });
 
             $('#modal_paid_amount').on('input change', updateModalDue);
@@ -520,8 +522,3 @@
         });
     </script>
 @endpush
-
-
-
-
-

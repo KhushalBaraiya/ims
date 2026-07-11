@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Purchase Order � ' . $purchase->purchase_no)
 
 @section('content')
@@ -112,7 +112,7 @@
                             @elseif ($purchase->status === 'ordered')
                                 <span class="badge bg-primary rounded-pill">{{ __('messages.ordered_badge') }}</span>
                             @elseif ($purchase->status === 'draft')
-                                <span class="badge bg-secondary text-dark">{{ __("messages.draft") }}</span>
+                                <span class="badge bg-secondary text-dark">{{ __('messages.draft') }}</span>
                             @else
                                 <span class="badge bg-danger rounded-pill">{{ $purchase->status }}</span>
                             @endif
@@ -300,7 +300,8 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td class="fw-bold text-end" colspan="7">{{ __('messages.grand_total_label') }}</td>
+                                    <td class="fw-bold text-end" colspan="7">{{ __('messages.grand_total_label') }}
+                                    </td>
                                     <td class="fw-bold text-primary fs-6 text-end">
                                         {{ format_currency($purchase->grand_total) }}</td>
                                 </tr>
@@ -357,33 +358,34 @@
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
-                        const form = document.getElementById('deleteForm');
-                        const formData = new FormData(form);
-                        fetch(form.action, {
-                            method: 'POST',
+                        const form = $('#deleteForm');
+                        $.ajax({
+                            url: form.attr('action'),
+                            type: 'POST',
+                            data: form.serialize(),
                             headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Accept': 'application/json'
                             },
-                            body: formData
-                        }).then(res => res.json()).then(data => {
-                            if (data.success) {
-                                showAdminToast(data.message, 'success');
-                                setTimeout(() => window.location.href =
-                                    "{{ route('purchases.index') }}", 1200);
-                            } else {
-                                showAdminToast(data.message ||
-                                    '{{ __('messages.error_occurred') }}', 'error');
+                            success: function(data) {
+                                if (data.success) {
+                                    showAdminToast(data.message, 'success');
+                                    setTimeout(() => window.location.href =
+                                        "{{ route('purchases.index') }}", 1200);
+                                } else {
+                                    showAdminToast(data.message ||
+                                        '{{ __('messages.error_occurred') }}',
+                                        'error');
+                                }
+                            },
+                            error: function(xhr) {
+                                const msg = xhr.responseJSON?.message ||
+                                    '{{ __('messages.error_occurred') }}';
+                                showAdminToast(msg, 'error');
                             }
-                        }).catch(() => showAdminToast('{{ __('messages.error_occurred') }}',
-                            'error'));
+                        });
                     }
                 });
             });
         });
     </script>
 @endpush
-
-
-
-

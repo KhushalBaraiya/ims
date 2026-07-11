@@ -19,7 +19,8 @@
                 <i class="bx bx-chevron-down" id="filtersChevron"></i>
             </button>
             @can('purchases.delete')
-                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button"><i class="bx bx-trash me-1"></i> {{ __("messages.delete_multiples") }}
+                <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button"><i class="bx bx-trash me-1"></i>
+                    {{ __('messages.delete_multiples') }}
                 </button>
             @endcan
             @can('purchases.create')
@@ -171,7 +172,7 @@
                             <th class="text-end">{{ __('messages.th_total') }}</th>
                             <th class="text-end">{{ __('messages.th_paid') }}</th>
                             <th class="text-end">{{ __('messages.th_due') }}</th>
-                            <th class="text-center">{{ __("messages.payment_status_label") }}</th>
+                            <th class="text-center">{{ __('messages.payment_status_label') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
                             <th class="no-sort text-center">{{ __('messages.th_actions') }}</th>
                         </tr>
@@ -195,22 +196,25 @@
                                 </td>
                                 <td class="text-center">
                                     @if ($purchase->payment_status === 'Paid')
-                                        <span class="badge rounded-pill bg-success">{{ __("messages.paid") }}</span>
+                                        <span class="badge rounded-pill bg-success">{{ __('messages.paid') }}</span>
                                     @elseif($purchase->payment_status === 'Partial')
-                                        <span class="badge rounded-pill bg-warning text-dark">{{ __("messages.partial") }}</span>
+                                        <span
+                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.partial') }}</span>
                                     @else
-                                        <span class="badge rounded-pill bg-danger">{{ __("messages.unpaid") }}</span>
+                                        <span class="badge rounded-pill bg-danger">{{ __('messages.unpaid') }}</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     @if ($purchase->status === 'received')
-                                        <span class="badge rounded-pill bg-success">{{ __("messages.received") }}</span>
+                                        <span class="badge rounded-pill bg-success">{{ __('messages.received') }}</span>
                                     @elseif($purchase->status === 'pending')
-                                        <span class="badge rounded-pill bg-warning text-dark">{{ __("messages.pending") }}</span>
+                                        <span
+                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.pending') }}</span>
                                     @elseif($purchase->status === 'ordered')
-                                        <span class="badge rounded-pill bg-primary">{{ __("messages.ordered") }}</span>
+                                        <span class="badge rounded-pill bg-primary">{{ __('messages.ordered') }}</span>
                                     @elseif($purchase->status === 'draft')
-                                        <span class="badge rounded-pill bg-secondary text-dark">{{ __("messages.draft") }}</span>
+                                        <span
+                                            class="badge rounded-pill bg-secondary text-dark">{{ __('messages.draft') }}</span>
                                     @else
                                         <span class="badge rounded-pill bg-danger">{{ $purchase->status }}</span>
                                     @endif
@@ -250,16 +254,17 @@
                                             @endif
                                         @endif
                                         @can('purchases.update')
-                                            <a class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action btn-payment-modal"
+                                            <button type="button"
+                                                class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action btn-payment-modal"
                                                 data-action="{{ route('purchases.update-payment', $purchase->id) }}"
                                                 data-due-amount="{{ $purchase->due_amount }}"
                                                 data-grand-total="{{ $purchase->grand_total }}"
                                                 data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
                                                 data-paid-amount="{{ $purchase->paid_amount }}"
-                                                data-payment-method="{{ $purchase->payment_method }}" href="#"
+                                                data-payment-method="{{ $purchase->payment_method }}"
                                                 style="width:30px;height:30px;padding:0;" title="Payment">
                                                 <i class="bx bx-credit-card" style="font-size:1rem;"></i>
-                                            </a>
+                                            </button>
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
                                                 href="{{ route('purchases.edit', $purchase->id) }}"
                                                 style="width:30px;height:30px;padding:0;" title="{{ __('messages.edit') }}">
@@ -310,7 +315,8 @@
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="bg-light rounded border p-3 text-center">
-                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}</div>
+                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}
+                                    </div>
                                     <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                     <input id="modal_grand_total" type="hidden">
@@ -326,7 +332,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span
+                                    class="text-danger">*</span></label>
                             <input class="form-control form-control-lg fw-bold" id="modal_paid_amount" min="0"
                                 name="paid_amount" required step="0.01" type="number">
                         </div>
@@ -465,13 +472,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
+                    title: '{{ __('messages.confirm_delete') }}',
                     text: 'Stock will be reversed for Received orders. This cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -485,7 +492,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -506,29 +513,22 @@
             });
 
             // -- Payment Modal Event Handler ------------------------------
-            $(document).on('click', '.btn-payment-modal', function(e) {
-                e.preventDefault();
+            $(document).on('click', '.btn-payment-modal', function() {
                 const btn = $(this);
-                const id = btn.data('id');
                 const no = btn.data('no');
                 const grandTotal = parseFloat(btn.data('grand-total')) || 0;
                 const paidAmount = parseFloat(btn.data('paid-amount')) || 0;
                 const paymentMethod = btn.data('payment-method') || 'Cash';
-                const action = btn.data('action');
 
                 $('#modal_purchase_no').val(no);
                 $('#modal_grand_total').val(grandTotal);
                 $('#modal_grand_total_text').text(sym + grandTotal.toFixed(2));
                 $('#modal_paid_amount').val(paidAmount.toFixed(2));
-                // Restore exact saved payment method; only fall back to Cash if truly blank
-                const pmSelect = $('#modal_payment_method');
-                pmSelect.val(paymentMethod || '');
-                $('#paymentForm').attr('action', action);
+                $('#modal_payment_method').val(paymentMethod || 'Cash');
+                $('#paymentForm').attr('action', btn.data('action'));
 
                 updateModalDue();
-                const modalEl = document.getElementById('paymentModal');
-                const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                bsModal.show();
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('paymentModal')).show();
             });
 
             $('#modal_paid_amount').on('input change', updateModalDue);
@@ -591,6 +591,3 @@
         });
     </script>
 @endpush
-
-
-
