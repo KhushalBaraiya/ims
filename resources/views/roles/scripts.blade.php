@@ -18,7 +18,7 @@
                 .replace(/^-|-$/g, '');
         }
 
-        if (displayNameInput && nameInput && !nameInput.readOnly) {
+        if (displayNameInput && nameInput) {
             displayNameInput.addEventListener('input', function() {
                 nameInput.value = toSlug(this.value);
             });
