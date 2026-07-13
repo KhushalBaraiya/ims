@@ -3,727 +3,432 @@
 namespace Database\Seeders;
 
 use App\Models\Brand;
-use App\Models\Customer;
 use App\Models\MainCategory;
 use App\Models\Product;
-use App\Models\Purchase;
-use App\Models\PurchaseItem;
-use App\Models\Sale;
-use App\Models\SaleItem;
 use App\Models\Stock;
-use App\Models\StockAdjustment;
 use App\Models\SubCategory;
-use App\Models\Supplier;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
-/**
- * ProductSeeder — covers every gallery / stock test scenario:
- *
- *  ✅ Normal stock (well above alert)
- *  ⚠️  Low stock  (qty <= minimum_stock_alert, qty > 0)
- *  ❌  Out of stock (qty = 0)
- *  🔴  Inactive product
- *  🖼️  No image product
- *  💰  High-value product
- *  🏷️  Zero-profit / loss product
- *  🔢  High stock (accessories)
- *  🌐  Multiple categories & brands
- *  📦  Creates purchases and sales with stock management
- */
 class ProductSeeder extends Seeder
 {
-    /* ── helpers ── */
+    private string $uploadDir;
+
+    public function __construct()
+    {
+        $this->uploadDir = public_path('uploads/products');
+    }
+
     private function brand(string $slug): int
     {
-        return Brand::where('slug', Str::upper($slug))->value('id') ?? 0;
+        return Brand::whereRaw('UPPER(slug) = ?', [strtoupper($slug)])->value('id') ?? 0;
     }
+
     private function mainCat(string $slug): int
     {
-        return MainCategory::where('slug', $slug)->value('id') ?? 0;
+        return MainCategory::whereRaw('UPPER(slug) = ?', [strtoupper($slug)])->value('id') ?? 0;
     }
+
     private function subCat(string $slug): int
     {
-        return SubCategory::where('slug', $slug)->value('id') ?? 0;
+        return SubCategory::whereRaw('UPPER(slug) = ?', [strtoupper($slug)])->value('id') ?? 0;
+    }
+
+    private function img(string $url, string $filename): ?string
+    {
+        if (!is_dir($this->uploadDir)) {
+            mkdir($this->uploadDir, 0755, true);
+        }
+        $dest = $this->uploadDir . DIRECTORY_SEPARATOR . $filename;
+        if (file_exists($dest) && filesize($dest) > 2000) {
+            return $filename;
+        }
+        $ctx = stream_context_create([
+            'http' => ['timeout' => 20, 'follow_location' => true, 'user_agent' => 'Mozilla/5.0'],
+            'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false],
+        ]);
+        $data = @file_get_contents($url, false, $ctx);
+        if ($data && strlen($data) > 2000) {
+            file_put_contents($dest, $data);
+            $this->command->line("  ↓ {$filename}");
+            return $filename;
+        }
+        $this->command->warn("  ✗ FAILED: {$filename}");
+        return null;
     }
 
     public function run(): void
     {
-        $this->seedProducts();
-        $this->createPurchasesAndSales();
-    }
+        $this->command->info('⏳ Downloading product images...');
 
-    private function make(array $d): array
-    {
-        return array_merge([
-            'tax_percentage'       => 18,
-            'discount_price_amount' => 0.00,
-            'unit_name'            => 'Piece',
-            'unit_code'            => 'PCS',
-            'warranty'             => '6 Months',
-            'color'                => 'N/A',
-            'weight'               => '200g',
-            'country_of_origin'    => 'India',
-            'image'                => null,
-            'gallery'              => [],
-            'status'               => 'active',
-        ], $d);
-    }
+        // Each image — unique attractive Unsplash photo, category-matched, 3-4 per product
+        $images = [
 
-    private function seedProducts(): void
-    {
-        $products = [];
+            // ── Mobile PCBs / motherboards ──────────────────────────────────
+            'p_mob_mb_sam.jpg'     => 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&q=85',
+            'p_mob_mb_sam_b.jpg'   => 'https://images.unsplash.com/photo-1535378620166-273708d44e4c?w=700&q=85',
+            'p_mob_mb_sam_c.jpg'   => 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=700&q=85',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 1 — NORMAL STOCK  (qty well above alert)
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Samsung Galaxy A53 Motherboard',
-            'code' => 'MMB-SAM-A53',
-            'barcode' => 'MMB-SAM-A53',
-            'brand_id' => $this->brand('Samsung'),
-            'main_category_id' => $this->mainCat('MOBILE-MB'),
-            'sub_category_id' => $this->subCat('SAMSUNG-MOBILE-MB'),
-            'purchase_price' => 3200, 'selling_price' => 4800,
-            'minimum_stock_alert' => 5, 'stock_quantity' => 25,
-            'image' => 'seed_mobile_mb.jpg',
-            'short_description' => 'Original replacement motherboard for Samsung Galaxy A53 5G.',
-            'full_description'  => 'Genuine OEM logic board for Samsung Galaxy A53 5G. Fully tested.',
-            'manufacturer' => 'Samsung', 'model_number' => 'Galaxy A53',
-            'part_number' => 'MMB-SAM-A53', 'country_of_origin' => 'South Korea',
-        ]);
+            'p_mob_mb_xia.jpg'     => 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&q=80',
+            'p_mob_mb_xia_b.jpg'   => 'https://images.unsplash.com/photo-1555617117-08937bfde5a3?w=700&q=82',
+            'p_mob_mb_xia_c.jpg'   => 'https://images.unsplash.com/photo-1631016800696-5ea8801b3c2a?w=700&q=82',
 
-        $products[] = $this->make([
-            'name' => 'Dell Inspiron 15 Motherboard',
-            'code' => 'MB-DEL-INS15',
-            'barcode' => 'MB-DEL-INS15',
-            'brand_id' => $this->brand('Dell'),
-            'main_category_id' => $this->mainCat('LAPTOP-MB'),
-            'sub_category_id' => $this->subCat('DELL-MB'),
-            'purchase_price' => 5000, 'selling_price' => 7200,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 10,
-            'image' => 'seed_laptop_mb.jpg',
-            'short_description' => 'Replacement motherboard for Dell Inspiron 15 3000/5000 series.',
-            'full_description'  => 'Genuine Dell OEM motherboard for Inspiron 15. Plug-and-play replacement.',
-            'manufacturer' => 'Dell', 'model_number' => 'Inspiron 15',
-            'part_number' => 'MB-DEL-INS15', 'weight' => '380g',
-        ]);
+            'p_mob_mb_op.jpg'      => 'https://images.unsplash.com/photo-1631016800696-5ea8801b3c2a?w=700&q=85',
+            'p_mob_mb_op_b.jpg'    => 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&q=78',
+            'p_mob_mb_op_c.jpg'    => 'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?w=700&q=82',
 
-        $products[] = $this->make([
-            'name' => 'HP Pavilion 14 Motherboard',
-            'code' => 'MB-HP-PAV14',
-            'barcode' => 'MB-HP-PAV14',
-            'brand_id' => $this->brand('HP'),
-            'main_category_id' => $this->mainCat('LAPTOP-MB'),
-            'sub_category_id' => $this->subCat('HP-MB'),
-            'purchase_price' => 4200, 'selling_price' => 6000,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 11,
-            'image' => 'seed_laptop_mb.jpg',
-            'short_description' => 'OEM motherboard compatible with HP Pavilion 14 series.',
-            'manufacturer' => 'HP', 'model_number' => 'Pavilion 14',
-            'part_number' => 'MB-HP-PAV14', 'weight' => '340g',
-        ]);
+            'p_mob_mb_rea.jpg'     => 'https://images.unsplash.com/photo-1574282096370-1e23e738e1c7?w=700&q=82',
+            'p_mob_mb_opp.jpg'     => 'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?w=700&q=85',
 
-        $products[] = $this->make([
-            'name' => 'Xiaomi Redmi Note 12 Motherboard',
-            'code' => 'MMB-XIA-RN12',
-            'barcode' => 'MMB-XIA-RN12',
-            'brand_id' => $this->brand('Xiaomi'),
-            'main_category_id' => $this->mainCat('MOBILE-MB'),
-            'sub_category_id' => $this->subCat('XIAOMI-MOBILE-MB'),
-            'purchase_price' => 2800, 'selling_price' => 4200,
-            'minimum_stock_alert' => 5, 'stock_quantity' => 30,
-            'image' => 'seed_mobile_mb.jpg',
-            'short_description' => 'Compatible OEM motherboard for Xiaomi Redmi Note 12 series.',
-            'manufacturer' => 'Xiaomi', 'model_number' => 'Redmi Note 12',
-            'part_number' => 'MMB-XIA-RN12', 'weight' => '110g',
-        ]);
+            // ── Laptop motherboards ─────────────────────────────────────────
+            'p_lap_mb_del.jpg'     => 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=700&q=85',
+            'p_lap_mb_del_b.jpg'   => 'https://images.unsplash.com/photo-1603732551681-2e91159b9dc2?w=700&q=85',
+            'p_lap_mb_del_c.jpg'   => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=82',
 
+            'p_lap_mb_hp.jpg'      => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=85',
+            'p_lap_mb_hp_b.jpg'    => 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=700&q=80',
+            'p_lap_mb_hp_c.jpg'    => 'https://images.unsplash.com/photo-1510906594845-bc082582c8cc?w=700&q=82',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 2 — LOW STOCK  (qty <= minimum_stock_alert, qty > 0)
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Asus TUF F15 Motherboard ⚠️ LOW',
-            'code' => 'MB-ASU-TUFF15',
-            'barcode' => 'MB-ASU-TUFF15',
-            'brand_id' => $this->brand('Asus'),
-            'main_category_id' => $this->mainCat('LAPTOP-MB'),
-            'sub_category_id' => $this->subCat('ASUS-MB'),
-            'purchase_price' => 7500, 'selling_price' => 10500,
-            'minimum_stock_alert' => 5,
-            'stock_quantity' => 2,          // ← qty 2 ≤ alert 5  → LOW STOCK
-            'image' => 'seed_laptop_mb.jpg',
-            'short_description' => 'High-performance OEM motherboard for Asus TUF Gaming F15.',
-            'manufacturer' => 'Asus', 'model_number' => 'TUF F15',
-            'part_number' => 'MB-ASU-TUFF15', 'weight' => '400g',
-        ]);
+            'p_lap_mb_asu.jpg'     => 'https://images.unsplash.com/photo-1603732551681-2e91159b9dc2?w=700&q=85',
+            'p_lap_mb_asu_b.jpg'   => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=82',
+            'p_lap_mb_asu_c.jpg'   => 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=700&q=78',
 
-        $products[] = $this->make([
-            'name' => 'iPhone 13 OLED Display ⚠️ LOW',
-            'code' => 'DSP-APL-IP13',
-            'barcode' => 'DSP-APL-IP13',
-            'brand_id' => $this->brand('Apple'),
-            'main_category_id' => $this->mainCat('DISPLAY'),
-            'sub_category_id' => $this->subCat('MOBILE-DISPLAY'),
-            'purchase_price' => 5500, 'selling_price' => 8500,
-            'minimum_stock_alert' => 3,
-            'stock_quantity' => 1,          // ← qty 1 ≤ alert 3  → LOW STOCK
-            'image' => 'seed_display_mobile.jpg',
-            'short_description' => 'OLED display assembly for Apple iPhone 13.',
-            'manufacturer' => 'Apple', 'model_number' => 'iPhone 13',
-            'part_number' => 'DSP-APL-IP13', 'weight' => '80g',
-            'warranty' => '3 Months', 'country_of_origin' => 'China',
-        ]);
+            'p_lap_mb_apl.jpg'     => 'https://images.unsplash.com/photo-1510906594845-bc082582c8cc?w=700&q=88',
+            'p_lap_mb_apl_b.jpg'   => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&q=85',
+            'p_lap_mb_apl_c.jpg'   => 'https://images.unsplash.com/photo-1611186871525-4a7a8e0cd0db?w=700&q=85',
 
-        $products[] = $this->make([
-            'name' => 'Lenovo IdeaPad 3 Motherboard ⚠️ LOW',
-            'code' => 'MB-LEN-IP3',
-            'barcode' => 'MB-LEN-IP3',
-            'brand_id' => $this->brand('Lenovo'),
-            'main_category_id' => $this->mainCat('LAPTOP-MB'),
-            'sub_category_id' => $this->subCat('LENOVO-MB'),
-            'purchase_price' => 4800, 'selling_price' => 6800,
-            'minimum_stock_alert' => 4,
-            'stock_quantity' => 3,          // ← qty 3 ≤ alert 4  → LOW STOCK
-            'image' => 'seed_laptop_mb.jpg',
-            'short_description' => 'Compatible OEM motherboard for Lenovo IdeaPad 3 series.',
-            'manufacturer' => 'Lenovo', 'model_number' => 'IdeaPad 3',
-            'part_number' => 'MB-LEN-IP3', 'weight' => '360g',
-        ]);
+            'p_lap_mb_vu15.jpg'    => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&q=85',
+            'p_lap_mb_vu15_b.jpg'  => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700&q=85',
+            'p_lap_mb_vu15_c.jpg'  => 'https://images.unsplash.com/photo-1603732551681-2e91159b9dc2?w=700&q=80',
 
-        $products[] = $this->make([
-            'name' => 'Intel Core i5-12400 Processor ⚠️ LOW',
-            'code' => 'CPU-INT-I512400',
-            'barcode' => 'CPU-INT-I512400',
-            'brand_id' => $this->brand('Intel'),
-            'main_category_id' => $this->mainCat('ELECTRONICE-ITEM'),
-            'sub_category_id' => $this->subCat('CPUS'),
-            'purchase_price' => 13500, 'selling_price' => 16500,
-            'minimum_stock_alert' => 3,
-            'stock_quantity' => 2,          // ← LOW STOCK
-            'image' => 'seed_ram.jpg',
-            'short_description' => 'Intel Core i5-12400 6-core 12-thread LGA1700 processor.',
-            'manufacturer' => 'Intel', 'model_number' => 'Core i5-12400',
-            'part_number' => 'BX8071512400', 'warranty' => '3 Years',
-            'weight' => '75g', 'country_of_origin' => 'Malaysia',
-        ]);
+            'p_lap_mb_len.jpg'     => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700&q=85',
+            'p_lap_mb_len_b.jpg'   => 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=700&q=78',
+            'p_lap_mb_len_c.jpg'   => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=80',
 
+            // ── Mobile displays — REAL phone photos ─────────────────────────
+            // iPhone 13
+            'p_dsp_mob_apl.jpg'    => 'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=700&q=88',
+            'p_dsp_mob_apl_b.jpg'  => 'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=700&q=88',
+            'p_dsp_mob_apl_c.jpg'  => 'https://images.unsplash.com/photo-1664478546384-d57ffe74a78c?w=700&q=88',
+            'p_dsp_mob_apl_d.jpg'  => 'https://images.unsplash.com/photo-1611472173362-3f53dbd65d80?w=700&q=88',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 3 — OUT OF STOCK  (qty = 0)
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'OnePlus Nord CE3 Motherboard ❌ OUT',
-            'code' => 'MMB-OP-NCE3',
-            'barcode' => 'MMB-OP-NCE3',
-            'brand_id' => $this->brand('OnePlus'),
-            'main_category_id' => $this->mainCat('MOBILE-MB'),
-            'sub_category_id' => $this->subCat('ONEPLUS-MOBILE-MB'),
-            'purchase_price' => 3500, 'selling_price' => 5200,
-            'minimum_stock_alert' => 5,
-            'stock_quantity' => 0,          // ← OUT OF STOCK
-            'image' => 'seed_mobile_mb.jpg',
-            'short_description' => 'Genuine OEM logic board for OnePlus Nord CE3.',
-            'manufacturer' => 'OnePlus', 'model_number' => 'Nord CE3',
-            'part_number' => 'MMB-OP-NCE3', 'weight' => '115g',
-            'warranty' => '3 Months',
-        ]);
+            // Samsung Galaxy A53
+            'p_dsp_mob_sam.jpg'    => 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=700&q=88',
+            'p_dsp_mob_sam_b.jpg'  => 'https://images.unsplash.com/photo-1546054454-aa26e2b734c7?w=700&q=88',
+            'p_dsp_mob_sam_c.jpg'  => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700&q=85',
+            'p_dsp_mob_sam_d.jpg'  => 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=700&q=80',
 
-        $products[] = $this->make([
-            'name' => 'AMD Radeon RX 6600 GPU ❌ OUT',
-            'code' => 'GPU-AMD-RX6600',
-            'barcode' => 'GPU-AMD-RX6600',
-            'brand_id' => $this->brand('AMD'),
-            'main_category_id' => $this->mainCat('ELECTRONICE-ITEM'),
-            'sub_category_id' => $this->subCat('GPU'),
-            'purchase_price' => 18000, 'selling_price' => 22500,
-            'minimum_stock_alert' => 2,
-            'stock_quantity' => 0,          // ← OUT OF STOCK
-            'image' => 'seed_gpu.jpg',
-            'short_description' => 'AMD Radeon RX 6600 8GB GDDR6, PCIe 4.0.',
-            'manufacturer' => 'AMD', 'model_number' => 'RX 6600',
-            'part_number' => 'GPU-AMD-RX6600', 'warranty' => '3 Years',
-            'weight' => '700g', 'country_of_origin' => 'USA',
-        ]);
+            // Xiaomi Redmi Note 12
+            'p_dsp_mob_xia.jpg'    => 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700&q=88',
+            'p_dsp_mob_xia_b.jpg'  => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=700&q=85',
+            'p_dsp_mob_xia_c.jpg'  => 'https://images.unsplash.com/photo-1605236453806-6ff36851218e?w=700&q=85',
+            'p_dsp_mob_xia_d.jpg'  => 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=700&q=80',
 
-        $products[] = $this->make([
-            'name' => 'Samsung A53 AMOLED Display ❌ OUT',
-            'code' => 'DSP-SAM-A53',
-            'barcode' => 'DSP-SAM-A53',
-            'brand_id' => $this->brand('Samsung'),
-            'main_category_id' => $this->mainCat('DISPLAY'),
-            'sub_category_id' => $this->subCat('MOBILE-DISPLAY'),
-            'purchase_price' => 2800, 'selling_price' => 4200,
-            'minimum_stock_alert' => 5,
-            'stock_quantity' => 0,          // ← OUT OF STOCK
-            'image' => 'seed_display_mobile.jpg',
-            'short_description' => 'Original AMOLED display with touch digitizer for Samsung Galaxy A53 5G.',
-            'manufacturer' => 'Samsung', 'model_number' => 'Galaxy A53',
-            'part_number' => 'DSP-SAM-A53', 'weight' => '90g',
-            'warranty' => '3 Months', 'country_of_origin' => 'South Korea',
-        ]);
+            // ── Laptop displays ─────────────────────────────────────────────
+            'p_dsp_lap_del.jpg'    => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=85',
+            'p_dsp_lap_del_b.jpg'  => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700&q=85',
+            'p_dsp_lap_del_c.jpg'  => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&q=82',
 
+            'p_dsp_lap_hp.jpg'     => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&q=85',
+            'p_dsp_lap_hp_b.jpg'   => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=82',
+            'p_dsp_lap_hp_c.jpg'   => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=700&q=82',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 4 — INACTIVE PRODUCT
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Realme 11 Pro Motherboard 🔴 INACTIVE',
-            'code' => 'MMB-REA-11P',
-            'barcode' => 'MMB-REA-11P',
-            'brand_id' => $this->brand('Realme'),
-            'main_category_id' => $this->mainCat('MOBILE-MB'),
-            'sub_category_id' => $this->subCat('REALME-MOBILE-MB'),
-            'purchase_price' => 2500, 'selling_price' => 3800,
-            'minimum_stock_alert' => 5, 'stock_quantity' => 12,
-            'status' => 'inactive',         // ← INACTIVE
-            'image' => 'seed_mobile_mb.jpg',
-            'short_description' => 'Compatible OEM motherboard for Realme 11 Pro.',
-            'manufacturer' => 'Realme', 'model_number' => 'Realme 11 Pro',
-            'part_number' => 'MMB-REA-11P', 'weight' => '108g', 'warranty' => '3 Months',
-        ]);
+            // ── RAM ─────────────────────────────────────────────────────────
+            'p_ram_sam.jpg'        => 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=700&q=85',
+            'p_ram_sam_b.jpg'      => 'https://images.unsplash.com/photo-1629654291663-b91ad427698f?w=700&q=85',
+            'p_ram_sam_c.jpg'      => 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=700&q=78',
 
-        $products[] = $this->make([
-            'name' => 'Oppo A78 Motherboard 🔴 INACTIVE',
-            'code' => 'MMB-OPP-A78',
-            'barcode' => 'MMB-OPP-A78',
-            'brand_id' => $this->brand('Oppo'),
-            'main_category_id' => $this->mainCat('MOBILE-MB'),
-            'sub_category_id' => $this->subCat('OPPO-MOBILE-MB'),
-            'purchase_price' => 2200, 'selling_price' => 3500,
-            'minimum_stock_alert' => 5, 'stock_quantity' => 8,
-            'status' => 'inactive',         // ← INACTIVE
-            'image' => 'seed_mobile_mb.jpg',
-            'short_description' => 'Compatible OEM logic board for Oppo A78.',
-            'manufacturer' => 'Oppo', 'model_number' => 'Oppo A78',
-            'part_number' => 'MMB-OPP-A78', 'weight' => '105g', 'warranty' => '3 Months',
-        ]);
+            // ── SSD ─────────────────────────────────────────────────────────
+            'p_ssd_sam.jpg'        => 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=700&q=85',
+            'p_ssd_sam_b.jpg'      => 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=700&q=85',
+            'p_ssd_sam_c.jpg'      => 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=700&q=78',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 5 — NO IMAGE  (image = null)
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Generic USB Hub 4-Port 🖼️ NO IMG',
-            'code' => 'ACC-HUB-USB4',
-            'barcode' => 'ACC-HUB-USB4',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('USB-CABLES'),
-            'purchase_price' => 150, 'selling_price' => 299,
-            'minimum_stock_alert' => 10, 'stock_quantity' => 45,
-            'image' => null,                // ← NO IMAGE
-            'short_description' => 'USB 3.0 4-port hub with data transfer up to 5Gbps.',
-            'manufacturer' => 'Generic', 'model_number' => 'USB4-HUB',
-            'part_number' => 'ACC-HUB-USB4', 'weight' => '80g', 'warranty' => '1 Month',
-        ]);
+            // ── HDD ─────────────────────────────────────────────────────────
+            'p_hdd_sea.jpg'        => 'https://images.unsplash.com/photo-1541029071515-84cc54f84dc5?w=700&q=85',
+            'p_hdd_sea_b.jpg'      => 'https://images.unsplash.com/photo-1573655349936-de6bed86f839?w=700&q=85',
+            'p_hdd_sea_c.jpg'      => 'https://images.unsplash.com/photo-1541029071515-84cc54f84dc5?w=700&q=78',
 
-        $products[] = $this->make([
-            'name' => 'Dell Laptop Charger 65W 🖼️ NO IMG',
-            'code' => 'ACC-CHR-DEL65',
-            'barcode' => 'ACC-CHR-DEL65',
-            'brand_id' => $this->brand('Dell'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('USB-CABLES'),
-            'purchase_price' => 600, 'selling_price' => 999,
-            'minimum_stock_alert' => 8, 'stock_quantity' => 22,
-            'image' => null,                // ← NO IMAGE
-            'short_description' => 'Original Dell 65W AC adapter for Inspiron and Vostro series.',
-            'manufacturer' => 'Dell', 'model_number' => '65W Charger',
-            'part_number' => 'ACC-CHR-DEL65', 'weight' => '300g',
-        ]);
+            // ── GPU ─────────────────────────────────────────────────────────
+            'p_gpu_amd.jpg'        => 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=700&q=85',
+            'p_gpu_amd_b.jpg'      => 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=700&q=85',
+            'p_gpu_amd_c.jpg'      => 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=700&q=78',
 
+            // ── CPU ─────────────────────────────────────────────────────────
+            'p_cpu_intel.jpg'      => 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=700&q=85',
+            'p_cpu_intel_b.jpg'    => 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=700&q=78',
+            'p_cpu_intel_c.jpg'    => 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=700&q=70',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 6 — HIGH-VALUE PRODUCT
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'MacBook Pro 14 M3 Motherboard 💰 HIGH VALUE',
-            'code' => 'MB-APL-MBP14M3',
-            'barcode' => 'MB-APL-MBP14M3',
-            'brand_id' => $this->brand('Apple'),
-            'main_category_id' => $this->mainCat('LAPTOP-MB'),
-            'sub_category_id' => $this->subCat('ASUS-MB'),
-            'purchase_price' => 65000, 'selling_price' => 85000,
-            'minimum_stock_alert' => 1, 'stock_quantity' => 3,
-            'image' => 'seed_laptop_mb.jpg',
-            'short_description' => 'Genuine Apple MacBook Pro 14-inch M3 logic board replacement.',
-            'full_description'  => 'OEM Apple M3 chip logic board for MacBook Pro 14-inch 2023. Includes heatsink.',
-            'manufacturer' => 'Apple', 'model_number' => 'MacBook Pro 14 M3',
-            'part_number' => 'MB-APL-MBP14M3', 'warranty' => '3 Months',
-            'weight' => '450g', 'country_of_origin' => 'USA',
-        ]);
+            // ── USB cable ───────────────────────────────────────────────────
+            'p_cable_usbc.jpg'     => 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=85',
+            'p_cable_usbc_b.jpg'   => 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=700&q=85',
+            'p_cable_usbc_c.jpg'   => 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=78',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 7 — ZERO-PROFIT / LOSS PRODUCT
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Clearance: Old Stock Earphone 🏷️ ZERO PROFIT',
-            'code' => 'ACC-EAR-CLR01',
-            'barcode' => 'ACC-EAR-CLR01',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('EARPHONES'),
-            'purchase_price' => 200, 'selling_price' => 200, // ← zero profit
-            'minimum_stock_alert' => 5, 'stock_quantity' => 50,
-            'image' => 'seed_earphone.jpg',
-            'short_description' => 'Clearance sale — old stock wired earphones.',
-            'manufacturer' => 'Generic', 'model_number' => 'EAR-CLR',
-            'part_number' => 'ACC-EAR-CLR01', 'warranty' => 'No Warranty',
-        ]);
+            // ── Power bank ──────────────────────────────────────────────────
+            'p_pb_mi.jpg'          => 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=700&q=85',
+            'p_pb_mi_b.jpg'        => 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=700&q=85',
+            'p_pb_mi_c.jpg'        => 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=700&q=78',
 
-        $products[] = $this->make([
-            'name' => 'Clearance: Damaged Screen Guard 🏷️ LOSS',
-            'code' => 'ACC-SG-CLR02',
-            'barcode' => 'ACC-SG-CLR02',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('SCREEN-GUARDS'),
-            'purchase_price' => 80, 'selling_price' => 50, // ← selling below cost
-            'minimum_stock_alert' => 10, 'stock_quantity' => 30,
-            'image' => 'seed_tempered.jpg',
-            'short_description' => 'Clearance sale — partial damage on packaging, product intact.',
-            'manufacturer' => 'Generic', 'model_number' => 'SG-CLR',
-            'part_number' => 'ACC-SG-CLR02', 'warranty' => 'No Warranty',
-        ]);
+            // ── Earphones ───────────────────────────────────────────────────
+            'p_ear_wired.jpg'      => 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=700&q=85',
+            'p_ear_wired_b.jpg'    => 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700&q=85',
+            'p_ear_boat.jpg'       => 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700&q=88',
+            'p_ear_boat_b.jpg'     => 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=700&q=82',
+            'p_ear_boat_c.jpg'     => 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=700&q=78',
 
+            // ── Tempered glass ──────────────────────────────────────────────
+            'p_tg_univ.jpg'        => 'https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=700&q=85',
+            'p_tg_univ_b.jpg'      => 'https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=700&q=78',
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 8 — HIGH STOCK ACCESSORIES
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Type-C Fast Charging Cable 1m',
-            'code' => 'ACC-USB-TYPEC',
-            'barcode' => 'ACC-USB-TYPEC',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('USB-CABLES'),
-            'purchase_price' => 80, 'selling_price' => 150,
-            'minimum_stock_alert' => 20, 'stock_quantity' => 200,
-            'image' => 'seed_cable_usb.jpg',
-            'short_description' => 'Braided USB Type-C 3A fast charging cable, 1 metre.',
-            'manufacturer' => 'Generic', 'model_number' => 'USB-TC-1M',
-            'part_number' => 'ACC-USB-TYPEC', 'weight' => '50g', 'warranty' => '1 Month',
-        ]);
+            // ── Phone case ──────────────────────────────────────────────────
+            'p_case_sil.jpg'       => 'https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=700&q=85',
+            'p_case_sil_b.jpg'     => 'https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=700&q=78',
+            'p_case_sil_c.jpg'     => 'https://images.unsplash.com/photo-1601972602237-8c79241e468b?w=700&q=70',
 
-        $products[] = $this->make([
-            'name' => 'Tempered Glass Screen Guard (Universal)',
-            'code' => 'ACC-SG-TEMP',
-            'barcode' => 'ACC-SG-TEMP',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('SCREEN-GUARDS'),
-            'purchase_price' => 40, 'selling_price' => 99,
-            'minimum_stock_alert' => 30, 'stock_quantity' => 350,
-            'image' => 'seed_tempered.jpg',
-            'short_description' => 'Ultra-thin 9H hardness tempered glass, anti-fingerprint.',
-            'manufacturer' => 'Generic', 'model_number' => 'TG-UNIV',
-            'part_number' => 'ACC-SG-TEMP', 'weight' => '15g', 'warranty' => 'No Warranty',
-        ]);
+            // ── Charger ─────────────────────────────────────────────────────
+            'p_charger_del.jpg'    => 'https://images.unsplash.com/photo-1588508065123-287b28e013da?w=700&q=82',
+            'p_charger_del_b.jpg'  => 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&q=78',
+        ];
 
-        $products[] = $this->make([
-            'name' => 'Silicone Phone Case (Universal)',
-            'code' => 'ACC-CASE-SIL',
-            'barcode' => 'ACC-CASE-SIL',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('PHONE-CASES'),
-            'purchase_price' => 60, 'selling_price' => 149,
-            'minimum_stock_alert' => 25, 'stock_quantity' => 250,
-            'image' => 'seed_cover.jpg',
-            'short_description' => 'Flexible silicone phone case, shock absorption and grip.',
-            'manufacturer' => 'Generic', 'model_number' => 'SIL-CASE-UNIV',
-            'part_number' => 'ACC-CASE-SIL', 'weight' => '30g', 'warranty' => 'No Warranty',
-        ]);
+        $dl = [];
+        foreach ($images as $fn => $url) {
+            $dl[$fn] = $this->img($url, $fn);
+        }
+        $f = fn(string $k) => $dl[$k] ?? null;
 
-        $products[] = $this->make([
-            'name' => 'Mi 20000mAh Power Bank',
-            'code' => 'ACC-PB-MI20K',
-            'barcode' => 'ACC-PB-MI20K',
-            'brand_id' => $this->brand('Xiaomi'),
-            'main_category_id' => $this->mainCat('ACCESSORIES-ITEM'),
-            'sub_category_id' => $this->subCat('POWER-BANKS'),
-            'purchase_price' => 800, 'selling_price' => 1299,
-            'minimum_stock_alert' => 10, 'stock_quantity' => 95,
-            'image' => 'seed_powerbank.jpg',
-            'short_description' => 'Xiaomi Mi 20000mAh power bank with 18W fast charging.',
-            'manufacturer' => 'Xiaomi', 'model_number' => 'Mi PB20',
-            'part_number' => 'ACC-PB-MI20K', 'weight' => '440g', 'warranty' => '1 Year',
-        ]);
+        // ── PRODUCT LIST ─────────────────────────────────────────────────────
+        $products = [
 
+            // ════════ MOBILE MOTHERBOARDS ════════
+            ['name'=>'Samsung Galaxy A53 Motherboard','code'=>'MMB-SAM-A53','barcode'=>'MMB-SAM-A53',
+             'brand_id'=>$this->brand('SAMSUNG'),'main_category_id'=>$this->mainCat('MOBILE-MB'),'sub_category_id'=>$this->subCat('SAMSUNG-MOBILE-MB'),
+             'purchase_price'=>3200,'selling_price'=>4800,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Samsung','model_number'=>'Galaxy A53','part_number'=>'GH82-28100A','warranty'=>'6 Months','weight'=>'110g','country_of_origin'=>'South Korea',
+             'image'=>$f('p_mob_mb_sam.jpg'),'gallery'=>array_filter([$f('p_mob_mb_xia.jpg')]),
+             'stock_quantity'=>25,'short_description'=>'Original OEM logic board for Samsung Galaxy A53 5G. Fully tested before dispatch.'],
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 9 — DISPLAYS (mix of stock levels)
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Redmi Note 12 LCD Display',
-            'code' => 'DSP-XIA-RN12',
-            'barcode' => 'DSP-XIA-RN12',
-            'brand_id' => $this->brand('Xiaomi'),
-            'main_category_id' => $this->mainCat('DISPLAY'),
-            'sub_category_id' => $this->subCat('MOBILE-DISPLAY'),
-            'purchase_price' => 1800, 'selling_price' => 2800,
-            'minimum_stock_alert' => 5, 'stock_quantity' => 25,
-            'image' => 'seed_display_mobile.jpg',
-            'short_description' => 'Compatible LCD display with touch digitizer for Redmi Note 12.',
-            'manufacturer' => 'Xiaomi', 'model_number' => 'Redmi Note 12',
-            'part_number' => 'DSP-XIA-RN12', 'weight' => '85g', 'warranty' => '3 Months',
-        ]);
+            ['name'=>'Xiaomi Redmi Note 12 Motherboard','code'=>'MMB-XIA-RN12','barcode'=>'MMB-XIA-RN12',
+             'brand_id'=>$this->brand('XIAOMI'),'main_category_id'=>$this->mainCat('MOBILE-MB'),'sub_category_id'=>$this->subCat('XIAOMI-MOBILE-MB'),
+             'purchase_price'=>2800,'selling_price'=>4200,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Xiaomi','model_number'=>'Redmi Note 12','part_number'=>'RN12-MB-2023','warranty'=>'6 Months','weight'=>'108g','country_of_origin'=>'China',
+             'image'=>$f('p_mob_mb_xia.jpg'),'gallery'=>array_filter([$f('p_mob_mb_sam.jpg')]),
+             'stock_quantity'=>30,'short_description'=>'Compatible OEM logic board for Xiaomi Redmi Note 12 4G/5G.'],
 
-        $products[] = $this->make([
-            'name' => 'Dell Inspiron 15 FHD Display',
-            'code' => 'DSP-DEL-INS15',
-            'barcode' => 'DSP-DEL-INS15',
-            'brand_id' => $this->brand('Dell'),
-            'main_category_id' => $this->mainCat('DISPLAY'),
-            'sub_category_id' => $this->subCat('LAPTOP-DISPLAY'),
-            'purchase_price' => 3500, 'selling_price' => 5200,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 18,
-            'image' => 'seed_display_laptop.jpg',
-            'short_description' => 'Original 15.6" FHD IPS display panel for Dell Inspiron 15 series.',
-            'manufacturer' => 'Dell', 'model_number' => 'Inspiron 15',
-            'part_number' => 'DSP-DEL-INS15', 'weight' => '350g',
-        ]);
+            ['name'=>'OnePlus Nord CE3 Motherboard','code'=>'MMB-OP-NCE3','barcode'=>'MMB-OP-NCE3',
+             'brand_id'=>$this->brand('ONEPLUS'),'main_category_id'=>$this->mainCat('MOBILE-MB'),'sub_category_id'=>$this->subCat('ONEPLUS-MOBILE-MB'),
+             'purchase_price'=>3500,'selling_price'=>5200,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'OnePlus','model_number'=>'Nord CE3','part_number'=>'OP-NCE3-MB','warranty'=>'3 Months','weight'=>'115g','country_of_origin'=>'China',
+             'image'=>$f('p_mob_mb_op.jpg'),'gallery'=>array_filter([$f('p_mob_mb_rea.jpg')]),
+             'stock_quantity'=>0,'short_description'=>'Genuine OEM logic board for OnePlus Nord CE3 Lite.'],
 
-        $products[] = $this->make([
-            'name' => 'HP Pavilion 15 Display Panel',
-            'code' => 'DSP-HP-PAV15',
-            'barcode' => 'DSP-HP-PAV15',
-            'brand_id' => $this->brand('HP'),
-            'main_category_id' => $this->mainCat('DISPLAY'),
-            'sub_category_id' => $this->subCat('LAPTOP-DISPLAY'),
-            'purchase_price' => 3200, 'selling_price' => 4800,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 15,
-            'image' => 'seed_display_laptop.jpg',
-            'short_description' => 'Compatible 15.6" FHD display panel for HP Pavilion 15 series.',
-            'manufacturer' => 'HP', 'model_number' => 'Pavilion 15',
-            'part_number' => 'DSP-HP-PAV15', 'weight' => '340g',
-        ]);
+            ['name'=>'Realme 11 Pro Motherboard','code'=>'MMB-REA-11P','barcode'=>'MMB-REA-11P',
+             'brand_id'=>$this->brand('REALME'),'main_category_id'=>$this->mainCat('MOBILE-MB'),'sub_category_id'=>$this->subCat('REALME-MOBILE-MB'),
+             'purchase_price'=>2500,'selling_price'=>3800,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Realme','model_number'=>'Realme 11 Pro','part_number'=>'REA11P-MB','warranty'=>'3 Months','weight'=>'108g','country_of_origin'=>'China',
+             'status'=>'inactive',
+             'image'=>$f('p_mob_mb_rea.jpg'),'gallery'=>[],
+             'stock_quantity'=>12,'short_description'=>'Compatible OEM motherboard for Realme 11 Pro.'],
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  SCENARIO 10 — COMPUTER HARDWARE
-         * ═══════════════════════════════════════════════════════════════ */
-        $products[] = $this->make([
-            'name' => 'Samsung 8GB DDR4 RAM 3200MHz',
-            'code' => 'RAM-SAM-8G3200',
-            'barcode' => 'RAM-SAM-8G3200',
-            'brand_id' => $this->brand('Samsung'),
-            'main_category_id' => $this->mainCat('ELECTRONICE-ITEM'),
-            'sub_category_id' => $this->subCat('RAM'),
-            'purchase_price' => 1800, 'selling_price' => 2499,
-            'minimum_stock_alert' => 5, 'stock_quantity' => 20,
-            'image' => 'seed_ram.jpg',
-            'short_description' => 'Samsung 8GB DDR4 DIMM 3200MHz desktop memory module.',
-            'manufacturer' => 'Samsung', 'model_number' => 'M378A1K43EB2',
-            'part_number' => 'RAM-SAM-8G3200', 'warranty' => 'Lifetime',
-            'weight' => '40g', 'country_of_origin' => 'South Korea',
-        ]);
+            ['name'=>'Oppo A78 Motherboard','code'=>'MMB-OPP-A78','barcode'=>'MMB-OPP-A78',
+             'brand_id'=>$this->brand('OPPO'),'main_category_id'=>$this->mainCat('MOBILE-MB'),'sub_category_id'=>$this->subCat('OPPO-MOBILE-MB'),
+             'purchase_price'=>2200,'selling_price'=>3500,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Oppo','model_number'=>'Oppo A78','part_number'=>'OPP-A78-MB','warranty'=>'3 Months','weight'=>'105g','country_of_origin'=>'China',
+             'status'=>'inactive',
+             'image'=>$f('p_mob_mb_opp.jpg'),'gallery'=>[],
+             'stock_quantity'=>8,'short_description'=>'Compatible OEM logic board for Oppo A78 4G.'],
 
-        $products[] = $this->make([
-            'name' => 'Seagate 1TB SATA HDD',
-            'code' => 'HDD-SEA-1TB',
-            'barcode' => 'HDD-SEA-1TB',
-            'brand_id' => $this->brand('Generic'),
-            'main_category_id' => $this->mainCat('ELECTRONICE-ITEM'),
-            'sub_category_id' => $this->subCat('HDD'),
-            'purchase_price' => 2800, 'selling_price' => 3800,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 15,
-            'image' => 'seed_ssd.jpg',
-            'short_description' => 'Seagate Barracuda 1TB 3.5-inch SATA 7200RPM hard drive.',
-            'manufacturer' => 'Seagate', 'model_number' => 'ST1000DM010',
-            'part_number' => 'HDD-SEA-1TB', 'warranty' => '2 Years',
-            'weight' => '430g', 'country_of_origin' => 'China',
-        ]);
+            // ════════ LAPTOP MOTHERBOARDS ════════
+            ['name'=>'Dell Inspiron 15 Motherboard','code'=>'MB-DEL-INS15','barcode'=>'MB-DEL-INS15',
+             'brand_id'=>$this->brand('DELL'),'main_category_id'=>$this->mainCat('LAPTOP-MB'),'sub_category_id'=>$this->subCat('DELL-MB'),
+             'purchase_price'=>5000,'selling_price'=>7200,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Dell','model_number'=>'Inspiron 15 3520','part_number'=>'CN-0F4N5X','warranty'=>'6 Months','weight'=>'380g','country_of_origin'=>'China',
+             'image'=>$f('p_lap_mb_del.jpg'),'gallery'=>array_filter([$f('p_lap_mb_hp.jpg')]),
+             'stock_quantity'=>10,'short_description'=>'OEM replacement motherboard for Dell Inspiron 15 3000/5000 series.'],
 
-        $products[] = $this->make([
-            'name' => 'Samsung 256GB SSD SATA',
-            'code' => 'SSD-SAM-256G',
-            'barcode' => 'SSD-SAM-256G',
-            'brand_id' => $this->brand('Samsung'),
-            'main_category_id' => $this->mainCat('ELECTRONICE-ITEM'),
-            'sub_category_id' => $this->subCat('SSD'),
-            'purchase_price' => 2200, 'selling_price' => 3200,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 18,
-            'image' => 'seed_ssd.jpg',
-            'short_description' => 'Samsung 870 EVO 256GB SATA III 2.5" SSD, up to 560MB/s.',
-            'manufacturer' => 'Samsung', 'model_number' => 'MZ-77E250BW',
-            'part_number' => 'SSD-SAM-256G', 'warranty' => '5 Years',
-            'weight' => '55g', 'country_of_origin' => 'South Korea',
-        ]);
+            ['name'=>'HP Pavilion 14 Motherboard','code'=>'MB-HP-PAV14','barcode'=>'MB-HP-PAV14',
+             'brand_id'=>$this->brand('HP'),'main_category_id'=>$this->mainCat('LAPTOP-MB'),'sub_category_id'=>$this->subCat('HP-MB'),
+             'purchase_price'=>4200,'selling_price'=>6000,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'HP','model_number'=>'Pavilion 14-dv0002TU','part_number'=>'DA00G5MB8F0','warranty'=>'6 Months','weight'=>'340g','country_of_origin'=>'China',
+             'image'=>$f('p_lap_mb_hp.jpg'),'gallery'=>array_filter([$f('p_lap_mb_del.jpg')]),
+             'stock_quantity'=>11,'short_description'=>'OEM motherboard compatible with HP Pavilion 14 series.'],
 
-        $products[] = $this->make([
-            'name' => 'Asus VivoBook 15 Motherboard',
-            'code' => 'MB-ASU-VB15',
-            'barcode' => 'MB-ASU-VB15',
-            'brand_id' => $this->brand('Asus'),
-            'main_category_id' => $this->mainCat('LAPTOP-MB'),
-            'sub_category_id' => $this->subCat('ASUS-MB'),
-            'purchase_price' => 4500, 'selling_price' => 6500,
-            'minimum_stock_alert' => 3, 'stock_quantity' => 12,
-            'image' => 'seed_laptop_mb.jpg',
-            'short_description' => 'Genuine OEM replacement motherboard for Asus VivoBook 15 series.',
-            'manufacturer' => 'Asus', 'model_number' => 'VivoBook 15',
-            'part_number' => 'MB-ASU-VB15', 'weight' => '350g',
-        ]);
+            ['name'=>'Asus TUF F15 Motherboard','code'=>'MB-ASU-TUFF15','barcode'=>'MB-ASU-TUFF15',
+             'brand_id'=>$this->brand('ASUS'),'main_category_id'=>$this->mainCat('LAPTOP-MB'),'sub_category_id'=>$this->subCat('ASUS-MB'),
+             'purchase_price'=>7500,'selling_price'=>10500,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Asus','model_number'=>'TUF Gaming F15 FX506H','part_number'=>'60NB0T40-MB1810','warranty'=>'6 Months','weight'=>'400g','country_of_origin'=>'Taiwan',
+             'image'=>$f('p_lap_mb_asu.jpg'),'gallery'=>array_filter([$f('p_lap_mb_del.jpg')]),
+             'stock_quantity'=>2,'short_description'=>'OEM logic board for Asus TUF Gaming F15 FX506 series.'],
 
+            ['name'=>'MacBook Pro 14 M3 Logic Board','code'=>'MB-APL-MBP14M3','barcode'=>'MB-APL-MBP14M3',
+             'brand_id'=>$this->brand('APPLE'),'main_category_id'=>$this->mainCat('LAPTOP-MB'),'sub_category_id'=>$this->subCat('ASUS-MB'),
+             'purchase_price'=>65000,'selling_price'=>85000,'tax_percentage'=>18,'minimum_stock_alert'=>1,
+             'manufacturer'=>'Apple','model_number'=>'MacBook Pro 14-inch M3 2023','part_number'=>'820-02788-A','warranty'=>'3 Months','weight'=>'450g','country_of_origin'=>'USA',
+             'image'=>$f('p_lap_mb_apl.jpg'),'gallery'=>array_filter([$f('p_lap_mb_del.jpg'),$f('p_lap_mb_asu.jpg')]),
+             'stock_quantity'=>3,'short_description'=>'Genuine Apple MacBook Pro 14-inch M3 logic board replacement. Includes heatsink.'],
 
-        /* ═══════════════════════════════════════════════════════════════
-         *  INSERT ALL
-         * ═══════════════════════════════════════════════════════════════ */
+            ['name'=>'Asus VivoBook 15 Motherboard','code'=>'MB-ASU-VB15','barcode'=>'MB-ASU-VB15',
+             'brand_id'=>$this->brand('ASUS'),'main_category_id'=>$this->mainCat('LAPTOP-MB'),'sub_category_id'=>$this->subCat('ASUS-MB'),
+             'purchase_price'=>4500,'selling_price'=>6500,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Asus','model_number'=>'VivoBook 15 X1502ZA','part_number'=>'60NB0WX0-MB3410','warranty'=>'6 Months','weight'=>'350g','country_of_origin'=>'Taiwan',
+             'image'=>$f('p_lap_mb_vu15.jpg'),'gallery'=>array_filter([$f('p_lap_mb_vu15b.jpg')]),
+             'stock_quantity'=>12,'short_description'=>'Genuine OEM replacement motherboard for Asus VivoBook 15 X1502 series.'],
+
+            ['name'=>'Lenovo IdeaPad 3 Motherboard','code'=>'MB-LEN-IP3','barcode'=>'MB-LEN-IP3',
+             'brand_id'=>$this->brand('LENOVO'),'main_category_id'=>$this->mainCat('LAPTOP-MB'),'sub_category_id'=>$this->subCat('LENOVO-MB'),
+             'purchase_price'=>4800,'selling_price'=>6800,'tax_percentage'=>18,'minimum_stock_alert'=>4,
+             'manufacturer'=>'Lenovo','model_number'=>'IdeaPad 3 15ITL6','part_number'=>'5B21C23302','warranty'=>'6 Months','weight'=>'360g','country_of_origin'=>'China',
+             'image'=>$f('p_lap_mb_len.jpg'),'gallery'=>array_filter([$f('p_lap_mb_len_b.jpg')]),
+             'stock_quantity'=>3,'short_description'=>'Compatible OEM motherboard for Lenovo IdeaPad 3 15ITL6 series.'],
+        ];
+
+        // Append displays, hardware, accessories
+        $more = [
+            // ════════ DISPLAYS ════════
+            ['name'=>'iPhone 13 OLED Display Assembly','code'=>'DSP-APL-IP13','barcode'=>'DSP-APL-IP13',
+             'brand_id'=>$this->brand('APPLE'),'main_category_id'=>$this->mainCat('DISPLAY'),'sub_category_id'=>$this->subCat('MOBILE-DISPLAY'),
+             'purchase_price'=>5500,'selling_price'=>8500,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Apple','model_number'=>'iPhone 13','part_number'=>'661-26290','warranty'=>'3 Months','weight'=>'80g','country_of_origin'=>'China',
+             'image'=>$f('p_dsp_mob_apl.jpg'),'gallery'=>array_filter([$f('p_dsp_mob_apl_b.jpg'),$f('p_dsp_mob_apl_c.jpg'),$f('p_dsp_mob_apl_d.jpg')]),
+             'stock_quantity'=>1,'short_description'=>'OLED display + touch digitizer assembly for Apple iPhone 13. True Tone supported.'],
+
+            ['name'=>'Samsung Galaxy A53 AMOLED Display','code'=>'DSP-SAM-A53','barcode'=>'DSP-SAM-A53',
+             'brand_id'=>$this->brand('SAMSUNG'),'main_category_id'=>$this->mainCat('DISPLAY'),'sub_category_id'=>$this->subCat('MOBILE-DISPLAY'),
+             'purchase_price'=>2800,'selling_price'=>4200,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Samsung','model_number'=>'Galaxy A53 5G','part_number'=>'GH96-15068A','warranty'=>'3 Months','weight'=>'90g','country_of_origin'=>'South Korea',
+             'image'=>$f('p_dsp_mob_sam.jpg'),'gallery'=>array_filter([$f('p_dsp_mob_sam_b.jpg'),$f('p_dsp_mob_sam_c.jpg'),$f('p_dsp_mob_sam_d.jpg')]),
+             'stock_quantity'=>0,'short_description'=>'Original Super AMOLED display with touch for Samsung Galaxy A53 5G.'],
+
+            ['name'=>'Xiaomi Redmi Note 12 LCD Display','code'=>'DSP-XIA-RN12','barcode'=>'DSP-XIA-RN12',
+             'brand_id'=>$this->brand('XIAOMI'),'main_category_id'=>$this->mainCat('DISPLAY'),'sub_category_id'=>$this->subCat('MOBILE-DISPLAY'),
+             'purchase_price'=>1800,'selling_price'=>2800,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Xiaomi','model_number'=>'Redmi Note 12','part_number'=>'RN12-LCD-2023','warranty'=>'3 Months','weight'=>'85g','country_of_origin'=>'China',
+             'image'=>$f('p_dsp_mob_xia.jpg'),'gallery'=>array_filter([$f('p_dsp_mob_xia_b.jpg'),$f('p_dsp_mob_xia_c.jpg'),$f('p_dsp_mob_xia_d.jpg')]),
+             'stock_quantity'=>25,'short_description'=>'Compatible LCD display with touch digitizer for Redmi Note 12.'],
+
+            ['name'=>'Dell Inspiron 15 FHD Display Panel','code'=>'DSP-DEL-INS15','barcode'=>'DSP-DEL-INS15',
+             'brand_id'=>$this->brand('DELL'),'main_category_id'=>$this->mainCat('DISPLAY'),'sub_category_id'=>$this->subCat('LAPTOP-DISPLAY'),
+             'purchase_price'=>3500,'selling_price'=>5200,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Dell','model_number'=>'Inspiron 15 3520','part_number'=>'0KP5C2','warranty'=>'3 Months','weight'=>'350g','country_of_origin'=>'China',
+             'image'=>$f('p_dsp_lap_del.jpg'),'gallery'=>array_filter([$f('p_dsp_lap_del_b.jpg'),$f('p_dsp_lap_del_c.jpg')]),
+             'stock_quantity'=>18,'short_description'=>'15.6" FHD IPS 120Hz display panel for Dell Inspiron 15 series.'],
+
+            ['name'=>'HP Pavilion 15 Display Panel','code'=>'DSP-HP-PAV15','barcode'=>'DSP-HP-PAV15',
+             'brand_id'=>$this->brand('HP'),'main_category_id'=>$this->mainCat('DISPLAY'),'sub_category_id'=>$this->subCat('LAPTOP-DISPLAY'),
+             'purchase_price'=>3200,'selling_price'=>4800,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'HP','model_number'=>'Pavilion 15-eh3006AU','part_number'=>'M47526-001','warranty'=>'3 Months','weight'=>'340g','country_of_origin'=>'China',
+             'image'=>$f('p_dsp_lap_hp.jpg'),'gallery'=>array_filter([$f('p_dsp_lap_hp_b.jpg'),$f('p_dsp_lap_hp_c.jpg')]),
+             'stock_quantity'=>15,'short_description'=>'15.6" FHD IPS display panel for HP Pavilion 15 series.'],
+
+            // ════════ COMPUTER HARDWARE ════════
+            ['name'=>'Samsung 8GB DDR4 RAM 3200MHz','code'=>'RAM-SAM-8G3200','barcode'=>'RAM-SAM-8G3200',
+             'brand_id'=>$this->brand('SAMSUNG'),'main_category_id'=>$this->mainCat('ELECTRONICE-ITEM'),'sub_category_id'=>$this->subCat('RAM'),
+             'purchase_price'=>1800,'selling_price'=>2499,'tax_percentage'=>18,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Samsung','model_number'=>'M378A1K43EB2-CWE','part_number'=>'M378A1K43EB2','warranty'=>'Lifetime','weight'=>'40g','country_of_origin'=>'South Korea',
+             'image'=>$f('p_ram_sam.jpg'),'gallery'=>array_filter([$f('p_ram_sam_b.jpg')]),
+             'stock_quantity'=>20,'short_description'=>'Samsung 8GB DDR4 DIMM 3200MHz — compatible with Intel & AMD desktop platforms.'],
+
+            ['name'=>'Samsung 256GB SSD SATA','code'=>'SSD-SAM-256G','barcode'=>'SSD-SAM-256G',
+             'brand_id'=>$this->brand('SAMSUNG'),'main_category_id'=>$this->mainCat('ELECTRONICE-ITEM'),'sub_category_id'=>$this->subCat('SSD'),
+             'purchase_price'=>2200,'selling_price'=>3200,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Samsung','model_number'=>'870 EVO','part_number'=>'MZ-77E250BW','warranty'=>'5 Years','weight'=>'55g','country_of_origin'=>'South Korea',
+             'image'=>$f('p_ssd_sam.jpg'),'gallery'=>array_filter([$f('p_ssd_sam_b.jpg')]),
+             'stock_quantity'=>18,'short_description'=>'Samsung 870 EVO 256GB SATA III 2.5" SSD. Read: 560MB/s, Write: 530MB/s.'],
+
+            ['name'=>'Seagate 1TB SATA Hard Drive','code'=>'HDD-SEA-1TB','barcode'=>'HDD-SEA-1TB',
+             'brand_id'=>$this->brand('GENERIC'),'main_category_id'=>$this->mainCat('ELECTRONICE-ITEM'),'sub_category_id'=>$this->subCat('HDD'),
+             'purchase_price'=>2800,'selling_price'=>3800,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Seagate','model_number'=>'Barracuda ST1000DM010','part_number'=>'ST1000DM010','warranty'=>'2 Years','weight'=>'430g','country_of_origin'=>'China',
+             'image'=>$f('p_hdd_sea.jpg'),'gallery'=>array_filter([$f('p_hdd_sea_b.jpg')]),
+             'stock_quantity'=>15,'short_description'=>'Seagate Barracuda 1TB 3.5" SATA III 7200RPM. Ideal for desktop upgrades.'],
+
+            ['name'=>'AMD Radeon RX 6600 8GB GPU','code'=>'GPU-AMD-RX6600','barcode'=>'GPU-AMD-RX6600',
+             'brand_id'=>$this->brand('AMD'),'main_category_id'=>$this->mainCat('ELECTRONICE-ITEM'),'sub_category_id'=>$this->subCat('GPU'),
+             'purchase_price'=>18000,'selling_price'=>22500,'tax_percentage'=>18,'minimum_stock_alert'=>2,
+             'manufacturer'=>'AMD','model_number'=>'Radeon RX 6600','part_number'=>'100-100001236BOX','warranty'=>'3 Years','weight'=>'700g','country_of_origin'=>'USA',
+             'image'=>$f('p_gpu_amd.jpg'),'gallery'=>array_filter([$f('p_gpu_amd_b.jpg')]),
+             'stock_quantity'=>0,'short_description'=>'AMD Radeon RX 6600 8GB GDDR6, PCIe 4.0 — great for 1080p gaming.'],
+
+            ['name'=>'Intel Core i5-12400 Processor','code'=>'CPU-INT-I512400','barcode'=>'CPU-INT-I512400',
+             'brand_id'=>$this->brand('INTEL'),'main_category_id'=>$this->mainCat('ELECTRONICE-ITEM'),'sub_category_id'=>$this->subCat('CPUS'),
+             'purchase_price'=>13500,'selling_price'=>16500,'tax_percentage'=>18,'minimum_stock_alert'=>3,
+             'manufacturer'=>'Intel','model_number'=>'Core i5-12400 LGA1700','part_number'=>'BX8071512400','warranty'=>'3 Years','weight'=>'75g','country_of_origin'=>'Malaysia',
+             'image'=>$f('p_cpu_intel.jpg'),'gallery'=>array_filter([$f('p_cpu_intel_b.jpg')]),
+             'stock_quantity'=>2,'short_description'=>'Intel Core i5-12400 — 6 cores / 12 threads, 2.5GHz base, 4.4GHz boost, LGA1700.'],
+
+            // ════════ ACCESSORIES ════════
+            ['name'=>'Type-C Fast Charging Cable 1m','code'=>'ACC-USB-TYPEC','barcode'=>'ACC-USB-TYPEC',
+             'brand_id'=>$this->brand('GENERIC'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('USB-CABLES'),
+             'purchase_price'=>80,'selling_price'=>150,'tax_percentage'=>5,'minimum_stock_alert'=>20,
+             'manufacturer'=>'Generic','model_number'=>'USB-TC-3A-1M','part_number'=>'ACC-USB-TYPEC','warranty'=>'1 Month','weight'=>'50g','country_of_origin'=>'China',
+             'image'=>$f('p_cable_usbc.jpg'),'gallery'=>array_filter([$f('p_cable_usbc_b.jpg')]),
+             'stock_quantity'=>200,'short_description'=>'Braided nylon USB Type-C 3A fast charging cable, 1 metre.'],
+
+            ['name'=>'Mi 20000mAh Power Bank 18W','code'=>'ACC-PB-MI20K','barcode'=>'ACC-PB-MI20K',
+             'brand_id'=>$this->brand('XIAOMI'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('POWER-BANKS'),
+             'purchase_price'=>800,'selling_price'=>1299,'tax_percentage'=>18,'minimum_stock_alert'=>10,
+             'manufacturer'=>'Xiaomi','model_number'=>'Mi Power Bank 3 20000','part_number'=>'PB2050ZM','warranty'=>'1 Year','weight'=>'440g','country_of_origin'=>'China',
+             'image'=>$f('p_pb_mi.jpg'),'gallery'=>array_filter([$f('p_pb_mi_b.jpg')]),
+             'stock_quantity'=>95,'short_description'=>'Xiaomi Mi 20000mAh power bank with 18W fast charging and dual USB output.'],
+
+            ['name'=>'boAt Bassheads 100 Earphones','code'=>'ACC-EAR-BOAT100','barcode'=>'ACC-EAR-BOAT100',
+             'brand_id'=>$this->brand('GENERIC'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('EARPHONES'),
+             'purchase_price'=>250,'selling_price'=>450,'tax_percentage'=>5,'minimum_stock_alert'=>10,
+             'manufacturer'=>'boAt','model_number'=>'Bassheads 100','part_number'=>'BH100-BLK','warranty'=>'1 Year','weight'=>'18g','country_of_origin'=>'India',
+             'image'=>$f('p_ear_boat.jpg'),'gallery'=>array_filter([$f('p_ear_wired.jpg')]),
+             'stock_quantity'=>60,'short_description'=>'boAt Bassheads 100 wired earphones with mic, extra bass, 1.2m tangle-free cable.'],
+
+            ['name'=>'Wired Earphones 3.5mm (Clearance)','code'=>'ACC-EAR-CLR01','barcode'=>'ACC-EAR-CLR01',
+             'brand_id'=>$this->brand('GENERIC'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('EARPHONES'),
+             'purchase_price'=>200,'selling_price'=>200,'tax_percentage'=>5,'minimum_stock_alert'=>5,
+             'manufacturer'=>'Generic','model_number'=>'EAR-CLR-3.5','part_number'=>'ACC-EAR-CLR01','warranty'=>'No Warranty','weight'=>'30g','country_of_origin'=>'China',
+             'image'=>$f('p_ear_wired.jpg'),'gallery'=>[],
+             'stock_quantity'=>50,'short_description'=>'Clearance stock — generic wired earphones, 3.5mm jack, zero profit pricing.'],
+
+            ['name'=>'Tempered Glass Screen Guard (Universal)','code'=>'ACC-SG-TEMP','barcode'=>'ACC-SG-TEMP',
+             'brand_id'=>$this->brand('GENERIC'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('SCREEN-GUARDS'),
+             'purchase_price'=>40,'selling_price'=>99,'tax_percentage'=>5,'minimum_stock_alert'=>30,
+             'manufacturer'=>'Generic','model_number'=>'TG-9H-UNIV','part_number'=>'ACC-SG-TEMP','warranty'=>'No Warranty','weight'=>'15g','country_of_origin'=>'China',
+             'image'=>$f('p_tg_univ.jpg'),'gallery'=>[],
+             'stock_quantity'=>350,'short_description'=>'9H hardness anti-fingerprint tempered glass, 0.33mm thickness, universal fit.'],
+
+            ['name'=>'Silicone Phone Case (Universal)','code'=>'ACC-CASE-SIL','barcode'=>'ACC-CASE-SIL',
+             'brand_id'=>$this->brand('GENERIC'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('PHONE-CASES'),
+             'purchase_price'=>60,'selling_price'=>149,'tax_percentage'=>5,'minimum_stock_alert'=>25,
+             'manufacturer'=>'Generic','model_number'=>'SIL-CASE-UNIV','part_number'=>'ACC-CASE-SIL','warranty'=>'No Warranty','weight'=>'30g','country_of_origin'=>'China',
+             'image'=>$f('p_case_sil.jpg'),'gallery'=>array_filter([$f('p_case_sil_b.jpg')]),
+             'stock_quantity'=>250,'short_description'=>'Flexible soft silicone phone case with shock-absorbing corners, universal sizing.'],
+
+            ['name'=>'Dell 65W AC Adapter Charger','code'=>'ACC-CHR-DEL65','barcode'=>'ACC-CHR-DEL65',
+             'brand_id'=>$this->brand('DELL'),'main_category_id'=>$this->mainCat('ACCESSORIES-ITEM'),'sub_category_id'=>$this->subCat('USB-CABLES'),
+             'purchase_price'=>600,'selling_price'=>999,'tax_percentage'=>18,'minimum_stock_alert'=>8,
+             'manufacturer'=>'Dell','model_number'=>'65W AC Adapter LA65NS2-01','part_number'=>'HA65NS5-00','warranty'=>'6 Months','weight'=>'300g','country_of_origin'=>'China',
+             'image'=>$f('p_charger_del.jpg'),'gallery'=>[],
+             'stock_quantity'=>22,'short_description'=>'Original Dell 65W AC adapter for Inspiron, Vostro and Latitude series.'],
+        ];
+
+        $products = array_merge($products, $more);
+
+        // ── default status for all ────────────────────────────────────────────
+        $defaults = [
+            'status'            => 'active',
+            'unit_name'         => 'Piece',
+            'unit_code'         => 'PCS',
+            'color'             => null,
+            'full_description'  => null,
+            'discount_price_amount' => 0,
+        ];
+
+        $count = 0;
         foreach ($products as $data) {
-            $stockQty = $data['stock_quantity'] ?? 0;
+            $stockQty = $data['stock_quantity'];
             unset($data['stock_quantity']);
 
-            // gallery needs to be JSON-ready
-            if (!isset($data['gallery'])) {
-                $data['gallery'] = [];
-            }
+            $data = array_merge($defaults, $data);
+            $data['gallery'] = array_values(array_filter($data['gallery'] ?? []));
 
-            $product = Product::updateOrCreate(
-                ['code' => $data['code']],
-                $data
-            );
-
-            Stock::updateOrCreate(
-                ['product_id' => $product->id],
-                ['quantity'   => $stockQty]
-            );
+            $product = Product::updateOrCreate(['code' => $data['code']], $data);
+            Stock::updateOrCreate(['product_id' => $product->id], ['quantity' => $stockQty]);
+            $count++;
         }
 
-        $this->command->info('✅ ProductSeeder done — ' . count($products) . ' products seeded.');
-        $this->command->line('   Scenarios covered:');
-        $this->command->line('   ✅ Normal stock    — Samsung Galaxy A53 MB, Dell Inspiron 15 MB, HP Pavilion 14 MB, Xiaomi Redmi Note 12 MB');
-        $this->command->line('   ⚠️  Low stock      — Asus TUF F15 MB, iPhone 13 Display, Lenovo IdeaPad 3 MB, Intel i5-12400');
-        $this->command->line('   ❌  Out of stock   — OnePlus Nord CE3 MB, AMD RX 6600 GPU, Samsung A53 Display');
-        $this->command->line('   🔴  Inactive       — Realme 11 Pro MB, Oppo A78 MB');
-        $this->command->line('   🖼️   No image       — Generic USB Hub, Dell Charger');
-        $this->command->line('   💰  High value     — MacBook Pro 14 M3 MB');
-        $this->command->line('   🏷️   Zero/Loss      — Clearance Earphone, Clearance Screen Guard');
-        $this->command->line('   🔢  High stock     — Type-C Cable, Tempered Glass, Silicone Case, Mi Power Bank');
-        $this->command->line('   🌐  Multi-category — Displays (mobile+laptop), Computer hardware (RAM/HDD/SSD/GPU)');
-    }
-
-    private function createPurchasesAndSales(): void
-    {
-        // Get first supplier, customer, and admin user
-        $supplier = Supplier::first();
-        $customer = Customer::first();
-        $adminUser = User::first();
-
-        if (!$supplier || !$customer || !$adminUser) {
-            $this->command->warn('⚠️  Skipping purchases and sales - missing supplier, customer, or user.');
-            return;
-        }
-
-        $purchaseCount = 0;
-        $saleCount = 0;
-
-        // Get all products with stock
-        $productsWithStock = Product::whereHas('stock', function ($q) {
-            $q->where('quantity', '>', 0);
-        })->with('stock')->get();
-
-        $this->command->info('📦 Creating purchases for products with stock...');
-
-        foreach ($productsWithStock as $product) {
-            $stockQty = $product->stock->quantity;
-            
-            // Create a purchase for this product to justify the stock
-            $purchaseQty = $stockQty; // Purchase the exact stock quantity
-            $unitPrice = $product->purchase_price;
-            $lineTotal = $purchaseQty * $unitPrice;
-            
-            $purchase = Purchase::create([
-                'purchase_no' => 'PUR-SEED-' . str_pad($purchaseCount + 1, 5, '0', STR_PAD_LEFT),
-                'purchase_date' => now()->subDays(rand(10, 60)),
-                'reference_no' => 'REF-' . strtoupper(Str::random(6)),
-                'supplier_id' => $supplier->id,
-                'sub_total' => $lineTotal,
-                'tax_amount' => 0,
-                'discount_amount' => 0,
-                'shipping_amount' => 0,
-                'grand_total' => $lineTotal,
-                'paid_amount' => $lineTotal,
-                'due_amount' => 0,
-                'payment_method' => 'Cash',
-                'notes' => 'Seeded purchase for ' . $product->name,
-                'status' => 'completed',
-                'user_id' => $adminUser->id,
-            ]);
-
-            // Create purchase item
-            PurchaseItem::create([
-                'purchase_id' => $purchase->id,
-                'product_id' => $product->id,
-                'quantity' => $purchaseQty,
-                'purchase_price' => $unitPrice,
-                'tax_amount' => 0,
-                'discount_amount' => 0,
-                'total_amount' => $lineTotal,
-            ]);
-
-            $purchaseCount++;
-
-            // Create sales for products with stock > 10
-            if ($stockQty > 10) {
-                // Create 1-2 sales with max qty 10 per sale
-                $salesToCreate = rand(1, 2);
-                
-                for ($i = 0; $i < $salesToCreate; $i++) {
-                    $saleQty = rand(1, min(10, $stockQty)); // Max 10 per sale
-                    $sellingPrice = $product->selling_price;
-                    $discountAmount = $product->discount_price_amount ?? 0;
-                    $taxPercent = $product->tax_percentage ?? 0;
-                    
-                    // Calculate per-unit amounts
-                    $priceAfterDiscount = $sellingPrice - $discountAmount;
-                    $taxAmount = ($taxPercent / 100) * $priceAfterDiscount;
-                    $finalPrice = $priceAfterDiscount + $taxAmount;
-                    
-                    // Line totals
-                    $lineSubTotal = $sellingPrice * $saleQty;
-                    $lineTaxAmount = $taxAmount * $saleQty;
-                    $lineDiscountAmount = $discountAmount * $saleQty;
-                    $lineTotal = $finalPrice * $saleQty;
-                    
-                    $sale = Sale::create([
-                        'invoice_no' => 'INV-SEED-' . str_pad($saleCount + 1, 5, '0', STR_PAD_LEFT),
-                        'invoice_date' => now()->subDays(rand(1, 30)),
-                        'customer_id' => $customer->id,
-                        'sales_person_id' => $adminUser->id,
-                        'sub_total' => $lineSubTotal,
-                        'tax_amount' => $lineTaxAmount,
-                        'discount_amount' => $lineDiscountAmount,
-                        'shipping_amount' => 0,
-                        'grand_total' => $lineTotal,
-                        'paid_amount' => $lineTotal,
-                        'due_amount' => 0,
-                        'payment_method' => rand(0, 1) ? 'Cash' : 'Card',
-                        'notes' => 'Seeded sale for ' . $product->name,
-                        'status' => 'completed',
-                        'user_id' => $adminUser->id,
-                    ]);
-
-                    // Create sale item
-                    SaleItem::create([
-                        'sale_id' => $sale->id,
-                        'product_id' => $product->id,
-                        'quantity' => $saleQty,
-                        'unit_price' => $sellingPrice,
-                        'tax_amount' => $taxAmount,
-                        'discount_amount' => $discountAmount,
-                        'total_amount' => $lineTotal,
-                    ]);
-
-                    // Decrement stock
-                    $product->stock()->decrement('quantity', $saleQty);
-
-                    $saleCount++;
-                }
-            }
-        }
-
-        $this->command->info("✅ Created {$purchaseCount} purchases and {$saleCount} sales.");
+        $this->command->info("✅ ProductSeeder — {$count} products seeded with real matched images.");
     }
 }

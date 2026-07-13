@@ -1,6 +1,156 @@
 ﻿@extends('layouts.admin')
 @section('title', 'Product — ' . $product->name)
 
+@push('styles')
+    {{-- Swiper --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    {{-- GLightbox --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    <style>
+        /* ── Swiper main ── */
+        .prod-swiper-main {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bs-body-bg);
+            border: 1px solid var(--bs-border-color);
+            position: relative;
+        }
+
+        .prod-swiper-main .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bs-body-bg);
+        }
+
+        .prod-swiper-main .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: zoom-in;
+            transition: transform .3s ease;
+        }
+
+        .prod-swiper-main .swiper-slide img:hover {
+            transform: scale(1.04);
+        }
+
+        /* navigation arrows */
+        .prod-swiper-main .swiper-button-prev,
+        .prod-swiper-main .swiper-button-next {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, .9);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+            color: #333;
+            --swiper-navigation-size: 15px;
+        }
+
+        .prod-swiper-main .swiper-button-prev {
+            left: 8px;
+        }
+
+        .prod-swiper-main .swiper-button-next {
+            right: 8px;
+        }
+
+        /* pagination dots */
+        .prod-swiper-main .swiper-pagination-bullet-active {
+            background: var(--bs-primary);
+        }
+
+        /* counter badge */
+        .swiper-counter {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            background: rgba(0, 0, 0, .45);
+            color: #fff;
+            font-size: .68rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            z-index: 10;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+        }
+
+        /* expand icon */
+        .swiper-expand-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 10;
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, .85);
+            border-radius: 6px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, .18);
+            transition: background .15s;
+        }
+
+        .swiper-expand-btn:hover {
+            background: #fff;
+        }
+
+        /* ── Swiper thumbs ── */
+        .prod-swiper-thumbs {
+            margin-top: 10px;
+        }
+
+        .prod-swiper-thumbs .swiper-slide {
+            width: 56px !important;
+            height: 56px !important;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--bs-border-color);
+            opacity: .5;
+            transition: opacity .18s, border-color .18s;
+        }
+
+        .prod-swiper-thumbs .swiper-slide-thumb-active {
+            opacity: 1;
+            border-color: var(--bs-primary);
+        }
+
+        .prod-swiper-thumbs .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── No-image placeholder ── */
+        .prod-no-image {
+            aspect-ratio: 1/1;
+            border-radius: 12px;
+            border: 1px solid var(--bs-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bs-body-bg);
+        }
+
+        /* dark mode */
+        [data-bs-theme="dark"] .prod-swiper-main .swiper-button-prev,
+        [data-bs-theme="dark"] .prod-swiper-main .swiper-button-next {
+            background: rgba(40, 40, 60, .85);
+            color: #ccc;
+        }
+
+        [data-bs-theme="dark"] .swiper-expand-btn {
+            background: rgba(40, 40, 60, .85);
+        }
+    </style>
+@endpush
+
 @section('content')
     @php
         $qty = (float) ($product->stock->quantity ?? 0);
@@ -47,7 +197,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('products.index') }}">{{ __('messages.menu_products') }}</a>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('products.index') }}">{{ __('messages.menu_products') }}</a>
                     </li>
                     <li class="breadcrumb-item active">{{ Str::limit($product->name, 35) }}</li>
                 </ol>
@@ -140,68 +291,59 @@
                 <div class="card-body p-4">
                     <div class="row g-4">
 
-                        {{-- ── Image carousel (left) ── --}}
+                        {{-- ── Image Swiper (left) ── --}}
                         <div class="col-12 col-sm-5">
                             @if ($allImgs)
-                                {{-- Main image --}}
-                                <div id="productCarousel"
-                                    class="carousel slide rounded-3 overflow-hidden mb-2 position-relative"
-                                    style="aspect-ratio:1/1;background:var(--bs-body-bg);border:1px solid var(--bs-border-color);"
-                                    data-bs-ride="false">
-                                    <div class="carousel-inner h-100">
+                                {{-- Hidden lightbox anchors --}}
+                                <div class="d-none" id="lightboxLinks">
+                                    @foreach ($allImgs as $idx => $img)
+                                        <a class="glightbox-prod" href="{{ asset('uploads/products/' . $img) }}"
+                                            data-gallery="prod-gallery"
+                                            data-glightbox="description: {{ $product->name }} ({{ $idx + 1 }}/{{ count($allImgs) }})"
+                                            data-index="{{ $idx }}"></a>
+                                    @endforeach
+                                </div>
+
+                                {{-- Main swiper --}}
+                                <div class="prod-swiper-main mb-2" id="productSwiperMain">
+                                    <div class="swiper-wrapper">
                                         @foreach ($allImgs as $idx => $img)
-                                            <div class="carousel-item h-100 {{ $idx === 0 ? 'active' : '' }}">
+                                            <div class="swiper-slide">
                                                 <img src="{{ asset('uploads/products/' . $img) }}"
-                                                    class="d-block w-100 h-100" style="object-fit:contain;"
-                                                    onerror="this.closest('.carousel-item').innerHTML='<div class=\'w-100 h-100 d-flex align-items-center justify-content-center\'><i class=\'bx bx-image-alt text-muted\' style=\'font-size:3.5rem;opacity:.25;\'></i></div>'"
-                                                    alt="Product image {{ $idx + 1 }}">
+                                                    alt="{{ $product->name }} {{ $idx + 1 }}"
+                                                    loading="{{ $idx === 0 ? 'eager' : 'lazy' }}"
+                                                    data-lightbox-idx="{{ $idx }}"
+                                                    onerror="this.parentElement.innerHTML='<div class=\'w-100 h-100 d-flex align-items-center justify-content-center\'><i class=\'bx bx-image-alt text-muted\' style=\'font-size:3.5rem;opacity:.25;\'></i></div>'">
                                             </div>
                                         @endforeach
                                     </div>
                                     @if (count($allImgs) > 1)
-                                        <button class="carousel-control-prev" type="button"
-                                            data-bs-target="#productCarousel" data-bs-slide="prev" style="width:38px;">
-                                            <span
-                                                class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm"
-                                                style="width:30px;height:30px;">
-                                                <i class="bx bx-chevron-left text-dark" style="font-size:1.1rem;"></i>
-                                            </span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button"
-                                            data-bs-target="#productCarousel" data-bs-slide="next" style="width:38px;">
-                                            <span
-                                                class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm"
-                                                style="width:30px;height:30px;">
-                                                <i class="bx bx-chevron-right text-dark" style="font-size:1.1rem;"></i>
-                                            </span>
-                                        </button>
-                                        <span id="slideCounter"
-                                            class="position-absolute bottom-0 end-0 m-2 badge bg-dark bg-opacity-50 rounded-pill"
-                                            style="font-size:.7rem;">1 / {{ count($allImgs) }}</span>
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                        <div class="swiper-pagination"></div>
+                                        <span class="swiper-counter" id="swiperCounter">1 / {{ count($allImgs) }}</span>
                                     @endif
+                                    {{-- Expand / lightbox button --}}
+                                    <button class="swiper-expand-btn" id="swiperExpandBtn" title="View fullscreen">
+                                        <i class="bx bx-expand-alt" style="font-size:.95rem;color:#555;"></i>
+                                    </button>
                                 </div>
 
-                                {{-- Thumbnails --}}
+                                {{-- Thumbs swiper (below main) --}}
                                 @if (count($allImgs) > 1)
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        @foreach ($allImgs as $tIdx => $tImg)
-                                            <div class="prod-thumb rounded-2 overflow-hidden"
-                                                data-thumb-idx="{{ $tIdx }}"
-                                                style="width:52px;height:52px;cursor:pointer;flex-shrink:0;
-                                                       border:2px solid {{ $tIdx === 0 ? 'var(--bs-primary)' : 'var(--bs-border-color)' }};
-                                                       opacity:{{ $tIdx === 0 ? '1' : '0.55' }};
-                                                       transition:border-color .18s,opacity .18s;">
-                                                <img src="{{ asset('uploads/products/' . $tImg) }}" class="w-100 h-100"
-                                                    style="object-fit:cover;"
-                                                    onerror="this.closest('.prod-thumb').style.display='none'"
-                                                    alt="Thumb {{ $tIdx + 1 }}">
-                                            </div>
-                                        @endforeach
+                                    <div class="swiper prod-swiper-thumbs" id="productSwiperThumbs">
+                                        <div class="swiper-wrapper">
+                                            @foreach ($allImgs as $img)
+                                                <div class="swiper-slide">
+                                                    <img src="{{ asset('uploads/products/' . $img) }}" alt="thumb"
+                                                        onerror="this.closest('.swiper-slide').style.display='none'">
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 @endif
                             @else
-                                <div class="rounded-3 border d-flex align-items-center justify-content-center bg-label-primary"
-                                    style="aspect-ratio:1/1;">
+                                <div class="prod-no-image">
                                     <i class="bx bx-package text-primary" style="font-size:5rem;opacity:.3;"></i>
                                 </div>
                             @endif
@@ -806,6 +948,10 @@
 @endsection
 
 @push('scripts')
+    {{-- Swiper --}}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    {{-- GLightbox --}}
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -820,31 +966,82 @@
                 localStorage.setItem(tabKey, $(e.target).data('bs-target'));
             });
 
-            // ── Carousel ──
-            const carouselEl = document.getElementById('productCarousel');
-            if (carouselEl) {
-                const bsCar = bootstrap.Carousel.getOrCreateInstance(carouselEl, {
-                    ride: false,
-                    interval: false
-                });
-
-                $(document).on('click', '.prod-thumb', function() {
-                    bsCar.to(parseInt($(this).data('thumb-idx')));
-                });
-
-                carouselEl.addEventListener('slid.bs.carousel', function(e) {
-                    const idx = e.to;
-                    const counter = document.getElementById('slideCounter');
-                    if (counter) counter.textContent = (idx + 1) + ' / ' + $('.prod-thumb').length;
-                    $('.prod-thumb').each(function(i) {
-                        $(this).css({
-                            'border-color': i === idx ? 'var(--bs-primary)' :
-                                'var(--bs-border-color)',
-                            'opacity': i === idx ? '1' : '0.55'
-                        });
+            // ── Swiper setup ──
+            @if ($allImgs && count($allImgs) > 0)
+                @if (count($allImgs) > 1)
+                    // Thumbs swiper
+                    const swiperThumbs = new Swiper('#productSwiperThumbs', {
+                        spaceBetween: 8,
+                        slidesPerView: 'auto',
+                        freeMode: true,
+                        watchSlidesProgress: true,
                     });
+
+                    // Main swiper with thumbs controller
+                    const swiperMain = new Swiper('#productSwiperMain', {
+                        spaceBetween: 0,
+                        navigation: {
+                            nextEl: '#productSwiperMain .swiper-button-next',
+                            prevEl: '#productSwiperMain .swiper-button-prev',
+                        },
+                        pagination: {
+                            el: '#productSwiperMain .swiper-pagination',
+                            clickable: true,
+                            dynamicBullets: true,
+                        },
+                        thumbs: {
+                            swiper: swiperThumbs
+                        },
+                        keyboard: {
+                            enabled: true
+                        },
+                        on: {
+                            slideChange: function() {
+                                const counter = document.getElementById('swiperCounter');
+                                if (counter) counter.textContent = (this.realIndex + 1) +
+                                    ' / {{ count($allImgs) }}';
+                            }
+                        }
+                    });
+                @else
+                    // Single image — no navigation needed
+                    const swiperMain = new Swiper('#productSwiperMain', {
+                        spaceBetween: 0
+                    });
+                @endif
+
+                // ── GLightbox ──
+                const lightbox = GLightbox({
+                    selector: '.glightbox-prod',
+                    touchNavigation: true,
+                    loop: true,
+                    autoplayVideos: false,
+                    openEffect: 'zoom',
+                    closeEffect: 'fade',
                 });
-            }
+
+                // Clicking main image opens lightbox at current index
+                $('#productSwiperMain').on('click', 'img', function() {
+                    @if (count($allImgs) > 1)
+                        const idx = swiperMain.realIndex;
+                    @else
+                        const idx = 0;
+                    @endif
+                    const links = document.querySelectorAll('.glightbox-prod');
+                    if (links[idx]) links[idx].click();
+                });
+
+                // Expand button
+                document.getElementById('swiperExpandBtn')?.addEventListener('click', function() {
+                    @if (count($allImgs) > 1)
+                        const idx = swiperMain.realIndex;
+                    @else
+                        const idx = 0;
+                    @endif
+                    const links = document.querySelectorAll('.glightbox-prod');
+                    if (links[idx]) links[idx].click();
+                });
+            @endif
 
             // ── Delete confirm ──
             $(document).on('click', '.delete-btn', function() {

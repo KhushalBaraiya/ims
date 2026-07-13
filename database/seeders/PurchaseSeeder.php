@@ -28,7 +28,7 @@ class PurchaseSeeder extends Seeder
         $po = 0;
         $makePo = function () use (&$po) {
             $po++;
-            return 'PO-' . str_pad($po, 4, '0', STR_PAD_LEFT);
+            return 'PUR-SEED-' . str_pad($po, 5, '0', STR_PAD_LEFT);
         };
 
         $purchases = [

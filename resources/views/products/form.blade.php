@@ -381,31 +381,64 @@
                 {{-- Gallery --}}
                 <div class="card border">
                     <div class="card-body p-3">
-                        <label class="form-label fw-semibold small">Gallery Images</label>
-                        <input accept="image/*" class="form-control form-control-sm" id="galleryInput" multiple
-                            name="gallery[]" type="file">
+                        <label class="form-label fw-semibold small d-flex align-items-center gap-2">
+                            <i class="bx bx-images text-primary"></i> Gallery Images
+                            <span class="badge bg-label-secondary fw-normal">Multi-select</span>
+                        </label>
+
+                        {{-- Drag-drop zone --}}
+                        <div id="galleryDropZone"
+                            style="border:2px dashed var(--bs-border-color);border-radius:10px;padding:18px 12px;
+                                    text-align:center;cursor:pointer;transition:border-color .2s,background .2s;
+                                    background:var(--bs-body-bg);">
+                            <i class="bx bx-cloud-upload d-block mb-1 text-muted" style="font-size:2rem;"></i>
+                            <p class="mb-1 small fw-semibold text-muted">Drag & drop images here</p>
+                            <p class="mb-2 text-muted" style="font-size:.72rem;">or click to browse — PNG, JPG, WEBP ·
+                                Max 2MB each</p>
+                            <button class="btn btn-sm btn-outline-primary" type="button" id="galleryBrowseBtn">
+                                <i class="bx bx-folder-open me-1"></i> Browse Files
+                            </button>
+                        </div>
+                        <input accept="image/*" class="d-none" id="galleryInput" multiple name="gallery[]"
+                            type="file">
                         <input id="clear_gallery" name="clear_gallery" type="hidden" value="0">
                         <input id="remove_gallery_images" name="remove_gallery_images" type="hidden"
                             value="">
 
+                        {{-- New upload preview tiles --}}
+                        <div id="newGalleryPreviews" class="d-flex flex-wrap gap-2 mt-3"></div>
+
+                        {{-- Existing gallery --}}
                         @if (isset($product) && $product->gallery && count($product->gallery) > 0)
                             <div class="mt-3">
-                                <small class="text-muted fw-semibold">Current Gallery:</small>
-                                <div class="d-flex mt-2 flex-wrap gap-2" id="galleryPreviewContainer">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <small class="text-muted fw-semibold">
+                                        <i class="bx bx-check-circle text-success me-1"></i>
+                                        Saved Gallery ({{ count($product->gallery) }} photos)
+                                    </small>
+                                    <button class="btn btn-sm btn-outline-danger py-0 px-2" id="clearAllGalleryBtn"
+                                        type="button" style="font-size:.72rem;">
+                                        <i class="bx bx-trash me-1"></i> Clear All
+                                    </button>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2" id="galleryPreviewContainer">
                                     @foreach ($product->gallery as $galImg)
-                                        <div class="position-relative" data-image="{{ $galImg }}">
-                                            <img class="rounded border"
-                                                src="{{ asset('uploads/products/' . $galImg) }}"
-                                                style="width:60px;height:60px;object-fit:cover;">
-                                            <button
-                                                class="btn btn-danger btn-sm position-absolute remove-gallery-img-btn end-0 top-0 p-0"
-                                                style="width:18px;height:18px;font-size:10px;line-height:1;"
-                                                type="button">×</button>
+                                        <div class="position-relative gallery-existing-tile"
+                                            data-image="{{ $galImg }}"
+                                            style="width:72px;height:72px;border-radius:8px;overflow:hidden;
+                                                    border:2px solid var(--bs-border-color);flex-shrink:0;">
+                                            <img src="{{ asset('uploads/products/' . $galImg) }}"
+                                                style="width:100%;height:100%;object-fit:cover;"
+                                                onerror="this.closest('.gallery-existing-tile').remove()">
+                                            <button class="remove-gallery-img-btn" type="button" title="Remove"
+                                                style="position:absolute;top:2px;right:2px;
+                                                       width:18px;height:18px;border-radius:50%;border:none;
+                                                       background:rgba(220,53,69,.9);color:#fff;
+                                                       font-size:11px;line-height:1;cursor:pointer;
+                                                       display:flex;align-items:center;justify-content:center;">×</button>
                                         </div>
                                     @endforeach
                                 </div>
-                                <button class="btn btn-sm btn-link text-danger mt-2 p-0" id="clearAllGalleryBtn"
-                                    type="button">Clear All Gallery</button>
                             </div>
                         @endif
                     </div>
@@ -448,6 +481,23 @@
 </div>
 
 @push('scripts')
+    <style>
+        @keyframes fadeInTile {
+            from {
+                opacity: 0;
+                transform: scale(.85);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #galleryDropZone:focus-within {
+            border-color: var(--bs-primary) !important;
+        }
+    </style>
     <script>
         $(document).ready(function() {
 
@@ -623,6 +673,71 @@
 
             // ── Gallery management ────────────────────────────────────────────────────
             let removedGalleryImages = [];
+
+            // Drag-drop zone
+            const $dropZone = $('#galleryDropZone');
+            $('#galleryBrowseBtn').on('click', function(e) {
+                e.stopPropagation();
+                $('#galleryInput').trigger('click');
+            });
+            $dropZone.on('click', function() {
+                $('#galleryInput').trigger('click');
+            });
+
+            $dropZone.on('dragover dragenter', function(e) {
+                e.preventDefault();
+                $(this).css({
+                    'border-color': 'var(--bs-primary)',
+                    'background': 'rgba(105,108,255,.05)'
+                });
+            });
+            $dropZone.on('dragleave drop', function(e) {
+                e.preventDefault();
+                $(this).css({
+                    'border-color': 'var(--bs-border-color)',
+                    'background': 'var(--bs-body-bg)'
+                });
+                if (e.type === 'drop') {
+                    const dt = e.originalEvent.dataTransfer;
+                    if (dt && dt.files.length) handleGalleryFiles(dt.files);
+                }
+            });
+
+            $('#galleryInput').on('change', function(e) {
+                handleGalleryFiles(e.target.files);
+            });
+
+            function handleGalleryFiles(files) {
+                const $container = $('#newGalleryPreviews');
+                Array.from(files).forEach(function(file) {
+                    if (!file.type.startsWith('image/')) return;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const src = e.target.result;
+                        const $tile = $(`
+                            <div class="position-relative new-gallery-tile"
+                                 style="width:72px;height:72px;border-radius:8px;overflow:hidden;
+                                        border:2px solid var(--bs-primary);flex-shrink:0;animation:fadeInTile .25s ease;">
+                                <img src="${src}" style="width:100%;height:100%;object-fit:cover;">
+                                <button type="button" class="remove-new-tile"
+                                    style="position:absolute;top:2px;right:2px;
+                                           width:18px;height:18px;border-radius:50%;border:none;
+                                           background:rgba(220,53,69,.9);color:#fff;
+                                           font-size:11px;line-height:1;cursor:pointer;
+                                           display:flex;align-items:center;justify-content:center;">×</button>
+                            </div>`);
+                        $container.append($tile);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            $(document).on('click', '.remove-new-tile', function(e) {
+                e.preventDefault();
+                $(this).closest('.new-gallery-tile').remove();
+                // Reset input so same files can be re-added
+                $('#galleryInput').val('');
+            });
 
             $(document).on('click', '.remove-gallery-img-btn', function(e) {
                 e.preventDefault();

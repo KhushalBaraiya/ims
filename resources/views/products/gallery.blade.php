@@ -4,8 +4,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════════════════════
-                                           PRODUCT GALLERY — BASE STYLES
-                                           ════════════════════════════════════════════════════════════ */
+                                                   PRODUCT GALLERY — BASE STYLES
+                                                   ════════════════════════════════════════════════════════════ */
 
         /* ── Card ── */
         .pg-card {
@@ -182,8 +182,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                           RESPONSIVE — LARGE TABLET  (768 – 991px)
-                                           ════════════════════════════════════════════════════════════ */
+                                                   RESPONSIVE — LARGE TABLET  (768 – 991px)
+                                                   ════════════════════════════════════════════════════════════ */
         @media (min-width: 768px) and (max-width: 991.98px) {
 
             /* Image shorter on tablet to save vertical space */
@@ -225,8 +225,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                           RESPONSIVE — SMALL  (576 – 767px)
-                                           ════════════════════════════════════════════════════════════ */
+                                                   RESPONSIVE — SMALL  (576 – 767px)
+                                                   ════════════════════════════════════════════════════════════ */
         @media (min-width: 576px) and (max-width: 767.98px) {
 
             /* Image height */
@@ -279,8 +279,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                           RESPONSIVE — MOBILE  (0 – 575px)
-                                           ════════════════════════════════════════════════════════════ */
+                                                   RESPONSIVE — MOBILE  (0 – 575px)
+                                                   ════════════════════════════════════════════════════════════ */
         @media (max-width: 575.98px) {
 
             /* ── Page header ── */
@@ -512,8 +512,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                           RESPONSIVE — EXTRA SMALL  (0 – 400px)
-                                           ════════════════════════════════════════════════════════════ */
+                                                   RESPONSIVE — EXTRA SMALL  (0 – 400px)
+                                                   ════════════════════════════════════════════════════════════ */
         @media (max-width: 400px) {
 
             /* Image thumb narrower on very small */
@@ -767,13 +767,32 @@
                         onclick="window.location='{{ route('products.show', $product->id) }}'">
 
                         {{-- ── Image ─── --}}
-                        <div class="pg-img-wrap">
+                        <div class="pg-img-wrap"
+                            @if (count($gallery)) data-gallery-imgs="{{ json_encode(array_merge($product->image ? [$product->image] : [], $gallery)) }}" @endif>
+                            @php $allCardImgs = array_values(array_filter(array_merge($product->image ? [$product->image] : [], $gallery))); @endphp
                             @if ($product->image)
                                 <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}"
-                                    loading="lazy"
+                                    class="pg-main-img" loading="lazy"
+                                    onerror="this.parentElement.innerHTML='<div class=\'pg-no-img\'><i class=\'bx bx-package\'></i><span>{{ __('messages.no_image') }}</span></div>'">
+                            @elseif(count($gallery))
+                                <img src="{{ asset('uploads/products/' . $gallery[0]) }}" alt="{{ $product->name }}"
+                                    class="pg-main-img" loading="lazy"
                                     onerror="this.parentElement.innerHTML='<div class=\'pg-no-img\'><i class=\'bx bx-package\'></i><span>{{ __('messages.no_image') }}</span></div>'">
                             @else
-                                <div class="pg-no-img"><i class="bx bx-package"></i><span>{{ __('messages.no_image') }}</span></div>
+                                <div class="pg-no-img"><i
+                                        class="bx bx-package"></i><span>{{ __('messages.no_image') }}</span></div>
+                            @endif
+
+                            {{-- Multi-image dot indicators --}}
+                            @if (count($allCardImgs) > 1)
+                                <div class="pg-img-dots"
+                                    style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:3px;z-index:5;">
+                                    @foreach ($allCardImgs as $di => $dImg)
+                                        <span
+                                            style="width:5px;height:5px;border-radius:50%;background:{{ $di === 0 ? '#fff' : 'rgba(255,255,255,.45)' }};transition:background .2s;"
+                                            data-dot="{{ $di }}"></span>
+                                    @endforeach
+                                </div>
                             @endif
 
                             {{-- stock badge TL --}}
@@ -942,8 +961,54 @@
                 const hidden = $card.hasClass('d-none');
                 $chevron.toggleClass('bx-chevron-down', hidden).toggleClass('bx-chevron-up', !hidden);
             });
+
+            // ── Multi-image hover cycling ──────────────────────────────────────
+            $('.pg-img-wrap[data-gallery-imgs]').each(function() {
+                const $wrap = $(this);
+                const imgs = JSON.parse($wrap.attr('data-gallery-imgs') || '[]');
+                if (imgs.length < 2) return;
+
+                const $img = $wrap.find('.pg-main-img');
+                const $dots = $wrap.find('[data-dot]');
+                let timer = null;
+                let idx = 0;
+
+                function showImg(i) {
+                    idx = i;
+                    $img.attr('src', `{{ asset('uploads/products') }}/` + imgs[i]);
+                    $dots.each(function() {
+                        const di = parseInt($(this).attr('data-dot'));
+                        $(this).css('background', di === i ? '#fff' : 'rgba(255,255,255,.45)');
+                    });
+                }
+
+                $wrap.on('mouseenter', function() {
+                    let i = 1; // start from second image
+                    timer = setInterval(function() {
+                        showImg(i);
+                        i = (i + 1) % imgs.length;
+                    }, 700);
+                });
+
+                $wrap.on('mousemove', function(e) {
+                    // Also let user scrub by horizontal mouse position
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const pct = x / rect.width;
+                    const targetIdx = Math.min(Math.floor(pct * imgs.length), imgs.length - 1);
+                    if (targetIdx !== idx) {
+                        clearInterval(timer);
+                        timer = null;
+                        showImg(targetIdx);
+                    }
+                });
+
+                $wrap.on('mouseleave', function() {
+                    clearInterval(timer);
+                    timer = null;
+                    showImg(0);
+                });
+            });
         });
     </script>
 @endpush
-
-
