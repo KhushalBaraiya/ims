@@ -1235,4 +1235,10 @@ return [
     'unit_col'                  => 'Unit',
     'unit_label'                => 'Unit',
 
+    // ── Keys used in form / view blades (previously missing) ──────────────
+    'uncategorized'             => 'Uncategorized',
+    'add_initial_stock_hint'    => 'Add Initial Stock',
+    'sale_already_returned'     => 'This sale invoice has already been returned.',
+    'search_products_return'    => 'Search products to return...',
+
 ];

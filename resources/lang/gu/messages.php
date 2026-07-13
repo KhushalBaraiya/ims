@@ -1208,4 +1208,10 @@ return [
     'unit_col'                  => 'એકમ',
     'unit_label'                => 'એકમ',
 
+    // ── Keys used in form / view blades (previously missing) ──────────────
+    'uncategorized'             => 'અવર્ગીકૃત',
+    'add_initial_stock_hint'    => 'પ્રારંભિક સ્ટૉક ઉમેરો',
+    'sale_already_returned'     => 'આ વેચાણ ઇન્વૉઇસ પહેલેથી પરત થઈ ગઈ છે.',
+    'search_products_return'    => 'પરત કરવા ઉત્પાદ શોધો...',
+
 ];

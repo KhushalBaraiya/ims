@@ -1216,4 +1216,10 @@ return [
     'unit_col'                  => 'इकाई',
     'unit_label'                => 'इकाई',
 
+    // ── Keys used in form / view blades (previously missing) ──────────────
+    'uncategorized'             => 'अवर्गीकृत',
+    'add_initial_stock_hint'    => 'प्रारंभिक स्टॉक जोड़ें',
+    'sale_already_returned'     => 'यह बिक्री इनवॉइस पहले ही वापस की जा चुकी है।',
+    'search_products_return'    => 'वापस करने के लिए उत्पाद खोजें...',
+
 ];
