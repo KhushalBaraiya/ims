@@ -214,7 +214,7 @@
                 <input class="form-check-input" type="checkbox" role="switch" name="add_opening_stock"
                     id="addOpeningStock" value="1" {{ old('add_opening_stock') ? 'checked' : '' }}>
                 <label class="form-check-label fw-semibold" for="addOpeningStock">
-                    <i class="bx bx-plus-circle me-1 text-success"></i> {{ __(\'messages.add_initial_stock_hint\') }}
+                    <i class="bx bx-plus-circle me-1 text-success"></i> {{ __('messages.add_initial_stock_hint') }}
                 </label>
                 <div class="form-text">When enabled, a Purchase record will be created automatically for traceability.
                 </div>
@@ -625,4 +625,3 @@
         });
     </script>
 @endpush
-

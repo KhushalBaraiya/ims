@@ -43,7 +43,7 @@
             <div>
                 <div class="text-white fw-bold">{{ $product->name }}</div>
                 <div class="text-white opacity-75 small">SKU: {{ $product->code }} &nbsp;�&nbsp;
-                    {{ $product->mainCategory->name ?? '{{ __(\'messages.uncategorized\') }}' }}</div>
+                    {{ $product->mainCategory->name ?? __('messages.uncategorized') }}</div>
             </div>
             <span class="badge bg-white text-primary ms-auto">{{ ucfirst($product->status) }}</span>
         </div>
@@ -193,7 +193,8 @@
 
                 {{-- -- Card 2: Pricing & Stock Alert ---------------------------- --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div
+                        class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
@@ -701,6 +702,3 @@
         });
     </script>
 @endpush
-
-
-

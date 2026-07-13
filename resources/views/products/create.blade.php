@@ -192,7 +192,8 @@
 
                 {{-- -- Card 2: Pricing & Stock Alert ---------------------------- --}}
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div
+                        class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
                             <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
                         </h6>
@@ -280,7 +281,7 @@
                                     id="addOpeningStock" value="1" {{ old('add_opening_stock') ? 'checked' : '' }}>
                                 <label class="form-check-label fw-semibold" for="addOpeningStock">
                                     <i class="bx bx-plus-circle me-1 text-success"></i>
-                                    {{ __(\'messages.add_initial_stock_hint\') }}
+                                    {{ __('messages.add_initial_stock_hint') }}
                                 </label>
                                 <div class="form-text">When enabled, a Purchase record will be created automatically for
                                     traceability.</div>
@@ -861,5 +862,3 @@
         });
     </script>
 @endpush
-
-

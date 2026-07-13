@@ -361,7 +361,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __(\'messages.uncategorized\') }}</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.uncategorized') }}</p>
                         <h4 class="mb-0 fw-bold text-warning">{{ $uncategorized->count() }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.1rem;">
@@ -436,7 +436,7 @@
             @endforeach
             @if ($uncategorized->count() > 0)
                 <a href="#cat-uncategorized" class="jump-pill jump-pill-warning">
-                    {{ __(\'messages.uncategorized\') }}
+                    {{ __('messages.uncategorized') }}
                     <span class="jump-pill-badge">{{ $uncategorized->count() }}</span>
                 </a>
             @endif
@@ -522,13 +522,13 @@
         @endforelse
     @endif {{-- end totalShown check --}}
 
-    {{-- ── {{ __(\'messages.uncategorized\') }} ───────────────────────────────── --}}
+    {{-- ── Uncategorized ───────────────────────────────── --}}
     @if ($uncategorized->count() > 0)
         <div class="cat-section" id="cat-uncategorized">
             <div class="cat-section-header" style="background: linear-gradient(135deg, #fd9f3c 0%, #e57c1b 100%);">
                 <div class="cat-title">
                     <i class="bx bx-question-mark" style="font-size:1.1rem;opacity:.85;"></i>
-                    {{ __(\'messages.uncategorized\') }}
+                    {{ __('messages.uncategorized') }}
                 </div>
                 <div class="cat-meta">
                     <span class="badge bg-white bg-opacity-25 text-white" style="font-size:.72rem;">
@@ -604,4 +604,3 @@
         });
     </script>
 @endpush
-
