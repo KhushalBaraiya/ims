@@ -8,31 +8,31 @@
         <div>
             <h4 class="fw-bold mb-1">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('products.index') }}">{{ __('messages.products') }}</a></li>
                     <li class="breadcrumb-item active">{{ isset($isCopy) ? 'Copy' : __('messages.add') }}</li>
                 </ol>
             </nav>
         </div>
-        <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
+        <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">
             <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
         </a>
     </div>
 
     {{-- -- Hero Banner -- --}}
-    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
-        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
-            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+    <div class="card mb-4 border-0 shadow-sm" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3 px-4 py-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 border border-2 border-white"
                 style="width:46px;height:46px;background:rgba(255,255,255,.2);">
                 <i class="bx bx-package text-white" style="font-size:1.3rem;"></i>
             </div>
             <div class="flex-grow-1">
-                <div class="text-white fw-bold">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</div>
-                <div class="text-white opacity-75 small">Fill in the details below to
+                <div class="fw-bold text-white">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</div>
+                <div class="small text-white opacity-75">Fill in the details below to
                     {{ isset($isCopy) ? 'copy this product' : 'add a new product to your catalog' }}</div>
             </div>
-            <span class="badge bg-white text-primary fw-semibold">
+            <span class="badge text-primary fw-semibold bg-white">
                 <i class="bx bx-plus me-1"></i>{{ isset($isCopy) ? 'Copy' : 'New Product' }}
             </span>
         </div>
@@ -47,11 +47,11 @@
                     <li class="small">{{ $e }}</li>
                 @endforeach
             </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button class="btn-close" data-bs-dismiss="alert" type="button"></button>
         </div>
     @endif
 
-    <form id="productForm" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+    <form action="{{ route('products.store') }}" enctype="multipart/form-data" id="productForm" method="POST">
         @csrf
         <div class="row g-4">
 
@@ -59,10 +59,10 @@
             <div class="col-lg-8">
 
                 {{-- -- Card 1: Basic Info ---------------------------------------- --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-transparent py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-info-circle me-2 text-primary"></i>Basic Information
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-transparent py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-info-circle text-primary me-2"></i>Basic Information
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -72,10 +72,9 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Product Name <span
                                         class="text-danger">*</span></label>
-                                <input type="text" name="name"
-                                    class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ old('name', $product->name ?? '') }}" placeholder="e.g. Core i9 Processor"
-                                    required>
+                                <input class="form-control @error('name') is-invalid @enderror" name="name"
+                                    placeholder="e.g. Core i9 Processor" required type="text"
+                                    value="{{ old('name', $product->name ?? '') }}">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -85,15 +84,14 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">
                                     SKU / Code <span class="text-danger">*</span>
-                                    <span class="ms-1 text-muted small fw-normal">(auto or manual)</span>
+                                    <span class="text-muted small fw-normal ms-1">(auto or manual)</span>
                                 </label>
                                 <div class="input-group">
-                                    <input type="text" name="code" id="skuInput"
-                                        class="form-control @error('code') is-invalid @enderror"
-                                        value="{{ old('code', $product->code ?? '') }}" placeholder="e.g. PRD-CORE-A3X9"
-                                        required>
-                                    <button type="button" id="generateSkuBtn" class="btn btn-outline-secondary"
-                                        title="Auto-generate SKU">
+                                    <input class="form-control @error('code') is-invalid @enderror" id="skuInput"
+                                        name="code" placeholder="e.g. PRD-CORE-A3X9" required type="text"
+                                        value="{{ old('code', $product->code ?? '') }}">
+                                    <button class="btn btn-outline-secondary" id="generateSkuBtn" title="Auto-generate SKU"
+                                        type="button">
                                         <i class="bx bx-refresh"></i>
                                     </button>
                                     @error('code')
@@ -105,9 +103,9 @@
                             {{-- Barcode --}}
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Barcode</label>
-                                <input type="text" name="barcode"
-                                    class="form-control @error('barcode') is-invalid @enderror"
-                                    value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="e.g. 8901234567890">
+                                <input class="form-control @error('barcode') is-invalid @enderror" name="barcode"
+                                    placeholder="e.g. 8901234567890" type="text"
+                                    value="{{ old('barcode', $product->barcode ?? '') }}">
                                 @error('barcode')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -117,12 +115,13 @@
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Main Category <span
                                         class="text-danger">*</span></label>
-                                <select name="main_category_id" id="main_category_id"
-                                    class="form-select @error('main_category_id') is-invalid @enderror" required>
+                                <select class="form-select @error('main_category_id') is-invalid @enderror"
+                                    id="main_category_id" name="main_category_id" required>
                                     <option value="">{{ __('messages.select_category') }}</option>
                                     @foreach ($categories as $c)
-                                        <option value="{{ $c->id }}"
-                                            {{ old('main_category_id', $product->main_category_id ?? '') == $c->id ? 'selected' : '' }}>
+                                        <option
+                                            {{ old('main_category_id', $product->main_category_id ?? '') == $c->id ? 'selected' : '' }}
+                                            value="{{ $c->id }}">
                                             {{ $c->name }}
                                         </option>
                                     @endforeach
@@ -135,8 +134,8 @@
                             {{-- Sub Category --}}
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Sub Category</label>
-                                <select name="sub_category_id" id="sub_category_id"
-                                    class="form-select @error('sub_category_id') is-invalid @enderror">
+                                <select class="form-select @error('sub_category_id') is-invalid @enderror"
+                                    id="sub_category_id" name="sub_category_id">
                                     <option value="">{{ __('messages.select_sub_category') }}</option>
                                 </select>
                                 @error('sub_category_id')
@@ -147,12 +146,12 @@
                             {{-- Brand --}}
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Brand <span class="text-danger">*</span></label>
-                                <select name="brand_id" class="form-select @error('brand_id') is-invalid @enderror"
+                                <select class="form-select @error('brand_id') is-invalid @enderror" name="brand_id"
                                     required>
                                     <option value="">{{ __('messages.select_brand') }}</option>
                                     @foreach ($brands as $b)
-                                        <option value="{{ $b->id }}"
-                                            {{ old('brand_id', $product->brand_id ?? '') == $b->id ? 'selected' : '' }}>
+                                        <option {{ old('brand_id', $product->brand_id ?? '') == $b->id ? 'selected' : '' }}
+                                            value="{{ $b->id }}">
                                             {{ $b->name }}
                                         </option>
                                     @endforeach
@@ -165,10 +164,9 @@
                             {{-- Unit Name --}}
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Unit Name <span class="text-danger">*</span></label>
-                                <input type="text" name="unit_name"
-                                    class="form-control @error('unit_name') is-invalid @enderror"
-                                    value="{{ old('unit_name', $product->unit_name ?? 'Piece') }}" placeholder="Piece"
-                                    required>
+                                <input class="form-control @error('unit_name') is-invalid @enderror" name="unit_name"
+                                    placeholder="Piece" required type="text"
+                                    value="{{ old('unit_name', $product->unit_name ?? 'Piece') }}">
                                 @error('unit_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -177,10 +175,9 @@
                             {{-- Unit Code --}}
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Unit Code <span class="text-danger">*</span></label>
-                                <input type="text" name="unit_code"
-                                    class="form-control @error('unit_code') is-invalid @enderror"
-                                    value="{{ old('unit_code', $product->unit_code ?? 'PCS') }}" placeholder="PCS"
-                                    required>
+                                <input class="form-control @error('unit_code') is-invalid @enderror" name="unit_code"
+                                    placeholder="PCS" required type="text"
+                                    value="{{ old('unit_code', $product->unit_code ?? 'PCS') }}">
                                 @error('unit_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -191,11 +188,11 @@
                 </div>
 
                 {{-- -- Card 2: Pricing & Stock Alert ---------------------------- --}}
-                <div class="card shadow-sm mb-4">
+                <div class="card mb-4 shadow-sm">
                     <div
-                        class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-money me-2 text-success"></i>Pricing & Stock Alert
+                        class="card-header border-bottom d-flex align-items-center justify-content-between bg-transparent py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-money text-success me-2"></i>Pricing & Stock Alert
                         </h6>
                         <span class="badge bg-label-primary small" id="profitBadge">Profit: �</span>
                     </div>
@@ -208,9 +205,9 @@
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">?</span>
-                                    <input type="number" step="0.01" name="purchase_price" id="purchase_price"
-                                        class="form-control @error('purchase_price') is-invalid @enderror"
-                                        value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}" required>
+                                    <input class="form-control @error('purchase_price') is-invalid @enderror"
+                                        id="purchase_price" name="purchase_price" required step="0.01" type="number"
+                                        value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}">
                                     @error('purchase_price')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -222,25 +219,40 @@
                                 <label class="form-label fw-semibold">Selling Price <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">?</span>
-                                    <input type="number" step="0.01" name="selling_price" id="selling_price"
-                                        class="form-control @error('selling_price') is-invalid @enderror"
-                                        value="{{ old('selling_price', $product->selling_price ?? '0.00') }}" required>
+                                    <span class="input-group-text">₹</span>
+                                    <input class="form-control @error('selling_price') is-invalid @enderror"
+                                        id="selling_price" name="selling_price" required step="0.01" type="number"
+                                        value="{{ old('selling_price', $product->selling_price ?? '0.00') }}">
                                     @error('selling_price')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            {{-- Tax % --}}
+                            {{-- Discount Amount --}}
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Tax %</label>
+                                <label class="form-label fw-semibold">Discount Amount</label>
                                 <div class="input-group">
-                                    <input type="number" step="0.01" min="0" max="100"
-                                        name="tax_percentage" id="tax_percentage"
-                                        class="form-control @error('tax_percentage') is-invalid @enderror"
-                                        value="{{ old('tax_percentage', $product->tax_percentage ?? '0.00') }}"
-                                        oninput="if(parseFloat(this.value)>100){this.value=100;}if(parseFloat(this.value)<0){this.value=0;}">
+                                    <span class="input-group-text">₹</span>
+                                    <input class="form-control @error('discount_price_amount') is-invalid @enderror"
+                                        id="discount_price_amount" min="0" name="discount_price_amount"
+                                        step="0.01" type="number"
+                                        value="{{ old('discount_price_amount', $product->discount_price_amount ?? '0.00') }}">
+                                    @error('discount_price_amount')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Selling Tax % --}}
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold">Selling Tax %</label>
+                                <div class="input-group">
+                                    <input class="form-control @error('tax_percentage') is-invalid @enderror"
+                                        id="tax_percentage" max="100" min="0" name="tax_percentage"
+                                        oninput="if(parseFloat(this.value)>100){this.value=100;}if(parseFloat(this.value)<0){this.value=0;}"
+                                        step="0.01" type="number"
+                                        value="{{ old('tax_percentage', $product->tax_percentage ?? '0.00') }}">
                                     <span class="input-group-text">%</span>
                                     @error('tax_percentage')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -252,10 +264,9 @@
                             {{-- Min Stock Alert --}}
                             <div class="col-md-2">
                                 <label class="form-label fw-semibold">Min Stock Alert</label>
-                                <input type="number" step="0.01" name="minimum_stock_alert"
-                                    class="form-control @error('minimum_stock_alert') is-invalid @enderror"
-                                    value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}"
-                                    placeholder="e.g. 5">
+                                <input class="form-control @error('minimum_stock_alert') is-invalid @enderror"
+                                    name="minimum_stock_alert" placeholder="e.g. 5" step="0.01" type="number"
+                                    value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}">
                                 @error('minimum_stock_alert')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -267,39 +278,40 @@
 
                 {{-- -- Card 3: Opening Stock (create / copy only) ---------------- --}}
                 @if (!$product->exists || isset($isCopy))
-                    <div class="card shadow-sm mb-4">
+                    <div class="card mb-4 shadow-sm">
                         <div
-                            class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
-                            <h6 class="mb-0 fw-semibold">
-                                <i class="bx bx-box me-2 text-warning"></i>Opening Stock
+                            class="card-header border-bottom d-flex align-items-center justify-content-between bg-transparent py-3">
+                            <h6 class="fw-semibold mb-0">
+                                <i class="bx bx-box text-warning me-2"></i>Opening Stock
                             </h6>
                             <span class="badge bg-label-warning small">Create only</span>
                         </div>
                         <div class="card-body p-4">
                             <div class="form-check form-switch mb-0">
-                                <input class="form-check-input" type="checkbox" role="switch" name="add_opening_stock"
-                                    id="addOpeningStock" value="1" {{ old('add_opening_stock') ? 'checked' : '' }}>
+                                <input {{ old('add_opening_stock') ? 'checked' : '' }} class="form-check-input"
+                                    id="addOpeningStock" name="add_opening_stock" role="switch" type="checkbox"
+                                    value="1">
                                 <label class="form-check-label fw-semibold" for="addOpeningStock">
-                                    <i class="bx bx-plus-circle me-1 text-success"></i>
+                                    <i class="bx bx-plus-circle text-success me-1"></i>
                                     {{ __('messages.add_initial_stock_hint') }}
                                 </label>
                                 <div class="form-text">When enabled, a Purchase record will be created automatically for
                                     traceability.</div>
                             </div>
 
-                            <div id="openingStockBox" class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3">
+                            <div class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3" id="openingStockBox">
                                 <div class="row g-3 align-items-end">
 
                                     {{-- Supplier --}}
                                     <div class="col-md-5">
                                         <label class="form-label fw-semibold">Supplier <span
                                                 class="text-danger">*</span></label>
-                                        <select name="supplier_id" id="supplier_id"
-                                            class="form-select @error('supplier_id') is-invalid @enderror">
+                                        <select class="form-select @error('supplier_id') is-invalid @enderror"
+                                            id="supplier_id" name="supplier_id">
                                             <option value="">{{ __('messages.select_supplier') }}</option>
                                             @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}"
-                                                    {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                                <option {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}
+                                                    value="{{ $supplier->id }}">
                                                     {{ $supplier->name }}
                                                 </option>
                                             @endforeach
@@ -313,10 +325,9 @@
                                     <div class="col-md-3">
                                         <label class="form-label fw-semibold">Opening Qty <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" step="0.01" min="0.01" name="initial_qty"
-                                            id="initial_qty"
-                                            class="form-control @error('initial_qty') is-invalid @enderror"
-                                            value="{{ old('initial_qty', '') }}" placeholder="e.g. 10">
+                                        <input class="form-control @error('initial_qty') is-invalid @enderror"
+                                            id="initial_qty" min="0.01" name="initial_qty" placeholder="e.g. 10"
+                                            step="0.01" type="number" value="{{ old('initial_qty', '') }}">
                                         @error('initial_qty')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -324,7 +335,7 @@
 
                                     {{-- Live total preview --}}
                                     <div class="col-md-4">
-                                        <div class="alert alert-info mb-0 py-2 px-3 d-flex align-items-center gap-2">
+                                        <div class="alert alert-info d-flex align-items-center mb-0 gap-2 px-3 py-2">
                                             <i class="bx bx-calculator text-info fs-5"></i>
                                             <div>
                                                 <div class="small fw-semibold text-info">Purchase Total</div>
@@ -341,63 +352,60 @@
                 @endif
 
                 {{-- -- Card 4: Technical Specifications ------------------------- --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-transparent py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-chip me-2 text-info"></i>Technical Specifications
-                            <span class="ms-2 badge bg-label-secondary small fw-normal">Optional</span>
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-transparent py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-chip text-info me-2"></i>Technical Specifications
+                            <span class="badge bg-label-secondary small fw-normal ms-2">Optional</span>
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Manufacturer</label>
-                                <input type="text" name="manufacturer" class="form-control"
-                                    value="{{ old('manufacturer', $product->manufacturer ?? '') }}"
-                                    placeholder="e.g. Intel, Asus">
+                                <input class="form-control" name="manufacturer" placeholder="e.g. Intel, Asus"
+                                    type="text" value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Model Number</label>
-                                <input type="text" name="model_number" class="form-control"
-                                    value="{{ old('model_number', $product->model_number ?? '') }}"
-                                    placeholder="e.g. ROG-STRIX-Z790">
+                                <input class="form-control" name="model_number" placeholder="e.g. ROG-STRIX-Z790"
+                                    type="text" value="{{ old('model_number', $product->model_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Part / Serial No.</label>
-                                <input type="text" name="part_number" class="form-control"
-                                    value="{{ old('part_number', $product->part_number ?? '') }}"
-                                    placeholder="e.g. 90MB1CS0">
+                                <input class="form-control" name="part_number" placeholder="e.g. 90MB1CS0"
+                                    type="text" value="{{ old('part_number', $product->part_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Warranty</label>
-                                <input type="text" name="warranty" class="form-control"
-                                    value="{{ old('warranty', $product->warranty ?? '') }}" placeholder="e.g. 3 Years">
+                                <input class="form-control" name="warranty" placeholder="e.g. 3 Years" type="text"
+                                    value="{{ old('warranty', $product->warranty ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Color</label>
-                                <input type="text" name="color" class="form-control"
-                                    value="{{ old('color', $product->color ?? '') }}" placeholder="e.g. Space Grey">
+                                <input class="form-control" name="color" placeholder="e.g. Space Grey" type="text"
+                                    value="{{ old('color', $product->color ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Weight</label>
-                                <input type="text" name="weight" class="form-control"
-                                    value="{{ old('weight', $product->weight ?? '') }}" placeholder="e.g. 1.2 kg">
+                                <input class="form-control" name="weight" placeholder="e.g. 1.2 kg" type="text"
+                                    value="{{ old('weight', $product->weight ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Country of Origin</label>
-                                <input type="text" name="country_of_origin" class="form-control"
-                                    value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}"
-                                    placeholder="e.g. Taiwan">
+                                <input class="form-control" name="country_of_origin" placeholder="e.g. Taiwan"
+                                    type="text"
+                                    value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- -- Card 5: Media & Description ------------------------------- --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-transparent py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-image me-2 text-warning"></i>Media & Description
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-transparent py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-image text-warning me-2"></i>Media & Description
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -408,17 +416,18 @@
 
                                 {{-- Primary Image --}}
                                 <label class="form-label fw-semibold mb-2">Primary Image</label>
-                                <div class="border rounded-3 p-3 mb-3" style="background:rgba(105,108,255,.03);">
+                                <div class="rounded-3 mb-3 border p-3" style="background:rgba(105,108,255,.03);">
                                     <div class="d-flex align-items-center gap-3">
                                         {{-- Preview box --}}
-                                        <div class="rounded-3 border overflow-hidden flex-shrink-0 d-flex align-items-center justify-content-center"
+                                        <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden border"
                                             style="width:90px;height:90px;background:#f0f1ff;">
-                                            <img id="imagePreview"
+                                            <img class="{{ isset($product) && $product->image ? '' : 'd-none' }}"
+                                                id="imagePreview"
                                                 src="{{ isset($product) && $product->image ? asset('uploads/products/' . $product->image) : '' }}"
-                                                class="{{ isset($product) && $product->image ? '' : 'd-none' }}"
                                                 style="width:90px;height:90px;object-fit:contain;">
-                                            <span id="imageNoPreview"
-                                                class="{{ isset($product) && $product->image ? 'd-none' : '' }} text-center text-muted small">
+                                            <span
+                                                class="{{ isset($product) && $product->image ? 'd-none' : '' }} text-muted small text-center"
+                                                id="imageNoPreview">
                                                 <i class="bx bx-image d-block mb-1"
                                                     style="font-size:2rem;opacity:.35;"></i>
                                                 No Image
@@ -426,40 +435,41 @@
                                         </div>
                                         {{-- Buttons --}}
                                         <div>
-                                            <button type="button" id="triggerImageBtn"
-                                                class="btn btn-primary d-block mb-2">
+                                            <button class="btn btn-primary d-block mb-2" id="triggerImageBtn"
+                                                type="button">
                                                 <i class="bx bx-upload me-1"></i> Upload
                                             </button>
-                                            <button type="button" id="removeImageBtn"
-                                                class="btn btn-outline-danger d-block {{ isset($product) && $product->image ? '' : 'd-none' }}">
+                                            <button
+                                                class="btn btn-outline-danger d-block {{ isset($product) && $product->image ? '' : 'd-none' }}"
+                                                id="removeImageBtn" type="button">
                                                 <i class="bx bx-trash me-1"></i> Remove
                                             </button>
                                             <div class="form-text mt-1">PNG, JPG, WEBP<br>Max 2 MB</div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="file" name="image" id="imageInput" class="d-none" accept="image/*">
-                                <input type="hidden" name="remove_image" id="remove_image" value="0">
+                                <input accept="image/*" class="d-none" id="imageInput" name="image" type="file">
+                                <input id="remove_image" name="remove_image" type="hidden" value="0">
 
                                 {{-- Gallery Images --}}
                                 <label class="form-label fw-semibold mb-2">Gallery Images</label>
-                                <input type="file" name="gallery[]" id="galleryInput" multiple class="d-none"
-                                    accept="image/*">
-                                <input type="hidden" name="clear_gallery" id="clear_gallery" value="0">
-                                <input type="hidden" name="remove_gallery_images" id="remove_gallery_images"
+                                <input accept="image/*" class="d-none" id="galleryInput" multiple name="gallery[]"
+                                    type="file">
+                                <input id="clear_gallery" name="clear_gallery" type="hidden" value="0">
+                                <input id="remove_gallery_images" name="remove_gallery_images" type="hidden"
                                     value="">
 
                                 {{-- Drop Zone --}}
-                                <div id="galleryDropZone"
-                                    class="border border-2 border-dashed rounded-3 p-3 text-center mb-2"
+                                <div class="rounded-3 mb-2 border border-2 border-dashed p-3 text-center"
+                                    id="galleryDropZone"
                                     style="border-color:rgba(105,108,255,.35)!important;background:rgba(105,108,255,.03);cursor:pointer;transition:border-color .2s,background .2s;">
-                                    <i class="bx bx-cloud-upload d-block mb-1 text-primary"
+                                    <i class="bx bx-cloud-upload d-block text-primary mb-1"
                                         style="font-size:1.8rem;opacity:.6;"></i>
                                     <div class="small text-muted">Drop images here or</div>
-                                    <button type="button" id="triggerGalleryBtn" class="btn btn-outline-primary mt-1">
+                                    <button class="btn btn-outline-primary mt-1" id="triggerGalleryBtn" type="button">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
-                                    <div class="form-text mt-1 mb-0">PNG, JPG, WEBP � Max 2MB each</div>
+                                    <div class="form-text mb-0 mt-1">PNG, JPG, WEBP � Max 2MB each</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -469,19 +479,19 @@
                                         @foreach ($product->gallery as $galImg)
                                             <div class="position-relative gallery-thumb" data-image="{{ $galImg }}"
                                                 style="aspect-ratio:1;border-radius:8px;overflow:visible;">
-                                                <img src="{{ asset('uploads/products/' . $galImg) }}" class="w-100 h-100"
+                                                <img class="w-100 h-100" src="{{ asset('uploads/products/' . $galImg) }}"
                                                     style="object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,.12);">
-                                                <button type="button"
-                                                    class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
+                                                <button
+                                                    class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger rounded-circle border-0 text-white shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove">�</button>
+                                                    title="Remove" type="button">�</button>
                                             </div>
                                         @endforeach
                                     @endif
                                 </div>
 
-                                <button type="button" id="clearAllGalleryBtn"
-                                    class="btn btn-link text-danger px-0 mt-2 d-none">
+                                <button class="btn btn-link text-danger d-none mt-2 px-0" id="clearAllGalleryBtn"
+                                    type="button">
                                     <i class="bx bx-trash me-1"></i> Clear All
                                 </button>
                             </div>
@@ -490,17 +500,16 @@
                             <div class="col-md-7">
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Short Description</label>
-                                    <textarea name="short_description" rows="3"
-                                        class="form-control @error('short_description') is-invalid @enderror" placeholder="Key features summary...">{{ old('short_description', $product->short_description ?? '') }}</textarea>
+                                    <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
+                                        placeholder="Key features summary..." rows="3">{{ old('short_description', $product->short_description ?? '') }}</textarea>
                                     @error('short_description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="mb-0">
                                     <label class="form-label fw-semibold">Full Description / Specifications</label>
-                                    <textarea name="full_description" rows="8"
-                                        class="form-control @error('full_description') is-invalid @enderror"
-                                        placeholder="Complete specifications, box contents...">{{ old('full_description', $product->full_description ?? '') }}</textarea>
+                                    <textarea class="form-control @error('full_description') is-invalid @enderror" name="full_description"
+                                        placeholder="Complete specifications, box contents..." rows="8">{{ old('full_description', $product->full_description ?? '') }}</textarea>
                                     @error('full_description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -517,10 +526,10 @@
             <div class="col-lg-4">
 
                 {{-- -- Card: Publish -------------------------------------------- --}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-transparent py-3 border-bottom">
-                        <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-send me-2 text-primary"></i>Publish
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header border-bottom bg-transparent py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-send text-primary me-2"></i>Publish
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -529,14 +538,15 @@
                         <div class="mb-4">
                             <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <div class="d-flex align-items-center gap-3">
-                                <input type="hidden" name="status" value="inactive">
+                                <input name="status" type="hidden" value="inactive">
                                 <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="statusToggle"
-                                        name="status" value="active"
-                                        {{ old('status', 'active') === 'active' ? 'checked' : '' }}>
+                                    <input {{ old('status', 'active') === 'active' ? 'checked' : '' }}
+                                        class="form-check-input" id="statusToggle" name="status" role="switch"
+                                        type="checkbox" value="active">
                                 </div>
-                                <span id="statusLabel"
-                                    class="fw-semibold {{ old('status', 'active') === 'active' ? 'text-success' : 'text-danger' }}">
+                                <span
+                                    class="fw-semibold {{ old('status', 'active') === 'active' ? 'text-success' : 'text-danger' }}"
+                                    id="statusLabel">
                                     {{ old('status', 'active') === 'active' ? __('messages.active') : __('messages.inactive') }}
                                 </span>
                             </div>
@@ -544,11 +554,11 @@
 
                         {{-- Action buttons --}}
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
+                            <button class="btn btn-primary" type="submit">
                                 <i class="bx bx-save me-1"></i>
                                 {{ isset($isCopy) ? 'Save Copied Product' : __('messages.save') }}
                             </button>
-                            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
+                            <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">
                                 <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                             </a>
                         </div>
@@ -556,12 +566,12 @@
                 </div>
 
                 {{-- -- Card: Quick Tips ------------------------------------------ --}}
-                <div class="card shadow-sm border-0">
+                <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
                         <h6 class="fw-semibold mb-3">
-                            <i class="bx bx-bulb me-2 text-warning"></i>Quick Tips
+                            <i class="bx bx-bulb text-warning me-2"></i>Quick Tips
                         </h6>
-                        <ul class="list-unstyled mb-0 small text-muted">
+                        <ul class="list-unstyled small text-muted mb-0">
                             <li class="mb-2"><i class="bx bx-check-circle text-success me-1"></i>SKU must be unique
                                 across all products.</li>
                             <li class="mb-2"><i class="bx bx-check-circle text-success me-1"></i>Select Main Category

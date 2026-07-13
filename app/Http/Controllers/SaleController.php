@@ -439,8 +439,8 @@ class SaleController extends Controller
                 'stock'           => $stockQty,
                 'out_of_stock'    => $stockQty <= 0,
                 'price'           => $price,
-                'tax'             => $p->tax_percentage,
-                'discount'        => 0,
+                'tax_percent'     => $p->tax_percentage,
+                'discount_amount' => $p->discount_price_amount ?? 0,
                 'unit'            => $p->unit_code ?? 'PCS',
                 'currency_symbol' => $symbol,
                 'image_url'       => $p->image

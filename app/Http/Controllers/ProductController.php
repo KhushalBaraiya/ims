@@ -278,7 +278,7 @@ class ProductController extends Controller
 
         // supplier_id is only for opening stock — do NOT persist on product
         $openingSupplier = $validated['supplier_id'] ?? null;
-        unset($validated['supplier_id'], $validated['initial_qty'], $validated['discount_percentage']);
+        unset($validated['supplier_id'], $validated['initial_qty']);
 
         // Hard cap tax at 100%
         if (isset($validated['tax_percentage'])) {
@@ -428,7 +428,7 @@ class ProductController extends Controller
         $validated = $request->validated();
 
         // supplier_id / initial_qty are only for opening stock on create — strip them
-        unset($validated['supplier_id'], $validated['initial_qty'], $validated['discount_percentage']);
+        unset($validated['supplier_id'], $validated['initial_qty']);
 
         // Hard cap tax at 100%
         if (isset($validated['tax_percentage'])) {
@@ -516,7 +516,7 @@ class ProductController extends Controller
         $subCategories = SubCategory::where('status', 'active')->orderBy('name')->get();
         $suppliers     = Supplier::where('status', 'active')->orderBy('name')->get();
 
-        $copy = $product->replicate(['code', 'barcode', 'image', 'gallery', 'slug']);
+        $copy = $product->replicate(['code', 'barcode', 'image', 'gallery']);
         $suffix    = '-COPY-' . strtoupper(\Illuminate\Support\Str::random(4));
         $baseCode  = strtoupper($product->code);
         $maxBase   = 50 - strlen($suffix);

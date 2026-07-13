@@ -15,7 +15,6 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'slug',
         'code',
         'barcode',
         'brand_id',
@@ -26,6 +25,7 @@ class Product extends Model
         'purchase_price',
         'selling_price',
         'tax_percentage',
+        'discount_price_amount',
         'minimum_stock_alert',
         'image',
         'gallery',

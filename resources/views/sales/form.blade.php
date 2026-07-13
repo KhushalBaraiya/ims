@@ -234,7 +234,8 @@
         {{-- Invoice Info Card --}}
         <div class="card mb-4 shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-file text-primary me-2"></i>{{ __("messages.invoice_info") }}</h6>
+                <h6 class="fw-semibold mb-0"><i
+                        class="bx bx-file text-primary me-2"></i>{{ __('messages.invoice_info') }}</h6>
             </div>
             <div class="card-body p-4">
 
@@ -313,7 +314,8 @@
 
                 {{-- Status --}}
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.status') }} <span
+                            class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('status') is-invalid @enderror" name="status" required>
                         @foreach (['Completed', 'Pending', 'Draft', 'Repair', 'Ordered'] as $statusOpt)
@@ -334,7 +336,8 @@
         {{-- Payment Details Card --}}
         <div class="card shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
-                <h6 class="fw-semibold mb-0"><i class="bx bx-credit-card text-success me-2"></i>{{ __("messages.payment_details") }}</h6>
+                <h6 class="fw-semibold mb-0"><i
+                        class="bx bx-credit-card text-success me-2"></i>{{ __('messages.payment_details') }}</h6>
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
@@ -360,7 +363,8 @@
                     @enderror
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span
+                            class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
                         name="paid_amount" required step="0.01" type="number"
@@ -418,7 +422,7 @@
                     <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center"
                         id="emptyTableMsg">
                         <i class="bx bx-cart mb-2" style="font-size:2.5rem;opacity:.3;"></i>
-                        <p class="mb-0 small">No products added to invoice.</p>
+                        <p class="small mb-0">No products added to invoice.</p>
                     </div>
                 </div>
             </div>
@@ -440,7 +444,7 @@
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0">{{ __("messages.calculation_summary") }}</h6>
+                        <h6 class="fw-semibold mb-0">{{ __('messages.calculation_summary') }}</h6>
                     </div>
                     <div class="card-body p-4">
 
@@ -552,8 +556,8 @@
                 <i class="bx bx-x me-1"></i> Cancel
             </a>
             @can('stocks.create')
-                <button type="button" class="btn btn-outline-warning" id="btnAdjustStock"
-                    title="Open Stock Adjustment with current invoice products">
+                <button class="btn btn-outline-warning" id="btnAdjustStock"
+                    title="Open Stock Adjustment with current invoice products" type="button">
                     <i class="bx bx-slider me-1"></i> Adjust Stock
                 </button>
             @endcan
@@ -681,7 +685,7 @@
                                 resultsDiv.append(
                                     `<div class="autocomplete-item${oosClass} d-flex align-items-center gap-3 px-3 py-2"
                                         data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
-                                        data-price="${p.price}" data-tax="${p.tax}" data-discount="${p.discount}"
+                                        data-price="${p.price}" data-tax-percent="${p.tax_percent}" data-discount-amount="${p.discount_amount}"
                                         data-unit="${p.unit}" data-image="${p.image_url}" data-oos="${isOos ? '1' : '0'}"
                                         style="cursor:${isOos ? 'not-allowed' : 'pointer'};">
                                         <img src="${p.image_url}" class="ac-img" onerror="imgError(this)">
@@ -725,8 +729,8 @@
                     sku: $(this).data('sku'),
                     stock: parseFloat($(this).data('stock')),
                     price: parseFloat($(this).data('price')),
-                    taxPct: parseFloat($(this).data('tax')),
-                    discPct: parseFloat($(this).data('discount')),
+                    taxPercent: parseFloat($(this).data('tax-percent')),
+                    discountAmount: parseFloat($(this).data('discount-amount')),
                     unit: $(this).data('unit'),
                     image_url: $(this).data('image'),
                 };
@@ -743,9 +747,10 @@
                     searchInput.val('');
                     return;
                 }
-                // Convert percentage to per-unit amount
-                p.taxAmt = parseFloat(((p.taxPct / 100) * p.price).toFixed(2));
-                p.discAmt = parseFloat(((p.discPct / 100) * p.price).toFixed(2));
+                // Calculate tax amount on (price - discount)
+                const priceAfterDiscount = p.price - p.discountAmount;
+                p.taxAmt = parseFloat(((p.taxPercent / 100) * priceAfterDiscount).toFixed(2));
+                p.discAmt = p.discountAmount;
                 p.qty = 1;
                 addProductRow(p);
                 resultsDiv.addClass('d-none').empty();
@@ -852,7 +857,7 @@
                 'Percentage (%)' : 'Amount');
 
             // ── Core calculation engine ───────────────────────────────────────
-            // 1. Compute row totals  → subtotal
+            // 1. Compute row totals: price - discount, then + tax on discounted price
             // 2. Apply global discount (fixed or %) on subtotal
             // 3. Apply global tax (%) on (subtotal - discount)
             // 4. Add shipping → grand total
@@ -865,7 +870,10 @@
                     const price = parseFloat(row.find('.price-input').val()) || 0;
                     const discU = parseFloat(row.find('.disc-hidden').val()) || 0;
                     const taxU = parseFloat(row.find('.tax-hidden').val()) || 0;
-                    const rowTot = (price + taxU - discU) * qty;
+
+                    // Row calculation: (price - discount + tax) × qty
+                    const priceAfterDiscount = price - discU;
+                    const rowTot = (priceAfterDiscount + taxU) * qty;
                     row.find('.subtotal-cell').text(fmt(rowTot));
                     subtotal += price * qty; // subtotal = sum of (qty × unit_price), raw
                 });
@@ -937,7 +945,3 @@
         });
     </script>
 @endpush
-
-
-
-
