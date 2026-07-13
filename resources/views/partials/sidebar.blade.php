@@ -372,12 +372,6 @@
                 </li>
                 <li>
                     <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                        href="{{ route('profile.show') }}#edit-profile">
-                        <i class="bx bx-edit"></i> {{ __('messages.profile_information') }}
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
                         href="{{ route('profile.show') }}#change-password">
                         <i class="bx bx-lock-alt"></i> {{ __('messages.change_password') }}
                     </a>
@@ -406,8 +400,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-       SIDEBAR — Sneat overrides
-       ════════════════════════════════════════════ */
+           SIDEBAR — Sneat overrides
+           ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {
