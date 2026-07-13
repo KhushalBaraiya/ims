@@ -593,6 +593,9 @@ class ProductSeeder extends Seeder
             $stockQty = $data['stock_quantity'] ?? 0;
             unset($data['stock_quantity']);
 
+            // Remove slug — not a column in the products table
+            unset($data['slug']);
+
             // gallery needs to be JSON-ready
             if (!isset($data['gallery'])) {
                 $data['gallery'] = [];
@@ -603,10 +606,10 @@ class ProductSeeder extends Seeder
                 $data
             );
 
-            // Stock::updateOrCreate(
-            //     ['product_id' => $product->id],
-            //     ['quantity'   => $stockQty]
-            // );
+            Stock::updateOrCreate(
+                ['product_id' => $product->id],
+                ['quantity'   => $stockQty]
+            );
         }
 
         $this->command->info('✅ ProductSeeder done — ' . count($products) . ' products seeded.');
