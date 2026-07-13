@@ -104,7 +104,6 @@
             {{ !isset($user) ? 'required' : '' }}>
     </div>
 </div>
-
 <div class="d-flex justify-content-end gap-2 pt-4 mt-2 border-top">
     <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">
         <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
