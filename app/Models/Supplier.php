@@ -25,7 +25,6 @@ class Supplier extends Model
         'state',
         'country',
         'pincode',
-        'opening_balance',
         'status',
         'notes',
     ];

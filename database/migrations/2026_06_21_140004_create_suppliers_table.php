@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->string('pincode')->nullable();
-            $table->decimal('opening_balance', 12, 2)->default(0.00);
             $table->string('status')->default('active');
             $table->text('notes')->nullable();
             $table->softDeletes();

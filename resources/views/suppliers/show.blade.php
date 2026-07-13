@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', __('messages.supplier_details') . ' — ' . $supplier->name)
+@section('title', __('messages.supplier_details') . ' ï¿½ ' . $supplier->name)
 
 @section('content')
 
@@ -7,7 +7,7 @@
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.supplier_details') }}</h4>
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 small">
+                <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('suppliers.index') }}">{{ __('messages.menu_suppliers') }}</a></li>
@@ -17,36 +17,36 @@
         </div>
         <div class="d-flex gap-2">
             @can('suppliers.update')
-                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-primary">
+                <a class="btn btn-primary" href="{{ route('suppliers.edit', $supplier->id) }}">
                     <i class="bx bx-edit me-1"></i> {{ __('messages.edit') }}
                 </a>
             @endcan
-            <a href="{{ route('suppliers.index') }}" class="btn btn-outline-secondary">
+            <a class="btn btn-outline-secondary" href="{{ route('suppliers.index') }}">
                 <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
             </a>
         </div>
     </div>
 
     {{-- -- Hero Banner -- --}}
-    <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
-        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
-            <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
+    <div class="card mb-4 border-0 shadow-sm" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3 px-4 py-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 border border-2 border-white"
                 style="width:54px;height:54px;background:rgba(255,255,255,.2)">
-                <i class="bx bx-truck text-white fs-4"></i>
+                <i class="bx bx-truck fs-4 text-white"></i>
             </div>
             <div class="flex-grow-1">
-                <div class="text-white fw-bold fs-6 lh-sm">{{ $supplier->name }}</div>
-                <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
+                <div class="fw-bold fs-6 lh-sm text-white">{{ $supplier->name }}</div>
+                <div class="small d-flex mt-1 flex-wrap gap-2 text-white opacity-75">
                     @if ($supplier->company_name)
                         <span><i class="bx bx-buildings me-1"></i>{{ $supplier->company_name }}</span>
                     @endif
                     <span><i class="bx bx-phone me-1"></i>{{ $supplier->phone }}</span>
-                    <span>· {{ $supplier->purchases->count() }} {{ __('messages.total_purchases') }}</span>
+                    <span>ï¿½ {{ $supplier->purchases->count() }} {{ __('messages.total_purchases') }}</span>
                 </div>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
+            <div class="d-flex flex-wrap gap-2">
                 <span
-                    class="badge bg-white fw-semibold {{ $supplier->status === 'active' ? 'text-success' : 'text-secondary' }}">
+                    class="badge fw-semibold {{ $supplier->status === 'active' ? 'text-success' : 'text-secondary' }} bg-white">
                     <i
                         class="bx {{ $supplier->status === 'active' ? 'bx-check' : 'bx-x' }} me-1"></i>{{ ucfirst($supplier->status) }}
                 </span>
@@ -60,18 +60,18 @@
         <div class="col-lg-8">
 
             {{-- Header Card --}}
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4 shadow-sm">
                 <div
-                    class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-store me-2 text-primary"></i>{{ __('messages.supplier_details') }}
+                    class="card-header border-bottom d-flex justify-content-between align-items-center bg-transparent py-3">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bx bx-store text-primary me-2"></i>{{ __('messages.supplier_details') }}
                     </h6>
                     <span class="badge rounded-pill {{ $supplier->status === 'active' ? 'bg-success' : 'bg-danger' }}">
                         {{ $supplier->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                     </span>
                 </div>
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center gap-4 mb-4">
+                    <div class="d-flex align-items-center mb-4 gap-4">
                         <div class="avatar flex-shrink-0" style="width:72px;height:72px;">
                             <span
                                 class="avatar-initial rounded-circle bg-label-warning w-100 h-100 d-flex align-items-center justify-content-center"
@@ -95,22 +95,15 @@
                     {{-- Stats Row --}}
                     <div class="row g-3 mb-4">
                         <div class="col-4">
-                            <div class="rounded-3 p-3 text-center bg-label-info">
+                            <div class="rounded-3 bg-label-info p-3 text-center">
                                 <div class="fw-bold fs-4 text-info">{{ $supplier->purchases->count() }}</div>
                                 <div class="text-muted small">{{ __('messages.total_purchases') }}</div>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="rounded-3 p-3 text-center bg-label-warning">
+                            <div class="rounded-3 bg-label-warning p-3 text-center">
                                 <div class="fw-bold fs-4 text-warning">{{ $supplier->purchaseReturns->count() }}</div>
                                 <div class="text-muted small">{{ __('messages.purchase_returns') }}</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="rounded-3 p-3 text-center bg-label-primary">
-                                <div class="fw-bold fs-4 text-primary">
-                                    {{ format_currency($supplier->opening_balance ?? 0) }}</div>
-                                <div class="text-muted small">{{ __('messages.opening_balance') }}</div>
                             </div>
                         </div>
                     </div>
@@ -118,10 +111,10 @@
             </div>
 
             {{-- Contact Details --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-transparent py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-phone me-2 text-success"></i>{{ __('messages.contact_details') }}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header border-bottom bg-transparent py-3">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bx bx-phone text-success me-2"></i>{{ __('messages.contact_details') }}
                     </h6>
                 </div>
                 <div class="card-body p-0">
@@ -138,7 +131,7 @@
                         @endif
                         <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
                             <span class="text-muted small fw-semibold">{{ __('messages.email_address') }}</span>
-                            <span>{{ $supplier->email ?: '—' }}</span>
+                            <span>{{ $supplier->email ?: 'ï¿½' }}</span>
                         </li>
                         @if ($supplier->gst_number)
                             <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
@@ -156,15 +149,15 @@
                             <li class="list-group-item px-4 py-3">
                                 <span
                                     class="text-muted small fw-semibold d-block mb-1">{{ __('messages.address_label') }}</span>
-                                <p class="mb-0 small">
-                                    {{ implode(', ', array_filter([$supplier->address, $supplier->city, $supplier->state, $supplier->pincode, $supplier->country])) ?: '—' }}
+                                <p class="small mb-0">
+                                    {{ implode(', ', array_filter([$supplier->address, $supplier->city, $supplier->state, $supplier->pincode, $supplier->country])) ?: 'ï¿½' }}
                                 </p>
                             </li>
                         @endif
                         @if ($supplier->notes)
                             <li class="list-group-item px-4 py-3">
                                 <span class="text-muted small fw-semibold d-block mb-1">{{ __('messages.notes') }}</span>
-                                <p class="mb-0 small text-muted">{{ $supplier->notes }}</p>
+                                <p class="small text-muted mb-0">{{ $supplier->notes }}</p>
                             </li>
                         @endif
                     </ul>
@@ -174,19 +167,19 @@
             {{-- Recent Purchases --}}
             <div class="card shadow-sm">
                 <div
-                    class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-receipt me-2 text-info"></i>{{ __('messages.recent_purchases') }}
+                    class="card-header border-bottom d-flex justify-content-between align-items-center bg-transparent py-3">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bx bx-receipt text-info me-2"></i>{{ __('messages.recent_purchases') }}
                         <span class="badge bg-label-info ms-1">{{ $supplier->purchases->count() }}</span>
                     </h6>
-                    <a href="{{ route('purchases.index') }}"
-                        class="btn btn-sm btn-outline-info">{{ __('messages.view_all') }}</a>
+                    <a class="btn btn-sm btn-outline-info"
+                        href="{{ route('purchases.index') }}">{{ __('messages.view_all') }}</a>
                 </div>
                 <div class="card-body p-0">
                     @php $recentPurchases = $supplier->purchases->sortByDesc('created_at')->take(5); @endphp
                     @if ($recentPurchases->count())
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
+                            <table class="table-hover mb-0 table align-middle">
                                 <thead class="table-light">
                                     <tr>
                                         <th class="ps-4">{{ __('messages.th_purchase_no') }}</th>
@@ -199,13 +192,13 @@
                                     @foreach ($recentPurchases as $p)
                                         <tr>
                                             <td class="ps-4">
-                                                <a href="{{ route('purchases.show', $p->id) }}"
-                                                    class="fw-semibold text-info">
+                                                <a class="fw-semibold text-info"
+                                                    href="{{ route('purchases.show', $p->id) }}">
                                                     <code>{{ $p->purchase_no }}</code>
                                                 </a>
                                             </td>
                                             <td class="small text-muted">{{ $p->purchase_date }}</td>
-                                            <td class="text-end fw-bold">{{ format_currency($p->grand_total) }}</td>
+                                            <td class="fw-bold text-end">{{ format_currency($p->grand_total) }}</td>
                                             <td class="text-center">
                                                 <span
                                                     class="badge rounded-pill {{ $p->status === 'Completed' ? 'bg-success' : ($p->status === 'Pending' ? 'bg-warning text-dark' : 'bg-danger') }}">
@@ -235,34 +228,34 @@
         <div class="col-lg-4">
 
             {{-- Information --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-transparent py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.information') }}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header border-bottom bg-transparent py-3">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.information') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">ID</span>
                             <span class="fw-bold">#{{ $supplier->id }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">{{ __('messages.supplier_name') }}</span>
                             <span class="fw-bold">{{ $supplier->name }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">{{ __('messages.th_status') }}</span>
                             <span
                                 class="badge rounded-pill {{ $supplier->status === 'active' ? 'bg-success' : 'bg-danger' }}">
                                 {{ $supplier->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                             </span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">{{ __('messages.total_purchases') }}</span>
                             <span class="badge bg-label-info">{{ $supplier->purchases->count() }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2 border-bottom">
+                        <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">{{ __('messages.th_created') }}</span>
                             <span class="small">{{ $supplier->created_at->format('d M Y') }}</span>
                         </li>
@@ -276,27 +269,27 @@
 
             {{-- Quick Actions --}}
             <div class="card shadow-sm">
-                <div class="card-header bg-transparent py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}
+                <div class="card-header border-bottom bg-transparent py-3">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bx bx-bolt-circle text-warning me-2"></i>{{ __('messages.quick_actions') }}
                     </h6>
                 </div>
-                <div class="card-body p-4 d-grid gap-2">
+                <div class="card-body d-grid gap-2 p-4">
                     @can('suppliers.update')
-                        <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-primary">
+                        <a class="btn btn-primary" href="{{ route('suppliers.edit', $supplier->id) }}">
                             <i class="bx bx-edit me-1"></i> {{ __('messages.edit_supplier') }}
                         </a>
                     @endcan
                     @can('purchases.create')
-                        <a href="{{ route('purchases.create') }}" class="btn btn-outline-info">
+                        <a class="btn btn-outline-info" href="{{ route('purchases.create') }}">
                             <i class="bx bx-plus me-1"></i> {{ __('messages.add_purchase') }}
                         </a>
                     @endcan
                     @can('suppliers.delete')
-                        <form id="deleteForm" action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
+                        <form action="{{ route('suppliers.destroy', $supplier->id) }}" id="deleteForm" method="POST">
                             @csrf @method('DELETE')
-                            <button type="button" class="btn btn-outline-danger w-100 delete-btn"
-                                data-name="{{ $supplier->name }}">
+                            <button class="btn btn-outline-danger w-100 delete-btn" data-name="{{ $supplier->name }}"
+                                type="button">
                                 <i class="bx bx-trash me-1"></i> {{ __('messages.delete_supplier') }}
                             </button>
                         </form>

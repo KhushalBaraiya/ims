@@ -36,7 +36,6 @@ class SupplierRequest extends FormRequest
             'state' => 'nullable|string|max:100',
             'country' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:10',
-            'opening_balance' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
             'notes' => 'nullable|string',
         ];
@@ -61,7 +60,6 @@ class SupplierRequest extends FormRequest
             'state' => 'State',
             'country' => 'Country',
             'pincode' => 'Pincode',
-            'opening_balance' => 'Opening Balance',
             'status' => 'Status',
             'notes' => 'Notes',
         ];
