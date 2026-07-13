@@ -114,13 +114,18 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified role (redirects to edit).
+     * Display the specified role.
      */
-    public function show(Role $role): RedirectResponse
+    public function show(Role $role): View
     {
         Gate::authorize('roles.view');
 
-        return redirect()->route('roles.edit', $role);
+        $role->load('permissions', 'users');
+
+        $crudPermissions = $this->buildPermissionsMatrix();
+        $selectedPermissions = $role->permissions->pluck('name')->toArray();
+
+        return view('roles.show', compact('role', 'crudPermissions', 'selectedPermissions'));
     }
 
     /**

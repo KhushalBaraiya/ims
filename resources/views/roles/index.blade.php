@@ -36,7 +36,8 @@
             <form method="GET" action="{{ route('roles.index') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold small">{{ __('messages.search') }} {{ __('messages.role') }}</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.search') }}
+                            {{ __('messages.role') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
                             value="{{ request('search') }}" placeholder="Role name...">
                     </div>
@@ -92,6 +93,13 @@
                                 <td class="text-muted small">{{ $role->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
+                                        @can('roles.view')
+                                            <a class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                href="{{ route('roles.show', $role->id) }}"
+                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.view') }}">
+                                                <i class="bx bx-show" style="font-size:1rem;"></i>
+                                            </a>
+                                        @endcan
                                         @can('roles.update')
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
                                                 href="{{ route('roles.edit', $role->id) }}"
@@ -219,13 +227,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
-                    text: '{{ __("messages.confirm_delete") }}',
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: '{{ __('messages.confirm_delete') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -239,7 +247,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -260,6 +268,3 @@
         });
     </script>
 @endpush
-
-
-
