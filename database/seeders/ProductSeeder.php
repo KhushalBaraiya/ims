@@ -3,10 +3,18 @@
 namespace Database\Seeders;
 
 use App\Models\Brand;
+use App\Models\Customer;
 use App\Models\MainCategory;
 use App\Models\Product;
+use App\Models\Purchase;
+use App\Models\PurchaseItem;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use App\Models\Stock;
+use App\Models\StockAdjustment;
 use App\Models\SubCategory;
+use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -22,6 +30,7 @@ use Illuminate\Support\Str;
  *  🏷️  Zero-profit / loss product
  *  🔢  High stock (accessories)
  *  🌐  Multiple categories & brands
+ *  📦  Creates purchases and sales with stock management
  */
 class ProductSeeder extends Seeder
 {
@@ -42,21 +51,23 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $this->seedProducts();
+        $this->createPurchasesAndSales();
     }
 
     private function make(array $d): array
     {
         return array_merge([
-            'tax_percentage'      => 18,
-            'unit_name'           => 'Piece',
-            'unit_code'           => 'PCS',
-            'warranty'            => '6 Months',
-            'color'               => 'N/A',
-            'weight'              => '200g',
-            'country_of_origin'   => 'India',
-            'image'               => null,
-            'gallery'             => [],
-            'status'              => 'active',
+            'tax_percentage'       => 18,
+            'discount_price_amount' => 0.00,
+            'unit_name'            => 'Piece',
+            'unit_code'            => 'PCS',
+            'warranty'             => '6 Months',
+            'color'                => 'N/A',
+            'weight'               => '200g',
+            'country_of_origin'    => 'India',
+            'image'                => null,
+            'gallery'              => [],
+            'status'               => 'active',
         ], $d);
     }
 
@@ -69,7 +80,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Samsung Galaxy A53 Motherboard',
-            'slug' => 'samsung-galaxy-a53-motherboard',
             'code' => 'MMB-SAM-A53',
             'barcode' => 'MMB-SAM-A53',
             'brand_id' => $this->brand('Samsung'),
@@ -86,7 +96,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Dell Inspiron 15 Motherboard',
-            'slug' => 'dell-inspiron-15-motherboard',
             'code' => 'MB-DEL-INS15',
             'barcode' => 'MB-DEL-INS15',
             'brand_id' => $this->brand('Dell'),
@@ -103,7 +112,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'HP Pavilion 14 Motherboard',
-            'slug' => 'hp-pavilion-14-motherboard',
             'code' => 'MB-HP-PAV14',
             'barcode' => 'MB-HP-PAV14',
             'brand_id' => $this->brand('HP'),
@@ -119,7 +127,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Xiaomi Redmi Note 12 Motherboard',
-            'slug' => 'xiaomi-redmi-note-12-motherboard',
             'code' => 'MMB-XIA-RN12',
             'barcode' => 'MMB-XIA-RN12',
             'brand_id' => $this->brand('Xiaomi'),
@@ -139,7 +146,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Asus TUF F15 Motherboard ⚠️ LOW',
-            'slug' => 'asus-tuf-f15-motherboard',
             'code' => 'MB-ASU-TUFF15',
             'barcode' => 'MB-ASU-TUFF15',
             'brand_id' => $this->brand('Asus'),
@@ -156,7 +162,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'iPhone 13 OLED Display ⚠️ LOW',
-            'slug' => 'iphone-13-oled-display',
             'code' => 'DSP-APL-IP13',
             'barcode' => 'DSP-APL-IP13',
             'brand_id' => $this->brand('Apple'),
@@ -174,7 +179,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Lenovo IdeaPad 3 Motherboard ⚠️ LOW',
-            'slug' => 'lenovo-ideapad-3-motherboard',
             'code' => 'MB-LEN-IP3',
             'barcode' => 'MB-LEN-IP3',
             'brand_id' => $this->brand('Lenovo'),
@@ -191,7 +195,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Intel Core i5-12400 Processor ⚠️ LOW',
-            'slug' => 'intel-core-i5-12400-processor',
             'code' => 'CPU-INT-I512400',
             'barcode' => 'CPU-INT-I512400',
             'brand_id' => $this->brand('Intel'),
@@ -213,7 +216,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'OnePlus Nord CE3 Motherboard ❌ OUT',
-            'slug' => 'oneplus-nord-ce3-motherboard',
             'code' => 'MMB-OP-NCE3',
             'barcode' => 'MMB-OP-NCE3',
             'brand_id' => $this->brand('OnePlus'),
@@ -231,7 +233,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'AMD Radeon RX 6600 GPU ❌ OUT',
-            'slug' => 'amd-radeon-rx-6600-gpu',
             'code' => 'GPU-AMD-RX6600',
             'barcode' => 'GPU-AMD-RX6600',
             'brand_id' => $this->brand('AMD'),
@@ -249,7 +250,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Samsung A53 AMOLED Display ❌ OUT',
-            'slug' => 'samsung-a53-amoled-display',
             'code' => 'DSP-SAM-A53',
             'barcode' => 'DSP-SAM-A53',
             'brand_id' => $this->brand('Samsung'),
@@ -271,7 +271,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Realme 11 Pro Motherboard 🔴 INACTIVE',
-            'slug' => 'realme-11-pro-motherboard',
             'code' => 'MMB-REA-11P',
             'barcode' => 'MMB-REA-11P',
             'brand_id' => $this->brand('Realme'),
@@ -288,7 +287,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Oppo A78 Motherboard 🔴 INACTIVE',
-            'slug' => 'oppo-a78-motherboard',
             'code' => 'MMB-OPP-A78',
             'barcode' => 'MMB-OPP-A78',
             'brand_id' => $this->brand('Oppo'),
@@ -308,7 +306,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Generic USB Hub 4-Port 🖼️ NO IMG',
-            'slug' => 'generic-usb-hub-4-port',
             'code' => 'ACC-HUB-USB4',
             'barcode' => 'ACC-HUB-USB4',
             'brand_id' => $this->brand('Generic'),
@@ -324,7 +321,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Dell Laptop Charger 65W 🖼️ NO IMG',
-            'slug' => 'dell-laptop-charger-65w',
             'code' => 'ACC-CHR-DEL65',
             'barcode' => 'ACC-CHR-DEL65',
             'brand_id' => $this->brand('Dell'),
@@ -344,7 +340,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'MacBook Pro 14 M3 Motherboard 💰 HIGH VALUE',
-            'slug' => 'macbook-pro-14-m3-motherboard',
             'code' => 'MB-APL-MBP14M3',
             'barcode' => 'MB-APL-MBP14M3',
             'brand_id' => $this->brand('Apple'),
@@ -365,7 +360,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Clearance: Old Stock Earphone 🏷️ ZERO PROFIT',
-            'slug' => 'clearance-old-stock-earphone',
             'code' => 'ACC-EAR-CLR01',
             'barcode' => 'ACC-EAR-CLR01',
             'brand_id' => $this->brand('Generic'),
@@ -381,7 +375,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Clearance: Damaged Screen Guard 🏷️ LOSS',
-            'slug' => 'clearance-damaged-screen-guard',
             'code' => 'ACC-SG-CLR02',
             'barcode' => 'ACC-SG-CLR02',
             'brand_id' => $this->brand('Generic'),
@@ -401,7 +394,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Type-C Fast Charging Cable 1m',
-            'slug' => 'type-c-fast-charging-cable-1m',
             'code' => 'ACC-USB-TYPEC',
             'barcode' => 'ACC-USB-TYPEC',
             'brand_id' => $this->brand('Generic'),
@@ -417,7 +409,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Tempered Glass Screen Guard (Universal)',
-            'slug' => 'tempered-glass-screen-guard',
             'code' => 'ACC-SG-TEMP',
             'barcode' => 'ACC-SG-TEMP',
             'brand_id' => $this->brand('Generic'),
@@ -433,7 +424,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Silicone Phone Case (Universal)',
-            'slug' => 'silicone-phone-case-universal',
             'code' => 'ACC-CASE-SIL',
             'barcode' => 'ACC-CASE-SIL',
             'brand_id' => $this->brand('Generic'),
@@ -449,7 +439,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Mi 20000mAh Power Bank',
-            'slug' => 'mi-20000mah-power-bank',
             'code' => 'ACC-PB-MI20K',
             'barcode' => 'ACC-PB-MI20K',
             'brand_id' => $this->brand('Xiaomi'),
@@ -469,7 +458,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Redmi Note 12 LCD Display',
-            'slug' => 'redmi-note-12-lcd-display',
             'code' => 'DSP-XIA-RN12',
             'barcode' => 'DSP-XIA-RN12',
             'brand_id' => $this->brand('Xiaomi'),
@@ -485,7 +473,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Dell Inspiron 15 FHD Display',
-            'slug' => 'dell-inspiron-15-fhd-display',
             'code' => 'DSP-DEL-INS15',
             'barcode' => 'DSP-DEL-INS15',
             'brand_id' => $this->brand('Dell'),
@@ -501,7 +488,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'HP Pavilion 15 Display Panel',
-            'slug' => 'hp-pavilion-15-display-panel',
             'code' => 'DSP-HP-PAV15',
             'barcode' => 'DSP-HP-PAV15',
             'brand_id' => $this->brand('HP'),
@@ -520,7 +506,6 @@ class ProductSeeder extends Seeder
          * ═══════════════════════════════════════════════════════════════ */
         $products[] = $this->make([
             'name' => 'Samsung 8GB DDR4 RAM 3200MHz',
-            'slug' => 'samsung-8gb-ddr4-ram-3200mhz',
             'code' => 'RAM-SAM-8G3200',
             'barcode' => 'RAM-SAM-8G3200',
             'brand_id' => $this->brand('Samsung'),
@@ -537,7 +522,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Seagate 1TB SATA HDD',
-            'slug' => 'seagate-1tb-sata-hdd',
             'code' => 'HDD-SEA-1TB',
             'barcode' => 'HDD-SEA-1TB',
             'brand_id' => $this->brand('Generic'),
@@ -554,7 +538,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Samsung 256GB SSD SATA',
-            'slug' => 'samsung-256gb-ssd-sata',
             'code' => 'SSD-SAM-256G',
             'barcode' => 'SSD-SAM-256G',
             'brand_id' => $this->brand('Samsung'),
@@ -571,7 +554,6 @@ class ProductSeeder extends Seeder
 
         $products[] = $this->make([
             'name' => 'Asus VivoBook 15 Motherboard',
-            'slug' => 'asus-vivobook-15-motherboard',
             'code' => 'MB-ASU-VB15',
             'barcode' => 'MB-ASU-VB15',
             'brand_id' => $this->brand('Asus'),
@@ -592,9 +574,6 @@ class ProductSeeder extends Seeder
         foreach ($products as $data) {
             $stockQty = $data['stock_quantity'] ?? 0;
             unset($data['stock_quantity']);
-
-            // Remove slug — not a column in the products table
-            unset($data['slug']);
 
             // gallery needs to be JSON-ready
             if (!isset($data['gallery'])) {
@@ -623,5 +602,128 @@ class ProductSeeder extends Seeder
         $this->command->line('   🏷️   Zero/Loss      — Clearance Earphone, Clearance Screen Guard');
         $this->command->line('   🔢  High stock     — Type-C Cable, Tempered Glass, Silicone Case, Mi Power Bank');
         $this->command->line('   🌐  Multi-category — Displays (mobile+laptop), Computer hardware (RAM/HDD/SSD/GPU)');
+    }
+
+    private function createPurchasesAndSales(): void
+    {
+        // Get first supplier, customer, and admin user
+        $supplier = Supplier::first();
+        $customer = Customer::first();
+        $adminUser = User::first();
+
+        if (!$supplier || !$customer || !$adminUser) {
+            $this->command->warn('⚠️  Skipping purchases and sales - missing supplier, customer, or user.');
+            return;
+        }
+
+        $purchaseCount = 0;
+        $saleCount = 0;
+
+        // Get all products with stock
+        $productsWithStock = Product::whereHas('stock', function ($q) {
+            $q->where('quantity', '>', 0);
+        })->with('stock')->get();
+
+        $this->command->info('📦 Creating purchases for products with stock...');
+
+        foreach ($productsWithStock as $product) {
+            $stockQty = $product->stock->quantity;
+            
+            // Create a purchase for this product to justify the stock
+            $purchaseQty = $stockQty; // Purchase the exact stock quantity
+            $unitPrice = $product->purchase_price;
+            $lineTotal = $purchaseQty * $unitPrice;
+            
+            $purchase = Purchase::create([
+                'purchase_no' => 'PUR-SEED-' . str_pad($purchaseCount + 1, 5, '0', STR_PAD_LEFT),
+                'purchase_date' => now()->subDays(rand(10, 60)),
+                'reference_no' => 'REF-' . strtoupper(Str::random(6)),
+                'supplier_id' => $supplier->id,
+                'sub_total' => $lineTotal,
+                'tax_amount' => 0,
+                'discount_amount' => 0,
+                'shipping_amount' => 0,
+                'grand_total' => $lineTotal,
+                'paid_amount' => $lineTotal,
+                'due_amount' => 0,
+                'payment_method' => 'Cash',
+                'notes' => 'Seeded purchase for ' . $product->name,
+                'status' => 'completed',
+                'user_id' => $adminUser->id,
+            ]);
+
+            // Create purchase item
+            PurchaseItem::create([
+                'purchase_id' => $purchase->id,
+                'product_id' => $product->id,
+                'quantity' => $purchaseQty,
+                'purchase_price' => $unitPrice,
+                'tax_amount' => 0,
+                'discount_amount' => 0,
+                'total_amount' => $lineTotal,
+            ]);
+
+            $purchaseCount++;
+
+            // Create sales for products with stock > 10
+            if ($stockQty > 10) {
+                // Create 1-2 sales with max qty 10 per sale
+                $salesToCreate = rand(1, 2);
+                
+                for ($i = 0; $i < $salesToCreate; $i++) {
+                    $saleQty = rand(1, min(10, $stockQty)); // Max 10 per sale
+                    $sellingPrice = $product->selling_price;
+                    $discountAmount = $product->discount_price_amount ?? 0;
+                    $taxPercent = $product->tax_percentage ?? 0;
+                    
+                    // Calculate per-unit amounts
+                    $priceAfterDiscount = $sellingPrice - $discountAmount;
+                    $taxAmount = ($taxPercent / 100) * $priceAfterDiscount;
+                    $finalPrice = $priceAfterDiscount + $taxAmount;
+                    
+                    // Line totals
+                    $lineSubTotal = $sellingPrice * $saleQty;
+                    $lineTaxAmount = $taxAmount * $saleQty;
+                    $lineDiscountAmount = $discountAmount * $saleQty;
+                    $lineTotal = $finalPrice * $saleQty;
+                    
+                    $sale = Sale::create([
+                        'invoice_no' => 'INV-SEED-' . str_pad($saleCount + 1, 5, '0', STR_PAD_LEFT),
+                        'invoice_date' => now()->subDays(rand(1, 30)),
+                        'customer_id' => $customer->id,
+                        'sales_person_id' => $adminUser->id,
+                        'sub_total' => $lineSubTotal,
+                        'tax_amount' => $lineTaxAmount,
+                        'discount_amount' => $lineDiscountAmount,
+                        'shipping_amount' => 0,
+                        'grand_total' => $lineTotal,
+                        'paid_amount' => $lineTotal,
+                        'due_amount' => 0,
+                        'payment_method' => rand(0, 1) ? 'Cash' : 'Card',
+                        'notes' => 'Seeded sale for ' . $product->name,
+                        'status' => 'completed',
+                        'user_id' => $adminUser->id,
+                    ]);
+
+                    // Create sale item
+                    SaleItem::create([
+                        'sale_id' => $sale->id,
+                        'product_id' => $product->id,
+                        'quantity' => $saleQty,
+                        'unit_price' => $sellingPrice,
+                        'tax_amount' => $taxAmount,
+                        'discount_amount' => $discountAmount,
+                        'total_amount' => $lineTotal,
+                    ]);
+
+                    // Decrement stock
+                    $product->stock()->decrement('quantity', $saleQty);
+
+                    $saleCount++;
+                }
+            }
+        }
+
+        $this->command->info("✅ Created {$purchaseCount} purchases and {$saleCount} sales.");
     }
 }
