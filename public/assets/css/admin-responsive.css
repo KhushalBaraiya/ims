@@ -11,8 +11,45 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 img {
     max-width: 100%;
+}
+
+.layout-wrapper,
+.layout-container,
+.layout-page,
+.content-wrapper,
+.container-xxl,
+.layout-navbar {
+    min-width: 0;
+}
+
+.layout-wrapper {
+    min-height: 100vh;
+}
+
+.layout-page {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.content-wrapper {
+    overflow-x: hidden;
+}
+
+.container-xxl {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.row>[class*="col-"] {
+    min-width: 0;
 }
 
 .table-responsive {
@@ -74,6 +111,64 @@ table .table-light th {
 }
 
 /* ================================================================
+   GENERAL PAGE RESPONSIVENESS — all pages
+   ================================================================ */
+.card,
+.card-body,
+.card-header,
+.modal-content,
+.modal-body,
+.modal-footer {
+    max-width: 100%;
+}
+
+.card,
+.modal-content {
+    overflow: hidden;
+}
+
+.page-header,
+.page-title-row,
+.card-header,
+.d-flex.justify-content-between.align-items-center {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.form-control,
+.form-select,
+.form-floating>.form-control,
+.form-floating>.form-select,
+.input-group,
+.btn,
+.btn-group,
+.input-group .form-control {
+    max-width: 100%;
+}
+
+.btn-group {
+    flex-wrap: wrap;
+}
+
+.btn-group>.btn {
+    flex: 1 1 auto;
+}
+
+.modal-dialog {
+    margin: 0.75rem;
+    max-width: calc(100% - 1.5rem);
+}
+
+.modal-content {
+    max-height: calc(100vh - 1.5rem);
+    overflow: auto;
+}
+
+.list-group-item {
+    word-break: break-word;
+}
+
+/* ================================================================
    DESKTOP ONLY (992px+)
    ================================================================ */
 @media (min-width: 992px) {
@@ -106,6 +201,35 @@ table .table-light th {
 
     .layout-overlay {
         z-index: 1099 !important;
+    }
+
+    .layout-page {
+        width: 100%;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .layout-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1070;
+    }
+
+    .layout-menu {
+        width: 280px !important;
+        max-width: 85vw;
+    }
+
+    .menu-link>div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .page-header .btn,
+    .page-title-row .btn,
+    .card-header .btn {
+        width: 100%;
     }
 }
 
@@ -326,10 +450,16 @@ table .table-light th {
 
     .layout-page {
         padding-left: 0 !important;
+        width: 100% !important;
     }
 
     .content-wrapper {
         padding: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    .layout-container {
+        display: block !important;
     }
 
     /* ── Navbar ── */
@@ -340,6 +470,19 @@ table .table-light th {
 
     .navbar-nav.align-items-center.ms-auto.flex-row.gap-1 {
         gap: 0 !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .navbar-nav-right {
+        overflow: hidden;
+    }
+
+    .layout-menu {
+        width: 260px !important;
+    }
+
+    .menu-inner {
+        padding-bottom: 5rem;
     }
 
     #navClock-time,
