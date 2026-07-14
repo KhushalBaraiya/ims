@@ -192,7 +192,10 @@
                                     <td class="text-muted fw-semibold">{{ $loop->iteration }}</td>
                                     <td class="text-muted small">{{ $date->format('d M Y') }}</td>
                                     <td>
-                                        <code class="fw-bold text-primary">{{ $voucherNo ?: '—' }}</code>
+                                        <a href="{{ route('stocks.show_adjustment', $voucherNo) }}"
+                                            class="fw-bold text-primary text-decoration-none">
+                                            <code>{{ $voucherNo ?: '—' }}</code>
+                                        </a>
                                     </td>
                                     <td>
                                         <ul class="list-unstyled mb-0" style="padding-left:0;">
@@ -221,6 +224,12 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex align-items-center justify-content-center gap-1">
+                                            <a href="{{ route('stocks.show_adjustment', $voucherNo) }}"
+                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                                title="{{ __('messages.voucher_details') }}"
+                                                style="width:30px;height:30px;padding:0;">
+                                                <i class="bx bx-show" style="font-size:1rem;"></i>
+                                            </a>
                                             @can('stocks.create')
                                                 <a href="{{ route('stocks.edit_adjustment', $voucherNo) }}"
                                                     class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
