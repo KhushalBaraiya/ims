@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.dashboard'))
 
 @push('styles')
@@ -578,12 +578,15 @@
                             </thead>
                             <tbody>
                                 @forelse($lowStockProducts ?? [] as $p)
-                                    @php $qty = $p->stock->quantity ?? 0; @endphp
+                                    @php
+                                        $product = $p instanceof \App\Models\Product ? $p : null;
+                                        $qty = (float) (optional(optional($product)->stock)->quantity ?? 0);
+                                    @endphp
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                @if ($p->image)
-                                                    <img src="{{ asset('uploads/products/' . $p->image) }}"
+                                                @if (!empty(optional($product)->image))
+                                                    <img src="{{ asset('uploads/products/' . optional($product)->image) }}"
                                                         class="rounded flex-shrink-0"
                                                         style="width:30px;height:30px;object-fit:cover;"
                                                         onerror="imgError(this)">
@@ -594,11 +597,13 @@
                                                     </div>
                                                 @endif
                                                 <span class="fw-semibold small"
-                                                    style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $p->name }}</span>
+                                                    style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ optional($product)->name ?? '-' }}</span>
                                             </div>
                                         </td>
-                                        <td><code style="font-size:.68rem;">{{ $p->code }}</code></td>
-                                        <td class="text-muted small">{{ $p->minimum_stock_alert ?? 0 }}</td>
+                                        <td><code style="font-size:.68rem;">{{ optional($product)->code ?? '-' }}</code>
+                                        </td>
+                                        <td class="text-muted small">{{ optional($product)->minimum_stock_alert ?? 0 }}
+                                        </td>
                                         <td>
                                             <span class="fw-bold {{ $qty <= 0 ? 'text-danger' : 'text-warning' }} small">
                                                 {{ number_format($qty, 2) }}
@@ -617,12 +622,14 @@
                                         </td>
                                         <td>
                                             @can('stocks.create')
-                                                <a href="{{ route('stocks.adjust', ['product_id' => $p->id]) }}"
-                                                    class="btn btn-outline-primary btn-sm"
-                                                    style="padding:.15rem .4rem;font-size:.7rem;"
-                                                    title="{{ __('messages.dash_adjust_stock_title') }}">
-                                                    <i class="bx bx-slider"></i>
-                                                </a>
+                                                @if ($product)
+                                                    <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
+                                                        class="btn btn-outline-primary btn-sm"
+                                                        style="padding:.15rem .4rem;font-size:.7rem;"
+                                                        title="{{ __('messages.dash_adjust_stock_title') }}">
+                                                        <i class="bx bx-slider"></i>
+                                                    </a>
+                                                @endif
                                             @endcan
                                         </td>
                                     </tr>

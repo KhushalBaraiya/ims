@@ -54,8 +54,6 @@ return [
     'todays_sales' => "Today's Sales",
     'pending_sales' => 'Pending Sales',
     'low_stock_products' => 'Low Stock Products',
-    'total_revenue' => 'Total Revenue',
-    'total_purchases' => 'Total Purchases',
     'total_products' => 'Total Products',
     'total_users' => 'Total Users',
     'recent_sales' => 'Recent Sales',
@@ -130,17 +128,14 @@ return [
     'discount' => 'Discount',
     'tax' => 'Tax',
     'subtotal' => 'Subtotal',
-    'completed' => 'Completed',
     'draft' => 'Draft',
     'cancelled' => 'Cancelled',
     'no_recent_sales' => 'No recent sales found.',
-    'add_sale' => 'Add Sale',
     'sale_return' => 'Sale Return',
 
     // Purchases
     'supplier' => 'Supplier',
     'purchase_date' => 'Purchase Date',
-    'add_purchase' => 'Add Purchase',
     'purchase_return' => 'Purchase Return',
 
     // Products
@@ -160,7 +155,6 @@ return [
     'available_stock' => 'Available Stock',
     'stock_in' => 'Stock In',
     'stock_out' => 'Stock Out',
-    'adjust_stock' => 'Adjust Stock',
 
     // Users & Roles
     'role' => 'Role',
@@ -227,7 +221,6 @@ return [
     'edit_purchase' => 'Edit Purchase',
 
     'sale_returns' => 'Sales Returns',
-    'purchase_returns' => 'Purchase Returns',
     'new_return' => 'New Return',
 
     'main_categories' => 'Main Categories',
@@ -260,9 +253,6 @@ return [
     'contact_person' => 'Contact Person',
     'alt_phone' => 'Alternative Phone',
     'pan_number' => 'PAN Number',
-    'address_label' => 'Address',
-    'address_details' => 'Address Details',
-    'city' => 'City',
     'state' => 'State',
     'country' => 'Country',
     'pincode' => 'Pincode',
@@ -288,7 +278,6 @@ return [
     'stock_management' => 'Stock Management',
     'inventory_overview' => 'Inventory Overview',
     'adjust_stock_card' => 'Record Stock Adjustment',
-    'stock_history' => 'Stock Adjustment History',
     'latest_50' => 'Latest 50 records',
 
     'role_management' => 'Role Management',
@@ -1240,5 +1229,8 @@ return [
     'add_initial_stock_hint'    => 'Add Initial Stock',
     'sale_already_returned'     => 'This sale invoice has already been returned.',
     'search_products_return'    => 'Search products to return...',
+
+    // Product Gallery / profit display
+    'profit'                    => 'Profit',
 
 ];

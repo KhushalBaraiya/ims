@@ -609,10 +609,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                        style="width:28px;height:28px;padding:0;">
-                                                    <i class="bx bx-trash" style="font-size:13px;"></i>
-                                                </button>`}
+                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                            style="width:28px;height:28px;padding:0;">
+                                                        <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                    </button>`}
                     </td>
                 </tr>`);
                 rowCount++;

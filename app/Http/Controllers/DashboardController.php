@@ -13,6 +13,7 @@ use App\Models\SaleItem;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -23,7 +24,18 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        $user = auth()->user();
+        $user = Auth::user();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        $canSalesView = method_exists($user, 'can') ? $user->can('sales.view') : false;
+        $canPurchasesView = method_exists($user, 'can') ? $user->can('purchases.view') : false;
+        $canCustomersView = method_exists($user, 'can') ? $user->can('customers.view') : false;
+        $canActivityLogsView = method_exists($user, 'can') ? $user->can('activity_logs.view') : false;
+        $canActivityLogsOwn = method_exists($user, 'can') ? $user->can('activity_logs.own') : false;
+        $isSuperAdmin = method_exists($user, 'getRoleNames') && $user->getRoleNames()->contains('super_admin');
 
         // 1. Basic Counts
         $totalProducts   = Product::count();
@@ -34,24 +46,24 @@ class DashboardController extends Controller
         $totalUsers      = User::count();
 
         // 2. Financial Summaries for Today (only if user can view sales/purchases)
-        $todayPurchases = $user->can('purchases.view')
+        $todayPurchases = $canPurchasesView
             ? Purchase::whereDate('created_at', today())->count()
             : null;
-        $todaySales = $user->can('sales.view')
+        $todaySales = $canSalesView
             ? Sale::whereDate('created_at', today())->sum('grand_total')
             : null;
-        $todaySalesCount = $user->can('sales.view')
+        $todaySalesCount = $canSalesView
             ? Sale::whereDate('created_at', today())->count()
             : null;
-        $pendingSales = $user->can('sales.view')
+        $pendingSales = $canSalesView
             ? Sale::where('status', 'Draft')->count()
             : null;
 
         // 3. Overall financial summary
-        $totalRevenue = $user->can('sales.view')
+        $totalRevenue = $canSalesView
             ? Sale::where('status', 'Completed')->sum('grand_total')
             : null;
-        $totalPurchases = $user->can('purchases.view')
+        $totalPurchases = $canPurchasesView
             ? Purchase::count()
             : null;
 
@@ -67,18 +79,17 @@ class DashboardController extends Controller
             ->get();
 
         // 5. Recent Sales (latest 8) — only if user has sales.view
-        $recentSales = $user->can('sales.view')
+        $recentSales = $canSalesView
             ? Sale::with('customer')->latest()->take(8)->get()
             : collect();
 
         // 6. Recent Activity Log (latest 5) — filtered to own logs when user has
         //    activity_logs.own but is NOT super_admin (super_admin sees everything).
         $recentActivities = collect();
-        if ($user->can('activity_logs.view')) {
+        if ($canActivityLogsView) {
             $activityQuery = ActivityLog::with('user')->latest();
 
-            $restrictToOwn = $user->can('activity_logs.own')
-                && !$user->getRoleNames()->contains('super_admin');
+            $restrictToOwn = $canActivityLogsOwn && ! $isSuperAdmin;
 
             if ($restrictToOwn) {
                 $activityQuery->where('user_id', $user->id);
@@ -92,21 +103,21 @@ class DashboardController extends Controller
         $weekSalesData = [];
         $weekPurchasesData = [];
 
-        if ($user->can('sales.view') || $user->can('purchases.view')) {
+        if ($canSalesView || $canPurchasesView) {
             $weekStart = now()->subDays(6)->startOfDay();
 
-            $weekSalesByDay = $user->can('sales.view')
+            $weekSalesByDay = $canSalesView
                 ? Sale::selectRaw('DATE(invoice_date) as date, SUM(grand_total) as total')
-                    ->where('invoice_date', '>=', $weekStart)
-                    ->groupByRaw('DATE(invoice_date)')
-                    ->pluck('total', 'date')
+                ->where('invoice_date', '>=', $weekStart)
+                ->groupByRaw('DATE(invoice_date)')
+                ->pluck('total', 'date')
                 : collect();
 
-            $weekPurchasesByDay = $user->can('purchases.view')
+            $weekPurchasesByDay = $canPurchasesView
                 ? Purchase::selectRaw('DATE(purchase_date) as date, SUM(grand_total) as total')
-                    ->where('purchase_date', '>=', $weekStart)
-                    ->groupByRaw('DATE(purchase_date)')
-                    ->pluck('total', 'date')
+                ->where('purchase_date', '>=', $weekStart)
+                ->groupByRaw('DATE(purchase_date)')
+                ->pluck('total', 'date')
                 : collect();
 
             for ($i = 6; $i >= 0; $i--) {
@@ -119,27 +130,27 @@ class DashboardController extends Controller
 
         // 8. Top Selling Products this month (by quantity sold)
         $monthStart  = now()->startOfMonth();
-        $topProducts = $user->can('sales.view')
+        $topProducts = $canSalesView
             ? SaleItem::with('product')
-                ->whereHas('sale', fn($q) => $q->where('status', 'Completed')
-                    ->where('invoice_date', '>=', $monthStart))
-                ->select('product_id', DB::raw('SUM(quantity) as total_qty'))
-                ->groupBy('product_id')
-                ->orderByDesc('total_qty')
-                ->take(6)
-                ->get()
+            ->whereHas('sale', fn($q) => $q->where('status', 'Completed')
+                ->where('invoice_date', '>=', $monthStart))
+            ->select('product_id', DB::raw('SUM(quantity) as total_qty'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_qty')
+            ->take(6)
+            ->get()
             : collect();
 
         // 9. Top 5 Customers this month (by grand_total)
-        $topCustomers = $user->can('customers.view')
+        $topCustomers = $canCustomersView
             ? Sale::with('customer')
-                ->where('status', 'Completed')
-                ->where('invoice_date', '>=', $monthStart)
-                ->select('customer_id', DB::raw('SUM(grand_total) as total_spent'))
-                ->groupBy('customer_id')
-                ->orderByDesc('total_spent')
-                ->take(5)
-                ->get()
+            ->where('status', 'Completed')
+            ->where('invoice_date', '>=', $monthStart)
+            ->select('customer_id', DB::raw('SUM(grand_total) as total_spent'))
+            ->groupBy('customer_id')
+            ->orderByDesc('total_spent')
+            ->take(5)
+            ->get()
             : collect();
 
         return view('dashboard', compact(
