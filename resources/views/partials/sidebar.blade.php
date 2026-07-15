@@ -139,7 +139,14 @@
             <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
                 <a href="{{ route('purchases.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart-download"></i>
-                    <div>{{ __('messages.menu_purchases') }}</div>
+                    <div>
+                        {{ __('messages.menu_purchases') }}
+                        <span class="sidebar-sub-label">({{ __('messages.stock_in') }})</span>
+                    </div>
+                    @if (($sidebarStockIn ?? 0) > 0)
+                        <span
+                            class="badge bg-success rounded-pill ms-auto sidebar-stock-badge">+{{ $sidebarStockIn }}</span>
+                    @endif
                 </a>
             </li>
         @endcan
@@ -164,7 +171,14 @@
             <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
                 <a href="{{ route('sales.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-cart-alt"></i>
-                    <div>{{ __('messages.menu_sales') }}</div>
+                    <div>
+                        {{ __('messages.menu_sales') }}
+                        <span class="sidebar-sub-label">({{ __('messages.stock_out') }})</span>
+                    </div>
+                    @if (($sidebarStockOut ?? 0) > 0)
+                        <span
+                            class="badge bg-danger rounded-pill ms-auto sidebar-stock-badge">-{{ $sidebarStockOut }}</span>
+                    @endif
                 </a>
             </li>
         @endcan
@@ -409,8 +423,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-                   SIDEBAR — Sneat overrides
-                   ════════════════════════════════════════════ */
+                           SIDEBAR — Sneat overrides
+                           ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {
@@ -422,6 +436,25 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: block;
+        }
+
+        /* "(Stock In) / (Stock Out)" sub-label under menu item text */
+        .sidebar-sub-label {
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 400;
+            opacity: 0.55;
+            line-height: 1.2;
+            margin-top: 1px;
+        }
+
+        /* Today's qty badge next to Purchases / Sales */
+        .sidebar-stock-badge {
+            flex-shrink: 0;
+            font-size: 0.62rem !important;
+            padding: 0.18em 0.5em;
+            font-weight: 700;
+            line-height: 1.5;
         }
 
         /* ── Sub-menu: show icons using menu-icon class ─────────────────────── */
