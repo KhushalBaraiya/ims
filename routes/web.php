@@ -55,13 +55,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
 
     // Role Management CRUD Resource Route
-    Route::resource('roles', RoleController::class);
     Route::delete('roles/bulk-delete', [RoleController::class, 'bulkDestroy'])->name('roles.bulk-destroy');
+    Route::resource('roles', RoleController::class);
 
     // User Management CRUD Resource Route
-    Route::resource('users', UserController::class);
     Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::delete('users/bulk-delete', [UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
+    Route::resource('users', UserController::class);
 
     // Inventory CRUD Resource Routes
     Route::resource('brands', BrandController::class);

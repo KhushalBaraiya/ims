@@ -24,7 +24,10 @@ class SaleController extends Controller
      */
     public function index(Request $request): View
     {
-        Gate::authorize('sales.view');
+        // Allow both 'sales.view' (all records) and 'sales.own' (own records only)
+        if (! auth()->user()->canAny(['sales.view', 'sales.own'])) {
+            abort(403);
+        }
 
         $query = Sale::with(['customer', 'user', 'items', 'returns'])->latest();
 

@@ -243,7 +243,8 @@ class StockController extends Controller
                 $qty = (float) $item['quantity'];
                 $change = $item['type'] === 'Minus' ? -$qty : $qty;
 
-                $stock = $product->stock ?? $product->stock()->create(['quantity' => 0]);
+                // fresh() ensures we read the updated DB value after reverts above
+                $stock = $product->stock()->first() ?? $product->stock()->create(['quantity' => 0]);
                 $newQty = $stock->quantity + $change;
 
                 if ($newQty < 0) {

@@ -30,7 +30,7 @@ class SaleReturnRequest extends FormRequest
             // Return items
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:0',
+            'items.*.quantity' => 'required|integer|min:1',
             'items.*.reason' => 'nullable|string|max:255',
         ];
     }
@@ -98,7 +98,7 @@ class SaleReturnRequest extends FormRequest
         return [
             'items.required' => 'At least one item must be returned.',
             'items.min' => 'At least one item must be returned.',
-            'items.*.quantity.min' => 'Return quantity cannot be negative.',
+            'items.*.quantity.min' => 'Return quantity must be at least 1.',
         ];
     }
 }

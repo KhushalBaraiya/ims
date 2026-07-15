@@ -258,6 +258,10 @@ class SaleReturnController extends Controller
             // ── STEP 2: Revert previous stock if old status was Completed ──
             if ($oldStatus === 'Completed') {
                 foreach ($saleReturn->items as $oldItem) {
+                    $currentStock = $oldItem->product->stock->quantity ?? 0;
+                    if ($currentStock < $oldItem->quantity) {
+                        throw new \Exception("Cannot revert return for \"{$oldItem->product->name}\": current stock ({$currentStock}) is less than previously returned quantity ({$oldItem->quantity}).");
+                    }
                     $oldItem->product->stock->decrement('quantity', $oldItem->quantity);
                 }
             }
