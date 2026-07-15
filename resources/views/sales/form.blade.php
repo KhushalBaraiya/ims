@@ -48,6 +48,17 @@
         margin: auto !important;
     }
 
+    /* Hide native number input spinners so users can type multi-digit values easily */
+    .sale-qty-input::-webkit-outer-spin-button,
+    .sale-qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .sale-qty-input {
+        -moz-appearance: textfield;
+    }
+
     .sale-price-cell {
         font-size: 12.5px !important;
     }
@@ -793,7 +804,7 @@
                     (stockQty > 0 ? stockQty + ' avail.' : 'Out of stock') +
                     '</span>' +
                     '</div>' +
-                    '<input type="number" step="1" min="1" ' +
+                    '<input type="number" inputmode="numeric" pattern="[0-9]*" step="1" min="1" ' +
                     'name="items[' + rowCount + '][quantity]" value="' + qty + '" ' +
                     'class="qty-input form-control form-control-sm text-center sale-qty-input" ' +
                     (isReturned ? 'disabled' : '') + '>' +

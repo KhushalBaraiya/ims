@@ -398,6 +398,8 @@ return [
     // Stock form labels
     'adjustment_type' => 'Adjustment Type',
     'quantity_change' => 'Quantity Change',
+    'added_quantity' => 'Added quantity',
+    'removed_quantity' => 'Removed quantity',
     'notes' => 'Notes',
     'notes_optional' => 'Notes (Optional)',
     'save_adjustment' => 'Save Adjustment',
@@ -1092,8 +1094,8 @@ return [
     'prod_no_purchase_records'  => 'No purchase records yet.',
     'prod_no_sales_records'     => 'No sales records yet.',
     'prod_no_adj_records'       => 'No stock adjustments yet.',
-    'prod_no_pur_return_records'=> 'No purchase return records yet.',
-    'prod_no_sal_return_records'=> 'No sale return records yet.',
+    'prod_no_pur_return_records' => 'No purchase return records yet.',
+    'prod_no_sal_return_records' => 'No sale return records yet.',
 
     // Show — inline status labels (in transaction tabs)
     'prod_received'             => 'Received',

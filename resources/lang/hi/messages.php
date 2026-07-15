@@ -155,6 +155,8 @@ return [
     'stock_in' => 'स्टॉक इन',
     'stock_out' => 'स्टॉक आउट',
     'adjust_stock' => 'स्टॉक समायोजन',
+    'added_quantity' => 'जोड़ी गई मात्रा',
+    'removed_quantity' => 'हटाई गई मात्रा',
 
     // Users & Roles
     'role' => 'भूमिका',
@@ -1084,8 +1086,8 @@ return [
     'prod_no_purchase_records'  => 'अभी कोई खरीद रिकॉर्ड नहीं।',
     'prod_no_sales_records'     => 'अभी कोई बिक्री रिकॉर्ड नहीं।',
     'prod_no_adj_records'       => 'अभी कोई स्टॉक समायोजन नहीं।',
-    'prod_no_pur_return_records'=> 'अभी कोई खरीद वापसी रिकॉर्ड नहीं।',
-    'prod_no_sal_return_records'=> 'अभी कोई बिक्री वापसी रिकॉर्ड नहीं।',
+    'prod_no_pur_return_records' => 'अभी कोई खरीद वापसी रिकॉर्ड नहीं।',
+    'prod_no_sal_return_records' => 'अभी कोई बिक्री वापसी रिकॉर्ड नहीं।',
 
     // Show — inline status labels
     'prod_received'             => 'प्राप्त',

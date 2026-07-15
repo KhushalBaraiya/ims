@@ -384,6 +384,8 @@ return [
     'not_set' => 'સ્થાપ્યું નથી',
     'adjustment_type' => 'ઍડ્જસ્ટ પ્રકાર',
     'quantity_change' => 'જથ્થો ફેરફાર',
+    'added_quantity' => 'જથ્થો ઉમેરાયો',
+    'removed_quantity' => 'જથ્થો ઘટાડાયો',
     'notes' => 'નોંધ',
     'notes_optional' => 'નોંધ (વૈકલ્પિક)',
     'save_adjustment' => 'ઍડ્જસ્ટ સાચવો',
