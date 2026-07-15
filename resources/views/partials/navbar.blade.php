@@ -64,40 +64,7 @@
                 </ul>
             </li>
 
-            {{-- ── Language Switcher ── --}}
-            {{-- <li class="nav-item dropdown me-1"> --}}
-
-                {{-- Trigger: globe + code --}}
-                {{-- <a aria-expanded="false" class="nav-link d-flex align-items-center ls-trigger gap-1 px-2"
-                    data-bs-toggle="dropdown" href="javascript:void(0);" style="height:36px;"
-                    title="{{ __('messages.language') }}">
-                    <i class="bx bx-globe" style="font-size:1.2rem;"></i>
-                    <span class="fw-bold"
-                        style="font-size:.85rem;letter-spacing:.04em;">{{ $currentLang['code'] }}</span>
-                </a> --}}
-
-                {{-- Dropdown — use standard Bootstrap ul>li>a.dropdown-item structure --}}
-                {{-- <ul class="dropdown-menu dropdown-menu-end ls-dropdown-menu">
-
-                    @foreach ($supportedLanguages as $locale => $lang)
-                        @php $active = ($currentLocale === $locale); @endphp
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center ls-lang-item {{ $active ? 'active' : '' }} gap-2 px-3 py-2"
-                                href="{{ route('language.switch', $locale) }}"> --}}
-                                {{-- Country code badge --}}
-                                {{-- <span class="ls-lang-abbr">{{ $lang['abbr'] }}</span> --}}
-                                {{-- Language name --}}
-                                {{-- <span class="ls-lang-name">{{ $lang['label'] }}</span> --}}
-                                {{-- Active check --}}
-                                {{-- @if ($active)
-                                    <i class="bx bx-check ms-auto" style="font-size:1rem;"></i>
-                                @endif
-                            </a>
-                        </li>
-                    @endforeach
-
-                </ul>
-            </li> --}}
+            {{-- ── Language Switcher — removed ── --}}
 
             {{-- ── Theme Toggle ── --}}
             <li class="nav-item me-1">
