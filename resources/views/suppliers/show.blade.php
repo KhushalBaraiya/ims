@@ -298,7 +298,7 @@
             </div>
 
         </div>
-    </div>
+    </d iv>
 
 @endsection
 {{-- do  --}}
@@ -321,3 +321,6 @@
         });
     </script>
 @endpush
+
+
+
