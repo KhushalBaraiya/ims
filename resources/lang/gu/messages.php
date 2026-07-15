@@ -1219,4 +1219,9 @@ return [
     'sale_already_returned'     => 'આ વેચાણ ઇન્વૉઇસ પહેલેથી પરત થઈ ગઈ છે.',
     'search_products_return'    => 'પરત કરવા ઉત્પાદ શોધો...',
 
+    // ── Additional missing view keys ──────────────────────────────────────
+    'updated_at'                => 'અપડેટ થયું',
+    'add_adjustment'            => 'ઍડ્જસ્ટ ઉમેરો',
+    'unknown_product'           => 'અજ્ઞાત ઉત્પાદ',
+
 ];

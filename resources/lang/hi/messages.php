@@ -1227,4 +1227,9 @@ return [
     'sale_already_returned'     => 'यह बिक्री इनवॉइस पहले ही वापस की जा चुकी है।',
     'search_products_return'    => 'वापस करने के लिए उत्पाद खोजें...',
 
+    // ── Additional missing view keys ──────────────────────────────────────
+    'updated_at'                => 'अपडेट किया गया',
+    'add_adjustment'            => 'समायोजन जोड़ें',
+    'unknown_product'           => 'अज्ञात उत्पाद',
+
 ];

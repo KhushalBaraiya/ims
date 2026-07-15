@@ -1238,4 +1238,9 @@ return [
     // Product Gallery / profit display
     'profit'                    => 'Profit',
 
+    // Missing keys used in views
+    'updated_at'                => 'Updated At',
+    'add_adjustment'            => 'Add Adjustment',
+    'unknown_product'           => 'Unknown Product',
+
 ];
