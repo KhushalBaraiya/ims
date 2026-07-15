@@ -660,6 +660,9 @@ return [
     'all_stock_healthy'      => 'All Stock Healthy!',
     'no_products_alert'      => 'No products are below their alert threshold.',
     'total_alerts'           => 'Total Alerts',
+    'all_alerts'             => 'All Alerts',
+    'low_stock_only'         => 'Low Stock Only',
+    'out_of_stock_only'      => 'Out of Stock Only',
 
     // ── Top Selling Report ─────────────────────────────────────────────────
     'total_qty_sold'         => 'Total Qty Sold',

@@ -79,6 +79,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::patch('customers/{customer}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
     Route::delete('customers/bulk-delete', [CustomerController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
+    Route::get('/stocks/low-stock', [StockController::class, 'lowStock'])->name('stocks.low_stock');
+    Route::get('/stocks-history', [StockController::class, 'history'])->name('stocks.history');
     Route::resource('stocks', StockController::class);
     Route::get('/stocks-adjust', [StockController::class, 'adjust'])->name('stocks.adjust');
     Route::post('/stocks-adjust', [StockController::class, 'store'])->name('stocks.store_adjustment');
@@ -86,7 +88,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/stocks-adjust/{voucher_no}/edit', [StockController::class, 'edit_adjustment'])->name('stocks.edit_adjustment');
     Route::put('/stocks-adjust/{voucher_no}', [StockController::class, 'update_adjustment'])->name('stocks.update_adjustment');
     Route::delete('/stocks-adjust/{voucher_no}', [StockController::class, 'destroy_adjustment'])->name('stocks.destroy_adjustment');
-    Route::get('/stocks-history', [StockController::class, 'history'])->name('stocks.history');
     // Currencies Routes (with status toggle and switcher)
     Route::post('/currencies/switch', [CurrencyController::class, 'switchCurrency'])->name('currencies.switch');
     Route::post('/currencies/{currency}/toggle-status', [CurrencyController::class, 'toggleStatus'])->name('currencies.toggle-status');

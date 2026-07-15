@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
+use App\Models\Brand;
 use App\Models\MainCategory;
 use App\Models\Product;
 use App\Models\Stock;
@@ -28,7 +29,7 @@ class StockController extends Controller
 
         if ($request->filled('search')) {
             $s = $request->search;
-            $query->where(fn ($q) => $q->where('name', 'like', "%$s%")
+            $query->where(fn($q) => $q->where('name', 'like', "%$s%")
                 ->orWhere('code', 'like', "%$s%"));
         }
 
@@ -38,10 +39,10 @@ class StockController extends Controller
 
         if ($request->filled('stock_status')) {
             match ($request->stock_status) {
-                'out' => $query->whereHas('stock', fn ($q) => $q->where('quantity', '<=', 0)),
-                'low' => $query->whereHas('stock', fn ($q) => $q->where('quantity', '>', 0)
+                'out' => $query->whereHas('stock', fn($q) => $q->where('quantity', '<=', 0)),
+                'low' => $query->whereHas('stock', fn($q) => $q->where('quantity', '>', 0)
                     ->whereRaw('stocks.quantity <= products.minimum_stock_alert')),
-                'ok' => $query->whereHas('stock', fn ($q) => $q->whereColumn('quantity', '>', 'minimum_stock_alert')),
+                'ok' => $query->whereHas('stock', fn($q) => $q->whereColumn('quantity', '>', 'minimum_stock_alert')),
                 default => null,
             };
         }
@@ -51,13 +52,17 @@ class StockController extends Controller
 
         // Summary stats
         $totalProducts = $products->count();
-        $outOfStock = $products->filter(fn ($p) => ($p->stock->quantity ?? 0) <= 0)->count();
-        $lowStock = $products->filter(fn ($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
-        $totalInvValue = $products->sum(fn ($p) => ($p->stock->quantity ?? 0) * $p->purchase_price);
+        $outOfStock = $products->filter(fn($p) => ($p->stock->quantity ?? 0) <= 0)->count();
+        $lowStock = $products->filter(fn($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
+        $totalInvValue = $products->sum(fn($p) => ($p->stock->quantity ?? 0) * $p->purchase_price);
 
         return view('stocks.index', compact(
-            'products', 'categories',
-            'totalProducts', 'outOfStock', 'lowStock', 'totalInvValue'
+            'products',
+            'categories',
+            'totalProducts',
+            'outOfStock',
+            'lowStock',
+            'totalInvValue'
         ));
     }
 
@@ -110,7 +115,7 @@ class StockController extends Controller
         try {
             $today = date('Ymd');
             $count = StockAdjustment::where('voucher_no', 'like', "ADJ-{$today}-%")->distinct()->count('voucher_no');
-            $voucherNo = 'ADJ-'.$today.'-'.str_pad($count + 1, 4, '0', STR_PAD_LEFT);
+            $voucherNo = 'ADJ-' . $today . '-' . str_pad($count + 1, 4, '0', STR_PAD_LEFT);
 
             $adjustedProductsLog = [];
 
@@ -136,8 +141,8 @@ class StockController extends Controller
                     'adjustment_type' => $item['type'],
                     'notes' => $validated['notes'] ?? null,
                     'user_id' => auth()->id(),
-                    'created_at' => $validated['transaction_date'].' '.now()->toTimeString(),
-                    'updated_at' => $validated['transaction_date'].' '.now()->toTimeString(),
+                    'created_at' => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                    'updated_at' => $validated['transaction_date'] . ' ' . now()->toTimeString(),
                 ]);
 
                 $sign = $change > 0 ? '+' : '';
@@ -146,7 +151,7 @@ class StockController extends Controller
 
             ActivityLog::log(
                 'Stock Adjusted',
-                "Created stock adjustment voucher: {$voucherNo}. Adjusted products: ".implode(', ', $adjustedProductsLog)
+                "Created stock adjustment voucher: {$voucherNo}. Adjusted products: " . implode(', ', $adjustedProductsLog)
             );
 
             DB::commit();
@@ -266,8 +271,8 @@ class StockController extends Controller
                     'adjustment_type' => $item['type'],
                     'notes' => $validated['notes'] ?? null,
                     'user_id' => auth()->id(),
-                    'created_at' => $validated['transaction_date'].' '.now()->toTimeString(),
-                    'updated_at' => $validated['transaction_date'].' '.now()->toTimeString(),
+                    'created_at' => $validated['transaction_date'] . ' ' . now()->toTimeString(),
+                    'updated_at' => $validated['transaction_date'] . ' ' . now()->toTimeString(),
                 ]);
 
                 $sign = $change > 0 ? '+' : '';
@@ -276,7 +281,7 @@ class StockController extends Controller
 
             ActivityLog::log(
                 'Stock Adjusted',
-                "Updated stock adjustment voucher: {$voucherNo}. Adjusted products: ".implode(', ', $adjustedProductsLog)
+                "Updated stock adjustment voucher: {$voucherNo}. Adjusted products: " . implode(', ', $adjustedProductsLog)
             );
 
             DB::commit();
@@ -331,6 +336,73 @@ class StockController extends Controller
     // ──────────────────────────────────────────────────
     //  7. ADJUSTMENTS PAGE (unified, was "history")
     // ──────────────────────────────────────────────────
+    public function lowStock(Request $request): View
+    {
+        Gate::authorize('stocks.view');
+
+        $filter = $request->input('filter', 'low');
+        $query = Product::with(['stock', 'brand', 'mainCategory'])
+            ->where('status', 'active');
+
+        if ($filter === 'out') {
+            $query->where(
+                fn($q) => $q->whereHas('stock', fn($sq) => $sq->where('quantity', '<=', 0))
+                    ->orWhereDoesntHave('stock')
+            );
+        } elseif ($filter === 'low') {
+            $query->whereHas(
+                'stock',
+                fn($sq) => $sq->where('quantity', '>', 0)
+                    ->whereRaw('stocks.quantity <= products.minimum_stock_alert')
+            );
+        } else {
+            $query->where(
+                fn($q) => $q->whereHas('stock', fn($sq) => $sq->whereRaw('stocks.quantity <= products.minimum_stock_alert'))
+                    ->orWhereDoesntHave('stock')
+            );
+        }
+
+        if ($request->filled('brand_id')) {
+            $query->where('brand_id', $request->brand_id);
+        }
+
+        if ($request->filled('main_category_id')) {
+            $query->where('main_category_id', $request->main_category_id);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(
+                fn($q) => $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%")
+            );
+        }
+
+        $products = $query->get()->map(function ($product) {
+            $currentQty = (float) ($product->stock->quantity ?? 0);
+            $alertQty = (float) ($product->minimum_stock_alert ?? 0);
+            $qtyNeeded = $alertQty > $currentQty ? $alertQty - $currentQty : 0;
+            $product->current_qty = $currentQty;
+            $product->alert_qty = $alertQty;
+            $product->qty_needed = $qtyNeeded;
+            $product->restock_value = $qtyNeeded * ($product->purchase_price ?? 0);
+            $product->stock_status = $currentQty <= 0 ? 'out' : 'low';
+            return $product;
+        });
+
+        $summary = [
+            'total' => $products->count(),
+            'out_of_stock' => $products->filter(fn($p) => $p->stock_status === 'out')->count(),
+            'low_stock' => $products->filter(fn($p) => $p->stock_status === 'low')->count(),
+            'restock_value' => $products->sum('restock_value'),
+        ];
+
+        $brands = Brand::where('status', 'active')->orderBy('name')->get();
+        $categories = MainCategory::where('status', 'active')->orderBy('name')->get();
+
+        return view('stocks.low-stock', compact('products', 'summary', 'filter', 'brands', 'categories'));
+    }
+
     public function history(Request $request): View
     {
         Gate::authorize('stocks.view');
@@ -358,12 +430,16 @@ class StockController extends Controller
         // Summary card stats (across ALL products, not filtered)
         $allStockProducts = Product::with('stock')->where('status', 'active')->get();
         $totalProducts    = $allStockProducts->count();
-        $outOfStock       = $allStockProducts->filter(fn ($p) => ($p->stock->quantity ?? 0) <= 0)->count();
-        $lowStock         = $allStockProducts->filter(fn ($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
+        $outOfStock       = $allStockProducts->filter(fn($p) => ($p->stock->quantity ?? 0) <= 0)->count();
+        $lowStock         = $allStockProducts->filter(fn($p) => ($q = $p->stock->quantity ?? 0) > 0 && $q <= $p->minimum_stock_alert)->count();
 
         return view('stocks.history', compact(
-            'adjustmentsGrouped', 'allProducts', 'types',
-            'totalProducts', 'outOfStock', 'lowStock'
+            'adjustmentsGrouped',
+            'allProducts',
+            'types',
+            'totalProducts',
+            'outOfStock',
+            'lowStock'
         ));
     }
 

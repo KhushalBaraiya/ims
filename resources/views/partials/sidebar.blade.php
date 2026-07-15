@@ -194,13 +194,21 @@
                     'stocks.edit_adjustment',
                     'stocks.show_adjustment',
                     'stocks.update_adjustment',
+                    'stocks.destroy_adjustment',
                     'stocks.index',
                 );
+                $lowStockActive = request()->routeIs('stocks.low_stock');
             @endphp
             <li class="menu-item {{ $adjustmentsActive ? 'active' : '' }}">
                 <a href="{{ route('stocks.history') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-slider"></i>
                     <div>{{ __('messages.stock_adjustments') }}</div>
+                </a>
+            </li>
+            <li class="menu-item {{ $lowStockActive ? 'active' : '' }}">
+                <a href="{{ route('stocks.low_stock') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-error"></i>
+                    <div>{{ __('messages.low_stock_alert') }}</div>
                 </a>
             </li>
         @endcan
@@ -366,7 +374,8 @@
                     </div>
                 </li>
                 <li>
-                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('profile.show') }}">
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                        href="{{ route('profile.show') }}">
                         <i class="bx bx-user"></i> {{ __('messages.profile') }}
                     </a>
                 </li>
@@ -400,8 +409,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-           SIDEBAR — Sneat overrides
-           ════════════════════════════════════════════ */
+                   SIDEBAR — Sneat overrides
+                   ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {
