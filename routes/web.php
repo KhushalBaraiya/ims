@@ -88,9 +88,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/stocks-adjust/{voucher_no}/edit', [StockController::class, 'edit_adjustment'])->name('stocks.edit_adjustment');
     Route::put('/stocks-adjust/{voucher_no}', [StockController::class, 'update_adjustment'])->name('stocks.update_adjustment');
     Route::delete('/stocks-adjust/{voucher_no}', [StockController::class, 'destroy_adjustment'])->name('stocks.destroy_adjustment');
-    // Currencies Routes (with status toggle and switcher)
+    // Currencies Routes (with status toggle, set-default and switcher)
     Route::post('/currencies/switch', [CurrencyController::class, 'switchCurrency'])->name('currencies.switch');
     Route::post('/currencies/{currency}/toggle-status', [CurrencyController::class, 'toggleStatus'])->name('currencies.toggle-status');
+    Route::post('/currencies/{currency}/set-default', [CurrencyController::class, 'setDefault'])->name('currencies.set-default');
     Route::resource('currencies', CurrencyController::class);
 
     // Products Routes

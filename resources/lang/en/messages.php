@@ -468,6 +468,12 @@ return [
     'currency_placeholder_code' => 'e.g. INR',
     'currency_placeholder_sym'  => 'e.g. ₹',
     'currency_placeholder_rate' => 'e.g. 83.5000',
+    'currency_details'          => 'Currency Details',
+    'currency_created'          => 'Currency created successfully.',
+    'currency_updated'          => 'Currency updated successfully.',
+    'currency_deleted'          => 'Currency deleted successfully.',
+    'delete_currency'           => 'Delete Currency',
+    'currency_code_hint'        => 'e.g. INR, USD, EUR — uppercase only',
 
     // Sales / Purchase form
     'invoice_info'              => 'Invoice Info',

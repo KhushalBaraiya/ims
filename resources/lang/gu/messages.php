@@ -446,6 +446,12 @@ return [
     'currency_placeholder_code' => 'દા.ત. INR',
     'currency_placeholder_sym' => 'દા.ત. ₹',
     'currency_placeholder_rate' => 'દા.ત. 83.5000',
+    'currency_details'          => 'ચલણ વિગત',
+    'currency_created'          => 'ચલણ સફળતાથી બનાવ્યું.',
+    'currency_updated'          => 'ચલણ સફળતાથી અપડેટ થયું.',
+    'currency_deleted'          => 'ચલણ સફળતાથી કાઢ્યું.',
+    'delete_currency'           => 'ચલણ કાઢો',
+    'currency_code_hint'        => 'ઉદા. INR, USD, EUR — મોટા અક્ષરોમાં',
 
     // Sales / Purchase form
     'invoice_info' => 'ઇન્વૉઇસ માહિતી',

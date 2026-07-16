@@ -434,6 +434,12 @@ return [
     'currency_placeholder_code' => 'उदा. INR',
     'currency_placeholder_sym' => 'उदा. ₹',
     'currency_placeholder_rate' => 'उदा. 83.5000',
+    'currency_details'          => 'मुद्रा विवरण',
+    'currency_created'          => 'मुद्रा सफलतापूर्वक बनाई गई।',
+    'currency_updated'          => 'मुद्रा सफलतापूर्वक अपडेट हुई।',
+    'currency_deleted'          => 'मुद्रा सफलतापूर्वक हटाई गई।',
+    'delete_currency'           => 'मुद्रा हटाएं',
+    'currency_code_hint'        => 'उदा. INR, USD, EUR — केवल बड़े अक्षर',
 
     // Sales / Purchase form
     'invoice_info' => 'इनवॉइस जानकारी',

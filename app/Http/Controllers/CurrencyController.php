@@ -13,33 +13,51 @@ use Illuminate\View\View;
 class CurrencyController extends Controller
 {
     /**
-     * Display a listing of the resource (Blade layout or AJAX JSON data).
+     * Display a listing of the resource.
      */
-    public function index(Request $request): View|JsonResponse
+    public function index(Request $request): View
     {
         Gate::authorize('currencies.view');
 
-        if ($request->ajax() || $request->wantsJson()) {
-            $currencies = Currency::orderBy('name', 'asc')->get();
-            return response()->json([
-                'success' => true,
-                'data' => $currencies,
-            ]);
+        $query = Currency::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%")
+                  ->orWhere('symbol', 'like', "%{$search}%");
+            });
         }
 
-        return view('currencies.index');
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $currencies = $query->orderBy('name', 'asc')->get();
+
+        return view('currencies.index', compact('currencies'));
     }
 
     /**
-     * Store a newly created resource in storage via AJAX.
+     * Show the form for creating a new resource.
      */
-    public function store(CurrencyRequest $request): JsonResponse
+    public function create(): View
+    {
+        Gate::authorize('currencies.create');
+
+        return view('currencies.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(CurrencyRequest $request): \Illuminate\Http\RedirectResponse
     {
         Gate::authorize('currencies.create');
 
         $validated = $request->validated();
-        
-        // Handle unique default currency logic
+
         $isDefault = $request->boolean('is_default');
         $validated['is_default'] = $isDefault;
 
@@ -51,49 +69,39 @@ class CurrencyController extends Controller
 
         ActivityLog::log('Currency Created', "Created currency: {$currency->name} (Code: {$currency->code}, Symbol: {$currency->symbol})");
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Currency created successfully.',
-            'data' => $currency,
-        ]);
+        return redirect()->route('currencies.index')
+            ->with('success', __('messages.currency_created'));
     }
 
     /**
      * Show the specified resource.
      */
-    public function show(Currency $currency): JsonResponse
+    public function show(Currency $currency): View
     {
         Gate::authorize('currencies.view');
 
-        return response()->json([
-            'success' => true,
-            'data' => $currency,
-        ]);
+        return view('currencies.show', compact('currency'));
     }
 
     /**
-     * Return JSON for edit modal.
+     * Show the form for editing the specified resource.
      */
-    public function edit(Currency $currency): JsonResponse
+    public function edit(Currency $currency): View
     {
         Gate::authorize('currencies.update');
 
-        return response()->json([
-            'success' => true,
-            'data' => $currency,
-        ]);
+        return view('currencies.edit', compact('currency'));
     }
 
     /**
-     * Update the specified resource in storage via AJAX.
+     * Update the specified resource in storage.
      */
-    public function update(CurrencyRequest $request, Currency $currency): JsonResponse
+    public function update(CurrencyRequest $request, Currency $currency): \Illuminate\Http\RedirectResponse
     {
         Gate::authorize('currencies.update');
 
         $validated = $request->validated();
-        
-        // Handle unique default currency logic
+
         $isDefault = $request->boolean('is_default');
         $validated['is_default'] = $isDefault;
 
@@ -105,11 +113,8 @@ class CurrencyController extends Controller
 
         ActivityLog::log('Currency Updated', "Updated currency: {$currency->name} (Code: {$currency->code})");
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Currency updated successfully.',
-            'data' => $currency,
-        ]);
+        return redirect()->route('currencies.index')
+            ->with('success', __('messages.currency_updated'));
     }
 
     /**
@@ -128,7 +133,25 @@ class CurrencyController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Currency deleted successfully.',
+            'message' => __('messages.currency_deleted'),
+        ]);
+    }
+
+    /**
+     * Set a currency as the default.
+     */
+    public function setDefault(Currency $currency): JsonResponse
+    {
+        Gate::authorize('currencies.update');
+
+        Currency::where('is_default', true)->update(['is_default' => false]);
+        $currency->update(['is_default' => true]);
+
+        ActivityLog::log('Currency Default Set', "Set default currency to: {$currency->name} ({$currency->code})");
+
+        return response()->json([
+            'success' => true,
+            'message' => __('messages.default_changed'),
         ]);
     }
 
