@@ -26,7 +26,7 @@
         <div class="row g-4">
 
             {{-- Left: Brand Details --}}
-            <div class="col-lg-8 col-md-8">
+            <div class="col-lg-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -34,12 +34,14 @@
                         </h6>
                     </div>
                     <div class="card-body p-4">
+
                         <div class="mb-3">
                             <label class="form-label fw-semibold">
                                 {{ __('messages.brand_name') }} <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                value="{{ old('name') }}" placeholder="{{ __('messages.ph_brand_name') }}" required>
+                            <input type="text" name="name" id="brandName"
+                                class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
+                                placeholder="{{ __('messages.ph_brand_name') }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -49,25 +51,13 @@
                             <label class="form-label fw-semibold">
                                 {{ __('messages.brand_code') }} <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug') }}" placeholder="e.g. NIKE, ADIDAS" required>
+                            <input type="text" name="slug" id="brandSlug"
+                                class="form-control @error('slug') is-invalid @enderror" value="{{ old('slug') }}"
+                                placeholder="e.g. NIKE, ADIDAS" required>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.brand_image') }}</label>
-                            <input type="file" name="image" class="form-control @error('image') is-invalid @enderror"
-                                accept="image/*" id="imageInput">
-                            <div class="form-text">{{ __('messages.image_hint') }}</div>
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div id="imagePreview" class="mt-3" style="display:none;">
-                                <img id="previewImg" src="" alt="Preview" class="rounded" style="max-width:200px;">
-                            </div>
                         </div>
 
                         <div class="mb-0">
@@ -78,12 +68,48 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
                     </div>
                 </div>
             </div>
 
-            {{-- Right: Publish --}}
-            <div class="col-lg-4 col-md-4">
+            {{-- Right Sidebar --}}
+            <div class="col-lg-4 d-flex flex-column gap-4">
+
+                {{-- Image Upload Card --}}
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="bx bx-image me-2 text-primary"></i>{{ __('messages.brand_image') }}
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+
+                        {{-- Preview Area --}}
+                        <div class="text-center mb-3">
+                            <div id="imgPreviewWrap"
+                                style="width:120px;height:120px;margin:0 auto;border-radius:50%;overflow:hidden;border:3px dashed #dee2e6;display:flex;align-items:center;justify-content:center;background:#f8f9fa;cursor:pointer;"
+                                onclick="document.getElementById('imageInput').click()">
+                                <img id="previewImg" src="" alt="Preview"
+                                    style="width:100%;height:100%;object-fit:cover;display:none;">
+                                <span id="previewPlaceholder">
+                                    <i class="bx bx-camera text-muted" style="font-size:2.5rem;"></i>
+                                </span>
+                            </div>
+                            <p class="text-muted small mt-2 mb-0">{{ __('messages.image_hint') }}</p>
+                        </div>
+
+                        <input type="file" name="image" id="imageInput"
+                            class="form-control @error('image') is-invalid @enderror"
+                            accept="image/jpeg,image/png,image/jpg,image/gif,image/webp">
+                        @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+
+                    </div>
+                </div>
+
+                {{-- Publish Card --}}
                 <div class="card shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
@@ -116,7 +142,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
+            </div>{{-- /Right Sidebar --}}
 
         </div>
     </form>
@@ -141,13 +168,15 @@
         }
 
         // Auto-generate slug from name
-        document.querySelector('input[name="name"]').addEventListener('input', function() {
-            const slugField = document.querySelector('input[name="slug"]');
+        document.getElementById('brandName').addEventListener('input', function() {
+            const slugField = document.getElementById('brandSlug');
             if (!slugField.dataset.manual) {
-                slugField.value = this.value.toUpperCase().trim().replace(/\s+/g, '-').replace(/[^A-Z0-9\-]/g, '');
+                slugField.value = this.value.toUpperCase().trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^A-Z0-9\-]/g, '');
             }
         });
-        document.querySelector('input[name="slug"]').addEventListener('input', function() {
+        document.getElementById('brandSlug').addEventListener('input', function() {
             this.dataset.manual = '1';
             this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
         });
@@ -157,9 +186,13 @@
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.getElementById('previewImg').src = event.target.result;
-                    document.getElementById('imagePreview').style.display = 'block';
+                reader.onload = function(evt) {
+                    const img = document.getElementById('previewImg');
+                    const placeholder = document.getElementById('previewPlaceholder');
+                    img.src = evt.target.result;
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    document.getElementById('imgPreviewWrap').style.border = '3px solid #696cff';
                 };
                 reader.readAsDataURL(file);
             }

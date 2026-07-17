@@ -46,6 +46,12 @@ class BrandRequest extends FormRequest
                 'required',
                 'in:active,inactive',
             ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif,webp',
+                'max:2048',
+            ],
         ];
     }
 

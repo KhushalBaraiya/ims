@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="20" fill="#003087"/>
+  <text x="64" y="60" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-size="30" font-weight="900" fill="#ffffff" letter-spacing="2">WD</text>
+  <text x="64" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#ffffff" opacity="0.8" letter-spacing="1">WESTERN DIGITAL</text>
+</svg>

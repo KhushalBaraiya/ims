@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="20" fill="#0096d6"/>
+  <path fill="#ffffff" d="M36 38h16l6 20h-10l-2-7h-4l-2 7H30l6-20zm6 4l-3 10h6l-3-10zM62 38h16l8 26h-10l-6-18-4 18H56l6-26zM90 38h10l-6 26H84l6-26z"/>
+  <text x="64" y="95" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#ffffff" letter-spacing="1">hp</text>
+</svg>

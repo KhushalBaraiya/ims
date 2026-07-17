@@ -110,6 +110,11 @@ class BrandController extends Controller
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/brands'), $filename);
             $data['image'] = $filename;
+        } elseif ($request->boolean('remove_image')) {
+            if ($brand->image && file_exists(public_path('uploads/brands/' . $brand->image))) {
+                unlink(public_path('uploads/brands/' . $brand->image));
+            }
+            $data['image'] = null;
         }
 
         $brand->update($data);

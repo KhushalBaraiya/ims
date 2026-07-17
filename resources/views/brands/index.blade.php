@@ -45,8 +45,10 @@
                         <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                         <select name="status" class="form-select form-select-sm">
                             <option value="">{{ __('messages.all_statuses') }}</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('messages.active') }}</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('messages.inactive') }}</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
+                                {{ __('messages.active') }}</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                                {{ __('messages.inactive') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex gap-2">
@@ -136,7 +138,6 @@
                         <tr>
                             <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
                             <th>{{ __('messages.th_no') }}</th>
-                            <th>{{ __('messages.th_image') }}</th>
                             <th>{{ __('messages.brand_name') }}</th>
                             <th>{{ __('messages.th_code') }}</th>
                             <th class="text-center">{{ __('messages.total_products') }}</th>
@@ -152,25 +153,29 @@
                                         value="{{ $brand->id }}"></td>
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td>
-                                    @if ($brand->image)
-                                        <img src="{{ asset('uploads/brands/' . $brand->image) }}" class="tbl-img-round"
-                                            onerror="imgError(this)" alt="{{ $brand->name }}">
-                                    @else
-                                        <div class="avatar avatar-sm flex-shrink-0">
-                                            <span class="avatar-initial rounded-circle bg-label-primary">
+                                    <div class="d-flex align-items-center gap-3">
+                                        {{-- Avatar / Image --}}
+                                        @if ($brand->image)
+                                            <img src="{{ asset('uploads/brands/' . $brand->image) }}"
+                                                class="rounded-circle flex-shrink-0"
+                                                style="width:40px;height:40px;object-fit:cover;border:2px solid #e7e7ff;"
+                                                onerror="this.outerHTML='<div class=\'rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center bg-label-primary\' style=\'width:40px;height:40px;\'><i class=\'bx bx-award\' style=\'font-size:1rem;\'></i></div>'"
+                                                alt="{{ $brand->name }}">
+                                        @else
+                                            <div class="rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center bg-label-primary"
+                                                style="width:40px;height:40px;">
                                                 <i class="bx bx-award" style="font-size:1rem;"></i>
-                                            </span>
-                                        </div>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div>
-                                        <strong>{{ $brand->name }}</strong>
-                                        @if ($brand->description)
-                                            <small class="d-block text-muted text-truncate" style="max-width:180px;">
-                                                {{ $brand->description }}
-                                            </small>
+                                            </div>
                                         @endif
+                                        {{-- Name + Description --}}
+                                        <div>
+                                            <strong class="d-block">{{ $brand->name }}</strong>
+                                            @if ($brand->description)
+                                                <small class="text-muted text-truncate d-block" style="max-width:180px;">
+                                                    {{ $brand->description }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </td>
                                 <td><code class="text-primary">{{ $brand->slug }}</code></td>
@@ -379,13 +384,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
-                    text: '{{ __("messages.confirm_delete") }}',
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: '{{ __('messages.confirm_delete') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -399,7 +404,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -420,6 +425,3 @@
         });
     </script>
 @endpush
-
-
-
