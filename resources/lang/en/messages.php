@@ -711,6 +711,7 @@ return [
     // Missing keys used in views
     'active_products'           => 'Active Products',
     'brand_image'               => 'Brand Image',
+    'remove_image'              => 'Remove Image',
     'copy'                      => 'Copy',
     'fix_errors'                => 'Please fix the errors below.',
     'image_hint'                => 'JPG, PNG, GIF — max 2MB',

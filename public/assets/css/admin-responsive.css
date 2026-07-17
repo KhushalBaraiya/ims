@@ -6,7 +6,9 @@
 /* ================================================================
    GLOBAL — All screen sizes
    ================================================================ */
-* {
+*,
+*::before,
+*::after {
     -webkit-tap-highlight-color: transparent;
     box-sizing: border-box;
 }
@@ -19,6 +21,7 @@ body {
 
 img {
     max-width: 100%;
+    height: auto;
 }
 
 .layout-wrapper,
@@ -37,6 +40,7 @@ img {
 .layout-page {
     width: 100%;
     flex: 1 1 auto;
+    min-width: 0;
 }
 
 .content-wrapper {
@@ -46,12 +50,15 @@ img {
 .container-xxl {
     width: 100% !important;
     max-width: 100% !important;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .row>[class*="col-"] {
     min-width: 0;
 }
 
+/* Always scrollable tables */
 .table-responsive {
     -webkit-overflow-scrolling: touch;
     overflow-x: auto;
@@ -77,6 +84,7 @@ img {
 
 .card-header {
     flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .input-group {
@@ -111,7 +119,7 @@ table .table-light th {
 }
 
 /* ================================================================
-   GENERAL PAGE RESPONSIVENESS — all pages
+   CARDS & MODALS — Global
    ================================================================ */
 .card,
 .card-body,
@@ -128,7 +136,6 @@ table .table-light th {
 }
 
 .page-header,
-.page-title-row,
 .card-header,
 .d-flex.justify-content-between.align-items-center {
     flex-wrap: wrap;
@@ -137,10 +144,7 @@ table .table-light th {
 
 .form-control,
 .form-select,
-.form-floating>.form-control,
-.form-floating>.form-select,
 .input-group,
-.btn,
 .btn-group,
 .input-group .form-control {
     max-width: 100%;
@@ -155,17 +159,24 @@ table .table-light th {
 }
 
 .modal-dialog {
-    margin: 0.75rem;
+    margin: 0.75rem auto;
     max-width: calc(100% - 1.5rem);
 }
 
 .modal-content {
     max-height: calc(100vh - 1.5rem);
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .list-group-item {
     word-break: break-word;
+}
+
+.avatar-initial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 /* ================================================================
@@ -189,6 +200,11 @@ table .table-light th {
     .layout-overlay {
         display: none !important;
     }
+
+    .container-xxl {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
 }
 
 /* ================================================================
@@ -208,33 +224,8 @@ table .table-light th {
     }
 }
 
-@media (max-width: 991.98px) {
-    .layout-navbar {
-        position: sticky;
-        top: 0;
-        z-index: 1070;
-    }
-
-    .layout-menu {
-        width: 280px !important;
-        max-width: 85vw;
-    }
-
-    .menu-link>div {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .page-header .btn,
-    .page-title-row .btn,
-    .card-header .btn {
-        width: 100%;
-    }
-}
-
 /* ================================================================
-   LARGE TABLET (992px – 1199px)
+   LARGE TABLET range (992px – 1199px)
    ================================================================ */
 @media (min-width: 992px) and (max-width: 1199.98px) {
 
@@ -258,12 +249,28 @@ table .table-light th {
         flex-wrap: wrap;
         gap: 0.5rem;
     }
+
+    .col-6.col-md-4.col-xl-2 {
+        width: 33.3333% !important;
+        max-width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+    }
 }
 
 /* ================================================================
    TABLET (768px – 991px)
    ================================================================ */
 @media (min-width: 768px) and (max-width: 991.98px) {
+    .layout-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1070;
+    }
+
+    .layout-menu {
+        width: 280px !important;
+        max-width: 85vw;
+    }
 
     .col-lg-8,
     .col-lg-4,
@@ -288,6 +295,31 @@ table .table-light th {
         width: 50%;
     }
 
+    .col-6.col-md-3,
+    .col-6.col-md-4 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    .col-6.col-md-4.col-xl-2 {
+        width: 33.3333% !important;
+        max-width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+    }
+
+    .form-main-col {
+        width: 66.6666% !important;
+        max-width: 66.6666% !important;
+        flex: 0 0 66.6666% !important;
+    }
+
+    .form-publish-col {
+        width: 33.3333% !important;
+        max-width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+    }
+
     .table td,
     .table th {
         font-size: 0.875rem !important;
@@ -308,9 +340,34 @@ table .table-light th {
         float: right;
     }
 
-    .col-sm-6.col-xl-3,
-    .col-6.col-xl-3 {
-        width: 50%;
+    .permission-table th,
+    .permission-table td {
+        font-size: 0.82rem !important;
+        padding: 0.4rem 0.5rem !important;
+    }
+
+    #dashClock {
+        display: none !important;
+    }
+
+    .show-sidebar {
+        order: -1 !important;
+    }
+
+    .show-main {
+        order: 0 !important;
+    }
+
+    .col-lg-4.col-md-4 {
+        width: 33.3333% !important;
+        flex: 0 0 33.3333% !important;
+        max-width: 33.3333% !important;
+    }
+
+    .col-lg-8.col-md-8 {
+        width: 66.6666% !important;
+        flex: 0 0 66.6666% !important;
+        max-width: 66.6666% !important;
     }
 
     .report-filter-form .col-md-3,
@@ -323,34 +380,24 @@ table .table-light th {
     .report-summary-row .col-md-4 {
         width: 50% !important;
     }
-
-    .permission-table th,
-    .permission-table td {
-        font-size: 0.82rem !important;
-        padding: 0.4rem 0.5rem !important;
-    }
-
-    /* Dashboard banner clock hidden on tablet */
-    #dashClock {
-        display: none !important;
-    }
 }
 
 /* ================================================================
    SMALL (576px – 767px)
    ================================================================ */
 @media (min-width: 576px) and (max-width: 767.98px) {
+    .layout-navbar {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
 
     .col-lg-8,
     .col-lg-4,
     .col-lg-7,
     .col-lg-5,
-    .col-lg-3,
-    .col-lg-9,
     .col-md-6,
     .col-md-8,
-    .col-md-4,
-    .col-md-3 {
+    .col-md-4 {
         width: 100% !important;
         max-width: 100% !important;
         flex: 0 0 100% !important;
@@ -376,18 +423,8 @@ table .table-light th {
         padding: 0.45rem 0.55rem !important;
     }
 
-    .layout-navbar {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-    }
-
     .card-body.p-4 {
         padding: 1.25rem !important;
-    }
-
-    .container-xxl.container-p-y {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
     }
 
     div.dataTables_wrapper div.dataTables_length,
@@ -400,48 +437,35 @@ table .table-light th {
         margin-bottom: 0.35rem;
     }
 
-    .report-filter-form .col-md-3,
+    .container-xxl.container-p-y {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .show-sidebar {
+        order: -1 !important;
+    }
+
+    .show-main {
+        order: 0 !important;
+    }
+
     .report-filter-form [class*="col-md-"] {
         width: 100% !important;
         max-width: 100% !important;
     }
 
-    .d-flex.align-items-center.justify-content-between.mb-4,
-    .d-flex.align-items-center.justify-content-between.mb-3 {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    /* Roles permission table — horizontal scroll on small */
-    .permission-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .permission-table th,
-    .permission-table td {
-        font-size: 0.8rem !important;
-        padding: 0.35rem 0.45rem !important;
-        white-space: nowrap;
-    }
-
-    /* Dashboard banner clock */
-    #dashClock {
-        display: none !important;
-    }
-
-    /* Purchase/sale form sidebar to top */
-    .col-lg-3.order-lg-first {
-        order: -1 !important;
+    .report-summary-row [class*="col-md-"] {
+        width: 50% !important;
     }
 }
 
 /* ================================================================
-   MOBILE (0 – 575px) — Main block
+   MOBILE (0 – 575px)
    ================================================================ */
 @media (max-width: 575.98px) {
 
-    /* ── Layout ── */
+    /* Layout */
     .container-xxl.container-p-y {
         padding-left: 0.6rem !important;
         padding-right: 0.6rem !important;
@@ -450,44 +474,25 @@ table .table-light th {
 
     .layout-page {
         padding-left: 0 !important;
-        width: 100% !important;
     }
 
     .content-wrapper {
         padding: 0 !important;
-        overflow-x: hidden !important;
     }
 
-    .layout-container {
-        display: block !important;
-    }
-
-    /* ── Navbar ── */
+    /* Navbar */
     .layout-navbar {
-        padding: 0 0.6rem !important;
-        min-height: 54px !important;
-    }
-
-    .navbar-nav.align-items-center.ms-auto.flex-row.gap-1 {
-        gap: 0 !important;
-        flex-wrap: nowrap !important;
-    }
-
-    .navbar-nav-right {
-        overflow: hidden;
-    }
-
-    .layout-menu {
-        width: 260px !important;
-    }
-
-    .menu-inner {
-        padding-bottom: 5rem;
+        padding: 0 0.75rem !important;
+        min-height: 56px !important;
     }
 
     #navClock-time,
     #navClock-date {
         display: none !important;
+    }
+
+    .navbar-nav.align-items-center.ms-auto.flex-row.gap-1 {
+        gap: 0 !important;
     }
 
     .cs-dropdown-menu,
@@ -503,7 +508,7 @@ table .table-light th {
         left: auto !important;
     }
 
-    /* ── Sidebar ── */
+    /* Sidebar */
     #layout-menu {
         width: 240px !important;
         max-width: 85vw;
@@ -513,7 +518,7 @@ table .table-light th {
         font-size: 1.1rem !important;
     }
 
-    /* ── Page header ── */
+    /* Page headers — stack vertically */
     .d-flex.align-items-center.justify-content-between.mb-4,
     .d-flex.align-items-center.justify-content-between.mb-3 {
         flex-direction: column !important;
@@ -534,10 +539,12 @@ table .table-light th {
 
     .d-flex.align-items-center.justify-content-between.mb-4 .btn,
     .d-flex.align-items-center.justify-content-between.mb-3 .btn {
-        width: 100%;
+        flex: 1 1 auto;
+        text-align: center;
+        justify-content: center;
     }
 
-    /* ── Card header ── */
+    /* Card headers */
     .card-header.d-flex {
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -548,7 +555,7 @@ table .table-light th {
         align-self: flex-start;
     }
 
-    /* ── Card body ── */
+    /* Card body */
     .card-body {
         padding: 1rem !important;
     }
@@ -557,11 +564,7 @@ table .table-light th {
         padding: 0.9rem !important;
     }
 
-    .card.shadow-sm {
-        box-shadow: 0 1px 6px rgba(0, 0, 0, .07) !important;
-    }
-
-    /* ── Typography ── */
+    /* Typography */
     h4.fw-bold,
     h4.fw-semibold {
         font-size: 1.1rem !important;
@@ -578,10 +581,9 @@ table .table-light th {
 
     .breadcrumb {
         font-size: 0.76rem;
-        flex-wrap: wrap;
     }
 
-    /* ── Column resets ── */
+    /* Forms — all columns full width on mobile */
     [class*="col-lg-"],
     [class*="col-md-"],
     [class*="col-xl-"] {
@@ -590,10 +592,10 @@ table .table-light th {
         flex: 0 0 100% !important;
     }
 
-    .col-6,
+    /* Exception: 2-col stat cards */
     .col-6.col-xl-3,
     .col-6.col-md-3,
-    .col-6.col-md-4 {
+    .col-6 {
         width: 50% !important;
         max-width: 50% !important;
         flex: 0 0 50% !important;
@@ -605,7 +607,14 @@ table .table-light th {
         flex: 0 0 100% !important;
     }
 
-    /* ── Forms ── */
+    .col-sm-12,
+    .col-md-4.col-sm-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Form controls */
     .form-label {
         font-size: 0.85rem !important;
         margin-bottom: 0.3rem !important;
@@ -626,7 +635,7 @@ table .table-light th {
         min-height: 100px !important;
     }
 
-    /* ── Table ── */
+    /* Tables */
     .table td,
     .table th {
         font-size: 0.8rem !important;
@@ -652,11 +661,14 @@ table .table-light th {
         min-width: 30px !important;
     }
 
-    .table-responsive table.table {
-        min-width: 540px;
+    /* Action buttons */
+    .btn-action {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.85rem !important;
     }
 
-    /* ── Buttons ── */
+    /* Buttons */
     .btn {
         font-size: 0.85rem !important;
     }
@@ -671,13 +683,7 @@ table .table-light th {
         padding: 0.25rem 0.55rem !important;
     }
 
-    .btn-action {
-        width: 28px !important;
-        height: 28px !important;
-        font-size: 0.85rem !important;
-    }
-
-    /* ── Badges ── */
+    /* Badges */
     .badge {
         font-size: 0.72rem !important;
     }
@@ -687,7 +693,7 @@ table .table-light th {
         padding: 0.2rem 0.5rem !important;
     }
 
-    /* ── DataTables ── */
+    /* DataTable controls */
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_filter,
     div.dataTables_wrapper div.dataTables_info,
@@ -700,6 +706,7 @@ table .table-light th {
 
     div.dataTables_wrapper div.dataTables_filter input {
         width: 100% !important;
+        max-width: 100% !important;
     }
 
     div.dataTables_wrapper div.dataTables_paginate ul.pagination {
@@ -717,270 +724,72 @@ table .table-light th {
         padding: 0.2rem 0.45rem !important;
     }
 
-    /* ── Dashboard ── */
-    #dashClock {
-        display: none !important;
-    }
-
-    .dash-banner .card-body {
+    /* Per-page + search row on mobile */
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2 {
         flex-direction: column !important;
-        align-items: flex-start !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
     }
 
-    .dash-banner h4 {
-        font-size: 1.1rem !important;
-    }
-
-    .dash-banner p {
-        font-size: 0.82rem !important;
-    }
-
-    .kpi-card .card-body {
-        padding: 0.75rem !important;
-    }
-
-    .kpi-icon {
-        width: 38px !important;
-        height: 38px !important;
-        font-size: 1.1rem !important;
-    }
-
-    .kpi-card .fw-bold[style*="1.1rem"] {
-        font-size: 0.95rem !important;
-    }
-
-    .kpi-card .fw-bold[style*="1.3rem"] {
-        font-size: 1.1rem !important;
-    }
-
-    /* ── Roles permission table ── */
-    .table-responsive.border.rounded {
-        border-radius: 6px !important;
-    }
-
-    .table.table-bordered th,
-    .table.table-bordered td {
-        font-size: 0.78rem !important;
-        padding: 0.35rem 0.4rem !important;
-        white-space: nowrap;
-    }
-
-    .table.table-bordered {
-        min-width: 480px;
-    }
-
-    /* ── Purchase / Sale create form ── */
-    .pur-qty-input {
-        width: 54px !important;
-    }
-
-    .pur-price-input {
-        width: 80px !important;
-    }
-
-    .pur-sm-input {
-        width: 64px !important;
-    }
-
-    #purchaseItemsTable,
-    #saleItemsTable {
-        min-width: 600px;
-    }
-
-    #shipping_amount {
-        width: 90px !important;
-    }
-
-    /* ── Summary totals row ── */
-    .d-flex.justify-content-between.align-items-center.border-bottom.py-2 .form-control-sm {
-        width: 90px !important;
-        font-size: 0.82rem !important;
-    }
-
-    /* ── Settings / Profile sidebar card ── */
-    .publish-sticky {
-        position: static !important;
-        top: auto !important;
-    }
-
-    .list-group-item {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-
-    .list-group-item .fw-bold {
-        font-size: 0.85rem !important;
-    }
-
-    /* ── Reports filter form ── */
-    .report-filter-form .col-md-3,
-    .report-filter-form [class*="col-md-"] {
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2 form,
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2 .input-group {
         width: 100% !important;
-        max-width: 100% !important;
     }
 
-    /* ── Product form sections ── */
-    .form-section-header {
+    /* Modal */
+    .modal-dialog {
+        margin: 0.4rem !important;
+    }
+
+    .modal-content {
+        border-radius: 0.5rem !important;
+    }
+
+    .modal-header {
+        padding: 0.75rem 1rem !important;
+    }
+
+    .modal-body {
+        padding: 0.9rem !important;
+    }
+
+    .modal-footer {
+        padding: 0.6rem 0.9rem !important;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
 
-    .form-section-body .row.g-3>[class*="col-md-"] {
+    .modal-footer .btn {
+        flex: 1 1 auto;
+    }
+
+    /* Dashboard */
+    #dashClock-time {
+        font-size: 1.6rem !important;
+    }
+
+    .kpi-card .card-body h3 {
+        font-size: 1.4rem !important;
+    }
+
+    .kpi-card .card-body h4 {
+        font-size: 1.1rem !important;
+    }
+
+    .table-responsive table.table {
+        min-width: 540px;
+    }
+
+    .col-lg-7,
+    .col-lg-5 {
         width: 100% !important;
-        max-width: 100% !important;
-        flex: 0 0 100% !important;
     }
 
-    /* ── Users / Customers / Suppliers show cards ── */
-    .d-flex.justify-content-between.py-2.border-bottom span {
-        font-size: 0.82rem !important;
+    canvas#weekChart {
+        height: 200px !important;
     }
 
-    .d-flex.justify-content-between.py-2 span {
-        font-size: 0.82rem !important;
-    }
-
-    /* ── Stock adjust page ── */
-    .col-md-4.col-lg-3 {
-        width: 100% !important;
-        max-width: 100% !important;
-        flex: 0 0 100% !important;
-    }
-}
-
-/* end @media max-width: 575.98px */
-
-/* ================================================================
-   VIEWPORT FIX — allow user zoom for accessibility
-   ================================================================ */
-/* Override is done via JS below — keep meta intact but allow zoom on md+ */
-
-/* ================================================================
-   NAVBAR — crowded icons fix on < 400px
-   ================================================================ */
-@media (max-width: 399.98px) {
-    .nav-item.dropdown.me-1 .nav-link {
-        padding: 0 0.3rem !important;
-    }
-
-    .cs-trigger span.fw-bold,
-    .ls-trigger span.fw-bold {
-        display: none !important;
-    }
-
-    .theme-toggle-btn {
-        width: 30px !important;
-    }
-
-    .avatar {
-        width: 32px !important;
-        height: 32px !important;
-    }
-
-    .avatar img,
-    .avatar>div {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 0.8rem !important;
-    }
-
-    .layout-navbar {
-        padding: 0 0.4rem !important;
-    }
-}
-
-/* ================================================================
-   PRINT — hide sidebar & navbar
-   ================================================================ */
-@media print {
-
-    #layout-menu,
-    .layout-navbar,
-    .layout-menu-toggle,
-    .layout-overlay,
-    .btn-action,
-    nav[aria-label="breadcrumb"] {
-        display: none !important;
-    }
-
-    .layout-page {
-        margin-left: 0 !important;
-        padding: 0 !important;
-    }
-
-    .content-wrapper {
-        padding: 0 !important;
-    }
-
-    .container-xxl {
-        max-width: 100% !important;
-        padding: 0 !important;
-    }
-
-    .card {
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-    }
-
-    body {
-        font-size: 12px !important;
-    }
-}
-
-/* ================================================================
-   DARK MODE — responsive tweaks
-   ================================================================ */
-[data-bs-theme="dark"] .card-body.p-4,
-[data-bs-theme="dark"] .card-body {
-    background: transparent;
-}
-
-[data-bs-theme="dark"] .card-header.bg-white {
-    background: transparent !important;
-}
-
-/* ================================================================
-   UTILITY — mobile helper classes
-   ================================================================ */
-@media (max-width: 575.98px) {
-    .mob-full {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-    }
-
-    .mob-hide {
-        display: none !important;
-    }
-
-    .mob-text-sm {
-        font-size: 0.8rem !important;
-    }
-
-    .mob-p-sm {
-        padding: 0.6rem !important;
-    }
-
-    .mob-gap-sm {
-        gap: 0.4rem !important;
-    }
-}
-
-@media (min-width: 576px) and (max-width: 991.98px) {
-    .tab-full {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-    }
-}
-
-/* ================================================================
-   SHOW PAGES — sidebar (col-lg-3) first on mobile
-   purchases/show, sales/show, purchase_returns/show, sale_returns/show
-   ================================================================ */
-@media (max-width: 991.98px) {
-
-    /* Quick Actions sidebar comes first on mobile */
+    /* Show pages: sidebar stacks above main on mobile */
     .show-sidebar {
         order: -1 !important;
     }
@@ -988,235 +797,663 @@ table .table-light th {
     .show-main {
         order: 0 !important;
     }
-}
 
-/* ================================================================
-   STATS CARDS — col-6 col-xl-3 gap: add md breakpoint
-   Affects all index pages
-   ================================================================ */
-@media (min-width: 768px) and (max-width: 1199.98px) {
-    .col-6.col-xl-3 {
-        width: 25% !important;
-        max-width: 25% !important;
-        flex: 0 0 25% !important;
-    }
-}
-
-/* ================================================================
-   FORM PAGES — col-lg-8/4 promote to col-md-8/4
-   so sidebar is side-by-side from 768px, not only from 992px
-   ================================================================ */
-@media (min-width: 768px) and (max-width: 991.98px) {
-
-    /* Keep the publish/save card beside the form on tablet */
-    .form-publish-col {
-        width: 33.3333% !important;
-        max-width: 33.3333% !important;
-        flex: 0 0 33.3333% !important;
+    /* Purchase/Sale create item rows */
+    .purchase-items-table td,
+    .sale-items-table td {
+        padding: 0.35rem 0.3rem !important;
+        font-size: 0.8rem !important;
     }
 
-    .form-main-col {
-        width: 66.6666% !important;
-        max-width: 66.6666% !important;
-        flex: 0 0 66.6666% !important;
+    .qty-input {
+        width: 56px !important;
+        font-size: 0.8rem !important;
+        padding: 0.25rem 0.3rem !important;
     }
-}
 
-/* ================================================================
-   REPORTS — col-6 col-xl-2 (6 KPI cards): add col-md-4
-   ================================================================ */
-@media (min-width: 768px) and (max-width: 1199.98px) {
-    .col-6.col-xl-2 {
-        width: 33.3333% !important;
-        max-width: 33.3333% !important;
-        flex: 0 0 33.3333% !important;
+    .price-input {
+        width: 78px !important;
+        font-size: 0.8rem !important;
     }
-}
 
-/* ================================================================
-   PRODUCTS INDEX — filter col-md-1 price inputs too narrow
-   ================================================================ */
-@media (max-width: 991.98px) {
-
-    /* col-md-1 price min/max inputs: make them wider */
-    .product-filter-row [class*="col-md-1"] {
-        width: 50% !important;
-        max-width: 50% !important;
-        flex: 0 0 50% !important;
+    .discount-input,
+    .tax-input {
+        width: 62px !important;
+        font-size: 0.8rem !important;
     }
-}
 
-@media (max-width: 575.98px) {
-    .product-filter-row [class*="col-md-1"] {
+    .d-flex.justify-content-end.gap-2.mt-4 {
+        flex-direction: column !important;
+    }
+
+    .d-flex.justify-content-end.gap-2.mt-4 .btn {
+        width: 100% !important;
+        justify-content: center;
+    }
+
+    /* Stock/Report filter rows full width */
+    .row.g-3>[class*="col-"] {
         width: 100% !important;
         max-width: 100% !important;
         flex: 0 0 100% !important;
     }
-}
 
-/* ================================================================
-   REPORTS — col-md-1 apply button too narrow
-   ================================================================ */
-@media (max-width: 991.98px) {
-    .report-filter-form .col-md-1 {
-        width: auto !important;
-        flex: 0 0 auto !important;
-    }
-}
-
-/* ================================================================
-   PURCHASE / SALE FORM — shipping input full-width on mobile
-   ================================================================ */
-@media (max-width: 575.98px) {
-    .d-flex.justify-content-between.align-items-center.border-bottom.py-2 input[type="number"] {
-        width: 100px !important;
-        font-size: 0.82rem !important;
+    /* Profile */
+    .img-preview {
+        width: 80px !important;
+        height: 80px !important;
     }
 
-    /* Summary totals section on create/edit forms */
-    #sum_subtotal,
-    #sum_grandtotal,
-    #sum_due,
-    #sum_change,
-    #lbl_discount_amount,
-    #lbl_tax_amount {
+    .img-preview-contain {
+        width: 90px !important;
+        height: 90px !important;
+    }
+
+    /* Image preview box */
+    #imagePreviewBox .position-relative img {
+        width: 72px !important;
+        height: 72px !important;
+    }
+
+    /* Toast */
+    #adminToast {
+        min-width: 180px !important;
+        max-width: calc(100vw - 1.2rem) !important;
+        font-size: 0.88rem !important;
+        right: 0.6rem !important;
+        top: 0.6rem !important;
+    }
+
+    /* Accordion */
+    .accordion-button {
+        font-size: 0.88rem !important;
+        padding: 0.7rem 0.9rem !important;
+    }
+
+    .accordion-body {
+        padding: 0.75rem !important;
+    }
+
+    /* Row gutters */
+    .row.g-4 {
+        --bs-gutter-x: 0.6rem;
+        --bs-gutter-y: 0.6rem;
+    }
+
+    .row.g-3 {
+        --bs-gutter-x: 0.5rem;
+        --bs-gutter-y: 0.5rem;
+    }
+
+    /* Product gallery */
+    .product-gallery-col {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+
+    /* Drop zone */
+    .drop-zone {
+        padding: 1.5rem !important;
+    }
+
+    .upload-icon {
+        font-size: 2rem !important;
+    }
+
+    /* Summary rows */
+    .purchase-summary td,
+    .sale-summary td {
+        font-size: 0.85rem !important;
+    }
+
+    /* Detail labels */
+    .detail-label {
+        font-size: 0.78rem !important;
+        font-weight: 600;
+        color: #8592a3;
+    }
+
+    .detail-value {
         font-size: 0.88rem !important;
     }
 }
 
 /* ================================================================
-   PRODUCTS FORM — col-md-5/3/4 stack on mobile
+   EXTRA SMALL (0 – 400px)
    ================================================================ */
-@media (max-width: 575.98px) {
-
-    .col-md-5,
-    .col-md-3,
-    .col-md-4,
-    .col-md-2 {
-        width: 100% !important;
-        max-width: 100% !important;
-        flex: 0 0 100% !important;
-    }
-}
-
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .col-md-5 {
-        width: 100% !important;
-        max-width: 100% !important;
-        flex: 0 0 100% !important;
+@media (max-width: 400px) {
+    #layout-menu {
+        width: 220px !important;
+        max-width: 80vw;
     }
 
-    .col-md-4 {
+    .col-6.col-xl-3,
+    .col-6 {
         width: 50% !important;
         max-width: 50% !important;
         flex: 0 0 50% !important;
     }
 
-    .col-md-3 {
-        width: 50% !important;
-        max-width: 50% !important;
-        flex: 0 0 50% !important;
+    /* Hide currency code text on very small, keep icon */
+    .cs-trigger span.fw-bold,
+    .ls-trigger span.fw-bold {
+        display: none !important;
+    }
+
+    .user-dropdown-menu {
+        min-width: 220px !important;
+    }
+
+    .table td,
+    .table th {
+        font-size: 0.75rem !important;
+        padding: 0.35rem 0.3rem !important;
+    }
+
+    .btn {
+        font-size: 0.8rem !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+
+    .btn-action {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .card-body {
+        padding: 0.75rem !important;
+    }
+
+    h4.fw-bold {
+        font-size: 1rem !important;
     }
 }
 
 /* ================================================================
-   NAVBAR — items spacing on very small screens
+   PRINT
    ================================================================ */
-@media (max-width: 575.98px) {
-    .layout-navbar .nav-item.dropdown {
-        margin-right: 0 !important;
+@media print {
+
+    .layout-menu,
+    .layout-navbar,
+    .btn,
+    .breadcrumb,
+    .card-header .btn,
+    #adminToast {
+        display: none !important;
     }
 
-    .layout-navbar .nav-link {
-        padding-left: 0.35rem !important;
-        padding-right: 0.35rem !important;
-    }
-}
-
-/* ================================================================
-   CARD HEADER — align items + flex-wrap for all headers
-   ================================================================ */
-.card-header {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-/* ================================================================
-   STOCKS ADJUST — col-lg-4/8 at tablet
-   ================================================================ */
-@media (min-width: 768px) and (max-width: 991.98px) {
-    .col-lg-4.col-md-4 {
-        width: 33.3333% !important;
-        flex: 0 0 33.3333% !important;
-        max-width: 33.3333% !important;
+    .layout-page {
+        margin-left: 0 !important;
     }
 
-    .col-lg-8.col-md-8 {
-        width: 66.6666% !important;
-        flex: 0 0 66.6666% !important;
-        max-width: 66.6666% !important;
-    }
-
-    .col-lg-3.col-md-4 {
-        width: 33.3333% !important;
-        flex: 0 0 33.3333% !important;
-        max-width: 33.3333% !important;
-    }
-
-    .col-lg-9.col-md-8 {
-        width: 66.6666% !important;
-        flex: 0 0 66.6666% !important;
-        max-width: 66.6666% !important;
-    }
-}
-
-/* ================================================================
-   DASHBOARD BANNER — responsive button row
-   ================================================================ */
-@media (max-width: 575.98px) {
-    .dash-banner .d-flex.flex-wrap.gap-2 {
-        width: 100%;
-    }
-
-    .dash-banner .d-flex.flex-wrap.gap-2 .btn {
-        flex: 1 1 auto;
-        text-align: center;
-    }
-
-    .dash-banner .card-body {
-        padding: 1.25rem !important;
-    }
-}
-
-/* ================================================================
-   ACTIVITY LOG — description cell wraps on mobile
-   ================================================================ */
-@media (max-width: 767.98px) {
-    .table td.description-cell {
-        white-space: normal !important;
-        max-width: 180px;
-        word-break: break-word;
-    }
-}
-
-/* ================================================================
-   AUTH PAGES — login / forgot-password
-   ================================================================ */
-@media (max-width: 575.98px) {
-    .authentication-wrapper {
-        padding: 1rem !important;
-    }
-
-    .authentication-inner {
+    .content-wrapper {
         padding: 0 !important;
     }
 
-    .card.authentication-card {
-        border-radius: 12px !important;
+    .card {
+        border: 1px solid #dee2e6 !important;
+        box-shadow: none !important;
     }
 
-    .demo-user-card {
-        flex-wrap: wrap !important;
+    .table td,
+    .table th {
+        font-size: 0.8rem !important;
+    }
+}
+
+/* ================================================================
+   PURCHASE / SALE CREATE — RESPONSIVE
+   ================================================================ */
+@media (max-width: 991.98px) {
+
+    .col-lg-3,
+    .col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    #shipping_amount,
+    #discount_amount,
+    #tax_amount {
+        width: 110px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    #autocompleteResults {
+        font-size: 0.82rem !important;
+    }
+
+    #autocompleteResults .autocomplete-item {
+        padding: 0.4rem 0.6rem !important;
+    }
+
+    .d-flex.justify-content-between.align-items-center.border-bottom.py-2 input.form-control {
+        width: 100px !important;
+        font-size: 0.82rem !important;
+    }
+
+    textarea[name="notes"] {
+        min-height: 80px !important;
+    }
+
+    #sum_due,
+    #sum_change {
+        font-size: 0.95rem !important;
+    }
+}
+
+/* ================================================================
+   REPORTS — RESPONSIVE
+   ================================================================ */
+@media (max-width: 767.98px) {
+
+    .report-filter-form .col-md-3,
+    .report-filter-form .col-md-2,
+    .report-filter-form [class*="col-md-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .report-summary-row .col-md-3,
+    .report-summary-row .col-md-4 {
+        width: 50% !important;
+    }
+
+    .btn-print {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .report-summary-row .col-md-3,
+    .report-summary-row .col-md-4,
+    .report-summary-row [class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   ROLE PERMISSIONS TABLE
+   ================================================================ */
+@media (max-width: 767.98px) {
+
+    .permission-table th,
+    .permission-table td {
+        font-size: 0.78rem !important;
+        padding: 0.35rem 0.4rem !important;
+    }
+
+    .permission-table .form-check-input {
+        width: 1rem !important;
+        height: 1rem !important;
+    }
+}
+
+/* ================================================================
+   PURCHASE / SALE SHOW (VIEW)
+   ================================================================ */
+@media (max-width: 767.98px) {
+    .invoice-header-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .invoice-info-col {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .print-invoice-wrap {
+        padding: 0.75rem !important;
+    }
+
+    .invoice-table th,
+    .invoice-table td {
+        font-size: 0.78rem !important;
+        padding: 0.35rem !important;
+    }
+
+    .invoice-total-row td {
+        font-size: 0.82rem !important;
+    }
+}
+
+/* ================================================================
+   SETTINGS PAGE
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .settings-logo-preview {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .settings-section .row.g-3>[class*="col-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
+
+/* ================================================================
+   NAVBAR — MOBILE
+   ================================================================ */
+@media (max-width: 767.98px) {
+    .layout-navbar {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+}
+
+/* ================================================================
+   HAMBURGER / MENU TOGGLE
+   ================================================================ */
+.layout-menu-toggle .nav-link {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    transition: background .15s;
+}
+
+.layout-menu-toggle .nav-link:hover {
+    background: rgba(105, 108, 255, .09);
+    color: #696cff !important;
+}
+
+.menu-toggle-btn {
+    transition: background .15s;
+    color: inherit;
+    text-decoration: none !important;
+}
+
+.menu-toggle-btn:hover {
+    background: rgba(105, 108, 255, .09) !important;
+    color: #696cff !important;
+}
+
+/* ================================================================
+   SHOW/DETAIL PAGES — 3/9 column split
+   ================================================================ */
+@media (max-width: 991.98px) {
+
+    /* On tablet/mobile, sidebar info comes after main content */
+    .show-sidebar {
+        order: 1 !important;
+    }
+
+    .show-main {
+        order: 0 !important;
+    }
+
+    /* col-lg-3 / col-lg-9 for show pages */
+    .col-lg-3.show-sidebar,
+    .col-lg-9.show-main {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    /* Show page header action buttons */
+    .d-flex.gap-2>.btn {
+        font-size: 0.82rem !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+
+    /* Hero banner on show pages */
+    .card .card-body.d-flex.align-items-center.gap-3.flex-wrap {
+        gap: 0.75rem !important;
+    }
+}
+
+/* ================================================================
+   DARK MODE — select2 / autocomplete in responsive mode
+   ================================================================ */
+[data-bs-theme="dark"] .autocomplete-item {
+    background: #1f2933;
+    color: #cbd3dc;
+    border-color: #33404d !important;
+}
+
+[data-bs-theme="dark"] .autocomplete-item:hover {
+    background: rgba(105, 108, 255, 0.14) !important;
+}
+
+[data-bs-theme="dark"] #autocompleteResults {
+    background: #1f2933 !important;
+    border-color: #33404d !important;
+}
+
+/* ================================================================
+   DATATABLE PER-PAGE + SEARCH CONTROLS ROW
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .dt-controls-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+    }
+
+    .dt-controls-row form,
+    .dt-controls-row .input-group {
+        width: 100% !important;
+    }
+
+    .dt-pagination-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.4rem !important;
+    }
+}
+
+/* ================================================================
+   STOCK / ADJUSTMENT
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    .stock-form .col-md-6,
+    .stock-form .col-md-4,
+    .stock-form .col-md-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   PROFILE PAGE
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .profile-avatar-wrap {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+    }
+}
+
+/* ================================================================
+   RETURN FORMS (purchase return / sale return)
+   ================================================================ */
+@media (max-width: 991.98px) {
+
+    .return-form .col-lg-3,
+    .return-form .col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================================
+   ACTIVITY LOG
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .activity-log-table td {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ================================================================
+   CUSTOMERS / SUPPLIERS / USERS SHOW — col-lg-8 / col-lg-4
+   These use col-lg-8 left + col-lg-4 right which is already
+   handled by the global col-lg rules above.
+   Extra: stat grid inside show pages
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    /* 3-col stat cards inside show pages → 1 per row */
+    .col-4 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* Exception — keep 2-col for the KPI section */
+    .col-6.col-md-3 .col-4,
+    .row.g-3 .col-4 {
+        width: 100% !important;
+    }
+
+    /* Hero banner on show pages — compact on mobile */
+    .card .card-body.py-3.px-4.d-flex.align-items-center {
+        padding: 0.75rem 1rem !important;
+    }
+
+    .card .card-body.py-3.px-4.d-flex.align-items-center .fs-4 {
+        font-size: 1rem !important;
+    }
+}
+
+/* ================================================================
+   AUTH CARD — extra small mobile
+   ================================================================ */
+@media (max-width: 400px) {
+    .auth-card {
+        padding: 1.75rem 1.25rem !important;
+        border-radius: 10px !important;
+    }
+
+    .brand-name {
+        font-size: 1.15rem !important;
+    }
+
+    .auth-title {
+        font-size: 1.2rem !important;
+    }
+
+    .btn-submit {
+        font-size: 0.85rem !important;
+        padding: 0.72rem !important;
+    }
+}
+
+/* ================================================================
+   STOCK ADJUST — action button row on mobile
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    /* Plus / Minus radio btn group in adjust table */
+    #adjustmentItemsTable .btn-group {
+        flex-direction: column !important;
+    }
+
+    #adjustmentItemsTable .btn-group label {
+        border-radius: 6px !important;
+        margin-bottom: 2px;
+    }
+}
+
+/* ================================================================
+   ROLES FORM — permissions grid on mobile
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .permission-module-row {
+        flex-direction: column !important;
+    }
+
+    .permission-module-row .form-check {
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* ================================================================
+   REPORTS — profit-loss, top-selling, stock-alert summary cards
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .report-summary-card .card-body {
+        padding: 0.75rem !important;
+    }
+
+    .report-summary-card h5 {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* ================================================================
+   PRODUCT GALLERY VIEW — grid columns on mobile
+   ================================================================ */
+@media (max-width: 575.98px) {
+
+    .products-gallery .col-md-3,
+    .products-gallery .col-sm-6,
+    .products-gallery [class*="col-"] {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+}
+
+/* ================================================================
+   CURRENCY / BRAND / CATEGORY — simple index pages
+   All use DataTables, already covered globally
+   ================================================================ */
+
+/* ================================================================
+   FLATPICKR INPUT GROUP — responsive fix
+   ================================================================ */
+.fp-wrapper {
+    flex-wrap: nowrap !important;
+}
+
+@media (max-width: 575.98px) {
+    .fp-wrapper {
+        width: 100% !important;
+    }
+
+    .fp-wrapper input.flatpickr-input {
+        font-size: 0.85rem !important;
+    }
+}
+
+/* ================================================================
+   FOOTER INSIDE CARDS — pagination row wrapping
+   ================================================================ */
+@media (max-width: 575.98px) {
+    .card-body nav[role="navigation"] {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .card-body nav[role="navigation"] .pagination {
+        flex-wrap: wrap;
+        gap: 3px;
+    }
+
+    /* Products index pagination footer row */
+    .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-3.py-2.border-top {
+        flex-direction: column !important;
+        align-items: flex-start !important;
         gap: 0.5rem !important;
     }
 }

@@ -108,7 +108,8 @@
                 @endif
             </div>
             <div class="text-right">
-                <h1 class="text-2xl font-black uppercase tracking-tight text-slate-800 print:text-black">{{ __('messages.sales_invoice_title') }}</h1>
+                <h1 class="text-2xl font-black uppercase tracking-tight text-slate-800 print:text-black">
+                    {{ __('messages.sales_invoice_title') }}</h1>
                 <p class="mt-1 font-mono text-xs font-bold text-slate-500 print:text-black">{{ $sale->invoice_no }}</p>
                 <div
                     class="mt-4 inline-block space-y-1 rounded-xl border border-slate-100 bg-slate-50 p-2.5 text-left text-[11px] print:border-0 print:bg-transparent">
@@ -159,18 +160,25 @@
 
         <!-- Products table -->
 
-        <div class="mb-6">
-            <table class="w-full border-collapse text-left text-xs">
+        <div class="mb-6 overflow-x-auto print:overflow-visible -mx-2 px-2">
+            <table class="w-full border-collapse text-left text-xs" style="min-width:520px;">
                 <thead>
                     <tr class="border-b border-slate-200 bg-slate-50 print:border-black print:bg-transparent">
                         <th class="w-8 px-3 py-2.5 text-center font-bold text-slate-500 print:text-black">#</th>
-                        <th class="px-3 py-2.5 font-bold text-slate-500 print:text-black">{{ __('messages.product_details_th') }}</th>
-                        <th class="w-24 px-3 py-2.5 text-center font-bold text-slate-500 print:text-black">{{ __('messages.sku') }}</th>
-                        <th class="w-20 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">{{ __('messages.price_th_print') }}</th>
-                        <th class="w-16 px-3 py-2.5 text-center font-bold text-slate-500 print:text-black">{{ __('messages.qty_th_print') }}</th>
-                        <th class="w-16 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">{{ __('messages.tax_th_print') }}</th>
-                        <th class="w-16 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">{{ __('messages.discount_th_print') }}</th>
-                        <th class="w-24 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">{{ __('messages.subtotal_th_print') }}</th>
+                        <th class="px-3 py-2.5 font-bold text-slate-500 print:text-black">
+                            {{ __('messages.product_details_th') }}</th>
+                        <th class="w-24 px-3 py-2.5 text-center font-bold text-slate-500 print:text-black">
+                            {{ __('messages.sku') }}</th>
+                        <th class="w-20 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">
+                            {{ __('messages.price_th_print') }}</th>
+                        <th class="w-16 px-3 py-2.5 text-center font-bold text-slate-500 print:text-black">
+                            {{ __('messages.qty_th_print') }}</th>
+                        <th class="w-16 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">
+                            {{ __('messages.tax_th_print') }}</th>
+                        <th class="w-16 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">
+                            {{ __('messages.discount_th_print') }}</th>
+                        <th class="w-24 px-3 py-2.5 text-right font-bold text-slate-500 print:text-black">
+                            {{ __('messages.subtotal_th_print') }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 print:border-b print:border-black">
@@ -217,12 +225,14 @@
             <!-- Calculations -->
             <div class="w-full sm:w-2/5 space-y-2.5 text-xs text-slate-600 print:text-black">
                 <div class="flex items-center justify-between border-b border-slate-50 pb-1.5 print:border-slate-200">
-                    <span class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.subtotal') }}</span>
+                    <span
+                        class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.subtotal') }}</span>
                     <span
                         class="font-bold text-slate-800 print:text-black">{{ $sym }}{{ number_format($sale->sub_total, 2) }}</span>
                 </div>
                 <div class="flex items-center justify-between border-b border-slate-50 pb-1.5 print:border-slate-200">
-                    <span class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.tax_amount_span') }}</span>
+                    <span
+                        class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.tax_amount_span') }}</span>
                     <span
                         class="font-bold text-slate-800 print:text-black">{{ $sym }}{{ number_format($sale->tax_amount, 2) }}</span>
                 </div>
@@ -233,22 +243,26 @@
                         class="font-bold text-red-500 print:text-black">{{ $sym }}{{ number_format($sale->discount_amount, 2) }}</span>
                 </div>
                 <div class="flex items-center justify-between border-b border-slate-50 pb-1.5 print:border-slate-200">
-                    <span class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.shipping_span') }}</span>
+                    <span
+                        class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.shipping_span') }}</span>
                     <span
                         class="font-bold text-slate-800 print:text-black">{{ $sym }}{{ number_format($sale->shipping_amount, 2) }}</span>
                 </div>
                 <div class="flex items-center justify-between border-b-2 border-slate-200 pb-2 print:border-black">
-                    <span class="text-[11px] font-black uppercase text-slate-800 print:text-black">{{ __('messages.grand_total_span') }}</span>
+                    <span
+                        class="text-[11px] font-black uppercase text-slate-800 print:text-black">{{ __('messages.grand_total_span') }}</span>
                     <span
                         class="text-sm font-black text-blue-600 print:text-black">{{ $sym }}{{ number_format($sale->grand_total, 2) }}</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.paid_amount_span') }}</span>
+                    <span
+                        class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.paid_amount_span') }}</span>
                     <span
                         class="font-bold text-emerald-600 print:text-black">{{ $sym }}{{ number_format($sale->paid_amount, 2) }}</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold uppercase text-slate-400 print:text-black">{{ __('messages.due_amount_span') }}</span>
+                    <span
+                        class="text-[10px] font-bold uppercase text-slate-400 print:text-black">{{ __('messages.due_amount_span') }}</span>
                     <span
                         class="font-bold text-red-600 print:text-black">{{ $sym }}{{ number_format($sale->due_amount, 2) }}</span>
                 </div>
@@ -277,5 +291,3 @@
 </body>
 
 </html>
-
-

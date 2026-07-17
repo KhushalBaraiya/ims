@@ -148,30 +148,32 @@
         </div>
 
         <!-- Items Table -->
-        <table class="w-full text-sm border-collapse mb-8">
-            <thead>
-                <tr class="bg-slate-800 text-white text-xs uppercase">
-                    <th class="py-3 px-4 text-left rounded-l-lg">#</th>
-                    <th class="py-3 px-4 text-left">Product</th>
-                    <th class="py-3 px-4 text-center">Return Qty</th>
-                    <th class="py-3 px-4 text-left rounded-r-lg">Reason</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($purchaseReturn->items as $index => $item)
-                    <tr class="{{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50' }} border-b border-slate-100">
-                        <td class="py-3 px-4 text-slate-400">{{ $index + 1 }}</td>
-                        <td class="py-3 px-4">
-                            <p class="font-bold text-slate-800">{{ $item->product->name }}</p>
-                            <p class="text-xs text-slate-400 font-mono">{{ $item->product->code }}</p>
-                        </td>
-                        <td class="py-3 px-4 text-center font-bold text-slate-700">
-                            {{ number_format($item->quantity, 2) }}</td>
-                        <td class="py-3 px-4 text-slate-500 italic">{{ $item->reason ?: '-' }}</td>
+        <div class="overflow-x-auto -mx-2 px-2 print:overflow-visible">
+            <table class="w-full text-sm border-collapse mb-8" style="min-width:480px;">
+                <thead>
+                    <tr class="bg-slate-800 text-white text-xs uppercase">
+                        <th class="py-3 px-4 text-left rounded-l-lg">#</th>
+                        <th class="py-3 px-4 text-left">Product</th>
+                        <th class="py-3 px-4 text-center">Return Qty</th>
+                        <th class="py-3 px-4 text-left rounded-r-lg">Reason</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($purchaseReturn->items as $index => $item)
+                        <tr class="{{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50' }} border-b border-slate-100">
+                            <td class="py-3 px-4 text-slate-400">{{ $index + 1 }}</td>
+                            <td class="py-3 px-4">
+                                <p class="font-bold text-slate-800">{{ $item->product->name }}</p>
+                                <p class="text-xs text-slate-400 font-mono">{{ $item->product->code }}</p>
+                            </td>
+                            <td class="py-3 px-4 text-center font-bold text-slate-700">
+                                {{ number_format($item->quantity, 2) }}</td>
+                            <td class="py-3 px-4 text-slate-500 italic">{{ $item->reason ?: '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         <!-- Refund Summary -->
         <div class="flex justify-end mb-8">
@@ -206,4 +208,3 @@
 </body>
 
 </html>
-

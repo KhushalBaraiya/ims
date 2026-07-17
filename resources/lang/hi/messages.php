@@ -649,6 +649,7 @@ return [
     // Missing keys used in views
     'active_products' => 'सक्रिय उत्पाद',
     'brand_image' => 'ब्रांड छवि',
+    'remove_image' => 'छवि हटाएं',
     'copy' => 'कॉपी',
     'fix_errors' => 'कृपया नीचे की त्रुटियाँ ठीक करें।',
     'image_hint' => 'JPG, PNG, GIF — अधिकतम 2MB',

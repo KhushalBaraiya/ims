@@ -698,6 +698,7 @@ return [
     // Missing keys used in views
     'active_products' => 'સક્રિય ઉત્પાદ',
     'brand_image' => 'બ્રાન્ડ છબી',
+    'remove_image' => 'છબી કાઢી નાખો',
     'copy' => 'કૉપિ',
     'fix_errors' => 'કૃપા કરી નીચેની ભૂલો સુધારો.',
     'image_hint' => 'JPG, PNG, GIF — મહ. 2MB',

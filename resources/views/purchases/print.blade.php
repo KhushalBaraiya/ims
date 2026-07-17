@@ -161,42 +161,45 @@
         </div>
 
         <!-- Items Table -->
-        <table class="w-full text-sm border-collapse mb-8">
-            <thead>
-                <tr class="bg-slate-800 text-white text-xs uppercase">
-                    <th class="py-3 px-4 text-left rounded-l-lg">#</th>
-                    <th class="py-3 px-4 text-left">Product</th>
-                    <th class="py-3 px-4 text-center">Unit</th>
-                    <th class="py-3 px-4 text-center">Qty</th>
-                    <th class="py-3 px-4 text-right">Unit Price</th>
-                    <th class="py-3 px-4 text-right">Discount</th>
-                    <th class="py-3 px-4 text-right">Tax</th>
-                    <th class="py-3 px-4 text-right rounded-r-lg">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($purchase->items as $index => $item)
-                    <tr class="{{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50' }} border-b border-slate-100">
-                        <td class="py-3 px-4 text-slate-400">{{ $index + 1 }}</td>
-                        <td class="py-3 px-4">
-                            <p class="font-bold text-slate-800">{{ $item->product->name }}</p>
-                            <p class="text-xs text-slate-400 font-mono">{{ $item->product->code }}</p>
-                        </td>
-                        <td class="py-3 px-4 text-center text-slate-500">{{ $item->product->unit_code ?? 'PCS' }}</td>
-                        <td class="py-3 px-4 text-center font-bold text-slate-700">
-                            {{ number_format($item->quantity, 2) }}</td>
-                        <td class="py-3 px-4 text-right text-slate-700">
-                            {{ $sym }}{{ number_format($item->purchase_price, 2) }}</td>
-                        <td class="py-3 px-4 text-right text-red-500">
-                            {{ $sym }}{{ number_format($item->discount_amount, 2) }}</td>
-                        <td class="py-3 px-4 text-right text-orange-500">
-                            {{ $sym }}{{ number_format($item->tax_amount, 2) }}</td>
-                        <td class="py-3 px-4 text-right font-bold text-slate-800">
-                            {{ $sym }}{{ number_format($item->total_amount, 2) }}</td>
+        <div class="overflow-x-auto -mx-2 px-2 print:overflow-visible">
+            <table class="w-full text-sm border-collapse mb-8" style="min-width:600px;">
+                <thead>
+                    <tr class="bg-slate-800 text-white text-xs uppercase">
+                        <th class="py-3 px-4 text-left rounded-l-lg">#</th>
+                        <th class="py-3 px-4 text-left">Product</th>
+                        <th class="py-3 px-4 text-center">Unit</th>
+                        <th class="py-3 px-4 text-center">Qty</th>
+                        <th class="py-3 px-4 text-right">Unit Price</th>
+                        <th class="py-3 px-4 text-right">Discount</th>
+                        <th class="py-3 px-4 text-right">Tax</th>
+                        <th class="py-3 px-4 text-right rounded-r-lg">Total</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($purchase->items as $index => $item)
+                        <tr class="{{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50' }} border-b border-slate-100">
+                            <td class="py-3 px-4 text-slate-400">{{ $index + 1 }}</td>
+                            <td class="py-3 px-4">
+                                <p class="font-bold text-slate-800">{{ $item->product->name }}</p>
+                                <p class="text-xs text-slate-400 font-mono">{{ $item->product->code }}</p>
+                            </td>
+                            <td class="py-3 px-4 text-center text-slate-500">{{ $item->product->unit_code ?? 'PCS' }}
+                            </td>
+                            <td class="py-3 px-4 text-center font-bold text-slate-700">
+                                {{ number_format($item->quantity, 2) }}</td>
+                            <td class="py-3 px-4 text-right text-slate-700">
+                                {{ $sym }}{{ number_format($item->purchase_price, 2) }}</td>
+                            <td class="py-3 px-4 text-right text-red-500">
+                                {{ $sym }}{{ number_format($item->discount_amount, 2) }}</td>
+                            <td class="py-3 px-4 text-right text-orange-500">
+                                {{ $sym }}{{ number_format($item->tax_amount, 2) }}</td>
+                            <td class="py-3 px-4 text-right font-bold text-slate-800">
+                                {{ $sym }}{{ number_format($item->total_amount, 2) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         <!-- Totals -->
         <div class="flex justify-end mb-8">
@@ -251,7 +254,8 @@
 
         <!-- Footer -->
         <div class="border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
-            <p>This is a system-generated purchase order from <strong>{{ $companyName }}</strong> &mdash; Electronics
+            <p>This is a system-generated purchase order from <strong>{{ $companyName }}</strong> &mdash;
+                Electronics
                 & Inventory Management System.</p>
             <p class="mt-1">Created by: {{ $purchase->user->name ?? 'System' }} &bull; Printed on:
                 {{ now()->format('d M Y, h:i A') }}</p>
@@ -266,4 +270,3 @@
 </body>
 
 </html>
-

@@ -319,7 +319,7 @@
                                         @error('supplier_id')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    </div>
+                                    </div> 
 
                                     {{-- Opening Qty --}}
                                     <div class="col-md-3">
