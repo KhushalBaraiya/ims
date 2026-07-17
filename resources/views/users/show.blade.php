@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', __('messages.user_details') . ' — ' . $user->name)
+@section('title', __('messages.user_details') . ' ï¿½ ' . $user->name)
 
 @section('content')
 
@@ -45,9 +45,9 @@
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-envelope me-1"></i>{{ $user->email }}</span>
                     @if ($user->phone)
-                        <span>· {{ $user->phone }}</span>
+                        <span>ï¿½ {{ $user->phone }}</span>
                     @endif
-                    <span>· {{ $user->roles->pluck('name')->implode(', ') ?: '{{ __("messages.role") }}' }}</span>
+                    <span>Â· {{ $user->roles->pluck('name')->implode(', ') ?: __('messages.role') }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -65,7 +65,8 @@
         {{-- Left --}}
         <div class="col-lg-8">
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
+                <div
+                    class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="mb-0 fw-semibold">
                         <i class="bx bx-user me-2 text-primary"></i>{{ __('messages.user_details') }}
                     </h6>
@@ -97,7 +98,7 @@
                                 <p class="text-muted mb-1 small"><i class="bx bx-phone me-1"></i>{{ $user->phone }}</p>
                             @endif
                             <span class="badge bg-label-primary">
-                                {{ $user->roles->pluck('name')->implode(', ') ?: '{{ __("messages.role") }}' }}
+                                {{ $user->roles->pluck('name')->implode(', ') ?: __('messages.role') }}
                             </span>
                         </div>
                     </div>
@@ -115,7 +116,7 @@
                         <div class="col-4">
                             <div class="rounded-3 p-3 text-center bg-label-success">
                                 <div class="fw-bold fs-4 text-success">
-                                    {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : '—' }}
+                                    {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'ï¿½' }}
                                 </div>
                                 <div class="text-muted small">{{ __('messages.last_login') }}</div>
                             </div>
@@ -185,7 +186,7 @@
                         <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">{{ __('messages.role') }}</span>
                             <span class="badge bg-label-primary">
-                                {{ $user->roles->pluck('name')->implode(', ') ?: '—' }}
+                                {{ $user->roles->pluck('name')->implode(', ') ?: 'ï¿½' }}
                             </span>
                         </li>
                         <li class="d-flex justify-content-between py-2 border-bottom">
@@ -256,4 +257,3 @@
         });
     </script>
 @endpush
-
