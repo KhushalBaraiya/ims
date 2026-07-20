@@ -1,4 +1,4 @@
-z@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.edit_currency') . ' — ' . $currency->name)
 
 @section('content')
