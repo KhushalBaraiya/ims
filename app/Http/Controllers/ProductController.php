@@ -211,6 +211,21 @@ class ProductController extends Controller
             });
         }
 
+        // Stock filter
+        if ($request->filled('stock_filter')) {
+            match ($request->stock_filter) {
+                'low' => $query->whereHas('stock', fn ($q) =>
+                             $q->where('quantity', '>', 0)
+                               ->whereRaw('stocks.quantity <= products.minimum_stock_alert')
+                         ),
+                'out' => $query->where(fn ($q) =>
+                             $q->whereHas('stock', fn ($sq) => $sq->where('quantity', '<=', 0))
+                               ->orWhereDoesntHave('stock')
+                         ),
+                default => null,
+            };
+        }
+
         $perPage  = (int) $request->input('per_page', 10);
         $perPage  = in_array($perPage, [10, 20, 50, 100]) ? $perPage : 10;
 
@@ -408,6 +423,8 @@ class ProductController extends Controller
     public function edit(Product $product): View
     {
         Gate::authorize('products.update');
+
+        $product->load('stock');
 
         $brands        = Brand::where('status', 'active')->orderBy('name')->get();
         $categories    = MainCategory::where('status', 'active')->orderBy('name')->get();

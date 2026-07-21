@@ -17,7 +17,12 @@
                 </ol>
             </nav>
         </div>
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
+            @if (request('from') === 'low_stock')
+                <a class="btn btn-outline-warning btn-sm" href="{{ route('stocks.low_stock') }}">
+                    <i class="bx bx-error-circle me-1"></i> Back to Low Stock Alert
+                </a>
+            @endif
             <a class="btn btn-outline-secondary" href="{{ route('products.show', $product->id) }}">
                 <i class="bx bx-show me-1"></i> View
             </a>
@@ -45,7 +50,22 @@
                 <div class="small text-white opacity-75">SKU: {{ $product->code }} &nbsp;�&nbsp;
                     {{ $product->mainCategory->name ?? __('messages.uncategorized') }}</div>
             </div>
-            <span class="badge text-primary ms-auto bg-white">{{ ucfirst($product->status) }}</span>
+            @php
+                $currentQty = (float) ($product->stock->quantity ?? 0);
+                $alertQty = (float) ($product->minimum_stock_alert ?? 0);
+                $isOut = $currentQty <= 0;
+                $isLow = !$isOut && $alertQty > 0 && $currentQty <= $alertQty;
+            @endphp
+            <div class="ms-auto d-flex align-items-center gap-2 flex-wrap">
+                @if ($isOut || $isLow)
+                    <span class="badge {{ $isOut ? 'bg-danger' : 'bg-warning text-dark' }} fw-semibold">
+                        <i class="bx {{ $isOut ? 'bx-x-circle' : 'bx-error-circle' }} me-1"></i>
+                        {{ $isOut ? __('messages.out_of_stock') : __('messages.low_stock') }}
+                        &mdash; {{ number_format($currentQty, 0) }} {{ $product->unit_code ?? 'PCS' }}
+                    </span>
+                @endif
+                <span class="badge text-primary bg-white">{{ ucfirst($product->status) }}</span>
+            </div>
         </div>
     </div>
 
@@ -92,7 +112,6 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
                             {{-- SKU --}}
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">SKU / Code <span class="text-danger">*</span></label>
@@ -192,7 +211,7 @@
                 </div>
 
                 {{-- -- Card 2: Pricing & Stock Alert ---------------------------- --}}
-                <div class="card mb-4 shadow-sm">
+                <div class="card mb-4 shadow-sm" id="pricingStockCard">
                     <div
                         class="card-header border-bottom d-flex align-items-center justify-content-between bg-transparent py-3">
                         <h6 class="fw-semibold mb-0">
@@ -269,6 +288,61 @@
                                 @error('minimum_stock_alert')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+
+                            </div>
+
+                            {{-- ── Low Stock Alert Status Panel ── --}}
+                            @php
+                                $lsQty     = (float) ($product->stock->quantity ?? 0);
+                                $lsAlert   = (float) ($product->minimum_stock_alert ?? 0);
+                                $lsOut     = $lsQty <= 0;
+                                $lsLow     = !$lsOut && $lsAlert > 0 && $lsQty <= $lsAlert;
+                                $lsNeeded  = ($lsAlert > $lsQty) ? ($lsAlert - $lsQty) : 0;
+                                $lsRestock = $lsNeeded * ($product->purchase_price ?? 0);
+                            @endphp
+                            @if ($lsOut || $lsLow)
+                            <div class="col-12 mt-1">
+                                <div class="rounded-3 border p-3 d-flex flex-wrap gap-3 align-items-center"
+                                     style="background:{{ $lsOut ? 'rgba(234,84,85,.07)' : 'rgba(255,171,0,.06)' }};
+                                            border-color:{{ $lsOut ? 'rgba(234,84,85,.35)' : 'rgba(255,171,0,.4)' }}!important;">
+                                    {{-- Status Badge --}}
+                                    <span class="badge {{ $lsOut ? 'bg-danger' : 'bg-warning text-dark' }} px-3 py-2 fs-6 flex-shrink-0">
+                                        <i class="bx {{ $lsOut ? 'bx-x-circle' : 'bx-error-circle' }} me-1"></i>
+                                        {{ $lsOut ? __("messages.out_of_stock") : __("messages.low_stock") }}
+                                    </span>
+                                    {{-- Stats --}}
+                                    <div class="d-flex flex-wrap gap-2 flex-grow-1 align-items-center">
+                                        <div class="text-center px-3 py-1 rounded-2 border bg-white">
+                                            <div class="fw-bold {{ $lsOut ? 'text-danger' : 'text-warning' }}" style="font-size:1.05rem;">{{ number_format($lsQty, 0) }}</div>
+                                            <div class="text-muted" style="font-size:.72rem;">Current Qty</div>
+                                        </div>
+                                        <div class="text-center px-3 py-1 rounded-2 border bg-white">
+                                            <div class="fw-bold text-secondary" style="font-size:1.05rem;">{{ number_format($lsAlert, 0) }}</div>
+                                            <div class="text-muted" style="font-size:.72rem;">Alert Level</div>
+                                        </div>
+                                        @if ($lsNeeded > 0)
+                                        <div class="text-center px-3 py-1 rounded-2 border bg-white">
+                                            <div class="fw-bold text-primary" style="font-size:1.05rem;">+{{ number_format($lsNeeded, 0) }}</div>
+                                            <div class="text-muted" style="font-size:.72rem;">Qty Needed</div>
+                                        </div>
+                                        <div class="text-center px-3 py-1 rounded-2 border bg-white">
+                                            <div class="fw-bold text-primary" style="font-size:1.05rem;">{{ format_currency($lsRestock) }}</div>
+                                            <div class="text-muted" style="font-size:.72rem;">Restock Value</div>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    {{-- Adjust Stock Button --}}
+                                    <div class="flex-shrink-0">
+                                        @can("stocks.create")
+                                        <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
+                                           class="btn btn-sm {{ $lsOut ? 'btn-danger' : 'btn-warning' }} fw-semibold">
+                                            <i class="bx bx-plus-medical me-1"></i> Adjust Stock
+                                        </a>
+                                        @endcan
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             </div>
 
                         </div>
@@ -528,6 +602,27 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+            // -- Low Stock Alert: Auto-scroll to Pricing & Stock Alert card ---------
+            @if (request('from') === 'low_stock')
+                setTimeout(function() {
+                    const card = document.getElementById('pricingStockCard');
+                    if (card) {
+                        card.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        // Flash highlight
+                        card.style.transition = 'box-shadow 0.3s ease, border 0.3s ease';
+                        card.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.6)';
+                        card.style.border = '2px solid #ffc107';
+                        setTimeout(function() {
+                            card.style.boxShadow = '';
+                            card.style.border = '';
+                        }, 3000);
+                    }
+                }, 400);
+            @endif
 
             // -- Status toggle label ------------------------------------------------
             $('#statusToggle').on('change', function() {

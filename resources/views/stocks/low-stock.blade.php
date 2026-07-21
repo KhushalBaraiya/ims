@@ -194,10 +194,10 @@
                                         {{ $product->restock_value > 0 ? format_currency($product->restock_value) : '—' }}
                                     </td>
                                     <td class="text-center">
-                                        @can('stocks.create')
-                                            <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
+                                        @can('products.update')
+                                            <a href="{{ route('products.edit', $product->id) }}?from=low_stock"
                                                 class="btn btn-sm btn-outline-primary px-2 py-1">
-                                                {{ __('messages.adjust_stock') }}
+                                                <i class="bx bx-edit me-1"></i>{{ __('messages.adjust_stock') }}
                                             </a>
                                         @endcan
                                     </td>

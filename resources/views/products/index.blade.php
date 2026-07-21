@@ -232,6 +232,14 @@
                                     {{ __('messages.inactive') }}</option>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold small">Stock Alert</label>
+                            <select name="stock_filter" class="form-select form-select-sm">
+                                <option value="">All Stock</option>
+                                <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock Only</option>
+                                <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>Out of Stock Only</option>
+                            </select>
+                        </div>
                         <div class="col-6 col-md-1">
                             <label class="form-label fw-semibold small">{{ __('messages.prod_price_min') }}
                                 {{ optional(current_currency())->symbol ?? '₹' }}</label>
@@ -444,6 +452,7 @@
                                                     'status',
                                                     'price_min',
                                                     'price_max',
+                                                    'stock_filter',
                                                 ]))
                                                 {{ __('messages.prod_no_match_filters') }}
                                             @else
@@ -459,6 +468,7 @@
                                                     'status',
                                                     'price_min',
                                                     'price_max',
+                                                    'stock_filter',
                                                 ]))
                                                 {{ __('messages.prod_clear_filters_hint') }}
                                             @else
@@ -474,6 +484,7 @@
                                                     'status',
                                                     'price_min',
                                                     'price_max',
+                                                    'stock_filter',
                                                 ]))
                                                 <a href="{{ route('products.index') }}"
                                                     class="btn btn-outline-secondary">
