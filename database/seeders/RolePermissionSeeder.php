@@ -17,6 +17,11 @@ class RolePermissionSeeder extends Seeder
     {
         // All permissions definition
         $permissions = [
+            'permissions.view',
+            'permissions.create',
+            'permissions.update',
+            'permissions.delete',
+
             'roles.view',
             'roles.create',
             'roles.update',

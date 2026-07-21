@@ -677,6 +677,27 @@ return [
     'role_publish_hint' => 'ભૂમિકા સાચવતા પહેલા પરવાનગીઓ ચકાસો.',
     'delete_role' => 'ભૂમિકા કાઢી નાખો',
 
+    // Permissions module
+    'menu_permissions'          => 'પરવાનગી',
+    'permission_management'     => 'પરવાનગી સંચાલન',
+    'add_permission_title'      => 'પરવાનગી બનાવો',
+    'add_permission'            => 'પરવાનગી ઉમેરો',
+    'edit_permission'           => 'પરવાનગી સુધારો',
+    'delete_permission'         => 'પરવાનગી કાઢી નાખો',
+    'permission_details_card'   => 'પરવાનગી વિગત',
+    'permission_name'           => 'પરવાનગી નામ',
+    'permission_name_hint'      => 'પરવાનગી ફૉર્મૅટ',
+    'permission_rename_warning' => 'નામ બદલવાથી આ પરવાનગી ધરાવતી ભૂમિકાઓ પ્રભાવિત થશે.',
+    'permission_publish_hint'   => 'ડૉટ નૉટેશન ઉપયોગ કરો: module.action (દા.ત. products.view).',
+    'module_hint'               => 'ફક્ત lowercase, નંબર, underscore (દા.ત. products)',
+    'action_label'              => 'ક્રિયા',
+    'action_hint'               => 'ફક્ત lowercase, નંબર, underscore (દા.ત. view)',
+    'quick_action_hint'         => 'ઝડપી ક્રિયા ભરવા ક્લિક કરો.',
+    'roles_count'               => 'ભૂમિકા',
+    'all'                       => 'બધા',
+    'th_actions_label'          => 'ક્રિયા',
+    'permission'                => 'પરવાનગી',
+
     // Supplier / Customer shared
     'recent_purchases' => 'તાજેતરની ખરીદીઓ',
     'add_purchase' => 'ખરીદી ઉમેરો',

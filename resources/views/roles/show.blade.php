@@ -76,11 +76,11 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>{{ __('messages.module_label') }}</th>
-                                    <th class="text-center" style="width:70px;">{{ __('messages.view') }}</th>
-                                    <th class="text-center" style="width:70px;">{{ __('messages.own') }}</th>
-                                    <th class="text-center" style="width:70px;">{{ __('messages.create') }}</th>
-                                    <th class="text-center" style="width:70px;">{{ __('messages.update') }}</th>
-                                    <th class="text-center" style="width:70px;">{{ __('messages.delete') }}</th>
+                                    @foreach ($allActions as $act)
+                                        <th class="text-center text-capitalize" style="width:70px;">
+                                            {{ $act === 'own' ? 'Own' : (Lang::has('messages.' . $act) ? __('messages.' . $act) : ucfirst($act)) }}
+                                        </th>
+                                    @endforeach
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,7 +92,7 @@
                                     @endphp
                                     <tr class="{{ $hasAny ? '' : 'text-muted opacity-50' }}">
                                         <td class="fw-semibold ps-3">{{ $module }}</td>
-                                        @foreach (['view', 'own', 'create', 'update', 'delete'] as $action)
+                                        @foreach ($allActions as $action)
                                             <td class="text-center">
                                                 @if (isset($actions[$action]))
                                                     @if (in_array($actions[$action]->name, $selectedPermissions))
@@ -112,6 +112,21 @@
                             </tbody>
                         </table>
                     </div>
+
+                    @if (!empty($otherPermissions) && count($otherPermissions) > 0)
+                        <div class="p-3 border-top bg-light">
+                            <h6 class="fw-bold mb-2">{{ __('messages.other_permissions') }}</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach ($otherPermissions as $perm)
+                                    @if (in_array($perm->name, $selectedPermissions))
+                                        <span class="badge bg-success"><i class="bx bx-check me-1"></i>{{ $perm->name }}</span>
+                                    @else
+                                        <span class="badge bg-secondary opacity-50"><i class="bx bx-x me-1"></i>{{ $perm->name }}</span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 

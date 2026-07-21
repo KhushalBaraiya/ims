@@ -321,6 +321,15 @@
             </li>
         @endcan
 
+        @can('permissions.view')
+            <li class="menu-item {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
+                <a href="{{ route('permissions.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-key"></i>
+                    <div>{{ __('messages.menu_permissions') }}</div>
+                </a>
+            </li>
+        @endcan
+
         @can('activity_logs.view')
             <li class="menu-item {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
                 <a href="{{ route('activity-logs.index') }}" class="menu-link">
@@ -423,8 +432,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-                           SIDEBAR — Sneat overrides
-                           ════════════════════════════════════════════ */
+                               SIDEBAR — Sneat overrides
+                               ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {

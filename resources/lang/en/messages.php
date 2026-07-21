@@ -690,6 +690,27 @@ return [
     'role_publish_hint'         => 'Review permissions carefully before saving the role.',
     'delete_role'               => 'Delete Role',
 
+    // Permissions module
+    'menu_permissions'          => 'Permissions',
+    'permission_management'     => 'Permission Management',
+    'add_permission_title'      => 'Create Permission',
+    'add_permission'            => 'Add Permission',
+    'edit_permission'           => 'Edit Permission',
+    'delete_permission'         => 'Delete Permission',
+    'permission_details_card'   => 'Permission Details',
+    'permission_name'           => 'Permission Name',
+    'permission_name_hint'      => 'Permission format',
+    'permission_rename_warning' => 'Renaming a permission will affect all roles that currently hold it.',
+    'permission_publish_hint'   => 'Use dot notation: module.action (e.g. products.view).',
+    'module_hint'               => 'Lowercase letters, numbers, underscores only (e.g. products)',
+    'action_label'              => 'Action',
+    'action_hint'               => 'Lowercase letters, numbers, underscores only (e.g. view)',
+    'quick_action_hint'         => 'Click to fill the action field quickly.',
+    'roles_count'               => 'Roles',
+    'all'                       => 'All',
+    'th_actions_label'          => 'Action',
+    'permission'                => 'Permission',
+
     // Supplier / Customer shared
     'recent_purchases'          => 'Recent Purchases',
     'add_purchase'              => 'Add Purchase',

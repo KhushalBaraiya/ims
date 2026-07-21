@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseReturnController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleReturnController;
@@ -57,6 +58,10 @@ Route::middleware('auth')->group(function () {
     // Role Management CRUD Resource Route
     Route::delete('roles/bulk-delete', [RoleController::class, 'bulkDestroy'])->name('roles.bulk-destroy');
     Route::resource('roles', RoleController::class);
+
+    // Permission Management CRUD Resource Route
+    Route::delete('permissions/bulk-delete', [PermissionController::class, 'bulkDestroy'])->name('permissions.bulk-destroy');
+    Route::resource('permissions', PermissionController::class);
 
     // User Management CRUD Resource Route
     Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');

@@ -50,11 +50,11 @@
                 <tr>
                     <th>{{ __('messages.module_label') }}</th>
                     <th class="text-center" style="min-width:55px;">{{ __('messages.select_all') }}</th>
-                    <th class="text-center" style="min-width:55px;">{{ __('messages.view') }}</th>
-                    <th class="text-center" style="min-width:55px;">Own</th>
-                    <th class="text-center" style="min-width:55px;">{{ __('messages.create') }}</th>
-                    <th class="text-center" style="min-width:55px;">{{ __('messages.update') }}</th>
-                    <th class="text-center" style="min-width:55px;">{{ __('messages.delete') }}</th>
+                    @foreach ($allActions as $act)
+                        <th class="text-center text-capitalize" style="min-width:55px;">
+                            {{ $act === 'own' ? 'Own' : (Lang::has('messages.' . $act) ? __('messages.' . $act) : ucfirst($act)) }}
+                        </th>
+                    @endforeach
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +68,7 @@
                                     data-module="{{ $moduleSlug }}">
                             </div>
                         </td>
-                        @foreach (['view', 'own', 'create', 'update', 'delete'] as $action)
+                        @foreach ($allActions as $action)
                             <td class="text-center">
                                 @if (isset($actions[$action]))
                                     <div class="form-check d-flex justify-content-center mb-0">
@@ -87,6 +87,26 @@
             </tbody>
         </table>
     </div>
+
+    @if (!empty($otherPermissions) && count($otherPermissions) > 0)
+        <div class="mt-4 p-3 border rounded bg-light">
+            <h6 class="fw-bold mb-2">{{ __('messages.other_permissions') }}</h6>
+            <div class="row g-2">
+                @foreach ($otherPermissions as $perm)
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input permission-checkbox" type="checkbox" name="permissions[]"
+                                value="{{ $perm->name }}" id="perm_{{ $perm->id }}"
+                                @checked(in_array($perm->name, $selectedPermissions ?? []))>
+                            <label class="form-check-label small font-monospace" for="perm_{{ $perm->id }}">
+                                {{ $perm->name }}
+                            </label>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
 
 <div class="d-flex justify-content-end gap-2 pt-3 border-top">

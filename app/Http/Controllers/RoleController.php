@@ -15,21 +15,28 @@ class RoleController extends Controller
 {
     /**
      * Build the structured CRUD permissions matrix.
-     * Returns: $crudPermissions[$module][$action] = $permissionObject|null
+     * Returns array with 'matrix', 'actions', and 'others'.
      */
     private function buildPermissionsMatrix(): array
     {
         $allPermissions = Permission::orderBy('name')->get();
 
         $crudPermissions = [];
+        $otherPermissions = [];
+        $actionsList = ['view', 'own', 'create', 'update', 'delete'];
 
         foreach ($allPermissions as $permission) {
-            // Expect format: "module.action"
+            // Standalone permissions without dot
             if (! str_contains($permission->name, '.')) {
+                $otherPermissions[] = $permission;
                 continue;
             }
 
             [$module, $action] = explode('.', $permission->name, 2);
+
+            if (! in_array($action, $actionsList)) {
+                $actionsList[] = $action;
+            }
 
             // Normalize module name for display (underscores → spaces, title case)
             $displayModule = ucwords(str_replace('_', ' ', $module));
@@ -44,7 +51,11 @@ class RoleController extends Controller
         // Sort modules alphabetically
         ksort($crudPermissions);
 
-        return $crudPermissions;
+        return [
+            'matrix'  => $crudPermissions,
+            'actions' => $actionsList,
+            'others'  => $otherPermissions,
+        ];
     }
 
     /**
@@ -72,9 +83,12 @@ class RoleController extends Controller
     {
         Gate::authorize('roles.create');
 
-        $crudPermissions = $this->buildPermissionsMatrix();
+        $data = $this->buildPermissionsMatrix();
+        $crudPermissions = $data['matrix'];
+        $allActions = $data['actions'];
+        $otherPermissions = $data['others'];
 
-        return view('roles.create', compact('crudPermissions'));
+        return view('roles.create', compact('crudPermissions', 'allActions', 'otherPermissions'));
     }
 
     /**
@@ -99,11 +113,6 @@ class RoleController extends Controller
             'guard_name' => 'web',
         ]);
 
-        // Store the human-readable display name as a separate attribute if your
-        // roles table has a display_name column; otherwise we just use the name.
-        // If the column exists, uncomment the line below:
-        // $role->update(['display_name' => $request->display_name]);
-
         if ($request->filled('permissions')) {
             $role->syncPermissions($request->permissions);
         }
@@ -122,10 +131,13 @@ class RoleController extends Controller
 
         $role->load('permissions', 'users');
 
-        $crudPermissions = $this->buildPermissionsMatrix();
+        $data = $this->buildPermissionsMatrix();
+        $crudPermissions = $data['matrix'];
+        $allActions = $data['actions'];
+        $otherPermissions = $data['others'];
         $selectedPermissions = $role->permissions->pluck('name')->toArray();
 
-        return view('roles.show', compact('role', 'crudPermissions', 'selectedPermissions'));
+        return view('roles.show', compact('role', 'crudPermissions', 'allActions', 'otherPermissions', 'selectedPermissions'));
     }
 
     /**
@@ -135,10 +147,13 @@ class RoleController extends Controller
     {
         Gate::authorize('roles.update');
 
-        $crudPermissions = $this->buildPermissionsMatrix();
+        $data = $this->buildPermissionsMatrix();
+        $crudPermissions = $data['matrix'];
+        $allActions = $data['actions'];
+        $otherPermissions = $data['others'];
         $selectedPermissions = $role->permissions->pluck('name')->toArray();
 
-        return view('roles.edit', compact('role', 'crudPermissions', 'selectedPermissions'));
+        return view('roles.edit', compact('role', 'crudPermissions', 'allActions', 'otherPermissions', 'selectedPermissions'));
     }
 
     /**
