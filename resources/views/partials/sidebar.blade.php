@@ -219,12 +219,6 @@
                     <div>{{ __('messages.stock_adjustments') }}</div>
                 </a>
             </li>
-            <li class="menu-item {{ $lowStockActive ? 'active' : '' }}">
-                <a href="{{ route('stocks.low_stock') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-error"></i>
-                    <div>{{ __('messages.low_stock_alert') }}</div>
-                </a>
-            </li>
         @endcan
 
         {{-- ── PARTIES header ── --}}
@@ -432,8 +426,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-                               SIDEBAR — Sneat overrides
-                               ════════════════════════════════════════════ */
+                                   SIDEBAR — Sneat overrides
+                                   ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {
