@@ -695,7 +695,7 @@
                             })
                         };
                     },
-                    cache: true
+                    cache: false
                 },
                 templateResult: function(p) {
                     if (p.loading) {
@@ -729,6 +729,16 @@
                         `<span><i class="bx bx-package me-1"></i>${p.name} <span class="text-muted small">(${p.sku})</span></span>`
                     );
                 }
+            });
+
+            // Load all products immediately when dropdown opens
+            $('#productSelect').on('select2:open', function() {
+                setTimeout(function() {
+                    var $search = $('.select2-container--open .select2-search__field');
+                    if ($search.length) {
+                        $search.val('').trigger('input');
+                    }
+                }, 50);
             });
 
             $('#productSelect').on('select2:select', function(e) {

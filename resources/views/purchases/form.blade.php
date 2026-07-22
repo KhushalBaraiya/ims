@@ -500,7 +500,7 @@
                             })
                         };
                     },
-                    cache: true
+                    cache: false
                 },
                 templateResult: function(p) {
                     if (p.loading) {
@@ -533,6 +533,16 @@
                         `<span><i class="bx bx-package me-1"></i>${p.name} <span class="text-muted small">(${p.sku})</span></span>`
                     );
                 }
+            });
+
+            // Load all products immediately when dropdown opens
+            $('#productSelect').on('select2:open', function() {
+                setTimeout(function() {
+                    var $search = $('.select2-container--open .select2-search__field');
+                    if ($search.length) {
+                        $search.val('').trigger('input');
+                    }
+                }, 50);
             });
 
             $('#productSelect').on('select2:select', function(e) {
@@ -618,10 +628,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                                        style="width:28px;height:28px;padding:0;">
-                                                                    <i class="bx bx-trash" style="font-size:13px;"></i>
-                                                                </button>`}
+                                                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                                                style="width:28px;height:28px;padding:0;">
+                                                                            <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                                        </button>`}
                     </td>
                 </tr>`);
                 rowCount++;
