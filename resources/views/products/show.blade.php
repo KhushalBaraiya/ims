@@ -206,6 +206,9 @@
         </div>
         <div class="d-flex gap-2 flex-wrap">
             @can('stocks.create')
+                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#quickAdjustModal">
+                    <i class="bx bx-plus-circle me-1"></i>Quick Adjust
+                </button>
                 <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}" class="btn btn-outline-warning btn-sm">
                     <i class="bx bx-slider me-1"></i>{{ __('messages.prod_adjust_stock_btn') }}
                 </a>
@@ -944,6 +947,130 @@
 
         </div>{{-- /col-lg-4 --}}
     </div>{{-- /row --}}
+
+    {{-- ─────────────────────────────────────────────────────────────────────
+         Quick Stock Adjustment Modal
+    ───────────────────────────────────────────────────────────────────── --}}
+    @can('stocks.create')
+        <div class="modal fade" id="quickAdjustModal" tabindex="-1" aria-labelledby="quickAdjustModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="max-width:480px;">
+                <div class="modal-content">
+                    <form action="{{ route('stocks.store_adjustment') }}" method="POST" id="quickAdjustForm">
+                        @csrf
+                        <input type="hidden" name="items[0][product_id]" value="{{ $product->id }}">
+                        <input type="hidden" name="_redirect_back" value="{{ url()->current() }}">
+                        <input type="hidden" name="transaction_date" id="qa_transaction_date"
+                            value="{{ date('Y-m-d') }}">
+
+                        <div class="modal-header border-bottom py-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span
+                                    class="rounded-circle d-flex align-items-center justify-content-center bg-warning bg-opacity-10"
+                                    style="width:36px;height:36px;">
+                                    <i class="bx bx-slider text-warning fs-5"></i>
+                                </span>
+                                <div>
+                                    <h6 class="modal-title fw-bold mb-0" id="quickAdjustModalLabel">Quick Stock Adjustment
+                                    </h6>
+                                    <div class="text-muted small">{{ $product->name }} &bull; SKU:
+                                        <code>{{ $product->code }}</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body p-4">
+
+                            {{-- Current Stock Info --}}
+                            <div class="rounded-3 p-3 mb-4 d-flex align-items-center gap-3"
+                                style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
+                                <i class="bx bx-package text-primary fs-3"></i>
+                                <div>
+                                    <div class="small text-muted fw-semibold">Current Stock</div>
+                                    <div class="fw-bold fs-5 text-primary" id="qa_current_stock">
+                                        {{ number_format($qty, 0) }} {{ $product->unit_code ?? 'PCS' }}
+                                    </div>
+                                </div>
+                                <div class="ms-auto">
+                                    <span class="badge {{ $sBadge }} px-2 py-1">{{ $sLabel }}</span>
+                                </div>
+                            </div>
+
+                            {{-- Type (Plus / Minus) --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Adjustment Type <span
+                                        class="text-danger">*</span></label>
+                                <div class="d-flex gap-2">
+                                    <input type="radio" class="btn-check" name="items[0][type]" id="qa_type_plus"
+                                        value="Plus" checked>
+                                    <label class="btn btn-outline-success w-50 fw-semibold" for="qa_type_plus">
+                                        <i class="bx bx-plus-circle me-1"></i> Plus (+)
+                                    </label>
+                                    <input type="radio" class="btn-check" name="items[0][type]" id="qa_type_minus"
+                                        value="Minus">
+                                    <label class="btn btn-outline-danger w-50 fw-semibold" for="qa_type_minus">
+                                        <i class="bx bx-minus-circle me-1"></i> Minus (-)
+                                    </label>
+                                </div>
+                            </div>
+
+                            {{-- Quantity --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Quantity <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <button class="btn btn-outline-secondary" type="button" id="qa_minus_btn">
+                                        <i class="bx bx-minus"></i>
+                                    </button>
+                                    <input type="number" class="form-control text-center fw-bold" name="items[0][quantity]"
+                                        id="qa_quantity" value="1" min="1" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="qa_plus_btn">
+                                        <i class="bx bx-plus"></i>
+                                    </button>
+                                    <span class="input-group-text">{{ $product->unit_code ?? 'PCS' }}</span>
+                                </div>
+                            </div>
+
+                            {{-- After adjustment preview --}}
+                            <div class="rounded-3 p-3 mb-3 d-flex align-items-center gap-3"
+                                style="background:rgba(40,199,111,.07);border:1px solid rgba(40,199,111,.2);">
+                                <i class="bx bx-trending-up text-success fs-4"></i>
+                                <div>
+                                    <div class="small text-muted fw-semibold">After Adjustment</div>
+                                    <div class="fw-bold fs-5 text-success" id="qa_after_stock">
+                                        {{ number_format($qty + 1, 0) }} {{ $product->unit_code ?? 'PCS' }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Date --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="transaction_date"
+                                    value="{{ date('Y-m-d') }}" required>
+                            </div>
+
+                            {{-- Notes --}}
+                            <div class="mb-0">
+                                <label class="form-label fw-semibold">Notes</label>
+                                <textarea class="form-control" name="notes" rows="2" placeholder="Reason for adjustment..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-top py-3">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="bx bx-x me-1"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-warning fw-semibold">
+                                <i class="bx bx-save me-1"></i> Save Adjustment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
 
 @endsection
 

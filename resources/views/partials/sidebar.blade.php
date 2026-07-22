@@ -99,7 +99,7 @@
 
         {{-- Products collapsible --}}
         @can('products.view')
-            @php $productsActive = request()->routeIs('products.*'); @endphp
+            @php $productsActive = request()->routeIs('products.*', 'stocks.*'); @endphp
             <li class="menu-item {{ $productsActive ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-package"></i>
@@ -124,6 +124,14 @@
                             <div>{{ __('messages.prod_by_category') }}</div>
                         </a>
                     </li>
+                    @can('stocks.view')
+                        <li class="menu-item {{ request()->routeIs('stocks.*') ? 'active' : '' }}">
+                            <a href="{{ route('stocks.history') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-slider" style="font-size:0.9rem;"></i>
+                                <div>{{ __('messages.stock_adjustments') }}</div>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </li>
         @endcan
@@ -192,34 +200,7 @@
             </li>
         @endcan
 
-        {{-- ── STOCK header ── --}}
-        @canany(['stocks.view', 'stocks.create'])
-            <li class="menu-header small text-uppercase mt-1">
-                <span class="menu-header-text">{{ __('messages.stock_adjustments') }}</span>
-            </li>
-        @endcanany
 
-        @can('stocks.view')
-            @php
-                $adjustmentsActive = request()->routeIs(
-                    'stocks.history',
-                    'stocks.adjust',
-                    'stocks.store_adjustment',
-                    'stocks.edit_adjustment',
-                    'stocks.show_adjustment',
-                    'stocks.update_adjustment',
-                    'stocks.destroy_adjustment',
-                    'stocks.index',
-                );
-                $lowStockActive = request()->routeIs('stocks.low_stock');
-            @endphp
-            <li class="menu-item {{ $adjustmentsActive ? 'active' : '' }}">
-                <a href="{{ route('stocks.history') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-slider"></i>
-                    <div>{{ __('messages.stock_adjustments') }}</div>
-                </a>
-            </li>
-        @endcan
 
         {{-- ── PARTIES header ── --}}
         @canany(['suppliers.view', 'customers.view', 'users.view'])
@@ -426,8 +407,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-                                   SIDEBAR — Sneat overrides
-                                   ════════════════════════════════════════════ */
+                                           SIDEBAR — Sneat overrides
+                                           ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {

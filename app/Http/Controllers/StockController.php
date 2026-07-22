@@ -156,6 +156,12 @@ class StockController extends Controller
 
             DB::commit();
 
+            $redirectTo = $request->input('_redirect_back');
+            if ($redirectTo) {
+                return redirect($redirectTo)
+                    ->with('success', "Stock adjustment \"{$voucherNo}\" saved successfully.");
+            }
+
             return redirect()->route('stocks.history')
                 ->with('success', "Stock adjustment voucher \"{$voucherNo}\" created successfully.");
         } catch (\Exception $e) {
