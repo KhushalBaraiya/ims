@@ -403,18 +403,17 @@ class SaleController extends Controller
     public function searchProducts(Request $request): JsonResponse
     {
         $query = $request->get('query', '');
-        if (strlen($query) < 1) {
-            return response()->json([]);
-        }
 
         $showOutOfStock = Setting::where('key', 'show_out_of_stock_products')->value('value') === '1';
 
         $productsQuery = Product::with(['stock'])
             ->where('status', 'active')
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                    ->orWhere('code', 'like', "%{$query}%")
-                    ->orWhere('barcode', 'like', "%{$query}%");
+            ->when(strlen($query) > 0, function ($q) use ($query) {
+                $q->where(function ($sq) use ($query) {
+                    $sq->where('name', 'like', "%{$query}%")
+                        ->orWhere('code', 'like', "%{$query}%")
+                        ->orWhere('barcode', 'like', "%{$query}%");
+                });
             });
 
         // If the setting is OFF, only show products with stock > 0
@@ -424,7 +423,7 @@ class SaleController extends Controller
             });
         }
 
-        $products = $productsQuery->limit(10)->get();
+        $products = $productsQuery->limit($query ? 10 : 50)->get();
 
         $activeCurrency = current_currency();
         $rate           = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;

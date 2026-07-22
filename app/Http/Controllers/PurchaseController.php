@@ -463,18 +463,17 @@ class PurchaseController extends Controller
     public function searchProducts(Request $request): JsonResponse
     {
         $query = $request->get('query', '');
-        if (strlen($query) < 1) {
-            return response()->json([]);
-        }
 
         $products = Product::with(['stock'])
             ->where('status', 'active')
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                    ->orWhere('code', 'like', "%{$query}%")
-                    ->orWhere('barcode', 'like', "%{$query}%");
+            ->when(strlen($query) > 0, function ($q) use ($query) {
+                $q->where(function ($sq) use ($query) {
+                    $sq->where('name', 'like', "%{$query}%")
+                        ->orWhere('code', 'like', "%{$query}%")
+                        ->orWhere('barcode', 'like', "%{$query}%");
+                });
             })
-            ->limit(10)
+            ->limit($query ? 10 : 50)
             ->get();
 
         $activeCurrency = current_currency();

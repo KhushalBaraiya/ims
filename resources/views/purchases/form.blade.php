@@ -229,15 +229,11 @@
                     </div>
                 @enderror
 
-                <div class="position-relative mb-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input {{ $isReturned ? 'disabled' : '' }} class="form-control" id="productSearchInput"
-                            placeholder="{{ __('messages.type_product_sku_barcode') }}" type="text">
-                    </div>
-                    <div class="position-absolute w-100 d-none rounded border bg-white shadow-lg"
-                        id="autocompleteResults" style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
-                    </div>
+                <div class="mb-4">
+                    <select id="productSelect" data-no-select2="1" {{ $isReturned ? 'disabled' : '' }}
+                        class="form-select" style="width:100%;">
+                        <option value=""></option>
+                    </select>
                 </div>
 
                 <div class="table-responsive">
@@ -468,78 +464,82 @@
                 @endforeach
             @endif
 
-            const searchInput = $('#productSearchInput');
-            const resultsContainer = $('#autocompleteResults');
-            let searchTimeout = null;
-
-            searchInput.on('input', function() {
-                clearTimeout(searchTimeout);
-                const query = $(this).val().trim();
-                if (query.length < 1) {
-                    resultsContainer.addClass('d-none').empty();
-                    return;
+            // ── Select2 AJAX Product Search ──────────────────────────────────
+            $('#productSelect').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: '{{ __('messages.type_product_sku_barcode') }}',
+                allowClear: true,
+                minimumInputLength: 0,
+                ajax: {
+                    url: "{{ route('purchases.search-products') }}",
+                    dataType: 'json',
+                    delay: 200,
+                    data: function(params) {
+                        return {
+                            query: params.term || ''
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(p) {
+                                return {
+                                    id: p.id,
+                                    text: p.name,
+                                    name: p.name,
+                                    sku: p.sku,
+                                    barcode: p.barcode,
+                                    purchase_price: p.purchase_price,
+                                    tax: p.tax,
+                                    discount: p.discount,
+                                    unit: p.unit,
+                                    stock: p.stock,
+                                    image_url: p.image_url,
+                                    currency_symbol: p.currency_symbol
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                templateResult: function(p) {
+                    if (p.loading) {
+                        return $(
+                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
+                    }
+                    if (!p.id) return p.text;
+                    const sym = p.currency_symbol || currencySymbol;
+                    const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Image';
+                    const stockBadge = parseFloat(p.stock) > 0 ?
+                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).toFixed(0)} in stock</span>` :
+                        `<span class="badge bg-danger-subtle text-danger">Out of stock</span>`;
+                    return $(`
+                        <div class="d-flex align-items-center gap-3 py-1">
+                            <img src="${img}" onerror="this.src='https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img'"
+                                 style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid rgba(0,0,0,.1);flex-shrink:0;">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="fw-semibold text-truncate" style="font-size:13px;">${p.name}</div>
+                                <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}${p.barcode ? ' &bull; ' + p.barcode : ''}</div>
+                            </div>
+                            <div class="text-end flex-shrink-0">
+                                <div class="fw-bold text-primary" style="font-size:13px;">${sym}${parseFloat(p.purchase_price).toFixed(2)}</div>
+                                <div style="font-size:11px;">${stockBadge}</div>
+                            </div>
+                        </div>`);
+                },
+                templateSelection: function(p) {
+                    if (!p.id) return p.text || '{{ __('messages.type_product_sku_barcode') }}';
+                    return $(
+                        `<span><i class="bx bx-package me-1"></i>${p.name} <span class="text-muted small">(${p.sku})</span></span>`
+                    );
                 }
-                searchTimeout = setTimeout(function() {
-                    $.ajax({
-                        url: "{{ route('purchases.search-products') }}",
-                        type: 'GET',
-                        data: {
-                            query: query
-                        },
-                        success: function(data) {
-                            resultsContainer.empty();
-                            if (data.length > 0) {
-                                data.forEach(p => {
-                                    const sym = p.currency_symbol ||
-                                        currencySymbol;
-                                    resultsContainer.append(`
-                                    <div class="autocomplete-item d-flex align-items-center gap-3 px-3 py-2"
-                                         style="cursor:pointer;"
-                                         data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}"
-                                         data-purchase-price="${p.purchase_price}" data-tax="${p.tax}"
-                                         data-discount="${p.discount}" data-unit="${p.unit}" data-image="${p.image_url}">
-                                        <img src="${p.image_url}" class="ac-img" onerror="imgError(this)">
-                                        <div class="flex-grow-1 overflow-hidden">
-                                            <div class="ac-name text-truncate">${p.name}</div>
-                                            <div class="ac-sku">SKU: ${p.sku}</div>
-                                        </div>
-                                        <div class="text-end flex-shrink-0">
-                                            <div class="ac-price">${sym}${parseFloat(p.purchase_price).toFixed(2)}</div>
-                                            <div class="ac-stock mt-1"><i class="bx bx-box" style="font-size:10px;"></i> ${parseFloat(p.stock).toFixed(0)} in stock</div>
-                                        </div>
-                                    </div>`);
-                                });
-                                resultsContainer.removeClass('d-none');
-                            } else {
-                                resultsContainer.html(
-                                    `<div class="px-3 py-4 text-center ac-no-results">
-                                        <i class="bx bx-search-alt d-block mb-1" style="font-size:1.8rem;opacity:.4;"></i>
-                                        <span class="small">No products found.</span>
-                                    </div>`
-                                ).removeClass('d-none');
-                            }
-                        }
-                    });
-                }, 250);
             });
 
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('#productSearchInput, #autocompleteResults').length)
-                    resultsContainer.addClass('d-none');
-            });
+            $('#productSelect').on('select2:select', function(e) {
+                const p = e.params.data;
+                if (!p || !p.id) return;
 
-            $(document).on('click', '.autocomplete-item', function() {
-                const p = {
-                    id: $(this).data('id'),
-                    name: $(this).data('name'),
-                    sku: $(this).data('sku'),
-                    purchase_price: parseFloat($(this).data('purchase-price')),
-                    tax: parseFloat($(this).data('tax')),
-                    discount: parseFloat($(this).data('discount')),
-                    unit: $(this).data('unit'),
-                    image_url: $(this).data('image'),
-                    qty: 1
-                };
+                // Duplicate check
                 let isDuplicate = false;
                 $('#purchaseItemsContainer tr').each(function() {
                     if ($(this).data('product-id') == p.id) {
@@ -549,13 +549,22 @@
                 });
                 if (isDuplicate) {
                     showAdminToast(`"${p.name}" is already in the order.`, 'warning');
-                    resultsContainer.addClass('d-none').empty();
-                    searchInput.val('');
-                    return;
+                } else {
+                    addProductRow({
+                        id: p.id,
+                        name: p.name,
+                        sku: p.sku,
+                        purchase_price: parseFloat(p.purchase_price),
+                        tax: parseFloat(p.tax) || 0,
+                        discount: parseFloat(p.discount) || 0,
+                        unit: p.unit,
+                        image_url: p.image_url,
+                        qty: 1
+                    });
                 }
-                addProductRow(p);
-                resultsContainer.addClass('d-none').empty();
-                searchInput.val('');
+
+                // Reset select2 after selection
+                $(this).val(null).trigger('change');
             });
 
             function addProductRow(p) {
@@ -609,10 +618,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                            style="width:28px;height:28px;padding:0;">
-                                                        <i class="bx bx-trash" style="font-size:13px;"></i>
-                                                    </button>`}
+                                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                                        style="width:28px;height:28px;padding:0;">
+                                                                    <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                                </button>`}
                     </td>
                 </tr>`);
                 rowCount++;

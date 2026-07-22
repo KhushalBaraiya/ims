@@ -406,15 +406,11 @@
                     </div>
                 @enderror
 
-                <div class="position-relative mb-4">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input {{ $isReturned ? 'disabled' : '' }} class="form-control" id="productSearchInput"
-                            placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
-                    </div>
-                    <div class="position-absolute w-100 d-none rounded" id="autocompleteResults"
-                        style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
-                    </div>
+                <div class="mb-4">
+                    <select id="productSelect" data-no-select2="1" {{ $isReturned ? 'disabled' : '' }}
+                        class="form-select" style="width:100%;">
+                        <option value=""></option>
+                    </select>
                 </div>
 
                 <div class="table-responsive">
@@ -662,89 +658,91 @@
                 @endforeach
             @endif
 
-            // ── Product autocomplete ──────────────────────────────────────────
-            const searchInput = $('#productSearchInput');
-            const resultsDiv = $('#autocompleteResults');
-            let searchTimeout = null;
-
-            searchInput.on('input', function() {
-                clearTimeout(searchTimeout);
-                const q = $(this).val().trim();
-                if (q.length < 1) {
-                    resultsDiv.addClass('d-none').empty();
-                    return;
+            // ── Select2 AJAX Product Search ──────────────────────────────────
+            $('#productSelect').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: 'Type Product Name, SKU, or Scan Barcode...',
+                allowClear: true,
+                minimumInputLength: 0,
+                ajax: {
+                    url: "{{ route('products.search') }}",
+                    dataType: 'json',
+                    delay: 200,
+                    data: function(params) {
+                        return {
+                            query: params.term || ''
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(p) {
+                                return {
+                                    id: p.id,
+                                    text: p.name,
+                                    name: p.name,
+                                    sku: p.sku,
+                                    barcode: p.barcode,
+                                    stock: p.stock,
+                                    out_of_stock: p.out_of_stock,
+                                    price: p.price,
+                                    tax_percent: p.tax_percent,
+                                    discount_amount: p.discount_amount,
+                                    unit: p.unit,
+                                    image_url: p.image_url,
+                                    currency_symbol: p.currency_symbol
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                templateResult: function(p) {
+                    if (p.loading) {
+                        return $(
+                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
+                    }
+                    if (!p.id) return p.text;
+                    const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img';
+                    const itemSym = p.currency_symbol || sym;
+                    const stockBadge = p.out_of_stock ?
+                        `<span class="badge bg-danger-subtle text-danger">Out of stock</span>` :
+                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).toFixed(0)} in stock</span>`;
+                    const nameStyle = p.out_of_stock ? 'color:#aab0c0;' : '';
+                    return $(`
+                        <div class="d-flex align-items-center gap-3 py-1" style="${p.out_of_stock ? 'opacity:.6;' : ''}">
+                            <img src="${img}" onerror="this.src='https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img'"
+                                 style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid rgba(0,0,0,.1);flex-shrink:0;">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="fw-semibold text-truncate" style="font-size:13px;${nameStyle}">${p.name}</div>
+                                <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}${p.barcode ? ' &bull; ' + p.barcode : ''}</div>
+                            </div>
+                            <div class="text-end flex-shrink-0">
+                                <div class="fw-bold text-primary" style="font-size:13px;">${itemSym}${parseFloat(p.price).toFixed(2)}</div>
+                                <div style="font-size:11px;">${stockBadge}</div>
+                            </div>
+                        </div>`);
+                },
+                templateSelection: function(p) {
+                    if (!p.id) return p.text || 'Type Product Name, SKU, or Scan Barcode...';
+                    return $(
+                        `<span><i class="bx bx-package me-1"></i>${p.name} <span class="text-muted small">(${p.sku})</span></span>`
+                    );
                 }
-                searchTimeout = setTimeout(function() {
-                    $.get("{{ route('products.search') }}", {
-                        query: q
-                    }, function(data) {
-                        resultsDiv.empty();
-                        if (data.length) {
-                            data.forEach(function(p) {
-                                const isOos = p.out_of_stock === true;
-                                const oosClass = isOos ? ' oos-item' : '';
-
-                                // Stock display
-                                const stockHtml = isOos ?
-                                    `<span class="badge bg-danger oos-badge">Out of Stock</span>` :
-                                    `<span class="ac-stock"><i class="bx bx-box" style="font-size:10px;"></i> ${parseFloat(p.stock).toFixed(0)} in stock</span>`;
-
-                                // Price display
-                                const priceHtml =
-                                    `<span class="ac-price">${p.currency_symbol}${parseFloat(p.price).toFixed(2)}</span>`;
-
-                                resultsDiv.append(
-                                    `<div class="autocomplete-item${oosClass} d-flex align-items-center gap-3 px-3 py-2"
-                                        data-id="${p.id}" data-name="${p.name}" data-sku="${p.sku}" data-stock="${p.stock}"
-                                        data-price="${p.price}" data-tax-percent="${p.tax_percent}" data-discount-amount="${p.discount_amount}"
-                                        data-unit="${p.unit}" data-image="${p.image_url}" data-oos="${isOos ? '1' : '0'}"
-                                        style="cursor:${isOos ? 'not-allowed' : 'pointer'};">
-                                        <img src="${p.image_url}" class="ac-img" onerror="imgError(this)">
-                                        <div class="flex-grow-1 overflow-hidden">
-                                            <div class="ac-name text-truncate">${p.name}${isOos ? ' <span class="badge bg-danger oos-badge ms-1">Out of Stock</span>' : ''}</div>
-                                            <div class="ac-sku">SKU: ${p.sku}</div>
-                                        </div>
-                                        <div class="text-end flex-shrink-0">
-                                            ${priceHtml}
-                                            <div class="mt-1">${stockHtml}</div>
-                                        </div>
-                                    </div>`
-                                );
-                            });
-                            resultsDiv.removeClass('d-none');
-                        } else {
-                            resultsDiv.html(
-                                `<div class="px-3 py-4 text-center ac-no-results">
-                                    <i class="bx bx-search-alt d-block mb-1" style="font-size:1.8rem;opacity:.4;"></i>
-                                    <span class="small">No products found.</span>
-                                </div>`
-                            ).removeClass('d-none');
-                        }
-                    });
-                }, 250);
             });
 
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('#productSearchInput, #autocompleteResults').length)
-                    resultsDiv.addClass('d-none');
-            });
+            $('#productSelect').on('select2:select', function(e) {
+                const p = e.params.data;
+                if (!p || !p.id) return;
 
-            $(document).on('click', '.autocomplete-item', function() {
-                // Guard: do not add out-of-stock products
-                if ($(this).data('oos') == '1') {
+                // Guard: out of stock
+                if (p.out_of_stock) {
+                    showAdminToast(`"${p.name}" is out of stock.`, 'warning');
+                    $(this).val(null).trigger('change');
                     return;
                 }
-                const p = {
-                    id: $(this).data('id'),
-                    name: $(this).data('name'),
-                    sku: $(this).data('sku'),
-                    stock: parseFloat($(this).data('stock')),
-                    price: parseFloat($(this).data('price')),
-                    taxPercent: parseFloat($(this).data('tax-percent')),
-                    discountAmount: parseFloat($(this).data('discount-amount')),
-                    unit: $(this).data('unit'),
-                    image_url: $(this).data('image'),
-                };
+
+                // Duplicate check
                 let isDuplicate = false;
                 $('#invoiceItemsContainer tr').each(function() {
                     if ($(this).data('product-id') == p.id) {
@@ -754,18 +752,28 @@
                 });
                 if (isDuplicate) {
                     showAdminToast(`"${p.name}" already added.`, 'warning');
-                    resultsDiv.addClass('d-none').empty();
-                    searchInput.val('');
+                    $(this).val(null).trigger('change');
                     return;
                 }
-                // Calculate tax amount on (price - discount)
-                const priceAfterDiscount = p.price - p.discountAmount;
-                p.taxAmt = parseFloat(((p.taxPercent / 100) * priceAfterDiscount).toFixed(2));
-                p.discAmt = p.discountAmount;
-                p.qty = 1;
-                addProductRow(p);
-                resultsDiv.addClass('d-none').empty();
-                searchInput.val('');
+
+                const priceAfterDiscount = parseFloat(p.price) - parseFloat(p.discount_amount || 0);
+                const taxAmt = parseFloat(((parseFloat(p.tax_percent) / 100) * priceAfterDiscount).toFixed(
+                    2));
+                addProductRow({
+                    id: p.id,
+                    name: p.name,
+                    sku: p.sku,
+                    stock: parseFloat(p.stock),
+                    price: parseFloat(p.price),
+                    taxPercent: parseFloat(p.tax_percent),
+                    taxAmt: taxAmt,
+                    discAmt: parseFloat(p.discount_amount || 0),
+                    unit: p.unit,
+                    image_url: p.image_url,
+                    qty: 1
+                });
+
+                $(this).val(null).trigger('change');
             });
 
             // ── Build row ─────────────────────────────────────────────────────
