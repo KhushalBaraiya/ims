@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     // Profile Management Routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/change-password', [ProfileController::class, 'showChangePassword'])->name('profile.change-password');
     Route::post('/profile/password', [ProfileController::class, 'changePassword'])->name('profile.password');
 
     // Role Management CRUD Resource Route

@@ -364,15 +364,38 @@ class SaleController extends Controller
             'payment_method' => 'required|string|max:100',
         ]);
 
-        $paidAmount  = (float) $request->paid_amount;
-        $grandTotal  = (float) $sale->grand_total;
-        $dueAmount   = max(0.00, $grandTotal - $paidAmount);
+        $paidAmount = (float) $request->paid_amount;
+        $grandTotal = (float) $sale->grand_total;
+        $dueAmount  = max(0.00, $grandTotal - $paidAmount);
 
-        $sale->update([
+        $updateData = [
             'paid_amount'    => $paidAmount,
             'due_amount'     => $dueAmount,
             'payment_method' => $request->payment_method,
-        ]);
+        ];
+
+        // Verify Razorpay signature before recording payment
+        if ($request->payment_method === 'Razorpay' && $request->filled('razorpay_payment_id')) {
+            try {
+                $api = new \Razorpay\Api\Api(
+                    config('services.razorpay.key_id'),
+                    config('services.razorpay.key_secret')
+                );
+                $api->utility->verifyPaymentSignature([
+                    'razorpay_order_id'   => $request->razorpay_order_id,
+                    'razorpay_payment_id' => $request->razorpay_payment_id,
+                    'razorpay_signature'  => $request->razorpay_signature,
+                ]);
+            } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Razorpay payment verification failed.'], 422);
+                }
+                return back()->withErrors(['razorpay' => 'Razorpay payment verification failed.']);
+            }
+            $updateData['reference_no'] = $request->razorpay_payment_id;
+        }
+
+        $sale->update($updateData);
 
         ActivityLog::log(
             'Sale Payment Updated',

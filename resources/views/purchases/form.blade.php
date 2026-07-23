@@ -1,4 +1,4 @@
-﻿@csrf
+@csrf
 @php
     $isReturned = isset($purchase) && $purchase->returns->isNotEmpty();
 @endphp
