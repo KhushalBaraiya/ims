@@ -73,19 +73,43 @@ class PurchaseController extends Controller
         Gate::authorize('purchases.update');
 
         $request->validate([
-            'paid_amount' => 'required|numeric|min:0',
+            'paid_amount'    => 'required|numeric|min:0',
             'payment_method' => 'required|string|max:100',
         ]);
 
-        $paidAmount = (float) $request->paid_amount;
-        $grandTotal = (float) $purchase->grand_total;
-        $dueAmount = max(0.00, $grandTotal - $paidAmount);
+        $paidAmount  = (float) $request->paid_amount;
+        $grandTotal  = (float) $purchase->grand_total;
+        $dueAmount   = max(0.00, $grandTotal - $paidAmount);
 
-        $purchase->update([
-            'paid_amount' => $paidAmount,
-            'due_amount' => $dueAmount,
+        $updateData = [
+            'paid_amount'    => $paidAmount,
+            'due_amount'     => $dueAmount,
             'payment_method' => $request->payment_method,
-        ]);
+        ];
+
+        // If paid via Razorpay, store payment ID as reference_no
+        if ($request->payment_method === 'Razorpay' && $request->filled('razorpay_payment_id')) {
+            // Verify signature before updating
+            try {
+                $api = new \Razorpay\Api\Api(
+                    config('services.razorpay.key_id'),
+                    config('services.razorpay.key_secret')
+                );
+                $api->utility->verifyPaymentSignature([
+                    'razorpay_order_id'   => $request->razorpay_order_id,
+                    'razorpay_payment_id' => $request->razorpay_payment_id,
+                    'razorpay_signature'  => $request->razorpay_signature,
+                ]);
+            } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Razorpay payment verification failed.'], 422);
+                }
+                return back()->withErrors(['razorpay' => 'Razorpay payment verification failed.']);
+            }
+            $updateData['reference_no'] = $request->razorpay_payment_id;
+        }
+
+        $purchase->update($updateData);
 
         ActivityLog::log(
             'Purchase Payment Updated',

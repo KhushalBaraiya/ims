@@ -180,8 +180,9 @@
                         <tr class="{{ $index % 2 === 0 ? 'bg-white' : 'bg-slate-50' }} border-b border-slate-100">
                             <td class="py-3 px-4 text-slate-400">{{ $index + 1 }}</td>
                             <td class="py-3 px-4">
-                                <p class="font-bold text-slate-800">{{ $item->product->name }}</p>
-                                <p class="text-xs text-slate-400 font-mono">{{ $item->product->code }}</p>
+                                <p class="font-bold text-slate-800">
+                                    {{ $item->product->name ?? '(Deleted Product #' . $item->product_id . ')' }}</p>
+                                <p class="text-xs text-slate-400 font-mono">{{ $item->product->code ?? '-' }}</p>
                             </td>
                             <td class="py-3 px-4 text-center text-slate-500">{{ $item->product->unit_code ?? 'PCS' }}
                             </td>

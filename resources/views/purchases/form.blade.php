@@ -175,22 +175,15 @@
                             {{ old('payment_method', $purchase->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}
                             value="Cash">
                             Cash</option>
-                        <option
-                            {{ old('payment_method', $purchase->payment_method ?? '') === 'Bank Transfer' ? 'selected' : '' }}
-                            value="Bank Transfer">
-                            Bank Transfer</option>
-                        <option
-                            {{ old('payment_method', $purchase->payment_method ?? '') === 'Card' ? 'selected' : '' }}
-                            value="Card">
-                            Credit/Debit Card</option>
-                        <option
-                            {{ old('payment_method', $purchase->payment_method ?? '') === 'UPI / QR' ? 'selected' : '' }}
-                            value="UPI / QR">
-                            UPI / QR Code</option>
-                        <option
+                        {{-- <option
                             {{ old('payment_method', $purchase->payment_method ?? '') === 'Cheque' ? 'selected' : '' }}
                             value="Cheque">
-                            Cheque</option>
+                            Cheque</option> --}}
+                        <option
+                            {{ old('payment_method', $purchase->payment_method ?? '') === 'Razorpay' ? 'selected' : '' }}
+                            value="Razorpay">
+                            ⚡ Razorpay (Online Payment)
+                        </option>
                     </select>
                     @error('payment_method')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -207,6 +200,48 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
+                {{-- Razorpay info box (shown only when Razorpay is selected) --}}
+                <div class="mt-3 d-none" id="razorpay_info_box">
+                    <div class="rounded-3 p-3"
+                        style="background:linear-gradient(135deg,#eef2ff,#f5f0ff);border:1.5px solid #c7d2fe;">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span
+                                class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width:30px;height:30px;background:linear-gradient(135deg,#696cff,#9c3fe4);">
+                                <i class="bx bx-lock-alt text-white" style="font-size:.9rem;"></i>
+                            </span>
+                            <strong style="color:#4f46e5;font-size:.85rem;">Secure Razorpay Checkout</strong>
+                        </div>
+                        <p class="mb-0 text-muted" style="font-size:.8rem;line-height:1.5;">
+                            Click <strong style="color:#696cff;">"Pay via Razorpay"</strong> below to open the
+                            secure payment gateway. Your purchase will be saved automatically after successful payment.
+                        </p>
+                        <div class="d-flex align-items-center gap-3 mt-2 pt-2" style="border-top:1px dashed #c7d2fe;">
+                            <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
+                                <i class="bx bx-shield-check" style="color:#696cff;"></i> 256-bit SSL
+                            </span>
+                            <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
+                                <i class="bx bx-check-circle" style="color:#696cff;"></i> PCI DSS Compliant
+                            </span>
+                            <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
+                                <i class="bx bx-credit-card" style="color:#696cff;"></i> Cards / UPI / NetBanking
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                @error('razorpay')
+                    <div class="alert alert-danger d-flex align-items-center mt-2 gap-2 px-3 py-2">
+                        <i class="bx bx-error-circle fs-5 flex-shrink-0"></i>
+                        <span>{{ $message }}</span>
+                    </div>
+                @enderror
+
+                {{-- Hidden Razorpay payment response fields --}}
+                <input type="hidden" id="razorpay_order_id" name="razorpay_order_id">
+                <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id">
+                <input type="hidden" id="razorpay_signature" name="razorpay_signature">
             </div>
         </div>
 
@@ -341,10 +376,28 @@
                     <i class="bx bx-file me-1"></i> Save As Draft
                 </button>
             @endif
-            <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-primary" type="submit">
+            {{-- Normal save button (hidden when Razorpay is selected) --}}
+            <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-primary" id="btnSavePurchase" type="submit">
                 <i class="bx bx-save me-1"></i>
                 {{ isset($purchase) && $purchase->exists ? 'Update Purchase Order' : 'Save Purchase Order' }}
             </button>
+            {{-- Razorpay pay button (shown only when Razorpay payment method selected, create form only) --}}
+            @if (!isset($purchase) || !$purchase->exists)
+                <button class="btn d-none position-relative overflow-hidden" id="btnPayRazorpay" type="button"
+                    style="background:linear-gradient(135deg,#696cff,#9c3fe4);
+                           border:none;color:#fff;padding:.6rem 2rem;font-weight:600;
+                           box-shadow:0 4px 12px rgba(105,108,255,.3);
+                           transition:all .3s ease;"
+                    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(105,108,255,.4)';"
+                    onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(105,108,255,.3)';">
+                    <i class="bx bx-bolt-circle me-2" style="font-size:1.1rem;"></i>
+                    Pay via Razorpay
+                    <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success"
+                        style="font-size:.6rem;padding:.25rem .5rem;">
+                        Secure
+                    </span>
+                </button>
+            @endif
         </div>
 
     </div>
@@ -447,20 +500,22 @@
                 @endforeach
             @elseif (isset($purchase) && $purchase->items->count() > 0)
                 @foreach ($purchase->items as $item)
-                    addProductRow({
-                        id: "{{ $item->product_id }}",
-                        name: "{{ addslashes($item->product->name) }}",
-                        sku: "{{ $item->product->code }}",
-                        purchase_price: parseFloat("{{ $item->purchase_price }}"),
-                        tax: parseFloat(
-                            "{{ $item->quantity > 0 ? $item->tax_amount / $item->quantity : 0 }}"),
-                        discount: parseFloat(
-                            "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
-                        ),
-                        qty: parseInt("{{ $item->quantity }}"),
-                        unit: "{{ $item->product->unit_code ?? 'PCS' }}",
-                        image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
-                    });
+                    @if ($item->product)
+                        addProductRow({
+                            id: "{{ $item->product_id }}",
+                            name: "{{ addslashes($item->product->name) }}",
+                            sku: "{{ $item->product->code ?? '' }}",
+                            purchase_price: parseFloat("{{ $item->purchase_price }}"),
+                            tax: parseFloat(
+                                "{{ $item->quantity > 0 ? $item->tax_amount / $item->quantity : 0 }}"),
+                            discount: parseFloat(
+                                "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
+                            ),
+                            qty: parseInt("{{ $item->quantity }}"),
+                            unit: "{{ $item->product->unit_code ?? 'PCS' }}",
+                            image_url: "{{ $item->product->image ? asset('uploads/products/' . $item->product->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
+                        });
+                    @endif
                 @endforeach
             @endif
 
@@ -628,10 +683,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                                                style="width:28px;height:28px;padding:0;">
-                                                                            <i class="bx bx-trash" style="font-size:13px;"></i>
-                                                                        </button>`}
+                                                                                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                                                                                style="width:28px;height:28px;padding:0;">
+                                                                                                            <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                                                                        </button>`}
                     </td>
                 </tr>`);
                 rowCount++;
@@ -685,8 +740,149 @@
                 $(this).closest('form').submit();
             });
 
+            // ── Razorpay Integration ─────────────────────────────────────────
+            @if (!isset($purchase) || !$purchase->exists)
+                function getCurrentGrandTotal() {
+                    let totalSubtotal = 0,
+                        sumItemTax = 0,
+                        sumItemDiscount = 0;
+                    $('#purchaseItemsContainer tr').each(function() {
+                        const row = $(this);
+                        const qty = parseFloat(row.find('.qty-input').val()) || 0;
+                        const price = parseFloat(row.find('.price-input').val()) || 0;
+                        const disc = parseFloat(row.find('.discount-input').val()) || 0;
+                        const tax = parseFloat(row.find('.tax-input').val()) || 0;
+                        totalSubtotal += price * qty;
+                        sumItemTax += tax * qty;
+                        sumItemDiscount += disc * qty;
+                    });
+                    const shipping = parseFloat($('#shipping_amount').val()) || 0;
+                    return totalSubtotal + sumItemTax + shipping - sumItemDiscount;
+                }
+
+                // Toggle Razorpay button visibility based on payment method
+                $('select[name="payment_method"]').on('change', function() {
+                    const isRazorpay = $(this).val() === 'Razorpay';
+                    $('#btnSavePurchase').toggleClass('d-none', isRazorpay);
+                    $('#btnPayRazorpay').toggleClass('d-none', !isRazorpay);
+                    $('#razorpay_info_box').toggleClass('d-none', !isRazorpay);
+                    // When Razorpay selected, disable manual paid_amount (will be set to grand total)
+                    $('#paid_amount').prop('readonly', isRazorpay);
+                    if (isRazorpay) {
+                        const gt = getCurrentGrandTotal();
+                        $('#paid_amount').val(gt.toFixed(2));
+                        calculateTotals();
+                    }
+                }).trigger('change'); // run on page load for old-input restore
+
+                // When grand total changes (items/shipping) and Razorpay is selected, sync paid_amount
+                const _origCalculateTotals = calculateTotals;
+                calculateTotals = function() {
+                    _origCalculateTotals();
+                    if ($('select[name="payment_method"]').val() === 'Razorpay') {
+                        const gt = getCurrentGrandTotal();
+                        $('#paid_amount').val(gt.toFixed(2));
+                    }
+                };
+
+                // Pay via Razorpay button click
+                $('#btnPayRazorpay').on('click', function() {
+                    const grandTotal = getCurrentGrandTotal();
+                    if (grandTotal <= 0) {
+                        showAdminToast('Please add products before paying.', 'warning');
+                        return;
+                    }
+                    if ($('#purchaseItemsContainer tr').length === 0) {
+                        showAdminToast('Please add at least one product.', 'warning');
+                        return;
+                    }
+
+                    const btn = $(this);
+                    btn.prop('disabled', true).html(
+                        '<span class="spinner-border spinner-border-sm me-1"></span> Processing…');
+
+                    // Step 1: Create Razorpay order on backend
+                    $.ajax({
+                        url: "{{ route('razorpay.create-order') }}",
+                        type: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            amount: grandTotal
+                        },
+                        success: function(res) {
+                            // Step 2: Open Razorpay checkout
+                            const options = {
+                                key: res.key_id,
+                                amount: res.amount,
+                                currency: res.currency,
+                                name: '{{ addslashes(config('app.name')) }}',
+                                description: 'Purchase Payment — ' + ($('#purchase_no')
+                                    .val() || ''),
+                                order_id: res.order_id,
+                                prefill: {
+                                    name: '{{ addslashes(auth()->user()->name ?? '') }}',
+                                    email: '{{ addslashes(auth()->user()->email ?? '') }}',
+                                },
+                                theme: {
+                                    color: '#696cff'
+                                },
+                                handler: function(response) {
+                                    // Step 3: Store payment IDs and submit form to verify-and-store
+                                    $('#razorpay_order_id').val(response
+                                        .razorpay_order_id);
+                                    $('#razorpay_payment_id').val(response
+                                        .razorpay_payment_id);
+                                    $('#razorpay_signature').val(response
+                                        .razorpay_signature);
+                                    $('#paid_amount').val(grandTotal.toFixed(2));
+
+                                    // Change form action to Razorpay verify-and-store route
+                                    const $form = btn.closest('form');
+                                    $form.attr('action',
+                                        "{{ route('razorpay.verify-and-store') }}");
+                                    $form.removeAttr('novalidate');
+                                    $form.submit();
+                                },
+                                modal: {
+                                    ondismiss: function() {
+                                        btn.prop('disabled', false)
+                                            .html(
+                                                '<i class="bx bx-rupee me-1"></i> Pay via Razorpay'
+                                            );
+                                        showAdminToast('Payment cancelled.', 'warning');
+                                    }
+                                }
+                            };
+                            const rzp = new Razorpay(options);
+                            rzp.on('payment.failed', function(response) {
+                                showAdminToast('Payment failed: ' + response.error
+                                    .description, 'danger');
+                                btn.prop('disabled', false)
+                                    .html(
+                                        '<i class="bx bx-rupee me-1"></i> Pay via Razorpay'
+                                    );
+                            });
+                            rzp.open();
+                        },
+                        error: function(xhr) {
+                            const msg = xhr.responseJSON?.message ||
+                                'Could not create Razorpay order. Check credentials.';
+                            showAdminToast(msg, 'danger');
+                            btn.prop('disabled', false)
+                                .html('<i class="bx bx-rupee me-1"></i> Pay via Razorpay');
+                        }
+                    });
+                });
+            @endif
+            // ── End Razorpay Integration ─────────────────────────────────────
+
             // Initial calculation after any old items are loaded
             calculateTotals();
         });
     </script>
+
+    {{-- Load Razorpay JS SDK only on create form --}}
+    @if (!isset($purchase) || !$purchase->exists)
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    @endif
 @endpush

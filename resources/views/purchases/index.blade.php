@@ -296,69 +296,135 @@
 
     {{-- Payment Management Modal --}}
     <div aria-hidden="true" aria-labelledby="paymentModalLabel" class="modal fade" id="paymentModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-primary py-3 text-white">
-                    <h5 class="modal-title fw-bold" id="paymentModalLabel"><i class="bx bx-credit-card me-2"></i>Manage
-                        Payment</h5>
-                    <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        type="button"></button>
+        <div class="modal-dialog modal-dialog-centered" style="max-width:480px;">
+            <div class="modal-content border-0 shadow-lg overflow-hidden" style="border-radius:16px;">
+
+                {{-- Gradient Header --}}
+                <div class="modal-header border-0 text-white py-4 px-4"
+                    style="background:linear-gradient(135deg,#696cff 0%,#9c3fe4 100%);position:relative;">
+                    <div class="d-flex align-items-center gap-3 w-100">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width:42px;height:42px;background:rgba(255,255,255,.2);">
+                            <i class="bx bx-credit-card text-white" style="font-size:1.3rem;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="modal-title fw-bold mb-0" id="paymentModalLabel">Manage Payment</h5>
+                            <input class="bg-transparent border-0 text-white opacity-75 small p-0 w-100"
+                                id="modal_purchase_no" readonly style="outline:none;" type="text">
+                        </div>
+                        {{-- Custom close button inside gradient --}}
+                        <button aria-label="Close" data-bs-dismiss="modal" type="button"
+                            style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);
+                                   border:none;color:#fff;display:flex;align-items:center;justify-content:center;
+                                   font-size:1.1rem;line-height:1;flex-shrink:0;transition:background .2s;"
+                            onmouseover="this.style.background='rgba(255,255,255,.35)'"
+                            onmouseout="this.style.background='rgba(255,255,255,.2)'">
+                            <i class="bx bx-x" style="font-size:1.2rem;"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <form id="paymentForm" method="POST">
                     @csrf
                     <div class="modal-body p-4">
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold uppercase">Purchase No</label>
-                            <input class="form-control bg-light fw-bold text-dark border-0" id="modal_purchase_no"
-                                readonly type="text">
-                        </div>
+
+                        {{-- Grand Total / Balance Due Cards --}}
                         <div class="row g-3 mb-4">
                             <div class="col-6">
-                                <div class="bg-light rounded border p-3 text-center">
-                                    <div class="text-muted small fw-semibold mb-1">{{ __('messages.grand_total_label') }}
+                                <div class="rounded-3 p-3 text-center h-100"
+                                    style="background:#f0f4ff;border:1.5px solid #d0d8ff;">
+                                    <div class="text-muted small fw-semibold mb-1">
+                                        <i class="bx bx-receipt me-1"></i>Grand Total
                                     </div>
-                                    <div class="fw-bold text-primary fs-5" id="modal_grand_total_text">
-                                        {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
+                                    <div class="fw-bold text-primary" style="font-size:1.4rem;"
+                                        id="modal_grand_total_text">
+                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00
+                                    </div>
                                     <input id="modal_grand_total" type="hidden">
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div
-                                    class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-3 text-center">
-                                    <div class="text-danger small-div fw-semibold mb-1">Balance Due</div>
-                                    <div class="text-danger fw-bold fs-5" id="modal_balance_due_text">
-                                        {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
+                                <div class="rounded-3 p-3 text-center h-100 balance-due-card"
+                                    style="background:#fff0f0;border:1.5px solid#ffd0d0;">
+                                    <div class="small fw-semibold mb-1 text-danger">
+                                        <i class="bx bx-time-five me-1"></i>Balance Due
+                                    </div>
+                                    <div class="fw-bold text-danger" style="font-size:1.4rem;"
+                                        id="modal_balance_due_text">
+                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Paid Amount --}}
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.paid_amount_field') }} <span
-                                    class="text-danger">*</span></label>
-                            <input class="form-control form-control-lg fw-bold" id="modal_paid_amount" min="0"
-                                name="paid_amount" required step="0.01" type="number">
+                            <label class="form-label fw-semibold small text-uppercase text-muted">
+                                {{ __('messages.paid_amount_field') }} <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light border-end-0 fw-bold text-primary"
+                                    style="font-size:1rem;">
+                                    {{ optional(current_currency())->symbol ?? '₹' }}
+                                </span>
+                                <input class="form-control border-start-0 fw-bold ps-0" id="modal_paid_amount"
+                                    min="0" name="paid_amount" required step="0.01" type="number"
+                                    style="font-size:1.15rem;">
+                            </div>
                         </div>
-                        <div class="mb-0">
-                            <label class="form-label fw-semibold">Payment Method <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select form-select-lg" id="modal_payment_method" name="payment_method"
-                                data-no-select2="1" required>
-                                <option value="Cash">{{ __('messages.pm_cash') }}</option>
-                                <option value="Bank Transfer">{{ __('messages.pm_bank') }}</option>
-                                <option value="Card">{{ __('messages.pm_card') }}</option>
-                                <option value="UPI / QR">{{ __('messages.pm_upi') }}</option>
-                                <option value="Cheque">{{ __('messages.pm_cheque') }}</option>
+
+                        {{-- Payment Method --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small text-uppercase text-muted">
+                                Payment Method <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="modal_payment_method" name="payment_method"
+                                data-no-select2="1" required style="height:46px;">
+                                <option value="Cash">💵 {{ __('messages.pm_cash') }}</option>
+                                <option value="Razorpay">⚡ Razorpay (Online Payment)</option>
                             </select>
                         </div>
+
+                        {{-- Razorpay info banner (shown only when Razorpay selected) --}}
+                        <div class="rounded-3 p-3 d-none" id="modal_razorpay_info"
+                            style="background:linear-gradient(135deg,#eef2ff,#f5f0ff);border:1.5px solid #c7d2fe;">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span
+                                    class="rounded-circle d-inline-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width:28px;height:28px;background:#696cff;">
+                                    <i class="bx bx-lock-alt text-white" style="font-size:.85rem;"></i>
+                                </span>
+                                <strong class="text-primary small">Secure Razorpay Checkout</strong>
+                            </div>
+                            <p class="text-muted small mb-0 ps-1">
+                                Click <strong>"Pay via Razorpay"</strong> below to open the secure payment gateway.
+                                Your payment will be recorded automatically on success.
+                            </p>
+                        </div>
+
+                        {{-- Hidden Razorpay fields --}}
+                        <input type="hidden" id="modal_razorpay_order_id" name="razorpay_order_id">
+                        <input type="hidden" id="modal_razorpay_payment_id" name="razorpay_payment_id">
+                        <input type="hidden" id="modal_razorpay_signature" name="razorpay_signature">
+                        <input type="hidden" id="modal_purchase_id" name="purchase_id">
                     </div>
-                    <div class="modal-footer bg-light border-top p-3">
-                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">
-                            <i class="bx bx-x me-1"></i> Close
+
+                    {{-- Footer --}}
+                    <div class="modal-footer border-top px-4 py-3 gap-2 bg-light" style="border-radius:0 0 16px 16px;">
+                        <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal"
+                            type="button">
+                            <i class="bx bx-x me-1"></i> Cancel
                         </button>
-                        <button class="btn btn-primary" id="btnSavePayment" type="submit">
+                        <button class="btn btn-primary rounded-pill px-4 ms-auto" id="btnSavePayment" type="submit">
                             <i class="bx bx-save me-1"></i> Update Payment
+                        </button>
+                        <button class="btn rounded-pill px-4 ms-auto d-none" id="btnModalPayRazorpay" type="button"
+                            style="background:linear-gradient(135deg,#696cff,#9c3fe4);color:#fff;border:none;">
+                            <i class="bx bx-bolt-circle me-1"></i> Pay via Razorpay
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -525,36 +591,180 @@
                 $('#modal_grand_total_text').text(sym + grandTotal.toFixed(2));
                 $('#modal_paid_amount').val(paidAmount.toFixed(2));
                 $('#modal_payment_method').val(paymentMethod || 'Cash');
+                $('#modal_purchase_id').val(btn.data('id'));
                 $('#paymentForm').attr('action', btn.data('action'));
 
+                // Clear previous Razorpay fields
+                $('#modal_razorpay_order_id, #modal_razorpay_payment_id, #modal_razorpay_signature').val(
+                    '');
+
                 updateModalDue();
+                toggleModalRazorpay(); // sync buttons for pre-filled method
                 bootstrap.Modal.getOrCreateInstance(document.getElementById('paymentModal')).show();
             });
 
             $('#modal_paid_amount').on('input change', updateModalDue);
+
+            // Show/hide Razorpay button based on selected payment method
+            $('#modal_payment_method').on('change', function() {
+                toggleModalRazorpay();
+                if ($(this).val() === 'Razorpay') {
+                    const grandTotal = parseFloat($('#modal_grand_total').val()) || 0;
+                    $('#modal_paid_amount').val(grandTotal.toFixed(2)).prop('readonly', true);
+                    updateModalDue();
+                } else {
+                    $('#modal_paid_amount').prop('readonly', false);
+                }
+            });
+
+            function toggleModalRazorpay() {
+                const isRazorpay = $('#modal_payment_method').val() === 'Razorpay';
+                $('#btnSavePayment').toggleClass('d-none', isRazorpay);
+                $('#btnModalPayRazorpay').toggleClass('d-none', !isRazorpay);
+                $('#modal_razorpay_info').toggleClass('d-none', !isRazorpay);
+            }
 
             function updateModalDue() {
                 const total = parseFloat($('#modal_grand_total').val()) || 0;
                 const paid = parseFloat($('#modal_paid_amount').val()) || 0;
                 const due = Math.max(0, total - paid);
                 $('#modal_balance_due_text').text(sym + due.toFixed(2));
+
+                const $card = $('.balance-due-card');
                 if (due > 0) {
-                    $('#modal_balance_due_text').parent().removeClass(
-                        'bg-success bg-opacity-10 border-success border-opacity-25 text-success').addClass(
-                        'bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger');
-                    $('#modal_balance_due_text').parent().find('.small-div').removeClass('text-success').addClass(
-                        'text-danger');
+                    $card.css({
+                        'background': '#fff0f0',
+                        'border': '1.5px solid #ffd0d0'
+                    });
+                    $card.find('.small').removeClass('text-success').addClass('text-danger');
+                    $('#modal_balance_due_text').removeClass('text-success').addClass('text-danger');
                 } else {
-                    $('#modal_balance_due_text').parent().removeClass(
-                        'bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger').addClass(
-                        'bg-success bg-opacity-10 border-success border-opacity-25 text-success');
-                    $('#modal_balance_due_text').parent().find('.small-div').removeClass('text-danger').addClass(
-                        'text-success');
+                    $card.css({
+                        'background': '#f0fff4',
+                        'border': '1.5px solid #c6f6d5'
+                    });
+                    $card.find('.small').removeClass('text-danger').addClass('text-success');
+                    $('#modal_balance_due_text').removeClass('text-danger').addClass('text-success');
                 }
+            }
+
+            // -- Razorpay Pay button in modal ----------------------------
+            $('#btnModalPayRazorpay').on('click', function() {
+                const grandTotal = parseFloat($('#modal_grand_total').val()) || 0;
+                if (grandTotal <= 0) {
+                    showAdminToast('Grand total must be greater than 0.', 'warning');
+                    return;
+                }
+                const btn = $(this);
+                btn.prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm me-1"></span> Processing…');
+
+                $.ajax({
+                    url: "{{ route('razorpay.create-order') }}",
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        amount: grandTotal
+                    },
+                    success: function(res) {
+                        const options = {
+                            key: res.key_id,
+                            amount: res.amount,
+                            currency: res.currency,
+                            name: '{{ addslashes(config('app.name')) }}',
+                            description: 'Purchase Payment — ' + $('#modal_purchase_no')
+                                .val(),
+                            order_id: res.order_id,
+                            prefill: {
+                                name: '{{ addslashes(auth()->user()->name ?? '') }}',
+                                email: '{{ addslashes(auth()->user()->email ?? '') }}',
+                            },
+                            theme: {
+                                color: '#696cff'
+                            },
+                            handler: function(response) {
+                                // Store Razorpay IDs and submit payment update via AJAX
+                                $('#modal_razorpay_order_id').val(response
+                                    .razorpay_order_id);
+                                $('#modal_razorpay_payment_id').val(response
+                                    .razorpay_payment_id);
+                                $('#modal_razorpay_signature').val(response
+                                    .razorpay_signature);
+                                $('#modal_paid_amount').val(grandTotal.toFixed(2));
+
+                                // Use Razorpay payment-update route
+                                const purchaseId = $('#modal_purchase_id').val();
+                                submitRazorpayPaymentUpdate(purchaseId, grandTotal,
+                                    response, btn);
+                            },
+                            modal: {
+                                ondismiss: function() {
+                                    btn.prop('disabled', false)
+                                        .html(
+                                            '<i class="bx bx-rupee me-1"></i> Pay via Razorpay'
+                                        );
+                                    showAdminToast('Payment cancelled.', 'warning');
+                                }
+                            }
+                        };
+                        const rzp = new Razorpay(options);
+                        rzp.on('payment.failed', function(response) {
+                            showAdminToast('Payment failed: ' + response.error
+                                .description, 'danger');
+                            btn.prop('disabled', false)
+                                .html(
+                                    '<i class="bx bx-rupee me-1"></i> Pay via Razorpay'
+                                );
+                        });
+                        rzp.open();
+                    },
+                    error: function(xhr) {
+                        const msg = xhr.responseJSON?.message ||
+                            'Could not create Razorpay order. Check credentials.';
+                        showAdminToast(msg, 'danger');
+                        btn.prop('disabled', false)
+                            .html('<i class="bx bx-rupee me-1"></i> Pay via Razorpay');
+                    }
+                });
+            });
+
+            function submitRazorpayPaymentUpdate(purchaseId, grandTotal, rzpResponse, btn) {
+                $.ajax({
+                    url: '/purchases/' + purchaseId + '/payment',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        paid_amount: grandTotal.toFixed(2),
+                        payment_method: 'Razorpay',
+                        razorpay_order_id: rzpResponse.razorpay_order_id,
+                        razorpay_payment_id: rzpResponse.razorpay_payment_id,
+                        razorpay_signature: rzpResponse.razorpay_signature,
+                    },
+                    success: function(res) {
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('paymentModal'))
+                            .hide();
+                        showAdminToast(
+                            res.message || 'Payment of ' + sym + grandTotal.toFixed(2) +
+                            ' received via Razorpay.',
+                            'success'
+                        );
+                        setTimeout(() => window.location.reload(), 1400);
+                    },
+                    error: function(xhr) {
+                        const msg = xhr.responseJSON?.message ||
+                            'Payment verified but could not update record.';
+                        showAdminToast(msg, 'danger');
+                        btn.prop('disabled', false)
+                            .html('<i class="bx bx-rupee me-1"></i> Pay via Razorpay');
+                    }
+                });
             }
 
             $('#paymentForm').on('submit', function(e) {
                 e.preventDefault();
+                // If Razorpay is selected, the Razorpay button handles submission — not this form
+                if ($('#modal_payment_method').val() === 'Razorpay') return;
+
                 const form = $(this);
                 const btn = $('#btnSavePayment');
                 const originalHtml = btn.html();
@@ -590,4 +800,7 @@
             });
         });
     </script>
+
+    {{-- Razorpay JS SDK --}}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 @endpush

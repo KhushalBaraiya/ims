@@ -268,34 +268,62 @@
                             </thead>
                             <tbody>
                                 @foreach ($purchase->items as $index => $item)
-                                    <tr>
-                                        <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                @if ($item->product->image)
-                                                    <img class="tbl-img rounded" onerror="imgError(this)"
-                                                        src="{{ asset('uploads/products/' . $item->product->image) }}">
-                                                @else
+                                    @if ($item->product)
+                                        <tr>
+                                            <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    @if ($item->product->image)
+                                                        <img class="tbl-img rounded" onerror="imgError(this)"
+                                                            src="{{ asset('uploads/products/' . $item->product->image) }}">
+                                                    @else
+                                                        <div
+                                                            class="tbl-img img-fallback d-flex align-items-center justify-content-center bg-light rounded">
+                                                            <i class="bx bx-package text-muted"></i>
+                                                        </div>
+                                                    @endif
+                                                    <div>
+                                                        <strong>{{ $item->product->name }}</strong>
+                                                        <small
+                                                            class="d-block text-muted">{{ $item->product->unit_code ?? 'PCS' }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><code class="small text-primary">{{ $item->product->code }}</code></td>
+                                            <td class="fw-bold text-center">{{ number_format($item->quantity, 2) }}</td>
+                                            <td class="fw-semibold text-end">{{ format_currency($item->purchase_price) }}
+                                            </td>
+                                            <td class="text-danger text-end">-
+                                                {{ format_currency($item->discount_amount) }}
+                                            </td>
+                                            <td class="text-warning text-end">+ {{ format_currency($item->tax_amount) }}
+                                            </td>
+                                            <td class="fw-bold text-end">{{ format_currency($item->total_amount) }}</td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                            <td colspan="2">
+                                                <div class="d-flex align-items-center gap-2 text-muted">
                                                     <div
                                                         class="tbl-img img-fallback d-flex align-items-center justify-content-center bg-light rounded">
-                                                        <i class="bx bx-package text-muted"></i>
+                                                        <i class="bx bx-error-circle text-danger"></i>
                                                     </div>
-                                                @endif
-                                                <div>
-                                                    <strong>{{ $item->product->name }}</strong>
-                                                    <small
-                                                        class="d-block text-muted">{{ $item->product->unit_code ?? 'PCS' }}</small>
+                                                    <div>
+                                                        <em>Product Deleted (ID: {{ $item->product_id }})</em>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td><code class="small text-primary">{{ $item->product->code }}</code></td>
-                                        <td class="fw-bold text-center">{{ number_format($item->quantity, 2) }}</td>
-                                        <td class="fw-semibold text-end">{{ format_currency($item->purchase_price) }}</td>
-                                        <td class="text-danger text-end">- {{ format_currency($item->discount_amount) }}
-                                        </td>
-                                        <td class="text-warning text-end">+ {{ format_currency($item->tax_amount) }}</td>
-                                        <td class="fw-bold text-end">{{ format_currency($item->total_amount) }}</td>
-                                    </tr>
+                                            </td>
+                                            <td class="fw-bold text-center">{{ number_format($item->quantity, 2) }}</td>
+                                            <td class="fw-semibold text-end">{{ format_currency($item->purchase_price) }}
+                                            </td>
+                                            <td class="text-danger text-end">-
+                                                {{ format_currency($item->discount_amount) }}</td>
+                                            <td class="text-warning text-end">+ {{ format_currency($item->tax_amount) }}
+                                            </td>
+                                            <td class="fw-bold text-end">{{ format_currency($item->total_amount) }}</td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                             <tfoot class="table-light">

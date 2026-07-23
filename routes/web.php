@@ -24,6 +24,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RazorpayController;
 use Illuminate\Support\Facades\Route;
 
 // Root redirect
@@ -129,6 +130,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/purchases/{purchase}/payment', [PurchaseController::class, 'updatePayment'])->name('purchases.update-payment');
     Route::delete('/purchases/bulk-delete', [PurchaseController::class, 'bulkDestroy'])->name('purchases.bulk-destroy');
     Route::resource('purchases', PurchaseController::class);
+
+    // Razorpay Routes
+    Route::post('/razorpay/create-order', [RazorpayController::class, 'createOrder'])->name('razorpay.create-order');
+    Route::post('/razorpay/verify-and-store', [RazorpayController::class, 'verifyAndStore'])->name('razorpay.verify-and-store');
 
     // Purchase Return Routes
     Route::get('/purchase-returns/search-products', [PurchaseReturnController::class, 'searchProducts'])->name('purchase-returns.search-products');
