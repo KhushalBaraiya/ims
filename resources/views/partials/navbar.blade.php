@@ -135,15 +135,6 @@
                         </a>
                     </li>
 
-                    {{-- Change Language --}}
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
-                            href="javascript:void(0);" id="userDDLangTrigger">
-                            <i class="bx bx-globe user-dd-icon"></i>
-                            <span>{{ __('messages.language') }}</span>
-                        </a>
-                    </li>
-
                     {{-- Logout --}}
                     <li>
                         <form action="{{ route('logout') }}" method="POST" class="m-0">
