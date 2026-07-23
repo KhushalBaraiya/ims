@@ -21,6 +21,14 @@ class ProfileController extends Controller
     }
 
     /**
+     * Show the dedicated Change Password page.
+     */
+    public function showChangePassword(): View
+    {
+        return view('change-password');
+    }
+
+    /**
      * Update the authenticated user's profile details.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
@@ -70,6 +78,7 @@ class ProfileController extends Controller
 
         ActivityLog::log('Password Changed', 'User updated their account password.');
 
-        return back()->with('success', 'Password changed successfully.');
+        return redirect()->route('profile.change-password')
+            ->with('password_success', 'Password changed successfully.');
     }
 }

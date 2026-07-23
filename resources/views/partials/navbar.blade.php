@@ -129,7 +129,7 @@
                     {{-- Change Password --}}
                     <li>
                         <a class="dropdown-item d-flex align-items-center gap-3 px-4 py-2 user-dd-item"
-                            href="{{ route('profile.show') }}#password">
+                            href="{{ route('profile.change-password') }}">
                             <i class="bx bx-lock user-dd-icon"></i>
                             <span>{{ __('messages.change_password') }}</span>
                         </a>

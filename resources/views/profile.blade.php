@@ -51,10 +51,15 @@
                             <span class="text-muted small fw-semibold">{{ __('messages.member_since') }}</span>
                             <span class="small">{{ $user->created_at->format('d M Y') }}</span>
                         </li>
-                        <li class="d-flex justify-content-between py-2">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
                             <span class="text-muted small fw-semibold">{{ __('messages.last_login') }}</span>
                             <span
                                 class="small">{{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'N/A' }}</span>
+                        </li>
+                        <li class="pt-3">
+                            <a href="{{ route('profile.change-password') }}" class="btn btn-outline-warning w-100">
+                                <i class="bx bx-lock-alt me-1"></i> {{ __('messages.change_password') }}
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -115,51 +120,6 @@
                         <div class="d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bx bx-save me-1"></i> {{ __('messages.save_profile') }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i
-                            class="bx bx-key me-2 text-warning"></i>{{ __('messages.change_password') }}</h6>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" action="{{ route('profile.password') }}">
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">{{ __('messages.current_password') }} <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" name="current_password"
-                                    class="form-control @error('current_password') is-invalid @enderror"
-                                    placeholder="••••••••" required>
-                                @error('current_password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">{{ __('messages.new_password') }} <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" name="password"
-                                    class="form-control @error('password') is-invalid @enderror" placeholder="••••••••"
-                                    required>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">{{ __('messages.confirm_password') }} <span
-                                        class="text-danger">*</span></label>
-                                <input type="password" name="password_confirmation" class="form-control"
-                                    placeholder="••••••••" required>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-warning">
-                                <i class="bx bx-key me-1"></i> {{ __('messages.change_password') }}
                             </button>
                         </div>
                     </form>
