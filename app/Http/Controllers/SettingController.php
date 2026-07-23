@@ -41,6 +41,7 @@ class SettingController extends Controller
             'invoice_prefix'              => ['nullable', 'string', 'max:20'],
             'purchase_prefix'             => ['nullable', 'string', 'max:20'],
             'show_out_of_stock_products'  => ['nullable', 'boolean'],
+            'session_timeout'             => ['nullable', 'integer', 'min:0', 'max:1440'],
         ]);
 
         $keys = [
@@ -52,6 +53,7 @@ class SettingController extends Controller
             'tax_percentage',
             'invoice_prefix',
             'purchase_prefix',
+            'session_timeout',
         ];
 
         foreach ($keys as $key) {
@@ -66,6 +68,9 @@ class SettingController extends Controller
             ['key' => 'show_out_of_stock_products'],
             ['value' => $request->has('show_out_of_stock_products') ? '1' : '0']
         );
+
+        // Clear cached session_timeout so new value takes effect immediately
+        \Illuminate\Support\Facades\Cache::forget('setting_session_timeout');
 
         ActivityLog::log('Settings Updated', 'Company settings were updated.');
 

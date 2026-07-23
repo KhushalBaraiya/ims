@@ -32,6 +32,17 @@ Route::get('/', function () {
     return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 
+// Session expired logout (GET — triggered by client-side JS timer)
+Route::get('/logout-session-expired', function () {
+    if (auth()->check()) {
+        \App\Models\ActivityLog::log('Auto Logout', 'User session expired due to inactivity.');
+        auth()->logout();
+    }
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('login')->with('error', 'Your session expired due to inactivity. Please log in again.');
+})->name('logout.session-expired');
+
 // Language Switcher (public - no auth required)
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 

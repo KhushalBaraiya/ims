@@ -152,6 +152,28 @@
                             </div>
                         </div>
 
+                        {{-- Session Timeout --}}
+                        <div class="border-top mt-3 pt-3">
+                            <label class="form-label fw-semibold">
+                                <i class="bx bx-time-five text-warning me-1"></i>
+                                Session Timeout (minutes)
+                            </label>
+                            <div class="input-group" style="max-width:260px;">
+                                <input class="form-control @error('session_timeout') is-invalid @enderror"
+                                    name="session_timeout" type="number" min="0" max="1440" step="1"
+                                    placeholder="e.g. 30"
+                                    value="{{ old('session_timeout', $settings->get('session_timeout', '0')) }}">
+                                <span class="input-group-text">min</span>
+                                @error('session_timeout')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-text">
+                                Set <strong>0</strong> to disable auto-logout. Users will be logged out automatically after
+                                this many minutes of inactivity.
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

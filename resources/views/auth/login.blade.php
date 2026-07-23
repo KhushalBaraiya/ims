@@ -20,6 +20,15 @@
         </div>
     @endif
 
+    {{-- Session expired / error alert --}}
+    @if (session('error'))
+        <div class="mb-3 d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+            style="background:rgba(255,62,29,.12);border:1px solid rgba(255,62,29,.3);color:#ff3e1d;font-size:.875rem;">
+            <i class="bx bx-time-five flex-shrink-0" style="font-size:1.1rem;"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
     <form action="{{ route('login') }}" method="POST">
         @csrf
 

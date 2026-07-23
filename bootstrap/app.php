@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Set locale from session on every web request (after session middleware has run)
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\SessionTimeout::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

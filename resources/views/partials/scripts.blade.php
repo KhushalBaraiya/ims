@@ -351,10 +351,14 @@
                             if (!img && !sku) return state.text;
                             return $(
                                 '<div class="d-flex align-items-center gap-2">' +
-                                '<img src="' + img + '" class="rounded" style="width:32px;height:32px;object-fit:cover;">' +
+                                '<img src="' + img +
+                                '" class="rounded" style="width:32px;height:32px;object-fit:cover;">' +
                                 '<div class="d-flex flex-column">' +
-                                '<span class="fw-semibold text-dark lh-sm" style="font-size:13px;">' + (element.data('name') || state.text.split(' (')[0]) + '</span>' +
-                                '<span class="text-muted" style="font-size:10.5px;">SKU: ' + sku + '</span>' +
+                                '<span class="fw-semibold text-dark lh-sm" style="font-size:13px;">' +
+                                (element.data('name') || state.text.split(' (')[0]) +
+                                '</span>' +
+                                '<span class="text-muted" style="font-size:10.5px;">SKU: ' +
+                                sku + '</span>' +
                                 '</div>' +
                                 '</div>'
                             );
@@ -534,3 +538,96 @@
         });
     </script>
 @endif
+
+{{-- ─── Session Timeout Warning (client-side countdown) ──────────────────── --}}
+@auth
+    @php
+        $sessionTimeoutMinutes = (int) \App\Models\Setting::where('key', 'session_timeout')->value('value');
+    @endphp
+    @if ($sessionTimeoutMinutes > 0)
+        <script>
+            (function() {
+                var timeoutMs = {{ $sessionTimeoutMinutes * 60 * 1000 }};
+                var warnBeforeMs = 60 * 1000; // warn 60 seconds before expiry
+                var lastActivity = Date.now();
+                var warnTimer, logoutTimer, warningShown = false;
+
+                // Track activity
+                ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function(evt) {
+                    document.addEventListener(evt, function() {
+                        lastActivity = Date.now();
+                        if (warningShown) {
+                            warningShown = false;
+                            var banner = document.getElementById('sessionTimeoutBanner');
+                            if (banner) banner.remove();
+                        }
+                        resetTimers();
+                    }, {
+                        passive: true
+                    });
+                });
+
+                function resetTimers() {
+                    clearTimeout(warnTimer);
+                    clearTimeout(logoutTimer);
+
+                    warnTimer = setTimeout(function() {
+                        showWarning();
+                    }, timeoutMs - warnBeforeMs);
+
+                    logoutTimer = setTimeout(function() {
+                        // Force logout via server
+                        window.location.href = '{{ route('logout.session-expired') }}';
+                    }, timeoutMs);
+                }
+
+                function showWarning() {
+                    warningShown = true;
+                    // Remove old banner if any
+                    var old = document.getElementById('sessionTimeoutBanner');
+                    if (old) old.remove();
+
+                    var banner = document.createElement('div');
+                    banner.id = 'sessionTimeoutBanner';
+                    banner.style.cssText = [
+                        'position:fixed', 'bottom:20px', 'left:50%', 'transform:translateX(-50%)',
+                        'z-index:99999', 'background:linear-gradient(135deg,#696cff,#9c3fe4)',
+                        'color:#fff', 'padding:14px 24px', 'border-radius:12px',
+                        'box-shadow:0 8px 24px rgba(0,0,0,.25)',
+                        'display:flex', 'align-items:center', 'gap:12px',
+                        'font-size:.9rem', 'font-weight:500', 'max-width:420px', 'width:90%'
+                    ].join(';');
+
+                    banner.innerHTML = [
+                        '<i class="bx bx-time-five" style="font-size:1.4rem;flex-shrink:0;"></i>',
+                        '<div style="flex:1;">',
+                        'Session expiring in <strong id="sessionCountdown">60</strong>s — ',
+                        '<a href="javascript:void(0)" onclick="location.reload()" ',
+                        'style="color:#fff;text-decoration:underline;">Stay Logged In</a>',
+                        '</div>',
+                        '<button onclick="document.getElementById(\'sessionTimeoutBanner\').remove()" ',
+                        'style="background:rgba(255,255,255,.2);border:none;color:#fff;',
+                        'border-radius:50%;width:24px;height:24px;cursor:pointer;',
+                        'display:flex;align-items:center;justify-content:center;flex-shrink:0;">',
+                        '&times;',
+                        '</button>'
+                    ].join('');
+
+                    document.body.appendChild(banner);
+
+                    // Countdown
+                    var secs = 60;
+                    var interval = setInterval(function() {
+                        secs--;
+                        var el = document.getElementById('sessionCountdown');
+                        if (el) el.textContent = secs;
+                        if (secs <= 0) clearInterval(interval);
+                    }, 1000);
+                }
+
+                resetTimers();
+            })
+            ();
+        </script>
+    @endif
+@endauth
