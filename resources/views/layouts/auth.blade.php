@@ -386,23 +386,38 @@
             margin-bottom: 1.5rem;
         }
 
-        .check-wrap {
-            display: flex;
-            align-items: center;
-            gap: .45rem;
+        /* Bootstrap form-check override for dark/light theme */
+        .form-check {
+            margin: 0;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            background-color: var(--bg-input);
+            border: 1.5px solid var(--border);
             cursor: pointer;
         }
 
-        .check-wrap input[type="checkbox"] {
-            width: 15px;
-            height: 15px;
-            accent-color: var(--primary);
-            cursor: pointer;
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
         }
 
-        .check-wrap span {
-            font-size: .8rem;
+        .form-check-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(105, 108, 255, .15);
+        }
+
+        .form-check-label {
+            font-size: .82rem;
             color: var(--text-secondary);
+            cursor: pointer;
+            transition: color .2s;
+        }
+
+        .form-check-label:hover {
+            color: var(--text-primary);
         }
 
         .forgot-link {

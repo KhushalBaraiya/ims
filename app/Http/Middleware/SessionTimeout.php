@@ -18,6 +18,14 @@ class SessionTimeout
             return $next($request);
         }
 
+        // Skip timeout check if user logged in via "Remember Me" cookie
+        // (viaRemember() returns true when authenticated through remember token)
+        if (Auth::viaRemember()) {
+            // Still update last_activity so manual timeout works after they interact
+            session(['last_activity_time' => now()->timestamp]);
+            return $next($request);
+        }
+
         // Cache the timeout setting for 5 minutes — avoids DB hit on every request
         $timeoutMinutes = (int) Cache::remember('setting_session_timeout', 300, function () {
             return Setting::where('key', 'session_timeout')->value('value') ?? 0;

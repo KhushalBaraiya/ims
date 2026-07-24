@@ -148,10 +148,12 @@
 
         {{-- Remember me --}}
         <div class="form-meta-row">
-            <label class="check-wrap" for="remember_me">
-                <input id="remember_me" name="remember" type="checkbox" />
-                <span>{{ __('messages.remember_session') }}</span>
-            </label>
+            <div class="form-check">
+                <input class="form-check-input" id="remember_me" name="remember" type="checkbox" />
+                <label class="form-check-label" for="remember_me">
+                    {{ __('messages.remember_session') }}
+                </label>
+            </div>
         </div>
 
         <button class="btn-submit" type="submit">
@@ -419,6 +421,51 @@
 
         .demo-copy-btn i {
             font-size: 0.875rem;
+        }
+
+        /* ── Remember me — square checkbox ──────────────────────────────── */
+
+        /* Override the toggle style from auth layout — use plain square checkbox */
+        .check-wrap input[type="checkbox"].box-input {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 17px;
+            height: 17px;
+            background: var(--bg-input);
+            border: 1.5px solid rgba(255, 255, 255, .25);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            transition: background .2s, border-color .2s;
+            /* reset toggle styles */
+            border-radius: 4px !important;
+        }
+
+        .check-wrap input[type="checkbox"].box-input::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 4px;
+            width: 5px;
+            height: 9px;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            border-radius: 0;
+            transform: rotate(45deg) scale(0);
+            transition: transform .15s ease;
+            background: transparent;
+        }
+
+        .check-wrap input[type="checkbox"].box-input:checked {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .check-wrap input[type="checkbox"].box-input:checked::after {
+            transform: rotate(45deg) scale(1);
+            background: transparent;
         }
     </style>
 

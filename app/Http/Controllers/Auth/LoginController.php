@@ -124,6 +124,7 @@ class LoginController extends Controller
             'last_login_at'         => now(),
         ])->save();
 
+        // Regenerate session FIRST — before writing any session data
         $request->session()->regenerate();
 
         // Load user's preferred language into session
@@ -141,6 +142,9 @@ class LoginController extends Controller
         if ($userCurrency) {
             session(['active_currency' => $userCurrency]);
         }
+
+        // Store remember preference so middleware can rehydrate session if needed
+        session(['remember_me' => $remember]);
 
         ActivityLog::log('Login', 'User authenticated and logged into the system.');
 

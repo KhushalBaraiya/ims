@@ -543,8 +543,9 @@
 @auth
     @php
         $sessionTimeoutMinutes = (int) \App\Models\Setting::where('key', 'session_timeout')->value('value');
+        $viaRemember = \Illuminate\Support\Facades\Auth::viaRemember();
     @endphp
-    @if ($sessionTimeoutMinutes > 0)
+    @if ($sessionTimeoutMinutes > 0 && !$viaRemember)
         <script>
             (function() {
                 var timeoutMs = {{ $sessionTimeoutMinutes * 60 * 1000 }};
