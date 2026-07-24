@@ -90,19 +90,12 @@
                     </div>
                     <div class="card-body p-4">
 
-                        {{-- Live search input --}}
+                        {{-- Select2 AJAX product search --}}
                         <div class="mb-4">
                             <label class="form-label fw-semibold">{{ __('messages.select_product_to_add') }}</label>
-                            <div class="position-relative">
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bx bx-search"></i></span>
-                                    <input type="text" id="adjProductSearch" class="form-control"
-                                        placeholder="{{ __('messages.type_product_barcode') }}" autocomplete="off">
-                                </div>
-                                <div id="adjAutocompleteResults" class="position-absolute w-100 d-none rounded"
-                                    style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;left:0;">
-                                </div>
-                            </div>
+                            <select id="adjProductSelect" class="form-select" style="width:100%;">
+                                <option value=""></option>
+                            </select>
                         </div>
 
                         {{-- Products table --}}
@@ -146,97 +139,30 @@
 
 @push('styles')
     <style>
-        /* ── Autocomplete container ── */
-        #adjAutocompleteResults {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+        /* ── Select2 overrides — theme aware ──────────────────────────────── */
+        .select2-container--bootstrap-5 .select2-selection {
+            min-height: 38px;
+            border-radius: 8px;
+        }
+
+        .select2-container--bootstrap-5 .select2-dropdown {
             border-radius: 10px;
-            box-shadow: 0 10px 32px rgba(0, 0, 0, .12);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, .14);
+            border-color: rgba(105, 108, 255, .25);
             overflow: hidden;
         }
 
-        [data-bs-theme="dark"] #adjAutocompleteResults {
-            background: #2b2c40;
-            border-color: rgba(255, 255, 255, .12);
-            box-shadow: 0 10px 32px rgba(0, 0, 0, .4);
+        .select2-container--bootstrap-5 .select2-results__option {
+            padding: 8px 14px;
         }
 
-        /* ── Each result item ── */
-        .adj-ac-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 14px;
-            cursor: pointer;
-            border-bottom: 1px solid #f1f5f9;
-            transition: background .12s;
+        .select2-container--bootstrap-5 .select2-results__option--highlighted {
+            background: rgba(105, 108, 255, .12) !important;
+            color: inherit !important;
         }
 
-        .adj-ac-item:last-child {
-            border-bottom: none;
-        }
-
-        .adj-ac-item:hover {
-            background: rgba(105, 108, 255, .08);
-        }
-
-        [data-bs-theme="dark"] .adj-ac-item {
-            border-bottom-color: rgba(255, 255, 255, .07);
-        }
-
-        [data-bs-theme="dark"] .adj-ac-item:hover {
-            background: rgba(105, 108, 255, .15);
-        }
-
-        .adj-ac-item img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 7px;
-            flex-shrink: 0;
-            border: 1px solid rgba(0, 0, 0, .08);
-        }
-
-        [data-bs-theme="dark"] .adj-ac-item img {
-            border-color: rgba(255, 255, 255, .12);
-        }
-
-        .adj-ac-name {
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.3;
-            color: #3d4150;
-        }
-
-        [data-bs-theme="dark"] .adj-ac-name {
-            color: #cfd3ec;
-        }
-
-        .adj-ac-sku {
-            font-size: 11px;
-            color: #94a3b8;
-            line-height: 1.2;
-        }
-
-        [data-bs-theme="dark"] .adj-ac-sku {
-            color: #7983bb;
-        }
-
-        .adj-ac-stock {
-            font-size: 11px;
-            white-space: nowrap;
-            color: #94a3b8;
-        }
-
-        [data-bs-theme="dark"] .adj-ac-stock {
-            color: #7983bb;
-        }
-
-        .adj-ac-no-results {
-            padding: 14px;
-            text-align: center;
-            color: #94a3b8;
-            font-size: 13px;
+        [data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-dropdown {
+            box-shadow: 0 10px 32px rgba(0, 0, 0, .45);
         }
     </style>
 @endpush
@@ -246,177 +172,180 @@
         $(document).ready(function() {
             let rowCount = 0;
 
-            /* ══════════════════════════════════════════
-               AUTOCOMPLETE
-            ══════════════════════════════════════════ */
-            const searchInput = $('#adjProductSearch');
-            const resultsBox = $('#adjAutocompleteResults');
-            let searchTimer = null;
+            // ── Select2 AJAX Product Search ──────────────────────────────────
+            $('#adjProductSelect').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: '{{ __('messages.type_product_sku_barcode') }}',
+                allowClear: true,
+                minimumInputLength: 0,
+                ajax: {
+                    url: '{{ route('products.search') }}',
+                    dataType: 'json',
+                    delay: 200,
+                    data: function(params) {
+                        return {
+                            query: params.term || ''
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(p) {
+                                return {
+                                    id: p.id,
+                                    text: p.name,
+                                    name: p.name,
+                                    sku: p.sku,
+                                    barcode: p.barcode,
+                                    stock: p.stock,
+                                    out_of_stock: p.out_of_stock,
+                                    unit: p.unit,
+                                    image_url: p.image_url
+                                };
+                            })
+                        };
+                    },
+                    cache: false
+                },
+                templateResult: function(p) {
+                    if (p.loading) {
+                        return $(
+                        '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
+                    }
+                    if (!p.id) return p.text;
 
-            searchInput.on('input', function() {
-                clearTimeout(searchTimer);
-                const q = $(this).val().trim();
-                if (q.length < 1) {
-                    resultsBox.addClass('d-none').empty();
-                    return;
-                }
+                    const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img';
+                    const stockVal = parseFloat(p.stock) || 0;
+                    const stockBadge = p.out_of_stock ?
+                        `<span class="badge bg-danger-subtle text-danger" style="font-size:10px;">Out of stock</span>` :
+                        `<span class="badge bg-success-subtle text-success" style="font-size:10px;">${stockVal.toFixed(0)} ${p.unit || 'PCS'} in stock</span>`;
 
-                searchTimer = setTimeout(function() {
-                    $.get('{{ route('products.search') }}', {
-                        query: q
-                    }, function(data) {
-                        resultsBox.empty();
-                        if (!data.length) {
-                            resultsBox.append(
-                                '<div class="adj-ac-no-results">{{ __('messages.no_products_found') }}</div>'
-                            );
-                            resultsBox.removeClass('d-none');
-                            return;
-                        }
-
-                        data.forEach(function(p) {
-                            const stockLabel = p.out_of_stock ?
-                                '<span class="badge bg-danger" style="font-size:10px;">{{ __('messages.out_of_stock') }}</span>' :
-                                `<span class="adj-ac-stock">${parseFloat(p.stock).toFixed(2)} ${p.unit || '{{ __('messages.units') }}'} {{ __('messages.avail') }}.</span>`;
-
-                            const $item = $(`
-                        <div class="adj-ac-item" data-id="${p.id}" data-name="${$('<div>').text(p.name).html()}"
-                             data-sku="${p.sku}" data-stock="${p.stock}" data-unit="${p.unit || 'Units'}"
-                             data-image="${p.image_url}">
-                            <img src="${p.image_url}" alt="">
+                    return $(`
+                        <div class="d-flex align-items-center gap-3 py-1">
+                            <img src="${img}"
+                                 onerror="this.src='https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img'"
+                                 style="width:40px;height:40px;object-fit:cover;border-radius:6px;
+                                        border:1px solid rgba(0,0,0,.1);flex-shrink:0;">
                             <div class="flex-grow-1 overflow-hidden">
-                                <div class="adj-ac-name text-truncate">${$('<div>').text(p.name).html()}</div>
-                                <div class="adj-ac-sku">SKU: ${p.sku}</div>
+                                <div class="fw-semibold text-truncate" style="font-size:13px;">${p.name}</div>
+                                <div class="text-muted" style="font-size:11px;">
+                                    SKU: ${p.sku}${p.barcode ? ' &bull; ' + p.barcode : ''}
+                                </div>
                             </div>
-                            <div class="text-end flex-shrink-0">${stockLabel}</div>
-                        </div>
-                    `);
+                            <div class="text-end flex-shrink-0" style="font-size:11px;">${stockBadge}</div>
+                        </div>`);
+                },
+                templateSelection: function(p) {
+                    if (!p.id) return p.text || '{{ __('messages.type_product_sku_barcode') }}';
+                    return $(`<span><i class="bx bx-package me-1"></i>${p.name}
+                               <span class="text-muted small">(${p.sku})</span></span>`);
+                }
+            });
 
-                            $item.on('click', function() {
-                                const $el = $(this);
-                                const pid = $el.data('id');
+            // Load all products on dropdown open (no typing required)
+            $('#adjProductSelect').on('select2:open', function() {
+                setTimeout(function() {
+                    var $s = $('.select2-container--open .select2-search__field');
+                    if ($s.length) $s.val('').trigger('input');
+                }, 50);
+            });
 
-                                // Duplicate check
-                                let dup = false;
-                                $('#adjustmentItemsContainer tr').each(
-                                    function() {
-                                        if ($(this).data(
-                                                'product-id') == pid) {
-                                            dup = true;
-                                            return false;
-                                        }
-                                    });
-                                if (dup) {
-                                    showAdminToast(
-                                        '{{ __('messages.product_already_added') }}',
-                                        'warning');
-                                    searchInput.val('').focus();
-                                    resultsBox.addClass('d-none').empty();
-                                    return;
-                                }
+            // On product selected → add row
+            $('#adjProductSelect').on('select2:select', function(e) {
+                const p = e.params.data;
+                if (!p || !p.id) return;
 
-                                addProductRow({
-                                    id: pid,
-                                    name: $el.data('name'),
-                                    sku: $el.data('sku'),
-                                    stock: parseFloat($el.data(
-                                        'stock')) || 0,
-                                    unit: $el.data('unit') ||
-                                        'Units',
-                                    image: $el.data('image'),
-                                    qty: 1,
-                                    type: 'Plus'
-                                });
-
-                                searchInput.val('').focus();
-                                resultsBox.addClass('d-none').empty();
-                            });
-
-                            resultsBox.append($item);
-                        });
-
-                        resultsBox.removeClass('d-none');
+                // Duplicate check
+                let dup = false;
+                $('#adjustmentItemsContainer tr').each(function() {
+                    if ($(this).data('product-id') == p.id) {
+                        dup = true;
+                        return false;
+                    }
+                });
+                if (dup) {
+                    showAdminToast('{{ __('messages.product_already_added') }}', 'warning');
+                } else {
+                    addProductRow({
+                        id: p.id,
+                        name: p.name,
+                        sku: p.sku,
+                        stock: parseFloat(p.stock) || 0,
+                        unit: p.unit || 'PCS',
+                        image: p.image_url ||
+                            'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img',
+                        qty: 1,
+                        type: 'Plus'
                     });
-                }, 250);
-            });
-
-            // Close dropdown when clicking outside
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('#adjProductSearch, #adjAutocompleteResults').length) {
-                    resultsBox.addClass('d-none').empty();
                 }
+
+                // Reset select2
+                $(this).val(null).trigger('change');
             });
 
-            // Keyboard: Escape closes
-            searchInput.on('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    resultsBox.addClass('d-none').empty();
-                }
-            });
-
-            /* ══════════════════════════════════════════
-               ADD ROW
-            ══════════════════════════════════════════ */
+            // ── Add Row ──────────────────────────────────────────────────────
             function addProductRow(p) {
                 $('#emptyTableMsg').addClass('d-none');
 
                 const rowHtml = `
-            <tr class="item-row" data-product-id="${p.id}">
-                <td>
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="${p.image}" class="rounded" style="width:36px;height:36px;object-fit:cover;border:1px solid rgba(0,0,0,.08);">
-                        <div>
-                            <div class="fw-semibold small">${p.name}</div>
-                            <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
-                            <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
+                <tr class="item-row" data-product-id="${p.id}">
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${p.image}"
+                                 onerror="this.src='https://placehold.co/36x36/e2e8f0/94a3b8?text=No+Img'"
+                                 class="rounded flex-shrink-0"
+                                 style="width:36px;height:36px;object-fit:cover;border:1px solid rgba(0,0,0,.08);">
+                            <div>
+                                <div class="fw-semibold small">${p.name}</div>
+                                <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}</div>
+                                <input type="hidden" name="items[${rowCount}][product_id]" value="${p.id}">
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <span class="fw-semibold small text-muted">${p.stock.toFixed(2)} ${p.unit}</span>
-                </td>
-                <td class="text-center">
-                    <div class="btn-group w-100" role="group">
-                        <input type="radio" class="btn-check" name="items[${rowCount}][type]"
-                               id="type_plus_${rowCount}" value="Plus"
-                               ${p.type === 'Plus' ? 'checked' : ''} autocomplete="off">
-                        <label class="btn btn-outline-success btn-sm px-2 py-1 d-flex align-items-center justify-content-center gap-1"
-                               for="type_plus_${rowCount}" style="font-size:11px;font-weight:600;cursor:pointer;">
-                            <i class="bx bx-plus-circle"></i> Plus (+)
-                        </label>
-                        <input type="radio" class="btn-check" name="items[${rowCount}][type]"
-                               id="type_minus_${rowCount}" value="Minus"
-                               ${p.type === 'Minus' ? 'checked' : ''} autocomplete="off">
-                        <label class="btn btn-outline-danger btn-sm px-2 py-1 d-flex align-items-center justify-content-center gap-1"
-                               for="type_minus_${rowCount}" style="font-size:11px;font-weight:600;cursor:pointer;">
-                            <i class="bx bx-minus-circle"></i> Minus (-)
-                        </label>
-                    </div>
-                </td>
-                <td class="text-center">
-                    <div class="input-group input-group-sm">
-                        <input type="number" step="1" min="1"
-                               name="items[${rowCount}][quantity]"
-                               class="form-control text-center py-1 qty-input"
-                               value="${Math.round(p.qty)}" required>
-                        <span class="input-group-text px-1 small" style="font-size:10px;">${p.unit}</span>
-                    </div>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-icon btn-outline-danger rounded-circle remove-row-btn"
-                            style="width:28px;height:28px;padding:0;" title="Remove">
-                        <i class="bx bx-trash" style="font-size:13px;"></i>
-                    </button>
-                </td>
-            </tr>`;
+                    </td>
+                    <td>
+                        <span class="fw-semibold small text-muted">${p.stock.toFixed(2)} ${p.unit}</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="items[${rowCount}][type]"
+                                   id="type_plus_${rowCount}" value="Plus"
+                                   ${p.type === 'Plus' ? 'checked' : ''} autocomplete="off">
+                            <label class="btn btn-outline-success btn-sm d-flex align-items-center justify-content-center gap-1"
+                                   for="type_plus_${rowCount}" style="font-size:11px;font-weight:600;">
+                                <i class="bx bx-plus-circle"></i> Plus (+)
+                            </label>
+                            <input type="radio" class="btn-check" name="items[${rowCount}][type]"
+                                   id="type_minus_${rowCount}" value="Minus"
+                                   ${p.type === 'Minus' ? 'checked' : ''} autocomplete="off">
+                            <label class="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center gap-1"
+                                   for="type_minus_${rowCount}" style="font-size:11px;font-weight:600;">
+                                <i class="bx bx-minus-circle"></i> Minus (-)
+                            </label>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="input-group input-group-sm">
+                            <input type="number" step="1" min="1"
+                                   name="items[${rowCount}][quantity]"
+                                   class="form-control text-center qty-input"
+                                   value="${Math.round(p.qty)}" required>
+                            <span class="input-group-text px-1" style="font-size:10px;">${p.unit}</span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <button type="button"
+                                class="btn btn-sm btn-icon btn-outline-danger rounded-circle remove-row-btn"
+                                style="width:28px;height:28px;padding:0;" title="Remove">
+                            <i class="bx bx-trash" style="font-size:13px;"></i>
+                        </button>
+                    </td>
+                </tr>`;
 
                 $('#adjustmentItemsContainer').append(rowHtml);
                 rowCount++;
             }
 
-            /* ══════════════════════════════════════════
-               REMOVE ROW
-            ══════════════════════════════════════════ */
+            // ── Remove Row ───────────────────────────────────────────────────
             $(document).on('click', '.remove-row-btn', function() {
                 $(this).closest('tr').remove();
                 if ($('#adjustmentItemsContainer tr').length === 0) {
@@ -424,9 +353,7 @@
                 }
             });
 
-            /* ══════════════════════════════════════════
-               PRE-POPULATE (validation fail / from Sales)
-            ══════════════════════════════════════════ */
+            // ── Pre-populate on validation fail / preselected products ───────
             @if (old('items'))
                 @foreach (old('items') as $oldItem)
                     @php $oldProd = \App\Models\Product::with('stock')->find($oldItem['product_id'] ?? null); @endphp
@@ -436,23 +363,22 @@
                             name: "{{ addslashes($oldProd->name) }}",
                             sku: "{{ $oldProd->code }}",
                             stock: parseFloat("{{ $oldProd->stock->quantity ?? 0 }}"),
-                            unit: "{{ $oldProd->unit_code ?? 'Units' }}",
-                            image: "{{ $oldProd->image ? asset('uploads/products/' . $oldProd->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}",
+                            unit: "{{ $oldProd->unit_code ?? 'PCS' }}",
+                            image: "{{ $oldProd->image ? asset('uploads/products/' . $oldProd->image) : 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Image' }}",
                             qty: parseFloat("{{ $oldItem['quantity'] ?? 1 }}"),
                             type: "{{ $oldItem['type'] ?? 'Plus' }}"
                         });
                     @endif
                 @endforeach
             @elseif (!empty($preselectedProducts) && $preselectedProducts->count() > 0)
-                {{-- Pre-loaded from Sales Invoice --}}
                 @foreach ($preselectedProducts as $preProd)
                     addProductRow({
                         id: "{{ $preProd->id }}",
                         name: "{{ addslashes($preProd->name) }}",
                         sku: "{{ $preProd->code }}",
                         stock: parseFloat("{{ $preProd->stock->quantity ?? 0 }}"),
-                        unit: "{{ $preProd->unit_code ?? 'Units' }}",
-                        image: "{{ $preProd->image ? asset('uploads/products/' . $preProd->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}",
+                        unit: "{{ $preProd->unit_code ?? 'PCS' }}",
+                        image: "{{ $preProd->image ? asset('uploads/products/' . $preProd->image) : 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Image' }}",
                         qty: 1,
                         type: 'Minus'
                     });
