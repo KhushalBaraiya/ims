@@ -38,7 +38,91 @@
             <input autocomplete="email" autofocus class="input-dark @error('email') is-invalid @enderror" id="email"
                 name="email" placeholder="name@company.com" required type="email" value="{{ old('email') }}" />
             @error('email')
-                <div class="field-error"><i class="bx bx-info-circle"></i> {{ $message }}</div>
+                @php
+                    $isLocked = str_starts_with($message, 'LOCKED:');
+                    $lockTs = $isLocked ? (int) substr($message, 7) : 0;
+                    $isWarning = !$isLocked && str_contains($message, 'remaining');
+                @endphp
+                @if ($isLocked)
+                    {{-- Account Locked — live countdown banner --}}
+                    <div class="login-alert-banner login-alert-danger mt-3">
+                        <div class="login-alert-icon">
+                            <i class="bx bx-lock"></i>
+                        </div>
+                        <div class="login-alert-body">
+                            <div class="login-alert-title">Account Locked</div>
+                            <div class="login-alert-msg">
+                                Too many failed login attempts. Please wait before trying again.
+                            </div>
+                            <div class="lock-countdown-wrap mt-2">
+                                <span class="lock-countdown-label">Try again in</span>
+                                <span class="lock-countdown-timer" id="lockCountdown">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        (function() {
+                            var unlockAt = {{ $lockTs }} * 1000;
+                            var el = document.getElementById('lockCountdown');
+                            var submitBtn = document.querySelector('.btn-submit');
+
+                            // Disable Sign In button while locked
+                            if (submitBtn) {
+                                submitBtn.disabled = true;
+                                submitBtn.style.opacity = '0.45';
+                                submitBtn.style.cursor = 'not-allowed';
+                            }
+
+                            function tick() {
+                                var diff = Math.max(0, Math.ceil((unlockAt - Date.now()) / 1000));
+
+                                if (diff <= 0) {
+                                    if (el) el.textContent = '00:00';
+                                    // Re-enable button & auto-refresh after short delay
+                                    if (submitBtn) {
+                                        submitBtn.disabled = false;
+                                        submitBtn.style.opacity = '1';
+                                        submitBtn.style.cursor = '';
+                                    }
+                                    setTimeout(function() {
+                                        window.location.reload();
+                                    }, 800);
+                                    return;
+                                }
+
+                                var m = Math.floor(diff / 60);
+                                var s = diff % 60;
+                                if (el) el.textContent =
+                                    String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+                                setTimeout(tick, 1000);
+                            }
+                            tick();
+                        })();
+                    </script>
+                @elseif ($isWarning)
+                    {{-- Attempts remaining — Orange warning --}}
+                    <div class="login-alert-banner login-alert-warning mt-3">
+                        <div class="login-alert-icon">
+                            <i class="bx bx-error"></i>
+                        </div>
+                        <div class="login-alert-body">
+                            <div class="login-alert-title">Invalid Credentials</div>
+                            <div class="login-alert-msg">{{ $message }}</div>
+                        </div>
+                    </div>
+                @else
+                    {{-- Normal error --}}
+                    <div class="login-alert-banner login-alert-danger mt-3">
+                        <div class="login-alert-icon">
+                            <i class="bx bx-x-circle"></i>
+                        </div>
+                        <div class="login-alert-body">
+                            <div class="login-alert-title">Login Failed</div>
+                            <div class="login-alert-msg">{{ $message }}</div>
+                        </div>
+                    </div>
+                @endif
             @enderror
         </div>
 
@@ -114,6 +198,136 @@
     </div>
 
     <style>
+        /* ── Login Alert Banners ─────────────────────────────────────────── */
+        .login-alert-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            animation: alertSlide .25s ease;
+        }
+
+        @keyframes alertSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-alert-danger {
+            background: rgba(239, 68, 68, .13);
+            border: 1.5px solid rgba(239, 68, 68, .35);
+        }
+
+        .login-alert-warning {
+            background: rgba(245, 158, 11, .13);
+            border: 1.5px solid rgba(245, 158, 11, .35);
+        }
+
+        .login-alert-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .login-alert-danger .login-alert-icon {
+            background: rgba(239, 68, 68, .2);
+            color: #f87171;
+        }
+
+        .login-alert-warning .login-alert-icon {
+            background: rgba(245, 158, 11, .2);
+            color: #fbbf24;
+        }
+
+        .login-alert-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .login-alert-title {
+            font-size: .8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 3px;
+        }
+
+        .login-alert-danger .login-alert-title {
+            color: #f87171;
+        }
+
+        .login-alert-warning .login-alert-title {
+            color: #fbbf24;
+        }
+
+        .login-alert-msg {
+            font-size: .85rem;
+            line-height: 1.4;
+        }
+
+        .login-alert-danger .login-alert-msg {
+            color: rgba(255, 255, 255, .8);
+        }
+
+        .login-alert-warning .login-alert-msg {
+            color: rgba(255, 255, 255, .8);
+        }
+
+        /* ── Live Countdown Timer ────────────────────────────────────────── */
+        .lock-countdown-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .lock-countdown-label {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .5);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .lock-countdown-timer {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .06em;
+            color: #f87171;
+            background: rgba(239, 68, 68, .15);
+            border: 1.5px solid rgba(239, 68, 68, .35);
+            border-radius: 10px;
+            padding: 3px 14px;
+            min-width: 80px;
+            text-align: center;
+            display: inline-block;
+            animation: timerPulse 1s ease infinite alternate;
+        }
+
+        @keyframes timerPulse {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: .7;
+            }
+        }
+
+        /* ── Demo Credentials ────────────────────────────────────────────── */
         .demo-credentials-wrap {
             margin-top: 2rem;
             padding: 1.5rem;

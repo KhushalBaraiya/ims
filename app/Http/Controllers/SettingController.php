@@ -42,6 +42,8 @@ class SettingController extends Controller
             'purchase_prefix'             => ['nullable', 'string', 'max:20'],
             'show_out_of_stock_products'  => ['nullable', 'boolean'],
             'session_timeout'             => ['nullable', 'integer', 'min:0', 'max:1440'],
+            'max_login_attempts'          => ['nullable', 'integer', 'min:0', 'max:20'],
+            'lockout_duration'            => ['nullable', 'integer', 'min:1', 'max:1440'],
         ]);
 
         $keys = [
@@ -54,6 +56,8 @@ class SettingController extends Controller
             'invoice_prefix',
             'purchase_prefix',
             'session_timeout',
+            'max_login_attempts',
+            'lockout_duration',
         ];
 
         foreach ($keys as $key) {
@@ -71,6 +75,8 @@ class SettingController extends Controller
 
         // Clear cached session_timeout so new value takes effect immediately
         \Illuminate\Support\Facades\Cache::forget('setting_session_timeout');
+        \Illuminate\Support\Facades\Cache::forget('setting_max_login_attempts');
+        \Illuminate\Support\Facades\Cache::forget('setting_lockout_duration');
 
         ActivityLog::log('Settings Updated', 'Company settings were updated.');
 

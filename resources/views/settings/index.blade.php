@@ -174,6 +174,44 @@
                             </div>
                         </div>
 
+                        {{-- Login Lockout Settings --}}
+                        <div class="border-top mt-3 pt-3">
+                            <p class="fw-semibold mb-3">
+                                <i class="bx bx-lock-alt text-danger me-1"></i>
+                                Login Lockout Settings
+                            </p>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Max Login Attempts</label>
+                                    <div class="input-group">
+                                        <input class="form-control @error('max_login_attempts') is-invalid @enderror"
+                                            name="max_login_attempts" type="number" min="0" max="20"
+                                            step="1" placeholder="e.g. 5"
+                                            value="{{ old('max_login_attempts', $settings->get('max_login_attempts', '5')) }}">
+                                        <span class="input-group-text">tries</span>
+                                        @error('max_login_attempts')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-text">Set <strong>0</strong> to disable lockout.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Lockout Duration</label>
+                                    <div class="input-group">
+                                        <input class="form-control @error('lockout_duration') is-invalid @enderror"
+                                            name="lockout_duration" type="number" min="1" max="1440"
+                                            step="1" placeholder="e.g. 15"
+                                            value="{{ old('lockout_duration', $settings->get('lockout_duration', '15')) }}">
+                                        <span class="input-group-text">min</span>
+                                        @error('lockout_duration')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-text">How long to lock the account after max attempts.</div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
     // User Management CRUD Resource Route
     Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::patch('users/{user}/unlock', [UserController::class, 'unlock'])->name('users.unlock');
     Route::delete('users/bulk-delete', [UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
     Route::resource('users', UserController::class);
 

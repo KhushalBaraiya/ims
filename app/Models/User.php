@@ -30,6 +30,8 @@ class User extends Authenticatable
         'last_login_at',
         'language',
         'currency',
+        'failed_login_attempts',
+        'locked_until',
     ];
 
     /**
@@ -50,9 +52,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'last_login_at' => 'datetime',
+            'email_verified_at'      => 'datetime',
+            'password'               => 'hashed',
+            'last_login_at'          => 'datetime',
+            'locked_until'           => 'datetime',
         ];
     }
 }

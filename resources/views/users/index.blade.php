@@ -206,6 +206,13 @@
                                             {{ $u->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                         </span>
                                     @endcan
+                                    {{-- Locked badge --}}
+                                    @if ($u->locked_until && now()->lt($u->locked_until))
+                                        <span class="badge rounded-pill bg-warning text-dark ms-1"
+                                            title="Locked until {{ $u->locked_until->format('d M Y H:i') }}">
+                                            <i class="bx bx-lock-alt me-1"></i>Locked
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="text-muted small">{{ $u->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
@@ -223,6 +230,15 @@
                                                 title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
+                                            {{-- Unlock button — shown only when account is locked --}}
+                                            @if ($u->locked_until && now()->lt($u->locked_until))
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action btn-unlock"
+                                                    data-id="{{ $u->id }}" data-name="{{ $u->name }}"
+                                                    title="Unlock Account" style="width:30px;height:30px;padding:0;">
+                                                    <i class="bx bx-lock-open-alt" style="font-size:1rem;"></i>
+                                                </button>
+                                            @endif
                                         @endcan
                                         @can('users.delete')
                                             @if (auth()->id() !== $u->id)
@@ -323,6 +339,47 @@
                             '{{ __('messages.inactive') }}');
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }
+                });
+            });
+
+            // Unlock Account
+            $(document).on('click', '.btn-unlock', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const btn = $(this);
+                Swal.fire({
+                    title: 'Unlock Account',
+                    text: `Unlock "${name}"? This will reset failed login attempts.`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#696cff',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Unlock',
+                    cancelButtonText: '{{ __('messages.cancel') }}'
+                }).then((r) => {
+                    if (!r.isConfirmed) return;
+                    btn.prop('disabled', true);
+                    $.ajax({
+                        url: `/users/${id}/unlock`,
+                        type: 'PATCH',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
+                            if (res.success) {
+                                showAdminToast(res.message, 'success');
+                                setTimeout(() => window.location.reload(), 1200);
+                            } else {
+                                showAdminToast(res.message, 'error');
+                                btn.prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showAdminToast('{{ __('messages.error_occurred') }}',
+                                'error');
+                            btn.prop('disabled', false);
+                        }
+                    });
                 });
             });
 

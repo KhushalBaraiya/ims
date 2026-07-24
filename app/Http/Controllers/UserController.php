@@ -176,6 +176,26 @@ class UserController extends Controller
     }
 
     /**
+     * Unlock a locked user account (reset failed attempts & locked_until).
+     */
+    public function unlock(User $user): JsonResponse
+    {
+        Gate::authorize('users.update');
+
+        $user->update([
+            'failed_login_attempts' => 0,
+            'locked_until'          => null,
+        ]);
+
+        ActivityLog::log('User Account Unlocked', "Admin manually unlocked account for: {$user->name}");
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$user->name}'s account has been unlocked successfully.",
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(User $user, Request $request): RedirectResponse|JsonResponse
