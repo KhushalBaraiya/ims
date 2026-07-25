@@ -25,7 +25,7 @@ class PurchaseReturnController extends Controller
     {
         Gate::authorize('purchase_returns.view');
 
-        $query = PurchaseReturn::with(['supplier', 'user', 'purchase'])->latest();
+        $query = PurchaseReturn::with(['supplier', 'user', 'purchase', 'items'])->latest();
 
         if ($request->filled('return_no')) {
             $query->where('return_no', 'like', "%{$request->return_no}%");
@@ -66,6 +66,9 @@ class PurchaseReturnController extends Controller
     /**
      * Store a newly created purchase return.
      *
+     * Purchase Return = Stock OUT (items leave warehouse back to supplier).
+     * So on Completed: stock is DECREMENTED.
+     *
      * Two modes:
      *  - With purchase_id: validate items belong to that purchase and respect already-returned qty limits.
      *  - Without purchase_id: validate only that current stock >= qty to return.
@@ -87,7 +90,7 @@ class PurchaseReturnController extends Controller
                 $qty = (int) $item['quantity'];
                 if ($qty <= 0) continue;
 
-                $product = Product::with('stock')->findOrFail($item['product_id']);
+                $product   = Product::with('stock')->findOrFail($item['product_id']);
                 $unitPrice = (float) $item['unit_price'];
 
                 if ($purchase) {
@@ -109,7 +112,7 @@ class PurchaseReturnController extends Controller
                     $unitPrice = (float) $purchaseItem->purchase_price;
                 }
 
-                // Stock check for Completed status
+                // Stock check: ensure enough stock exists to return (decrement)
                 if ($request->status === 'Completed') {
                     $currentStock = $product->stock->quantity ?? 0;
                     if ($currentStock < $qty) {
@@ -152,13 +155,14 @@ class PurchaseReturnController extends Controller
                 'user_id'         => auth()->id(),
             ]);
 
-            // ── STEP 3: Create items and decrement stock ──
+            // ── STEP 3: Create items and DECREMENT stock (Purchase Return = Stock OUT) ──
             foreach ($itemsToProcess as $item) {
                 $return->items()->create($item);
 
                 if ($request->status === 'Completed') {
-                    $product = Product::findOrFail($item['product_id']);
-                    $product->stock->decrement('quantity', $item['quantity']);
+                    $product = Product::with('stock')->findOrFail($item['product_id']);
+                    $stock   = $product->stock ?? $product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->decrement('quantity', $item['quantity']);
                 }
             }
 
@@ -198,6 +202,9 @@ class PurchaseReturnController extends Controller
 
     /**
      * Update the specified purchase return.
+     *
+     * Purchase Return = Stock OUT (decrement on Completed).
+     * Reversal of old Completed return = add stock back (increment).
      *
      * Two modes:
      *  - With linked purchase: validate against original purchase.
@@ -244,9 +251,10 @@ class PurchaseReturnController extends Controller
 
                     $unitPrice = (float) $purchaseItem->purchase_price;
 
-                    // Stock check after reversing old completed return
+                    // Stock check: after reversing old completed return, ensure stock >= new qty
                     if ($newStatus === 'Completed') {
                         $oldReturnedQty     = $purchaseReturn->items->where('product_id', $item['product_id'])->sum('quantity');
+                        // Adding back old qty (reversal) then subtracting new qty
                         $stockAfterReversal = ($product->stock->quantity ?? 0) + ($oldStatus === 'Completed' ? $oldReturnedQty : 0);
                         if ($stockAfterReversal < $qty) {
                             DB::rollBack();
@@ -255,7 +263,7 @@ class PurchaseReturnController extends Controller
                         }
                     }
                 } else {
-                    // Standalone: just check stock
+                    // Standalone: check stock after reversal
                     if ($newStatus === 'Completed') {
                         $oldReturnedQty     = $purchaseReturn->items->where('product_id', $item['product_id'])->sum('quantity');
                         $stockAfterReversal = ($product->stock->quantity ?? 0) + ($oldStatus === 'Completed' ? $oldReturnedQty : 0);
@@ -278,23 +286,25 @@ class PurchaseReturnController extends Controller
                 ];
             }
 
-            // ── STEP 2: Reverse previous stock ──
+            // ── STEP 2: Reverse previous stock (old Completed = stock was decremented, so add it back) ──
             if ($oldStatus === 'Completed') {
                 foreach ($purchaseReturn->items as $oldItem) {
-                    $oldItem->product->stock->increment('quantity', $oldItem->quantity);
+                    $stock = $oldItem->product->stock ?? $oldItem->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->increment('quantity', $oldItem->quantity);
                 }
             }
 
             // ── STEP 3: Delete old items ──
             $purchaseReturn->items()->delete();
 
-            // ── STEP 4: Create new items and apply new stock ──
+            // ── STEP 4: Create new items and DECREMENT stock (Purchase Return = Stock OUT) ──
             foreach ($itemsToProcess as $item) {
                 $purchaseReturn->items()->create($item);
 
                 if ($newStatus === 'Completed') {
-                    $product = Product::findOrFail($item['product_id']);
-                    $product->stock->decrement('quantity', $item['quantity']);
+                    $product = Product::with('stock')->findOrFail($item['product_id']);
+                    $stock   = $product->stock ?? $product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->decrement('quantity', $item['quantity']);
                 }
             }
 
@@ -320,6 +330,7 @@ class PurchaseReturnController extends Controller
 
     /**
      * Remove the specified purchase return.
+     * Deleting a Completed return = undo the stock decrement → INCREMENT stock back.
      */
     public function destroy(PurchaseReturn $purchaseReturn, Request $request): RedirectResponse|JsonResponse
     {
@@ -327,10 +338,11 @@ class PurchaseReturnController extends Controller
 
         DB::beginTransaction();
         try {
-            // Reverse stock: add back what was returned if status was Completed
+            // Reverse stock: add back what was decremented when return was completed
             if ($purchaseReturn->status === 'Completed') {
                 foreach ($purchaseReturn->items as $item) {
-                    $item->product->stock->increment('quantity', $item->quantity);
+                    $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->increment('quantity', $item->quantity);
                 }
             }
 
@@ -356,6 +368,7 @@ class PurchaseReturnController extends Controller
 
     /**
      * Bulk delete purchase returns.
+     * Deleting Completed returns = undo stock decrements → INCREMENT stock back.
      */
     public function bulkDestroy(Request $request): JsonResponse
     {
@@ -374,7 +387,8 @@ class PurchaseReturnController extends Controller
                 if (!$ret) continue;
                 if ($ret->status === 'Completed') {
                     foreach ($ret->items as $item) {
-                        $item->product->stock->increment('quantity', $item->quantity);
+                        $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                        $stock->increment('quantity', $item->quantity);
                     }
                 }
                 $ret->delete();

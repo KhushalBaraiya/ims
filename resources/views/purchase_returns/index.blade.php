@@ -171,6 +171,7 @@
                             <th>{{ __('messages.th_date') }}</th>
                             <th>{{ __('messages.th_purchase_no') }}</th>
                             <th>{{ __('messages.th_supplier') }}</th>
+                            <th class="text-center">QTY</th>
                             <th class="text-end">{{ __('messages.th_total') }}</th>
                             <th class="text-end">{{ __('messages.th_refunded') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
@@ -196,6 +197,9 @@
                                     @endif
                                 </td>
                                 <td><strong>{{ $return->supplier->name ?? '-' }}</strong></td>
+                                <td class="text-center fw-bold text-danger">
+                                    {{ $return->items->sum('quantity') }}
+                                </td>
                                 <td class="text-end fw-bold">{{ format_currency($return->grand_total) }}</td>
                                 <td class="text-end text-success fw-semibold">
                                     {{ format_currency($return->refunded_amount) }}</td>
@@ -361,13 +365,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
+                    title: '{{ __('messages.confirm_delete') }}',
                     text: 'Stock will be reversed for Completed returns. This cannot be undone.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -381,7 +385,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -403,7 +407,3 @@
         });
     </script>
 @endpush
-
-
-
-

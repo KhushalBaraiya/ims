@@ -403,7 +403,8 @@ class PurchaseController extends Controller
 
                 // ── Safe — reverse stock ──
                 foreach ($purchase->items as $item) {
-                    $item->product->stock->decrement('quantity', $item->quantity);
+                    $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->decrement('quantity', $item->quantity);
                 }
             }
 
@@ -454,7 +455,8 @@ class PurchaseController extends Controller
                         }
                     }
                     foreach ($purchase->items as $item) {
-                        $item->product->stock->decrement('quantity', $item->quantity);
+                        $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                        $stock->decrement('quantity', $item->quantity);
                     }
                 }
                 $purchase->delete();

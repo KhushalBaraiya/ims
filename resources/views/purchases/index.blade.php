@@ -169,6 +169,7 @@
                             <th>{{ __('messages.th_date') }}</th>
                             <th>{{ __('messages.th_supplier') }}</th>
                             <th>{{ __('messages.th_items') }}</th>
+                            <th class="text-center">QTY</th>
                             <th class="text-end">{{ __('messages.th_total') }}</th>
                             <th class="text-end">{{ __('messages.th_paid') }}</th>
                             <th class="text-end">{{ __('messages.th_due') }}</th>
@@ -187,6 +188,9 @@
                                 <td class="text-muted">{{ $purchase->purchase_date }}</td>
                                 <td><strong>{{ $purchase->supplier->name ?? '-' }}</strong></td>
                                 <td class="text-muted">{{ $purchase->items->count() }} {{ __('messages.items_count') }}
+                                </td>
+                                <td class="text-center fw-bold text-primary">
+                                    {{ $purchase->items->sum('quantity') }}
                                 </td>
                                 <td class="fw-bold text-end">{{ format_currency($purchase->grand_total) }}</td>
                                 <td class="text-success fw-semibold text-end">

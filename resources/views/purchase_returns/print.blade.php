@@ -97,9 +97,10 @@
                     <p class="text-[11px] text-slate-400">
                         @if ($companyEmail)
                             Email: {{ $companyEmail }}
-                            @endif@if ($companyPhone)
-                                | Phone: {{ $companyPhone }}
-                            @endif
+                        @endif
+                        @if ($companyPhone)
+                            | Phone: {{ $companyPhone }}
+                        @endif
                     </p>
                 @endif
             </div>
@@ -127,7 +128,6 @@
                 <p class="font-bold text-slate-800 text-base">{{ $purchaseReturn->supplier->name ?? 'N/A' }}</p>
                 @if ($purchaseReturn->supplier?->email)
                     <p class="text-sm text-slate-500 mt-0.5">{{ $purchaseReturn->supplier->email }}</p>
-                    `
                 @endif
                 @if ($purchaseReturn->supplier?->phone)
                     <p class="text-sm text-slate-500">{{ $purchaseReturn->supplier->phone }}</p>

@@ -89,8 +89,8 @@ class SaleController extends Controller
             // Validate & decrement stock when Completed
             if ($request->status === 'Completed') {
                 foreach ($request->items as $item) {
-                    $product = Product::findOrFail($item['product_id']);
-                    $stock = $product->stock;
+                    $product = Product::with('stock')->findOrFail($item['product_id']);
+                    $stock   = $product->stock ?? $product->stock()->firstOrCreate(['quantity' => 0]);
                     if ($stock->quantity < $item['quantity']) {
                         throw new \Exception("Insufficient stock for product: {$product->name}. Available: {$stock->quantity}.");
                     }
@@ -222,18 +222,20 @@ class SaleController extends Controller
             // 1. Restore previous stock if was Completed
             if ($oldStatus === 'Completed') {
                 foreach ($sale->items as $oldItem) {
-                    $oldItem->product->stock->increment('quantity', $oldItem->quantity);
+                    $stock = $oldItem->product->stock ?? $oldItem->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->increment('quantity', $oldItem->quantity);
                 }
             }
 
             // 2. Validate & decrement stock if new status is Completed
             if ($newStatus === 'Completed') {
                 foreach ($request->items as $item) {
-                    $product = Product::findOrFail($item['product_id']);
-                    if ($product->stock->quantity < $item['quantity']) {
-                        throw new \Exception("Insufficient stock for product: {$product->name}. Available: {$product->stock->quantity}.");
+                    $product = Product::with('stock')->findOrFail($item['product_id']);
+                    $stock   = $product->stock ?? $product->stock()->firstOrCreate(['quantity' => 0]);
+                    if ($stock->quantity < $item['quantity']) {
+                        throw new \Exception("Insufficient stock for product: {$product->name}. Available: {$stock->quantity}.");
                     }
-                    $product->stock->decrement('quantity', $item['quantity']);
+                    $stock->decrement('quantity', $item['quantity']);
                 }
             }
 
@@ -321,7 +323,8 @@ class SaleController extends Controller
         try {
             if ($sale->status === 'Completed') {
                 foreach ($sale->items as $item) {
-                    $item->product->stock->increment('quantity', $item->quantity);
+                    $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->increment('quantity', $item->quantity);
                 }
             }
 
@@ -510,7 +513,8 @@ class SaleController extends Controller
                 if (!$sale) continue;
                 if ($sale->status === 'Completed') {
                     foreach ($sale->items as $item) {
-                        $item->product->stock->increment('quantity', $item->quantity);
+                        $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                        $stock->increment('quantity', $item->quantity);
                     }
                 }
                 $sale->delete();

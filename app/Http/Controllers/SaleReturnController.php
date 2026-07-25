@@ -155,8 +155,9 @@ class SaleReturnController extends Controller
                 $saleReturn->items()->create($item);
 
                 if ($request->status === 'Completed') {
-                    $product = Product::findOrFail($item['product_id']);
-                    $product->stock->increment('quantity', $item['quantity']);
+                    $product = Product::with('stock')->findOrFail($item['product_id']);
+                    $stock   = $product->stock ?? $product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->increment('quantity', $item['quantity']);
                 }
             }
 
@@ -262,7 +263,8 @@ class SaleReturnController extends Controller
                     if ($currentStock < $oldItem->quantity) {
                         throw new \Exception("Cannot revert return for \"{$oldItem->product->name}\": current stock ({$currentStock}) is less than previously returned quantity ({$oldItem->quantity}).");
                     }
-                    $oldItem->product->stock->decrement('quantity', $oldItem->quantity);
+                    $stock = $oldItem->product->stock ?? $oldItem->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->decrement('quantity', $oldItem->quantity);
                 }
             }
 
@@ -274,8 +276,9 @@ class SaleReturnController extends Controller
                 $saleReturn->items()->create($item);
 
                 if ($newStatus === 'Completed') {
-                    $product = Product::findOrFail($item['product_id']);
-                    $product->stock->increment('quantity', $item['quantity']);
+                    $product = Product::with('stock')->findOrFail($item['product_id']);
+                    $stock   = $product->stock ?? $product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->increment('quantity', $item['quantity']);
                 }
             }
 
@@ -313,7 +316,8 @@ class SaleReturnController extends Controller
             // Decrease stock by returned quantity to reverse return
             if ($saleReturn->status === 'Completed') {
                 foreach ($saleReturn->items as $item) {
-                    $item->product->stock->decrement('quantity', $item->quantity);
+                    $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                    $stock->decrement('quantity', $item->quantity);
                 }
             }
 
@@ -363,7 +367,8 @@ class SaleReturnController extends Controller
                 if (!$ret) continue;
                 if ($ret->status === 'Completed') {
                     foreach ($ret->items as $item) {
-                        $item->product->stock->decrement('quantity', $item->quantity);
+                        $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);
+                        $stock->decrement('quantity', $item->quantity);
                     }
                 }
                 $ret->delete();
