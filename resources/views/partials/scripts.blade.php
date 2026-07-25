@@ -252,6 +252,71 @@
     });
 </script>
 
+{{-- ─── Mobile: overlay click closes sidebar + swipe-to-open ─────────── --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // 1. Overlay click → close sidebar
+        var overlay = document.querySelector('.layout-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                if (window.Helpers && typeof window.Helpers.toggleCollapsed === 'function') {
+                    window.Helpers.setCollapsed(true, true);
+                }
+            });
+        }
+
+        // 2. Swipe right on left-edge (≤40px) → open sidebar on mobile
+        // Swipe left anywhere on sidebar → close sidebar on mobile
+        var touchStartX = 0;
+        var touchStartY = 0;
+        var SWIPE_THRESHOLD = 60; // min px to register swipe
+        var EDGE_ZONE = 40; // px from left edge to trigger open
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, {
+            passive: true
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!window.Helpers || typeof window.Helpers.isSmallScreen !== 'function') return;
+            if (!window.Helpers.isSmallScreen()) return; // desktop only needs click
+
+            var dx = e.changedTouches[0].clientX - touchStartX;
+            var dy = e.changedTouches[0].clientY - touchStartY;
+
+            // Ignore if more vertical than horizontal
+            if (Math.abs(dy) > Math.abs(dx)) return;
+
+            // Swipe RIGHT from left edge → open
+            if (touchStartX <= EDGE_ZONE && dx > SWIPE_THRESHOLD) {
+                window.Helpers.setCollapsed(false, true);
+                return;
+            }
+
+            // Swipe LEFT while sidebar is open → close
+            if (dx < -SWIPE_THRESHOLD && !window.Helpers.isCollapsed()) {
+                window.Helpers.setCollapsed(true, true);
+            }
+        }, {
+            passive: true
+        });
+
+        // 3. Close sidebar on nav-link click (mobile — navigate away)
+        var menuLinks = document.querySelectorAll('#layout-menu .menu-link:not(.menu-toggle)');
+        menuLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.Helpers && window.Helpers.isSmallScreen && window.Helpers
+                    .isSmallScreen()) {
+                    window.Helpers.setCollapsed(true, true);
+                }
+            });
+        });
+    });
+</script>
+
 {{-- ─── Page-specific scripts ──────────────────────────────────────────────── --}}
 @stack('scripts')
 

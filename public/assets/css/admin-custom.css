@@ -2641,3 +2641,298 @@ table .table-light th {
     background: rgba(105, 108, 255, .09) !important;
     color: #696cff !important;
 }
+
+
+/* ================================================================
+   RESPONSIVE ADDITIONS — All missing breakpoint fixes
+   Added: 2026 — covers purchase/sale forms, col-md-*, navbar,
+   stat cards, summary rows, filter panels, action button rows
+   ================================================================ */
+
+/* ── 1. ALL col-md-* go full width on mobile ───────────────────── */
+@media (max-width: 575.98px) {
+
+    /* Every col-md-* variant becomes full width */
+    [class*="col-md-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* col-lg-3 / col-lg-4 / col-lg-5 / col-lg-6 — full width */
+    [class*="col-lg-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    /* EXCEPT stat cards — keep 2-column grid */
+    .col-6[class*="col-md-"],
+    .col-6[class*="col-xl-"],
+    .col-6.col-md-3,
+    .col-6.col-md-4,
+    .col-6.col-xl-3 {
+        width: 50% !important;
+        max-width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+}
+
+/* ── 2. Tablet: col-lg-3 purchase/sale sidebar full width ────────── */
+@media (max-width: 991.98px) {
+    .col-lg-3.col-md-4 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .col-lg-9.col-md-8 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ── 3. Purchase / Sale form — items table scroll ────────────────── */
+#purchaseItemsTable,
+#saleItemsTable,
+#adjustmentItemsTable,
+#returnItemsTable {
+    min-width: 620px;
+}
+
+@media (max-width: 767.98px) {
+
+    /* Inputs inside purchase/sale rows — compact */
+    .pur-qty-input,
+    .pur-price-input,
+    .pur-sm-input {
+        width: 56px !important;
+        font-size: 11px !important;
+    }
+
+    /* Totals summary row */
+    #sum_subtotal,
+    #sum_grandtotal,
+    #sum_due,
+    #sum_change {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ── 4. Filter panel — form controls stack on mobile ─────────────── */
+@media (max-width: 575.98px) {
+
+    /* Filter form rows — all cols stack */
+    .card .card-body form .row.g-3>[class*="col-md-"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Filter buttons row */
+    .col-md-2.d-flex.gap-2 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Summary stats: 2 col grid */
+    .row.g-3.mb-4>.col-6,
+    .row.g-3.mb-4>.col-md-3 {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+}
+
+/* ── 5. Navbar — hide clock on small, compress items ─────────────── */
+@media (max-width: 575.98px) {
+
+    /* Clock — already d-none d-lg-flex but add extra safety */
+    #navClock-time,
+    #navClock-date {
+        display: none !important;
+    }
+
+    /* Currency code text — hide on very small */
+    .cs-trigger span.fw-bold {
+        display: none !important;
+    }
+
+    /* Navbar items gap */
+    .navbar-nav.align-items-center.ms-auto.flex-row.gap-1 {
+        gap: 2px !important;
+    }
+
+    /* Navbar padding */
+    .layout-navbar.navbar-detached {
+        padding: 0.5rem 0.75rem !important;
+    }
+}
+
+/* ── 6. Sidebar overlay close works on all screens ───────────────── */
+.layout-overlay {
+    cursor: pointer;
+}
+
+/* ── 7. Summary stat cards — prevent text overflow ───────────────── */
+@media (max-width: 575.98px) {
+    .card-body.d-flex.align-items-center.gap-3 {
+        gap: 0.6rem !important;
+        padding: 0.75rem !important;
+    }
+
+    /* Stat numbers */
+    .fw-bold.fs-4.lh-1 {
+        font-size: 1.1rem !important;
+    }
+
+    .fw-bold.text-primary.mb-0,
+    .fw-bold.text-success.mb-0,
+    .fw-bold.text-danger.mb-0,
+    .fw-bold.text-info.mb-0 {
+        font-size: 1.1rem !important;
+    }
+
+    /* Avatar icon boxes in stat cards */
+    .avatar-initial.rounded-circle[style*="width:44px"] {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* ── 8. Page action buttons row — wrap and align start ───────────── */
+@media (max-width: 575.98px) {
+
+    .d-flex.justify-content-end.gap-2.mt-4,
+    .d-flex.justify-content-end.gap-2.mt-3 {
+        justify-content: flex-start !important;
+        flex-wrap: wrap;
+    }
+
+    /* Full-width primary submit on mobile */
+    .d-flex.justify-content-end.gap-2 .btn-primary {
+        flex: 1 1 100%;
+        order: -1;
+    }
+}
+
+/* ── 9. Table action buttons — keep circular, don't wrap ─────────── */
+@media (max-width: 575.98px) {
+    td .d-flex.align-items-center.justify-content-center.gap-1 {
+        gap: 3px !important;
+    }
+
+    .btn-action,
+    .btn.btn-sm.btn-icon.rounded-circle {
+        width: 28px !important;
+        height: 28px !important;
+        flex-shrink: 0;
+    }
+}
+
+/* ── 10. Hero ribbon on edit pages — stack on mobile ──────────────── */
+@media (max-width: 575.98px) {
+    .card.mb-4.border-0.shadow-sm .card-body.d-flex.align-items-center.gap-3 {
+        flex-wrap: wrap;
+        gap: 0.6rem !important;
+    }
+}
+
+/* ── 11. Purchases/Sales form — col-lg-3 sidebar + col-lg-9 main ─── */
+@media (max-width: 991.98px) {
+
+    /* Purchase order info sidebar */
+    .row.g-4>.col-lg-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .row.g-4>.col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ── 12. Modal — full-screen on mobile ────────────────────────────── */
+@media (max-width: 575.98px) {
+    .modal-dialog:not(.modal-fullscreen) {
+        margin: 0.4rem auto;
+        max-width: calc(100vw - 0.8rem) !important;
+    }
+
+    .modal-dialog[style*="max-width:480px"],
+    .modal-dialog[style*="max-width: 480px"] {
+        max-width: calc(100vw - 0.8rem) !important;
+    }
+
+    .modal-body.p-4 {
+        padding: 1rem !important;
+    }
+
+    .modal-footer.px-4 {
+        padding: 0.75rem 1rem !important;
+    }
+}
+
+/* ── 13. DataTables — search input full width on mobile ───────────── */
+@media (max-width: 575.98px) {
+    .dataTables_filter input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .dataTables_filter label {
+        width: 100% !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.3rem !important;
+    }
+}
+
+/* ── 14. Card headers with many items — wrap nicely ───────────────── */
+@media (max-width: 575.98px) {
+    .card-header.d-flex {
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Badge + button groups in card headers */
+    .card-header .d-flex.align-items-center.gap-2 {
+        flex-wrap: wrap;
+        gap: 0.3rem !important;
+    }
+}
+
+/* ── 15. Role/Permission checkboxes grid — 2 col on mobile ──────── */
+@media (max-width: 575.98px) {
+    .row.g-3 .col-md-4.col-sm-6 {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+    }
+}
+
+/* ── 16. Stock adjustment table compact on mobile ─────────────────── */
+@media (max-width: 767.98px) {
+    .btn-group.w-100[role="group"] label.btn {
+        font-size: 10px !important;
+        padding: 3px 5px !important;
+    }
+}
+
+/* ── 17. Reports page — col-md-* filter row stack ────────────────── */
+@media (max-width: 575.98px) {
+
+    .row.g-3 .col-md-2,
+    .row.g-3 .col-md-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ── 18. Prevent horizontal scroll on body ────────────────────────── */
+body {
+    overflow-x: hidden;
+}
+
+.layout-wrapper {
+    overflow-x: hidden;
+}
