@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PurchaseRequest;
+use App\Mail\PurchaseInvoiceMail;
 use App\Models\ActivityLog;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -12,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class PurchaseController extends Controller
@@ -116,6 +118,9 @@ class PurchaseController extends Controller
             "Updated payment for purchase: {$purchase->purchase_no}. Paid: {$paidAmount}, Due: {$dueAmount}"
         );
 
+        // Send updated invoice email to supplier
+        $this->sendPurchaseInvoiceMail($purchase->fresh(['supplier', 'user', 'items.product']));
+
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -197,6 +202,9 @@ class PurchaseController extends Controller
                 'Purchase Created',
                 "Created purchase order: {$purchase->purchase_no} from Supplier: {$purchase->supplier->name}"
             );
+
+            // Send invoice email to supplier if they have an email address
+            $this->sendPurchaseInvoiceMail($purchase);
 
             return redirect()->route('purchases.index')->with('success', 'Purchase order created successfully.');
         } catch (\Exception $e) {
@@ -555,5 +563,21 @@ class PurchaseController extends Controller
         }
 
         return 'PUR-'.date('Ymd').'-'.uniqid();
+    }
+
+    /**
+     * Send purchase invoice email to the supplier (silently — never blocks the request).
+     */
+    private function sendPurchaseInvoiceMail(Purchase $purchase): void
+    {
+        try {
+            $purchase->loadMissing(['supplier', 'user', 'items.product']);
+            $email = $purchase->supplier?->email;
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($email)->send(new PurchaseInvoiceMail($purchase));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Purchase invoice mail failed: ' . $e->getMessage());
+        }
     }
 }

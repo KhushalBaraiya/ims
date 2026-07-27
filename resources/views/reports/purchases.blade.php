@@ -62,26 +62,24 @@
                         <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                         <select name="status" class="form-select form-select-sm">
                             <option value="">{{ __('messages.all_statuses') }}</option>
-                            <option value="Completed" {{ request('status') === 'Completed' ? 'selected' : '' }}>
-                                {{ __('messages.completed') }}</option>
-                            <option value="Pending" {{ request('status') === 'Pending' ? 'selected' : '' }}>
+                            <option value="received" {{ request('status') === 'received' ? 'selected' : '' }}>Received
+                            </option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>
                                 {{ __('messages.pending') }}</option>
-                            <option value="Cancelled" {{ request('status') === 'Cancelled' ? 'selected' : '' }}>
-                                {{ __('messages.cancelled') }}</option>
+                            <option value="ordered" {{ request('status') === 'ordered' ? 'selected' : '' }}>Ordered
+                            </option>
+                            <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>
+                                {{ __('messages.draft') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.payment_method') }}</label>
                         <select name="payment_method" class="form-select form-select-sm">
                             <option value="">{{ __('messages.rpt_all_methods') }}</option>
-                            <option value="Cash" {{ request('payment_method') === 'Cash' ? 'selected' : '' }}>Cash
+                            <option value="Cash" {{ request('payment_method') === 'Cash' ? 'selected' : '' }}>💵 Cash
                             </option>
-                            <option value="Card" {{ request('payment_method') === 'Card' ? 'selected' : '' }}>Card
-                            </option>
-                            <option value="Bank" {{ request('payment_method') === 'Bank' ? 'selected' : '' }}>Bank
-                                Transfer</option>
-                            <option value="Credit" {{ request('payment_method') === 'Credit' ? 'selected' : '' }}>Credit
-                            </option>
+                            <option value="Razorpay" {{ request('payment_method') === 'Razorpay' ? 'selected' : '' }}>⚡
+                                Razorpay</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end gap-1">
@@ -259,13 +257,17 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($p->status === 'received' || $p->status === 'Completed')
-                                            <span class="badge bg-success rounded-pill">{{ __('messages.received_badge') }}</span>
+                                            <span
+                                                class="badge bg-success rounded-pill">{{ __('messages.received_badge') }}</span>
                                         @elseif ($p->status === 'pending' || $p->status === 'Pending')
-                                            <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
+                                            <span
+                                                class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
                                         @elseif ($p->status === 'ordered')
-                                            <span class="badge bg-primary rounded-pill">{{ __('messages.ordered_badge') }}</span>
+                                            <span
+                                                class="badge bg-primary rounded-pill">{{ __('messages.ordered_badge') }}</span>
                                         @elseif ($p->status === 'draft')
-                                            <span class="badge bg-secondary rounded-pill">{{ __('messages.draft') }}</span>
+                                            <span
+                                                class="badge bg-secondary rounded-pill">{{ __('messages.draft') }}</span>
                                         @else
                                             <span class="badge bg-danger rounded-pill">{{ $p->status }}</span>
                                         @endif
@@ -352,4 +354,3 @@
         }
     </style>
 @endpush
-

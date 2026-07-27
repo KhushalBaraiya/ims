@@ -18,7 +18,7 @@
 
 
 
-    <form action="{{ route('settings.update') }}" method="POST">
+    <form action="{{ route('settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -76,6 +76,31 @@
                             @enderror
                         </div>
 
+                        {{-- Company Logo Upload --}}
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">
+                                <i class="bx bx-image text-primary me-1"></i>Company Logo
+                            </label>
+                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                @if ($settings->get('company_logo'))
+                                    <div class="border rounded p-2 bg-light flex-shrink-0" style="line-height:0;">
+                                        <img src="{{ asset('uploads/settings/' . $settings->get('company_logo')) }}"
+                                            alt="Company Logo" style="height:52px;max-width:160px;object-fit:contain;">
+                                    </div>
+                                @endif
+                                <div class="flex-grow-1">
+                                    <input class="form-control @error('company_logo') is-invalid @enderror"
+                                        name="company_logo" type="file"
+                                        accept="image/png,image/jpeg,image/svg+xml,image/webp">
+                                    <div class="form-text">PNG, JPG, SVG or WebP. Max 2MB. Shown on invoices and emails.
+                                    </div>
+                                    @error('company_logo')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -124,8 +149,8 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">{{ __('messages.tax_percentage') }} (%)</label>
                                 <input class="form-control @error('tax_percentage') is-invalid @enderror" max="100"
-                                    min="0" name="tax_percentage" placeholder="e.g. 18" step="0.01" type="number"
-                                    value="{{ old('tax_percentage', $settings->get('tax_percentage')) }}">
+                                    min="0" name="tax_percentage" placeholder="e.g. 18" step="0.01"
+                                    type="number" value="{{ old('tax_percentage', $settings->get('tax_percentage')) }}">
                                 @error('tax_percentage')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -212,6 +237,121 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+
+            {{-- ── SMTP / Email Settings ── --}}
+            <div class="col-lg-8 col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header border-bottom bg-white py-3">
+                        <h6 class="fw-semibold mb-0">
+                            <i class="bx bx-envelope text-info me-2"></i>Email / SMTP Settings
+                        </h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-info d-flex gap-2 align-items-start py-2 px-3 mb-4"
+                            style="font-size:.82rem;">
+                            <i class="bx bx-info-circle mt-1 flex-shrink-0"></i>
+                            <div>
+                                These settings control how invoice emails are sent. For Gmail use
+                                <strong>smtp.gmail.com</strong> (Port 587, TLS) with an
+                                <strong>App Password</strong>. Changes are written directly to <code>.env</code>.
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Mailer Driver</label>
+                                <select class="form-select @error('mail_mailer') is-invalid @enderror"
+                                    name="mail_mailer">
+                                    <option value="smtp"
+                                        {{ old('mail_mailer', $settings->get('mail_mailer', 'smtp')) === 'smtp' ? 'selected' : '' }}>
+                                        SMTP</option>
+                                    <option value="log"
+                                        {{ old('mail_mailer', $settings->get('mail_mailer', 'smtp')) === 'log' ? 'selected' : '' }}>
+                                        Log (debug only)</option>
+                                    <option value="array"
+                                        {{ old('mail_mailer', $settings->get('mail_mailer', 'smtp')) === 'array' ? 'selected' : '' }}>
+                                        Array (testing)</option>
+                                </select>
+                                @error('mail_mailer')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold">SMTP Host</label>
+                                <input class="form-control @error('mail_host') is-invalid @enderror" name="mail_host"
+                                    type="text" placeholder="smtp.gmail.com"
+                                    value="{{ old('mail_host', $settings->get('mail_host', env('MAIL_HOST', ''))) }}">
+                                @error('mail_host')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">SMTP Port</label>
+                                <input class="form-control @error('mail_port') is-invalid @enderror" name="mail_port"
+                                    type="number" placeholder="587"
+                                    value="{{ old('mail_port', $settings->get('mail_port', env('MAIL_PORT', '587'))) }}">
+                                @error('mail_port')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Encryption</label>
+                                <select class="form-select @error('mail_encryption') is-invalid @enderror"
+                                    name="mail_encryption">
+                                    <option value="tls"
+                                        {{ old('mail_encryption', $settings->get('mail_encryption', 'tls')) === 'tls' ? 'selected' : '' }}>
+                                        TLS (Port 587)</option>
+                                    <option value="ssl"
+                                        {{ old('mail_encryption', $settings->get('mail_encryption', 'tls')) === 'ssl' ? 'selected' : '' }}>
+                                        SSL (Port 465)</option>
+                                    <option value=""
+                                        {{ old('mail_encryption', $settings->get('mail_encryption', 'tls')) === '' ? 'selected' : '' }}>
+                                        None</option>
+                                </select>
+                                @error('mail_encryption')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold">SMTP Username</label>
+                                <input class="form-control @error('mail_username') is-invalid @enderror"
+                                    name="mail_username" type="text" placeholder="your@gmail.com"
+                                    value="{{ old('mail_username', $settings->get('mail_username', env('MAIL_USERNAME', ''))) }}">
+                                @error('mail_username')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">SMTP Password / App Password</label>
+                                <input class="form-control @error('mail_password') is-invalid @enderror"
+                                    name="mail_password" type="password" placeholder="Leave blank to keep existing"
+                                    autocomplete="new-password">
+                                <div class="form-text">Leave blank to keep current password.</div>
+                                @error('mail_password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">From Email Address</label>
+                                <input class="form-control @error('mail_from_address') is-invalid @enderror"
+                                    name="mail_from_address" type="email" placeholder="noreply@yourcompany.com"
+                                    value="{{ old('mail_from_address', $settings->get('mail_from_address', env('MAIL_FROM_ADDRESS', ''))) }}">
+                                @error('mail_from_address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">From Name</label>
+                                <input class="form-control @error('mail_from_name') is-invalid @enderror"
+                                    name="mail_from_name" type="text" placeholder="Your Company Name"
+                                    value="{{ old('mail_from_name', $settings->get('mail_from_name', env('MAIL_FROM_NAME', ''))) }}">
+                                @error('mail_from_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

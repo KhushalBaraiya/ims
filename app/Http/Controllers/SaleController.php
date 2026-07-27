@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaleRequest;
+use App\Mail\SaleInvoiceMail;
 use App\Models\ActivityLog;
 use App\Models\Customer;
 use App\Models\Product;
@@ -14,6 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class SaleController extends Controller
@@ -166,6 +168,9 @@ class SaleController extends Controller
 
             DB::commit();
             ActivityLog::log('Sale Created', "Created sale invoice: {$sale->invoice_no} for Customer: {$sale->customer->name}");
+
+            // Send invoice email to customer if they have an email address
+            $this->sendSaleInvoiceMail($sale);
 
             return redirect()->route('sales.index')->with('success', 'Sale created successfully.');
         } catch (\Exception $e) {
@@ -405,6 +410,9 @@ class SaleController extends Controller
             "Updated payment for sale: {$sale->invoice_no}. Paid: {$paidAmount}, Due: {$dueAmount}"
         );
 
+        // Send updated invoice email to customer
+        $this->sendSaleInvoiceMail($sale->fresh(['customer', 'user', 'salesPerson', 'items.product']));
+
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -563,5 +571,21 @@ class SaleController extends Controller
         }
 
         return 'INV-'.date('Ymd').'-'.uniqid();
+    }
+
+    /**
+     * Send sale invoice email to the customer (silently — never blocks the request).
+     */
+    private function sendSaleInvoiceMail(Sale $sale): void
+    {
+        try {
+            $sale->loadMissing(['customer', 'user', 'salesPerson', 'items.product']);
+            $email = $sale->customer?->email;
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($email)->send(new SaleInvoiceMail($sale));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Sale invoice mail failed: ' . $e->getMessage());
+        }
     }
 }

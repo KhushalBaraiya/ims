@@ -303,6 +303,7 @@ class ReportController extends Controller
             ->when($request->date_to,   fn($q) => $q->whereDate('invoice_date', '<=', $request->date_to))
             ->when($request->customer_id, fn($q) => $q->where('customer_id', $request->customer_id))
             ->when($request->status,    fn($q) => $q->where('status', $request->status))
+            ->when($request->payment_method, fn($q) => $q->where('payment_method', $request->payment_method))
             ->latest('invoice_date')->get();
 
         $filename = 'sales-report-' . now()->format('Y-m-d') . '.csv';
@@ -310,11 +311,12 @@ class ReportController extends Controller
         return response()->streamDownload(function () use ($sales) {
             $h = fopen('php://output', 'w');
             fwrite($h, "\xEF\xBB\xBF");
-            fputcsv($h, ['Invoice No', 'Date', 'Customer', 'Status', 'Payment Status', 'Subtotal', 'Tax', 'Discount', 'Shipping', 'Grand Total', 'Paid', 'Due', 'Created By']);
+            fputcsv($h, ['Invoice No', 'Date', 'Customer', 'Status', 'Payment Status', 'Payment Method', 'Subtotal', 'Tax', 'Discount', 'Shipping', 'Grand Total', 'Paid', 'Due', 'Created By']);
             foreach ($sales as $s) {
                 fputcsv($h, [
                     $s->invoice_no, $s->invoice_date,
                     $s->customer->name ?? '-', $s->status, $s->payment_status,
+                    $s->payment_method ?? '-',
                     number_format($s->sub_total, 2), number_format($s->tax_amount, 2),
                     number_format($s->discount_amount, 2), number_format($s->shipping_amount, 2),
                     number_format($s->grand_total, 2), number_format($s->paid_amount, 2),
@@ -337,6 +339,7 @@ class ReportController extends Controller
             ->when($request->date_to,     fn($q) => $q->whereDate('purchase_date', '<=', $request->date_to))
             ->when($request->supplier_id, fn($q) => $q->where('supplier_id', $request->supplier_id))
             ->when($request->status,      fn($q) => $q->where('status', $request->status))
+            ->when($request->payment_method, fn($q) => $q->where('payment_method', $request->payment_method))
             ->latest('purchase_date')->get();
 
         $filename = 'purchases-report-' . now()->format('Y-m-d') . '.csv';
@@ -344,12 +347,13 @@ class ReportController extends Controller
         return response()->streamDownload(function () use ($purchases) {
             $h = fopen('php://output', 'w');
             fwrite($h, "\xEF\xBB\xBF");
-            fputcsv($h, ['Purchase No', 'Date', 'Supplier', 'Ref No', 'Status', 'Payment Status', 'Subtotal', 'Tax', 'Discount', 'Shipping', 'Grand Total', 'Paid', 'Due', 'Created By']);
+            fputcsv($h, ['Purchase No', 'Date', 'Supplier', 'Ref No', 'Status', 'Payment Status', 'Payment Method', 'Subtotal', 'Tax', 'Discount', 'Shipping', 'Grand Total', 'Paid', 'Due', 'Created By']);
             foreach ($purchases as $p) {
                 fputcsv($h, [
                     $p->purchase_no, $p->purchase_date,
                     $p->supplier->name ?? '-', $p->reference_no ?? '-',
                     $p->status, $p->payment_status,
+                    $p->payment_method ?? '-',
                     number_format($p->sub_total, 2), number_format($p->tax_amount, 2),
                     number_format($p->discount_amount, 2), number_format($p->shipping_amount, 2),
                     number_format($p->grand_total, 2), number_format($p->paid_amount, 2),

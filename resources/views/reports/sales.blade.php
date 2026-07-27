@@ -75,10 +75,10 @@
                         <label class="form-label fw-semibold small">{{ __('messages.payment_method') }}</label>
                         <select name="payment_method" class="form-select form-select-sm">
                             <option value="">{{ __('messages.rpt_all_methods') }}</option>
-                            @foreach (['Cash', 'Card', 'UPI / QR', 'Bank Transfer', 'Cheque'] as $m)
-                                <option value="{{ $m }}"
-                                    {{ request('payment_method') === $m ? 'selected' : '' }}>{{ $m }}</option>
-                            @endforeach
+                            <option value="Cash" {{ request('payment_method') === 'Cash' ? 'selected' : '' }}>💵 Cash
+                            </option>
+                            <option value="Razorpay" {{ request('payment_method') === 'Razorpay' ? 'selected' : '' }}>⚡
+                                Razorpay</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end gap-1">
@@ -262,11 +262,14 @@
                                     </td>
                                     <td class="text-center">
                                         @if ($sale->status === 'Completed')
-                                            <span class="badge bg-success rounded-pill">{{ __('messages.completed_label') }}</span>
+                                            <span
+                                                class="badge bg-success rounded-pill">{{ __('messages.completed_label') }}</span>
                                         @elseif ($sale->status === 'Pending')
-                                            <span class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
+                                            <span
+                                                class="badge bg-warning text-dark rounded-pill">{{ __('messages.pending') }}</span>
                                         @elseif ($sale->status === 'Draft')
-                                            <span class="badge bg-secondary rounded-pill">{{ __('messages.draft') }}</span>
+                                            <span
+                                                class="badge bg-secondary rounded-pill">{{ __('messages.draft') }}</span>
                                         @else
                                             <span class="badge bg-danger rounded-pill">{{ $sale->status }}</span>
                                         @endif
@@ -362,5 +365,3 @@
         });
     </script>
 @endpush
-
-

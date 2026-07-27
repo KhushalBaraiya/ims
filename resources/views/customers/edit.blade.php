@@ -18,8 +18,10 @@
         <a href="{{ route('customers.index') }}" class="btn btn-outline-secondary">
             <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
         </a>
-    </div>
+    </div> 
 
+ 
+  
     <form id="customerForm" method="POST" action="{{ route('customers.update', $customer->id) }}" data-validate="true">
         @csrf @method('PUT')
         <div class="row g-4">

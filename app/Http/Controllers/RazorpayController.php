@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PurchaseInvoiceMail;
 use App\Models\ActivityLog;
 use App\Models\Product;
 use App\Models\Purchase;
@@ -12,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Razorpay\Api\Api;
 use Razorpay\Api\Errors\SignatureVerificationError;
 
@@ -150,6 +152,17 @@ class RazorpayController extends Controller
                 'Purchase Created (Razorpay)',
                 "Created purchase {$purchase->purchase_no} via Razorpay payment {$razorpayPaymentId}."
             );
+
+            // Send invoice email to supplier after successful Razorpay payment
+            try {
+                $purchase->loadMissing(['supplier', 'user', 'items.product']);
+                $email = $purchase->supplier?->email;
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    Mail::to($email)->send(new PurchaseInvoiceMail($purchase));
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Purchase invoice mail failed (Razorpay): ' . $e->getMessage());
+            }
 
             return redirect()->route('purchases.index')
                 ->with('success', "Purchase saved & payment of ₹{$grandTotal} received via Razorpay (ID: {$razorpayPaymentId}).");

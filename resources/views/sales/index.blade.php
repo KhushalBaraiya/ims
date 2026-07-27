@@ -594,7 +594,7 @@
 
                 // Clear previous Razorpay fields
                 $('#modal_razorpay_order_id, #modal_razorpay_payment_id, #modal_razorpay_signature').val(
-                '');
+                    '');
 
                 updateModalDue();
                 toggleModalRazorpay();
@@ -711,7 +711,7 @@
                                             'danger');
                                         btn.prop('disabled', false).html(
                                             '<i class="bx bx-bolt-circle me-1"></i> Pay via Razorpay'
-                                            );
+                                        );
                                     }
                                 });
                             },
@@ -719,7 +719,7 @@
                                 ondismiss: function() {
                                     btn.prop('disabled', false).html(
                                         '<i class="bx bx-bolt-circle me-1"></i> Pay via Razorpay'
-                                        );
+                                    );
                                     showAdminToast('Payment cancelled.', 'warning');
                                 }
                             }
@@ -730,7 +730,7 @@
                                 'danger');
                             btn.prop('disabled', false).html(
                                 '<i class="bx bx-bolt-circle me-1"></i> Pay via Razorpay'
-                                );
+                            );
                         });
                         rzp.open();
                     },

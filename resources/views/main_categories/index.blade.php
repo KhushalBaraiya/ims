@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.main_categories'))
 
 @section('content')
@@ -51,7 +51,9 @@
                                 {{ __('messages.inactive') }}</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex gap-2">
+                    <di
+                    
+                    v class="col-md-2 d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">
                             <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
                         </button>
@@ -375,7 +377,7 @@
             }
 
             // -- Bulk Delete ----------------------------------------------
-            $('#bulkDeleteBtn').on('click', function() {
+            $('# ').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();
                 }).get();

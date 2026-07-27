@@ -34,7 +34,7 @@
 
     {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
-           <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
+        <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             <div class="rounded-circle border border-2 border-white flex-shrink-0 d-flex align-items-center justify-content-center"
                 style="width:54px;height:54px;background:rgba(255,255,255,.2)">
                 <i class="bx bx-receipt text-white fs-4"></i>
@@ -406,11 +406,8 @@
                                     class="text-danger">*</span></label>
                             <select class="form-select form-select-lg" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required>
-                                <option value="Cash">{{ __('messages.pm_cash') }}</option>
-                                <option value="Bank Transfer">{{ __('messages.pm_bank') }}</option>
-                                <option value="Card">{{ __('messages.pm_card') }}</option>
-                                <option value="UPI / QR">{{ __('messages.pm_upi') }}</option>
-                                <option value="Cheque">{{ __('messages.pm_cheque') }}</option>
+                                <option value="Cash">💵 {{ __('messages.pm_cash') }}</option>
+                                <option value="Razorpay">⚡ Razorpay (Online Payment)</option>
                             </select>
                         </div>
                     </div>

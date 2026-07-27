@@ -357,17 +357,16 @@
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
                         <option value="">{{ __('messages.select_method') }}</option>
-                        @foreach (['Cash', 'Bank Transfer', 'Card' => 'Credit/Debit Card', 'UPI / QR' => 'UPI / QR Code', 'Cheque'] as $val => $label)
-                            @php
-                                $optVal = is_string($val) ? $val : $label;
-                                $optLabel = $label;
-                            @endphp
-                            <option
-                                {{ old('payment_method', $sale->payment_method ?? 'Cash') === $optVal ? 'selected' : '' }}
-                                value="{{ $optVal }}">
-                                {{ $optLabel }}
-                            </option>
-                        @endforeach
+                        <option
+                            {{ old('payment_method', $sale->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}
+                            value="Cash">
+                            💵 Cash
+                        </option>
+                        <option
+                            {{ old('payment_method', $sale->payment_method ?? '') === 'Razorpay' ? 'selected' : '' }}
+                            value="Razorpay">
+                            ⚡ Razorpay (Online Payment)
+                        </option>
                     </select>
                     @error('payment_method')
                         <div class="invalid-feedback">{{ $message }}</div>

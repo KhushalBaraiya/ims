@@ -56,6 +56,7 @@
         $companyAddress = $settings['company_address'] ?? '';
         $companyPhone = $settings['company_phone'] ?? '';
         $companyEmail = $settings['company_email'] ?? '';
+        $companyLogo = $settings['company_logo'] ?? null;
     @endphp
 
     <!-- Top Action Bar (hidden on print) -->
@@ -86,6 +87,10 @@
         <!-- Header -->
         <div class="flex flex-wrap justify-between items-start gap-4 border-b border-slate-200 pb-8 mb-8">
             <div>
+                @if ($companyLogo && file_exists(public_path('uploads/settings/' . $companyLogo)))
+                    <img src="{{ asset('uploads/settings/' . $companyLogo) }}" alt="{{ $companyName }}"
+                        style="height:52px;max-width:180px;object-fit:contain;margin-bottom:8px;display:block;">
+                @endif
                 <div
                     class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1 print:text-black print:bg-none">
                     ⚡ {{ $companyName }}
