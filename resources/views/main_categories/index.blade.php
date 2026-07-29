@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.main_categories'))
 
 @section('content')
@@ -14,18 +14,18 @@
                 </ol>
             </nav>
         </div>
-        @can('main_categories.create')
-            <div class="d-flex gap-2 align-items-center">
-                @can('main_categories.delete')
-                    <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                        <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
-                    </button>
-                @endcan
+        <div class="d-flex gap-2 align-items-center">
+            @can('main_categories.delete')
+                <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
+                </button>
+            @endcan
+            @can('main_categories.create')
                 <a href="{{ route('main-categories.create') }}" class="btn btn-outline-primary">
                     <i class="bx bx-plus me-1"></i> {{ __('messages.add_category') }}
                 </a>
-            </div>
-        @endcan
+            @endcan
+        </div>
     </div>
 
     {{-- Filters --}}
@@ -51,9 +51,7 @@
                                 {{ __('messages.inactive') }}</option>
                         </select>
                     </div>
-                    <di
-                    
-                    v class="col-md-2 d-flex gap-2">
+                    <div class="col-md-2 d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">
                             <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
                         </button>
@@ -148,7 +146,6 @@
                             <th>{{ __('messages.th_code') }}</th>
                             <th class="text-center">{{ __('messages.sub_categories') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
-                            {{-- <th>{{ __('messages.th_created') }}</th> --}}
                             <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
                         </tr>
                     </thead>
@@ -168,9 +165,8 @@
                                         <div>
                                             <strong>{{ $category->name }}</strong>
                                             @if ($category->description)
-                                                <small class="d-block text-muted text-truncate" style="max-width:200px;">
-                                                    {{ $category->description }}
-                                                </small>
+                                                <small class="d-block text-muted text-truncate"
+                                                    style="max-width:220px;">{{ $category->description }}</small>
                                             @endif
                                         </div>
                                     </div>
@@ -182,7 +178,8 @@
                                 <td class="text-center">
                                     @can('main_categories.update')
                                         <button type="button"
-                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1
+                                                {{ $category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
                                             style="background:transparent;cursor:pointer;" data-id="{{ $category->id }}"
                                             data-status="{{ $category->status }}"
                                             title="{{ __('messages.click_to_toggle') }}">
@@ -190,13 +187,13 @@
                                         </button>
                                     @else
                                         <span
-                                            class="badge rounded-pill border fw-semibold px-3 py-1 {{ $category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            class="badge rounded-pill border fw-semibold px-3 py-1
+                                            {{ $category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
                                             style="background:transparent;">
                                             {{ $category->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                         </span>
                                     @endcan
                                 </td>
-                                {{-- <td class="text-muted small">{{ $category->created_at->format('d M Y') }}</td> --}}
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
                                         @can('main_categories.view')
@@ -242,11 +239,11 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const dt = $('#categoriesTable').DataTable({
+            $('#categoriesTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 order: [
-                    [0, 'desc']
+                    [0, 'asc']
                 ],
                 columnDefs: [{
                     targets: 'no-sort',
@@ -268,62 +265,50 @@
                 }
             });
 
-            // Status toggle
             $(document).on('click', '.status-toggle-btn', function() {
-                const btn = $(this);
-                const id = btn.data('id');
-                const currentStatus = btn.data('status');
-
+                const btn = $(this),
+                    id = btn.data('id'),
+                    cur = btn.data('status');
                 $.ajax({
                     url: `/main-categories/${id}/toggle-status`,
                     type: 'PATCH',
                     data: {
                         _token: '{{ csrf_token() }}'
                     },
-                    beforeSend: function() {
-                        btn.prop('disabled', true).html(
-                            '<span class="spinner-border spinner-border-sm" role="status"></span>'
-                        );
-                    },
-                    success: function(res) {
+                    beforeSend: () => btn.prop('disabled', true).html(
+                        '<span class="spinner-border spinner-border-sm"></span>'),
+                    success: (res) => {
+                        btn.prop('disabled', false);
                         if (res.success) {
-                            const newStatus = res.status;
-                            btn.data('status', newStatus);
-                            if (newStatus === 'active') {
-                                btn.removeClass('border-danger text-danger').addClass(
-                                    'border-success text-success');
-                                btn.text('{{ __('messages.active') }}');
-                            } else {
-                                btn.removeClass('border-success text-success').addClass(
-                                    'border-danger text-danger');
-                                btn.text('{{ __('messages.inactive') }}');
-                            }
+                            btn.data('status', res.status)
+                                .removeClass(
+                                    'border-success text-success border-danger text-danger')
+                                .addClass(res.status === 'active' ?
+                                    'border-success text-success' : 'border-danger text-danger')
+                                .text(res.status === 'active' ? '{{ __('messages.active') }}' :
+                                    '{{ __('messages.inactive') }}');
                             showAdminToast(res.message, 'success');
-                            // -- Update stat cards live ------------------
                             $('#statActiveCount').text($('.status-toggle-btn.border-success')
                                 .length);
                             $('#statInactiveCount').text($('.status-toggle-btn.border-danger')
                                 .length);
                         } else {
                             showAdminToast(res.message ||
-                                '{{ __('messages.error_occurred') }}',
-                                'error');
+                                '{{ __('messages.error_occurred') }}', 'error');
                         }
-                        btn.prop('disabled', false);
                     },
-                    error: function() {
-                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
-                        btn.prop('disabled', false);
-                        btn.text(currentStatus === 'active' ? '{{ __('messages.active') }}' :
+                    error: () => {
+                        btn.prop('disabled', false).text(cur === 'active' ?
+                            '{{ __('messages.active') }}' :
                             '{{ __('messages.inactive') }}');
+                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }
                 });
             });
 
-            // Delete
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
-                    name = $(this).data('name'),` 
+                    name = $(this).data('name'),
                     form = $(`#delete-form-${id}`);
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
@@ -334,91 +319,76 @@
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
-                }).then((r) => {
-                    if (r.isConfirmed) {
-                        $.ajax({
-                            url: form.attr('action'),
-                            type: 'POST',
-                            data: form.serialize(),
-                            success: function(res) {
-                                if (res.success) {
-                                    Swal.fire({
-                                        title: '{{ __('messages.deleted_title') }}',
-                                        text: res.message,
-                                        icon: 'success',
-                                        confirmButtonColor: '#696cff'
-                                    }).then(() => window.location.reload());
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
-                            },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
-                        });
-                    }
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: res => {
+                            if (res.success) Swal.fire({
+                                title: '{{ __('messages.deleted_title') }}',
+                                text: res.message,
+                                icon: 'success',
+                                confirmButtonColor: '#696cff'
+                            }).then(() => location.reload());
+                            else showAdminToast(res.message, 'error');
+                        },
+                        error: () => showAdminToast('{{ __('messages.error_occurred') }}',
+                            'error')
+                    });
                 });
             });
 
-            // -- Bulk Select ----------------------------------------------
             $('#selectAll').on('change', function() {
                 $('.row-checkbox').prop('checked', this.checked);
-                toggleBulkBtn();
+                toggleBulk();
             });
             $(document).on('change', '.row-checkbox', function() {
-                $('#selectAll').prop('checked', $('.row-checkbox:not(:checked)').length === 0);
-                toggleBulkBtn();
+                $('#selectAll').prop('checked', !$('.row-checkbox:not(:checked)').length);
+                toggleBulk();
             });
 
-            function toggleBulkBtn() {
-                const count = $('.row-checkbox:checked').length;
-                count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
+            function toggleBulk() {
+                const c = $('.row-checkbox:checked').length;
+                c > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
             }
 
-            // -- Bulk Delete ----------------------------------------------
-            $('# ').on('click', function() {
+            $('#bulkDeleteBtn').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
-                    text: '{{ __('messages.confirm_delete') }}',
+                    text: `Delete ${ids.length} item(s)?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
-                }).then((r) => {
-                    if (r.isConfirmed) {
-                        $.ajax({
-                            url: '{{ route('main-categories.bulk-destroy') }}',
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                ids: ids
-                            },
-                            success: function(res) {
-                                if (res.success) {
-                                    Swal.fire({
-                                            title: '{{ __('messages.deleted_title') }}',
-                                            text: res.message,
-                                            icon: 'success',
-                                            confirmButtonColor: '#696cff'
-                                        })
-                                        .then(() => window.location.reload());
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
-                            },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
-                        });
-                    }
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    $.ajax({
+                        url: '{{ route('main-categories.bulk-destroy') }}',
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            ids: ids
+                        },
+                        success: res => {
+                            if (res.success) Swal.fire({
+                                title: '{{ __('messages.deleted_title') }}',
+                                text: res.message,
+                                icon: 'success',
+                                confirmButtonColor: '#696cff'
+                            }).then(() => location.reload());
+                            else showAdminToast(res.message, 'error');
+                        },
+                        error: () => showAdminToast('{{ __('messages.error_occurred') }}',
+                            'error')
+                    });
                 });
             });
         });

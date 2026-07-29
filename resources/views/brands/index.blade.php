@@ -14,18 +14,18 @@
                 </ol>
             </nav>
         </div>
-        @can('brands.create')
-            <div class="d-flex gap-2 align-items-center">
-                @can('brands.delete')
-                    <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                        <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
-                    </button>
-                @endcan
+        <div class="d-flex gap-2 align-items-center">
+            @can('brands.delete')
+                <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
+                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
+                </button>
+            @endcan
+            @can('brands.create')
                 <a href="{{ route('brands.create') }}" class="btn btn-outline-primary">
                     <i class="bx bx-plus me-1"></i> {{ __('messages.add_brand') }}
                 </a>
-            </div>
-        @endcan
+            @endcan
+        </div>
     </div>
 
     {{-- Filters --}}
@@ -89,7 +89,8 @@
                     </span>
                     <div>
                         <div class="fw-bold fs-4 lh-1 text-success" id="statActiveCount">
-                            {{ $brands->where('status', 'active')->count() }}</div>
+                            {{ $brands->where('status', 'active')->count() }}
+                        </div>
                         <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
                     </div>
                 </div>
@@ -154,7 +155,7 @@
                                 <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
-                                        {{-- Avatar / Image --}}
+                                        {{-- Logo or icon --}}
                                         @if ($brand->image)
                                             <img src="{{ asset('uploads/brands/' . $brand->image) }}"
                                                 class="rounded-circle flex-shrink-0"
@@ -162,18 +163,17 @@
                                                 onerror="this.outerHTML='<div class=\'rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center bg-label-primary\' style=\'width:40px;height:40px;\'><i class=\'bx bx-award\' style=\'font-size:1rem;\'></i></div>'"
                                                 alt="{{ $brand->name }}">
                                         @else
-                                            <div class="rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center bg-label-primary"
-                                                style="width:40px;height:40px;">
-                                                <i class="bx bx-award" style="font-size:1rem;"></i>
+                                            <div class="avatar avatar-sm flex-shrink-0">
+                                                <span class="avatar-initial rounded-circle bg-label-primary">
+                                                    <i class="bx bx-award" style="font-size:1rem;"></i>
+                                                </span>
                                             </div>
                                         @endif
-                                        {{-- Name + Description --}}
                                         <div>
-                                            <strong class="d-block">{{ $brand->name }}</strong>
+                                            <strong>{{ $brand->name }}</strong>
                                             @if ($brand->description)
-                                                <small class="text-muted text-truncate d-block" style="max-width:180px;">
-                                                    {{ $brand->description }}
-                                                </small>
+                                                <small class="d-block text-muted text-truncate"
+                                                    style="max-width:200px;">{{ $brand->description }}</small>
                                             @endif
                                         </div>
                                     </div>
@@ -185,14 +185,16 @@
                                 <td class="text-center">
                                     @can('brands.update')
                                         <button type="button"
-                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1
+                                                {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
                                             style="background:transparent;cursor:pointer;" data-id="{{ $brand->id }}"
                                             data-status="{{ $brand->status }}" title="{{ __('messages.click_to_toggle') }}">
                                             {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                         </button>
                                     @else
                                         <span
-                                            class="badge rounded-pill border fw-semibold px-3 py-1 {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            class="badge rounded-pill border fw-semibold px-3 py-1
+                                            {{ $brand->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
                                             style="background:transparent;">
                                             {{ $brand->status === 'active' ? __('messages.active') : __('messages.inactive') }}
                                         </span>
@@ -244,11 +246,11 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const dt = $('#brandsTable').DataTable({
+            $('#brandsTable').DataTable({
                 responsive: true,
                 pageLength: 10,
                 order: [
-                    [0, 'desc']
+                    [0, 'asc']
                 ],
                 columnDefs: [{
                     targets: 'no-sort',
@@ -270,58 +272,47 @@
                 }
             });
 
-            // Status toggle
             $(document).on('click', '.status-toggle-btn', function() {
-                const btn = $(this);
-                const id = btn.data('id');
-                const currentStatus = btn.data('status');
-
+                const btn = $(this),
+                    id = btn.data('id'),
+                    cur = btn.data('status');
                 $.ajax({
                     url: `/brands/${id}/toggle-status`,
                     type: 'PATCH',
                     data: {
                         _token: '{{ csrf_token() }}'
                     },
-                    beforeSend: function() {
-                        btn.prop('disabled', true).html(
-                            '<span class="spinner-border spinner-border-sm" role="status"></span>'
-                        );
-                    },
-                    success: function(res) {
+                    beforeSend: () => btn.prop('disabled', true).html(
+                        '<span class="spinner-border spinner-border-sm"></span>'),
+                    success: (res) => {
+                        btn.prop('disabled', false);
                         if (res.success) {
-                            const newStatus = res.status;
-                            btn.data('status', newStatus);
-                            if (newStatus === 'active') {
-                                btn.removeClass('border-danger text-danger').addClass(
-                                    'border-success text-success');
-                                btn.text('{{ __('messages.active') }}');
-                            } else {
-                                btn.removeClass('border-success text-success').addClass(
-                                    'border-danger text-danger');
-                                btn.text('{{ __('messages.inactive') }}');
-                            }
+                            btn.data('status', res.status)
+                                .removeClass(
+                                    'border-success text-success border-danger text-danger')
+                                .addClass(res.status === 'active' ?
+                                    'border-success text-success' : 'border-danger text-danger')
+                                .text(res.status === 'active' ? '{{ __('messages.active') }}' :
+                                    '{{ __('messages.inactive') }}');
                             showAdminToast(res.message, 'success');
+                            $('#statActiveCount').text($('.status-toggle-btn.border-success')
+                                .length);
+                            $('#statInactiveCount').text($('.status-toggle-btn.border-danger')
+                                .length);
                         } else {
                             showAdminToast(res.message ||
                                 '{{ __('messages.error_occurred') }}', 'error');
                         }
-                        btn.prop('disabled', false);
-                        // -- Update stat cards live ------------------
-                        const activeCount = $('.status-toggle-btn.border-success').length;
-                        const inactiveCount = $('.status-toggle-btn.border-danger').length;
-                        $('#statActiveCount').text(activeCount);
-                        $('#statInactiveCount').text(inactiveCount);
                     },
-                    error: function() {
-                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
-                        btn.prop('disabled', false);
-                        btn.text(currentStatus === 'active' ? '{{ __('messages.active') }}' :
+                    error: () => {
+                        btn.prop('disabled', false).text(cur === 'active' ?
+                            '{{ __('messages.active') }}' :
                             '{{ __('messages.inactive') }}');
+                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }
                 });
             });
 
-            // Delete
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
                     name = $(this).data('name'),
@@ -335,49 +326,41 @@
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
-                }).then((r) => {
-                    if (r.isConfirmed) {
-                        $.ajax({
-                            url: form.attr('action'),
-                            type: 'POST',
-                            data: form.serialize(),
-                            success: function(res) {
-                                if (res.success) {
-                                    Swal.fire({
-                                        title: '{{ __('messages.deleted_title') }}',
-                                        text: res.message,
-                                        icon: 'success',
-                                        confirmButtonColor: '#696cff'
-                                    }).then(() => window.location.reload());
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
-                            },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
-                        });
-                    }
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    $.ajax({
+                        url: form.attr('action'),
+                        type: 'POST',
+                        data: form.serialize(),
+                        success: res => {
+                            if (res.success) Swal.fire({
+                                title: '{{ __('messages.deleted_title') }}',
+                                text: res.message,
+                                icon: 'success',
+                                confirmButtonColor: '#696cff'
+                            }).then(() => location.reload());
+                            else showAdminToast(res.message, 'error');
+                        },
+                        error: () => showAdminToast('{{ __('messages.error_occurred') }}',
+                            'error')
+                    });
                 });
             });
 
-            // -- Bulk Select ----------------------------------------------
             $('#selectAll').on('change', function() {
                 $('.row-checkbox').prop('checked', this.checked);
-                toggleBulkBtn();
+                toggleBulk();
             });
             $(document).on('change', '.row-checkbox', function() {
-                $('#selectAll').prop('checked', $('.row-checkbox:not(:checked)').length === 0);
-                toggleBulkBtn();
+                $('#selectAll').prop('checked', !$('.row-checkbox:not(:checked)').length);
+                toggleBulk();
             });
 
-            function toggleBulkBtn() {
-                const count = $('.row-checkbox:checked').length;
-                count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
+            function toggleBulk() {
+                const c = $('.row-checkbox:checked').length;
+                c > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
             }
 
-            // -- Bulk Delete ----------------------------------------------
             $('#bulkDeleteBtn').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();
@@ -385,41 +368,34 @@
                 if (!ids.length) return;
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
-                    text: '{{ __('messages.confirm_delete') }}',
+                    text: `Delete ${ids.length} item(s)?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
-                }).then((r) => {
-                    if (r.isConfirmed) {
-                        $.ajax({
-                            url: '{{ route('brands.bulk-destroy') }}',
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                ids: ids
-                            },
-                            success: function(res) {
-                                if (res.success) {
-                                    Swal.fire({
-                                            title: '{{ __('messages.deleted_title') }}',
-                                            text: res.message,
-                                            icon: 'success',
-                                            confirmButtonColor: '#696cff'
-                                        })
-                                        .then(() => window.location.reload());
-                                } else {
-                                    showAdminToast(res.message, 'error');
-                                }
-                            },
-                            error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
-                                    'error');
-                            }
-                        });
-                    }
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    $.ajax({
+                        url: '{{ route('brands.bulk-destroy') }}',
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            ids: ids
+                        },
+                        success: res => {
+                            if (res.success) Swal.fire({
+                                title: '{{ __('messages.deleted_title') }}',
+                                text: res.message,
+                                icon: 'success',
+                                confirmButtonColor: '#696cff'
+                            }).then(() => location.reload());
+                            else showAdminToast(res.message, 'error');
+                        },
+                        error: () => showAdminToast('{{ __('messages.error_occurred') }}',
+                            'error')
+                    });
                 });
             });
         });
