@@ -95,6 +95,20 @@
                             <span class="text-muted small fw-semibold">{{ __('messages.supplier') }}</span>
                             <span class="fw-bold text-end">{{ $purchase->supplier->name ?? '-' }}</span>
                         </li>
+                        @if ($purchase->supplier && $purchase->supplier->currency)
+                            <li class="d-flex justify-content-between border-bottom py-2">
+                                <span class="text-muted small fw-semibold">Currency</span>
+                                <span class="fw-semibold text-end">
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle"
+                                        style="font-size:11px;padding:3px 8px;">
+                                        <i class="bx bx-coin me-1"
+                                            style="font-size:10px;"></i>{{ $purchase->supplier->currency->symbol }}
+                                        {{ $purchase->supplier->currency->name }}
+                                        ({{ $purchase->supplier->currency->code }})
+                                    </span>
+                                </span>
+                            </li>
+                        @endif
                         <li class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">{{ __('messages.reference_no') }}</span>
                             <span class="small">{{ $purchase->reference_no ?: '-' }}</span>

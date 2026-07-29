@@ -114,11 +114,17 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
-                        class="form-select @error('supplier_id') is-invalid @enderror" name="supplier_id" required>
+                        class="form-select @error('supplier_id') is-invalid @enderror" id="supplierSelect"
+                        name="supplier_id" required>
                         <option value="">{{ __('messages.select_supplier') }}</option>
                         @foreach ($suppliers as $s)
                             <option {{ old('supplier_id', $purchase->supplier_id ?? '') == $s->id ? 'selected' : '' }}
-                                value="{{ $s->id }}">
+                                value="{{ $s->id }}"
+                                data-currency-symbol="{{ optional($s->currency)->symbol ?? '' }}"
+                                data-currency-code="{{ optional($s->currency)->code ?? '' }}"
+                                data-currency-name="{{ optional($s->currency)->name ?? '' }}"
+                                data-currency-rate="{{ optional($s->currency)->exchange_rate ?? '' }}"
+                                data-currency-id="{{ optional($s->currency)->id ?? '' }}">
                                 {{ $s->name }} {{ $s->phone ? '(' . $s->phone . ')' : '' }}
                             </option>
                         @endforeach
@@ -126,6 +132,16 @@
                     @error('supplier_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    {{-- Currency badge — updated via JS when supplier changes --}}
+                    <div class="mt-1" id="supplierCurrencyBadge" style="display:none;">
+                        <span
+                            class="badge bg-warning-subtle text-warning border border-warning-subtle d-inline-flex align-items-center gap-1"
+                            style="font-size:11px;padding:4px 8px;">
+                            <i class="bx bx-coin"></i>
+                            <span id="supplierCurrencyLabel">—</span>
+                        </span>
+                        <span class="text-muted ms-1" id="supplierCurrencyNote" style="font-size:11px;"></span>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Reference / PO No</label>
@@ -242,6 +258,11 @@
                 <input type="hidden" id="razorpay_order_id" name="razorpay_order_id">
                 <input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id">
                 <input type="hidden" id="razorpay_signature" name="razorpay_signature">
+                {{-- Supplier currency exchange rate (updated via JS when supplier changes) --}}
+                <input type="hidden" id="purchase_exchange_rate" name="exchange_rate"
+                    value="{{ old('exchange_rate', $purchase->exchange_rate ?? 1) }}">
+                <input type="hidden" id="purchase_currency_id" name="currency_id"
+                    value="{{ old('currency_id', $purchase->currency_id ?? '') }}">
             </div>
         </div>
 
@@ -425,31 +446,122 @@
                 autoFillPurchaseNo();
             @endif
 
-            // ── Refresh button ────────────────────────────────────────────────
-            $('#generatePurchaseNoBtn').on('click', function() {
-                const btn = $(this);
-                btn.prop('disabled', true).html('<i class="bx bx-loader-alt bx-spin"></i>');
-                $.ajax({
-                    url: "{{ route('purchases.generate-purchase-no') }}",
-                    type: 'GET',
-                    success: function(res) {
-                        $('#purchase_no').val(res.purchase_no).focus();
-                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
-                    },
-                    error: function() {
-                        showAdminToast('Could not generate purchase number.', 'error');
-                        btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
-                    }
-                });
-            });
-
             // ── Active currency symbol from server ───────────────────────────
-            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            // currencySymbol / activeCurrencyExchangeRate are updated when supplier changes.
+            // All product prices are entered/displayed in the SUPPLIER's currency on screen,
+            // but amounts stored to DB are always in the BASE (default) currency.
+            let currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            // On edit, initialize from stored exchange rate so re-pricing math is correct
+            let activeCurrencyExchangeRate =
+                {{ (float) ($purchase->exchange_rate ?? (optional(current_currency())->exchange_rate ?? 1)) }};
+            // Track the previous rate so we can re-price existing rows when supplier changes
+            let prevExchangeRate = activeCurrencyExchangeRate;
 
             // ── Helper: format a number with the active currency symbol ──────
             function fmtCurrency(amount) {
                 return currencySymbol + parseFloat(amount).toFixed(2);
             }
+
+            // ── Auto-load supplier currency on page load if supplier already selected ──
+            function applyNewCurrency(symbol, code, name, rate, isDefault, currencyId) {
+                const newRate = parseFloat(rate) || 1;
+
+                // Re-price existing product rows when the supplier's currency changes
+                if (prevExchangeRate !== newRate && prevExchangeRate > 0) {
+                    $('#purchaseItemsContainer tr').each(function() {
+                        const row = $(this);
+                        const oldPrice = parseFloat(row.find('.price-input').val()) || 0;
+                        const oldDisc = parseFloat(row.find('.discount-input').val()) || 0;
+                        const oldTax = parseFloat(row.find('.tax-input').val()) || 0;
+                        // Re-scale: screen values were in old supplier currency, convert to new
+                        row.find('.price-input').val((oldPrice / prevExchangeRate * newRate).toFixed(2));
+                        row.find('.discount-input').val((oldDisc / prevExchangeRate * newRate).toFixed(2));
+                        row.find('.tax-input').val((oldTax / prevExchangeRate * newRate).toFixed(2));
+                    });
+                    // Also rescale shipping
+                    const oldShipping = parseFloat($('#shipping_amount').val()) || 0;
+                    if (oldShipping > 0) {
+                        $('#shipping_amount').val((oldShipping / prevExchangeRate * newRate).toFixed(2));
+                    }
+                }
+
+                currencySymbol = symbol;
+                activeCurrencyExchangeRate = newRate;
+                prevExchangeRate = newRate;
+
+                // Keep hidden fields in sync for form submission
+                $('#purchase_exchange_rate').val(newRate);
+                $('#purchase_currency_id').val(currencyId || '');
+
+                const label = symbol + ' ' + name + ' (' + code + ')' + (isDefault ? ' — default' : '');
+                $('#supplierCurrencyLabel').text(label);
+                const defaultCode =
+                    '{{ optional(\App\Models\Currency::where('is_default', true)->first())->code ?? 'INR' }}';
+                if (newRate !== 1) {
+                    $('#supplierCurrencyNote').text('1 ' + defaultCode + ' = ' + newRate.toFixed(4) + ' ' + code);
+                } else {
+                    $('#supplierCurrencyNote').text('Same as base currency');
+                }
+                $('#supplierCurrencyBadge').show();
+            }
+
+            function loadSupplierCurrency(supplierId, onDone) {
+                if (!supplierId) {
+                    $('#supplierCurrencyBadge').hide();
+                    if (typeof onDone === 'function') onDone();
+                    return;
+                }
+
+                // First: read currency from the <option> data attributes (instant, no AJAX)
+                const $option = $('#supplierSelect option[value="' + supplierId + '"]');
+                const dataSymbol = $option.data('currency-symbol');
+                const dataCode = $option.data('currency-code');
+                const dataName = $option.data('currency-name');
+                const dataRate = $option.data('currency-rate');
+                const dataCurrId = $option.data('currency-id');
+
+                if (dataSymbol && dataCode) {
+                    applyNewCurrency(dataSymbol, dataCode, dataName, dataRate, false, dataCurrId);
+                    if (typeof onDone === 'function') onDone();
+                    return;
+                }
+
+                // Fallback AJAX: supplier has no currency set → fetch system default
+                $.ajax({
+                    url: '/suppliers/' + supplierId + '/currency',
+                    type: 'GET',
+                    success: function(res) {
+                        if (res.success) {
+                            applyNewCurrency(res.symbol, res.code, res.name, res.exchange_rate, true,
+                                res.currency_id);
+                        } else {
+                            $('#supplierCurrencyBadge').hide();
+                        }
+                        if (typeof onDone === 'function') onDone();
+                    },
+                    error: function() {
+                        $('#supplierCurrencyBadge').hide();
+                        if (typeof onDone === 'function') onDone();
+                    }
+                });
+            }
+
+            // ── When supplier changes, fetch and apply their currency ─────────
+            @if (!$isReturned)
+                $('#supplierSelect').on('change', function() {
+                    const supplierId = $(this).val();
+                    loadSupplierCurrency(supplierId, function() {
+                        // Refresh all displayed amounts with the new currency symbol & rate
+                        calculateTotals();
+                    });
+                });
+
+                // Auto-trigger on page load if a supplier is already selected (edit form / validation fail)
+                const initialSupplierId = $('#supplierSelect').val();
+                if (initialSupplierId) {
+                    loadSupplierCurrency(initialSupplierId);
+                }
+            @endif
 
             $('#btnGeneratePurchaseNo').on('click', function() {
                 const btn = $(this);
@@ -532,7 +644,8 @@
                     delay: 200,
                     data: function(params) {
                         return {
-                            query: params.term || ''
+                            query: params.term || '',
+                            currency_rate: activeCurrencyExchangeRate || 1
                         };
                     },
                     processResults: function(data) {
@@ -683,10 +796,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                                                                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                                                                                style="width:28px;height:28px;padding:0;">
-                                                                                                            <i class="bx bx-trash" style="font-size:13px;"></i>
-                                                                                                        </button>`}
+                                                                                                                                                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                                                                                                                                                    style="width:28px;height:28px;padding:0;">
+                                                                                                                                                                                <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                                                                                                                                            </button>`}
                     </td>
                 </tr>`);
                 rowCount++;
@@ -727,11 +840,12 @@
                 const globalDisc = parseFloat($('#discount_amount').val()) || 0;
                 const globalTax = parseFloat($('#tax_amount').val()) || 0;
                 const shipping = parseFloat($('#shipping_amount').val()) || 0;
-                const grandTotal = totalSubtotal + globalTax + shipping - globalDisc;
-                $('#sum_grandtotal').text(fmtCurrency(grandTotal));
+                // Grand total in supplier's currency (for display)
+                const grandTotalDisplay = totalSubtotal + globalTax + shipping - globalDisc;
+                $('#sum_grandtotal').text(fmtCurrency(grandTotalDisplay));
                 const paid = parseFloat($('#paid_amount').val()) || 0;
-                $('#sum_due').text(fmtCurrency(Math.max(0, grandTotal - paid)));
-                $('#sum_change').text(fmtCurrency(Math.max(0, paid - grandTotal)));
+                $('#sum_due').text(fmtCurrency(Math.max(0, grandTotalDisplay - paid)));
+                $('#sum_change').text(fmtCurrency(Math.max(0, paid - grandTotalDisplay)));
             }
 
             $('#btnSaveDraft').on('click', function(e) {
@@ -757,6 +871,7 @@
                         sumItemDiscount += disc * qty;
                     });
                     const shipping = parseFloat($('#shipping_amount').val()) || 0;
+                    // Return grand total in SUPPLIER currency (for display / Razorpay amount in supplier's currency)
                     return totalSubtotal + sumItemTax + shipping - sumItemDiscount;
                 }
 
@@ -839,7 +954,8 @@
                                     // Change form action to Razorpay verify-and-store route
                                     const $form = btn.closest('form');
                                     $form.attr('action',
-                                        "{{ route('razorpay.verify-and-store') }}");
+                                        "{{ route('razorpay.verify-and-store') }}"
+                                    );
                                     $form.removeAttr('novalidate');
                                     $form.submit();
                                 },

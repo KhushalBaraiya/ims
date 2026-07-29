@@ -34,7 +34,8 @@ class SaleController extends Controller
         $query = Sale::with(['customer', 'user', 'items', 'returns'])->latest();
 
         // RBAC: sales.own restricts to records created by the authenticated user
-        if (! auth()->user()->can('sales.view') || auth()->user()->hasPermissionTo('sales.own') && ! auth()->user()->hasAnyRole(['super_admin', 'manager'])) {
+        if (! auth()->user()->can('sales.view')
+            || (auth()->user()->hasPermissionTo('sales.own') && ! auth()->user()->hasAnyRole(['super_admin', 'manager']))) {
             $query->where('user_id', auth()->id());
         }
 
@@ -324,6 +325,15 @@ class SaleController extends Controller
     {
         Gate::authorize('sales.delete');
 
+        // Guard: cannot delete a sale that has associated returns
+        if ($sale->returns()->exists()) {
+            $msg = 'Cannot delete this sale — it has associated sale returns. Delete the returns first.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $msg], 422);
+            }
+            return back()->withErrors(['stock_error' => $msg]);
+        }
+
         DB::beginTransaction();
         try {
             if ($sale->status === 'Completed') {
@@ -368,7 +378,10 @@ class SaleController extends Controller
         Gate::authorize('sales.update');
 
         $request->validate([
-            'paid_amount'    => 'required|numeric|min:0',
+            'paid_amount'    => ['required', 'numeric', 'min:0', \Illuminate\Validation\Rule::when(
+                $sale->grand_total > 0,
+                ['max:' . $sale->grand_total]
+            )],
             'payment_method' => 'required|string|max:100',
         ]);
 
@@ -519,6 +532,8 @@ class SaleController extends Controller
             foreach ($ids as $id) {
                 $sale = Sale::with('items.product.stock')->find($id);
                 if (!$sale) continue;
+                // Skip sales with returns — cannot delete them
+                if ($sale->returns()->exists()) continue;
                 if ($sale->status === 'Completed') {
                     foreach ($sale->items as $item) {
                         $stock = $item->product->stock ?? $item->product->stock()->firstOrCreate(['quantity' => 0]);

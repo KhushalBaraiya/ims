@@ -186,7 +186,16 @@
                                 <td class="text-muted fw-semibold d-none">{{ $purchase->id }}</td>
                                 <td><code class="fw-bold">{{ $purchase->purchase_no }}</code></td>
                                 <td class="text-muted">{{ $purchase->purchase_date }}</td>
-                                <td><strong>{{ $purchase->supplier->name ?? '-' }}</strong></td>
+                                <td><strong>{{ $purchase->supplier->name ?? '-' }}</strong>
+                                    @if ($purchase->supplier && $purchase->supplier->currency)
+                                        <br><span class="badge bg-warning-subtle text-warning border border-warning-subtle"
+                                            style="font-size:10px;padding:2px 6px;">
+                                            <i class="bx bx-coin" style="font-size:9px;"></i>
+                                            {{ $purchase->supplier->currency->symbol }}
+                                            {{ $purchase->supplier->currency->code }}
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="text-muted">{{ $purchase->items->count() }} {{ __('messages.items_count') }}
                                 </td>
                                 <td class="text-center fw-bold text-primary">

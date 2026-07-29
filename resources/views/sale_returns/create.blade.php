@@ -52,7 +52,8 @@
                     <div class="card-body p-4">
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.sales_invoice_label') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.sales_invoice_label') }} <span
+                                    class="text-danger">*</span></label>
                             <select class="form-select @error('sale_id') is-invalid @enderror" id="sale_id" name="sale_id"
                                 required>
                                 <option value="">{{ __('messages.select_invoice') }}</option>
@@ -74,7 +75,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span
+                                    class="text-danger">*</span></label>
                             <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 name="return_date" required type="date" value="{{ old('return_date', date('Y-m-d')) }}">
                             @error('return_date')
@@ -89,7 +91,8 @@
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span
+                                    class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
                                     value="Completed">{{ __('messages.completed_label') }}</option>
@@ -109,7 +112,8 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span
+                                    class="text-danger">*</span></label>
                             <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
                                 min="0" name="refunded_amount" required step="0.01" type="number"
                                 value="{{ old('refunded_amount', '0.00') }}">
@@ -132,23 +136,54 @@
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-list-ul text-info me-2"></i>Invoice Return Items
                         </h6>
-                        <span class="badge bg-label-secondary" id="itemCountBadge">{{ __('messages.no_invoice_selected') }}</span>
+                        <span class="badge bg-label-secondary"
+                            id="itemCountBadge">{{ __('messages.no_invoice_selected') }}</span>
                     </div>
                     <div class="card-body p-0">
+
+                        {{-- Product Filter Search (visible only after invoice loaded) --}}
+                        <div class="px-4 pt-3 pb-2 border-bottom d-none" id="productFilterWrapper">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bx bx-search text-muted"></i>
+                                </span>
+                                <input type="text" id="productFilterInput" class="form-control border-start-0 ps-0"
+                                    placeholder="Filter products by name or SKU…" autocomplete="off">
+                                <button type="button" class="btn btn-outline-secondary" id="clearFilterBtn"
+                                    style="display:none;">
+                                    <i class="bx bx-x"></i>
+                                </button>
+                            </div>
+                            <div class="text-muted mt-1" id="filterResultCount" style="font-size:11px;"></div>
+                        </div>
+
                         <div class="table-responsive" id="itemsTableWrapper" style="display:none;">
                             <table class="table-hover mb-0 table align-middle" id="returnItemsTable">
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.product') }}</th>
-                                        <th class="text-center" style="min-width:90px;">{{ __('messages.return_qty') }}</th>
-                                        <th class="text-center" style="min-width:80px;">{{ __('messages.unit_price') }}</th>
-                                        <th class="text-center" style="min-width:75px;">{{ __('messages.discount') }}</th>
-                                        <th class="text-center" style="min-width:75px;">{{ __('messages.tax_label') }}</th>
-                                        <th class="text-end" style="min-width:85px;">{{ __('messages.sub_total_th') }}</th>
+                                        <th class="text-center" style="min-width:90px;">{{ __('messages.return_qty') }}
+                                        </th>
+                                        <th class="text-center" style="min-width:80px;">{{ __('messages.unit_price') }}
+                                        </th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.discount') }}
+                                        </th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.tax_label') }}
+                                        </th>
+                                        <th class="text-end" style="min-width:85px;">{{ __('messages.sub_total_th') }}
+                                        </th>
+                                        <th style="width:40px;"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="returnItemsContainer"></tbody>
                             </table>
+                        </div>
+
+                        {{-- No filter results message --}}
+                        <div class="text-muted d-none flex-column align-items-center justify-content-center py-4 text-center"
+                            id="noFilterResultsMsg">
+                            <i class="bx bx-search-alt d-block mb-2" style="font-size:2rem;opacity:.3;"></i>
+                            <p class="small mb-0">No products match your search.</p>
                         </div>
 
                         {{-- States --}}
@@ -200,7 +235,8 @@
                             <div class="card-body p-4">
                                 <ul class="list-unstyled mb-0">
                                     <li class="d-flex justify-content-between border-bottom py-2">
-                                        <span class="text-muted small fw-semibold">{{ __('messages.refund_subtotal') }}</span>
+                                        <span
+                                            class="text-muted small fw-semibold">{{ __('messages.refund_subtotal') }}</span>
                                         <span class="fw-bold" id="sum_subtotal">{{ format_currency(0) }}</span>
                                     </li>
                                     <li
@@ -210,7 +246,8 @@
                                             id="sum_grandtotal">{{ format_currency(0) }}</span>
                                     </li>
                                     <li class="d-flex justify-content-between py-2">
-                                        <span class="text-muted small fw-semibold">{{ __('messages.customer_refund') }}</span>
+                                        <span
+                                            class="text-muted small fw-semibold">{{ __('messages.customer_refund') }}</span>
                                         <span class="fw-bold text-success"
                                             id="summary_refunded">{{ format_currency(0) }}</span>
                                     </li>
@@ -260,11 +297,22 @@
                 emptyReturnMsg.addClass('d-none');
                 errorMsg.addClass('d-none');
                 itemsTableWrapper.hide();
-                if (state === 'noInvoice') noInvoiceMsg.removeClass('d-none');
-                else if (state === 'loading') loadingMsg.removeClass('d-none');
-                else if (state === 'empty') emptyReturnMsg.removeClass('d-none');
-                else if (state === 'error') errorMsg.removeClass('d-none');
-                else if (state === 'table') itemsTableWrapper.show();
+                $('#noFilterResultsMsg').addClass('d-none');
+                if (state === 'noInvoice') {
+                    noInvoiceMsg.removeClass('d-none');
+                    $('#productFilterWrapper').addClass('d-none');
+                } else if (state === 'loading') {
+                    loadingMsg.removeClass('d-none');
+                    $('#productFilterWrapper').addClass('d-none');
+                } else if (state === 'empty') {
+                    emptyReturnMsg.removeClass('d-none');
+                    $('#productFilterWrapper').addClass('d-none');
+                } else if (state === 'error') {
+                    errorMsg.removeClass('d-none');
+                    $('#productFilterWrapper').addClass('d-none');
+                } else if (state === 'table') {
+                    itemsTableWrapper.show();
+                }
             }
 
             function loadSaleItems(saleId) {
@@ -275,6 +323,7 @@
                     itemCountBadge.text('No invoice selected').removeClass('bg-label-primary').addClass(
                         'bg-label-secondary');
                     $('#customerInfoBox').addClass('d-none');
+                    $('#productFilterWrapper').addClass('d-none');
                     calcTotals();
                     return;
                 }
@@ -320,12 +369,13 @@
                                      <input type="hidden" name="items[${rowCount}][product_id]" value="${item.product_id}">
                                  </td>
                                  <td class="text-center">
-                                     <div class="text-muted small mb-1" style="font-size:10.5px;">Sold: ${parseInt(item.sold_quantity)}</div>
-                                     <input type="number" step="1" min="0" max="${parseInt(item.sold_quantity)}"
+                                     <div class="text-muted small mb-1" style="font-size:10.5px;">Max: ${parseInt(item.available_quantity)}</div>
+                                     <input type="number" step="1" min="0" max="${parseInt(item.available_quantity)}"
                                          name="items[${rowCount}][quantity]"
-                                         value="${parseInt(item.sold_quantity)}"
+                                         value="0"
                                          class="qty-input form-control form-control-sm text-center"
-                                         style="width:72px;margin:auto;">
+                                         style="width:72px;margin:auto;"
+                                         placeholder="0">
                                  </td>
                                  <td class="text-center price-cell fw-semibold text-muted" style="font-size:12.5px;"
                                      data-price="${item.unit_price}">
@@ -340,6 +390,12 @@
                                      ${fmt(item.tax_amount)}
                                  </td>
                                  <td class="text-end fw-bold subtotal-cell" style="font-size:13px;">${fmt(0)}</td>
+                                 <td class="text-center">
+                                     <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                         style="width:28px;height:28px;padding:0;" title="Remove">
+                                         <i class="bx bx-trash" style="font-size:13px;"></i>
+                                     </button>
+                                 </td>
                              </tr>`);
                             rowCount++;
                         });
@@ -349,11 +405,20 @@
                             submitBtn.attr('disabled', true);
                             itemCountBadge.text('All items returned').removeClass(
                                 'bg-label-secondary bg-label-primary').addClass('bg-label-success');
+                            $('#productFilterWrapper').addClass('d-none');
                         } else {
                             showState('table');
                             submitBtn.attr('disabled', false);
                             itemCountBadge.text(returnableCount + ' returnable item(s)').removeClass(
                                 'bg-label-secondary bg-label-success').addClass('bg-label-primary');
+                            // Show product filter search bar
+                            $('#productFilterWrapper').removeClass('d-none');
+                            $('#productFilterInput').val('');
+                            $('#clearFilterBtn').hide();
+                            $('#filterResultCount').text(returnableCount + ' product(s) loaded');
+                            $('#noFilterResultsMsg').addClass('d-none');
+                            // Dim all rows initially (qty=0)
+                            itemsContainer.find('tr.item-row').addClass('opacity-50');
                         }
 
                         calcTotals();
@@ -366,12 +431,73 @@
 
             saleIdSelect.on('change', function() {
                 loadSaleItems($(this).val());
+                // Reset filter when invoice changes
+                $('#productFilterInput').val('');
+                $('#productFilterWrapper').addClass('d-none');
+                $('#noFilterResultsMsg').addClass('d-none');
             });
 
             // Auto-load if sale_id pre-selected (old value after validation fail)
             if (saleIdSelect.val()) {
                 loadSaleItems(saleIdSelect.val());
             }
+
+            // ── Product Filter Search ─────────────────────────────────────────
+            $('#productFilterInput').on('input', function() {
+                const q = $(this).val().trim().toLowerCase();
+                const rows = itemsContainer.find('tr.item-row');
+
+                if (q === '') {
+                    rows.show();
+                    $('#clearFilterBtn').hide();
+                    $('#noFilterResultsMsg').addClass('d-none');
+                    const visibleCount = rows.length;
+                    $('#filterResultCount').text(visibleCount + ' product(s) loaded');
+                    return;
+                }
+
+                $('#clearFilterBtn').show();
+                let visibleCount = 0;
+
+                rows.each(function() {
+                    const name = $(this).find('.fw-bold.text-primary').text().toLowerCase();
+                    const sku = $(this).find('.text-muted[style*="10.5px"]').text().toLowerCase();
+                    const matches = name.includes(q) || sku.includes(q);
+                    $(this).toggle(matches);
+                    if (matches) visibleCount++;
+                });
+
+                if (visibleCount === 0) {
+                    $('#noFilterResultsMsg').removeClass('d-none');
+                    $('#filterResultCount').text('No products match "' + $('#productFilterInput').val() +
+                        '"');
+                } else {
+                    $('#noFilterResultsMsg').addClass('d-none');
+                    $('#filterResultCount').text(visibleCount + ' product(s) found');
+                }
+            });
+
+            $('#clearFilterBtn').on('click', function() {
+                $('#productFilterInput').val('').trigger('input');
+            });
+
+            // ── Remove row button ─────────────────────────────────────────────
+            $(document).on('click', '.remove-row-btn', function() {
+                $(this).closest('tr').remove();
+                // If no rows left, show empty state
+                const remaining = itemsContainer.find('tr.item-row').length;
+                if (remaining === 0) {
+                    showState('empty');
+                    submitBtn.attr('disabled', true);
+                    itemCountBadge.text('All items returned').removeClass(
+                        'bg-label-secondary bg-label-primary').addClass('bg-label-success');
+                    $('#productFilterWrapper').addClass('d-none');
+                } else {
+                    itemCountBadge.text(remaining + ' returnable item(s)');
+                    $('#filterResultCount').text(remaining + ' product(s) loaded');
+                }
+                calcTotals();
+            });
 
             // Qty input validation
             $(document).on('input change', '.qty-input', function() {
@@ -382,7 +508,17 @@
                     showAdminToast(`Max returnable: ${max} unit(s).`, 'error');
                     val = max;
                 }
-                if (val < 0) $(this).val(0);
+                if (val < 0) {
+                    $(this).val(0);
+                    val = 0;
+                }
+                // Visually dim rows with qty=0
+                const row = $(this).closest('tr');
+                if (val === 0) {
+                    row.addClass('opacity-50');
+                } else {
+                    row.removeClass('opacity-50');
+                }
                 calcTotals();
             });
 
@@ -406,6 +542,7 @@
                 let totalDisc = 0;
                 let refundTotal = 0;
 
+                // Update all rows (including hidden/filtered ones)
                 itemsContainer.find('tr.item-row').each(function() {
                     const row = $(this);
                     const qty = parseInt(row.find('.qty-input').val()) || 0;
@@ -441,17 +578,24 @@
             // Form submit guard
             $('#returnForm').on('submit', function(e) {
                 let total = 0;
-                $('.qty-input').each(function() {
-                    total += parseInt($(this).val()) || 0;
+                // Disable qty=0 rows before submit so they don't get sent / fail validation
+                itemsContainer.find('tr.item-row').each(function() {
+                    const qtyInput = $(this).find('.qty-input');
+                    const val = parseInt(qtyInput.val()) || 0;
+                    if (val <= 0) {
+                        // Disable all inputs in this row so they're excluded from POST data
+                        $(this).find('input').prop('disabled', true);
+                    } else {
+                        total += val;
+                    }
                 });
                 if (total <= 0) {
+                    // Re-enable everything so user can fix and resubmit
+                    itemsContainer.find('input').prop('disabled', false);
                     e.preventDefault();
-                    showAdminToast('Please specify a return quantity for at least one item.', 'error');
+                    showAdminToast('Please enter a return quantity of at least 1 for one item.', 'error');
                 }
             });
         });
     </script>
 @endpush
-
-
-

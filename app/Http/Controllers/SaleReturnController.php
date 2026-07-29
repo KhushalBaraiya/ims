@@ -77,6 +77,12 @@ class SaleReturnController extends Controller
         try {
             $sale = Sale::findOrFail($request->sale_id);
 
+            // Guard: can only return completed sales
+            if ($sale->status !== 'Completed') {
+                DB::rollBack();
+                return back()->withInput()->with('error', 'Returns can only be created for Completed sales.');
+            }
+
             // ── STEP 1: Validate all quantities before touching stock ──
             $itemsToProcess = [];
             $subTotal = 0;
@@ -118,12 +124,13 @@ class SaleReturnController extends Controller
                 $grandTotal += $rowTotal;
 
                 $itemsToProcess[] = [
-                    'product_id'   => $item['product_id'],
-                    'quantity'     => $qty,
-                    'unit_price'   => $saleItem->unit_price,
-                    'tax_amount'   => $rowTax,
-                    'total_amount' => $rowTotal,
-                    'reason'       => $item['reason'] ?? null,
+                    'product_id'      => $item['product_id'],
+                    'quantity'        => $qty,
+                    'unit_price'      => $saleItem->unit_price,
+                    'discount_amount' => $rowDisc,
+                    'tax_amount'      => $rowTax,
+                    'total_amount'    => $rowTotal,
+                    'reason'          => $item['reason'] ?? null,
                 ];
             }
 
@@ -247,12 +254,13 @@ class SaleReturnController extends Controller
                 $grandTotal += $rowTotal;
 
                 $itemsToProcess[] = [
-                    'product_id'   => $item['product_id'],
-                    'quantity'     => $qty,
-                    'unit_price'   => $saleItem->unit_price,
-                    'tax_amount'   => $rowTax,
-                    'total_amount' => $rowTotal,
-                    'reason'       => $item['reason'] ?? null,
+                    'product_id'      => $item['product_id'],
+                    'quantity'        => $qty,
+                    'unit_price'      => $saleItem->unit_price,
+                    'discount_amount' => $rowDisc,
+                    'tax_amount'      => $rowTax,
+                    'total_amount'    => $rowTotal,
+                    'reason'          => $item['reason'] ?? null,
                 ];
             }
 

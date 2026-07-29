@@ -13,8 +13,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Razorpay\Api\Api;
+use Razorpay\Api\Errors\SignatureVerificationError;
 
 class PurchaseController extends Controller
 {
@@ -25,7 +29,7 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.view');
 
-        $query = Purchase::with(['supplier', 'user', 'items', 'returns'])->latest();
+        $query = Purchase::with(['supplier.currency', 'user', 'items', 'returns'])->latest();
 
         if ($request->filled('purchase_no')) {
             $query->where('purchase_no', 'like', "%{$request->purchase_no}%");
@@ -53,7 +57,7 @@ class PurchaseController extends Controller
     {
         Gate::authorize('purchases.create');
 
-        $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
+        $suppliers = Supplier::with('currency')->where('status', 'active')->orderBy('name')->get();
         $purchaseNo = $this->generatePurchaseNo();
 
         return view('purchases.create', compact('suppliers', 'purchaseNo'));
@@ -75,17 +79,20 @@ class PurchaseController extends Controller
         Gate::authorize('purchases.update');
 
         $request->validate([
-            'paid_amount'    => 'required|numeric|min:0',
+            'paid_amount' => ['required', 'numeric', 'min:0', Rule::when(
+                $purchase->grand_total > 0,
+                ['max:'.$purchase->grand_total]
+            )],
             'payment_method' => 'required|string|max:100',
         ]);
 
-        $paidAmount  = (float) $request->paid_amount;
-        $grandTotal  = (float) $purchase->grand_total;
-        $dueAmount   = max(0.00, $grandTotal - $paidAmount);
+        $paidAmount = (float) $request->paid_amount;
+        $grandTotal = (float) $purchase->grand_total;
+        $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
         $updateData = [
-            'paid_amount'    => $paidAmount,
-            'due_amount'     => $dueAmount,
+            'paid_amount' => $paidAmount,
+            'due_amount' => $dueAmount,
             'payment_method' => $request->payment_method,
         ];
 
@@ -93,19 +100,20 @@ class PurchaseController extends Controller
         if ($request->payment_method === 'Razorpay' && $request->filled('razorpay_payment_id')) {
             // Verify signature before updating
             try {
-                $api = new \Razorpay\Api\Api(
+                $api = new Api(
                     config('services.razorpay.key_id'),
                     config('services.razorpay.key_secret')
                 );
                 $api->utility->verifyPaymentSignature([
-                    'razorpay_order_id'   => $request->razorpay_order_id,
+                    'razorpay_order_id' => $request->razorpay_order_id,
                     'razorpay_payment_id' => $request->razorpay_payment_id,
-                    'razorpay_signature'  => $request->razorpay_signature,
+                    'razorpay_signature' => $request->razorpay_signature,
                 ]);
-            } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
+            } catch (SignatureVerificationError $e) {
                 if ($request->ajax() || $request->wantsJson()) {
                     return response()->json(['success' => false, 'message' => 'Razorpay payment verification failed.'], 422);
                 }
+
                 return back()->withErrors(['razorpay' => 'Razorpay payment verification failed.']);
             }
             $updateData['reference_no'] = $request->razorpay_payment_id;
@@ -143,22 +151,31 @@ class PurchaseController extends Controller
         try {
             $purchaseNo = $request->input('purchase_no') ?: $this->generatePurchaseNo();
 
+            // Exchange rate: how many base-currency units = 1 supplier-currency unit
+            // User entered prices in supplier's currency; we store in base currency
+            $exchangeRate = max(1.0, (float) ($request->exchange_rate ?? 1));
+            $currencyId = $request->input('currency_id') ?: null;
+
             $subTotal = 0;
             foreach ($request->items as $item) {
-                $subTotal += ((float) $item['quantity'] * (float) $item['purchase_price']);
+                // Item prices are submitted in supplier currency → convert to base
+                $basePrice = (float) $item['purchase_price'] * $exchangeRate;
+                $subTotal += (float) $item['quantity'] * $basePrice;
             }
 
-            $taxAmount = (float) ($request->tax_amount ?? 0);
-            $discountAmount = (float) ($request->discount_amount ?? 0);
-            $shippingAmount = (float) ($request->shipping_amount ?? 0);
+            $taxAmount = (float) ($request->tax_amount ?? 0) * $exchangeRate;
+            $discountAmount = (float) ($request->discount_amount ?? 0) * $exchangeRate;
+            $shippingAmount = (float) ($request->shipping_amount ?? 0) * $exchangeRate;
             $grandTotal = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
-            $paidAmount = (float) ($request->paid_amount ?? 0);
+            $paidAmount = (float) ($request->paid_amount ?? 0) * $exchangeRate;
             $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
             $purchase = Purchase::create([
                 'purchase_no' => $purchaseNo,
                 'purchase_date' => $request->purchase_date,
                 'supplier_id' => $request->supplier_id,
+                'currency_id' => $currencyId,
+                'exchange_rate' => $exchangeRate,
                 'reference_no' => $request->reference_no,
                 'sub_total' => $subTotal,
                 'tax_amount' => $taxAmount,
@@ -175,9 +192,10 @@ class PurchaseController extends Controller
 
             foreach ($request->items as $item) {
                 $qty = (float) $item['quantity'];
-                $price = (float) $item['purchase_price'];
-                $itemDisc = (float) ($item['discount_amount'] ?? 0);
-                $itemTax = (float) ($item['tax_amount'] ?? 0);
+                // Convert from supplier currency → base currency for storage
+                $price = (float) $item['purchase_price'] * $exchangeRate;
+                $itemDisc = (float) ($item['discount_amount'] ?? 0) * $exchangeRate;
+                $itemTax = (float) ($item['tax_amount'] ?? 0) * $exchangeRate;
                 $itemTotal = ($qty * $price) + $itemTax - $itemDisc;
 
                 $purchase->items()->create([
@@ -220,7 +238,7 @@ class PurchaseController extends Controller
     public function show(Purchase $purchase): View
     {
         Gate::authorize('purchases.view');
-        $purchase->load(['supplier', 'user', 'items.product.stock']);
+        $purchase->load(['supplier.currency', 'user', 'items.product.stock']);
 
         return view('purchases.show', compact('purchase'));
     }
@@ -233,7 +251,7 @@ class PurchaseController extends Controller
         Gate::authorize('purchases.update');
 
         $purchase->load(['items.product.stock', 'returns']);
-        $suppliers = Supplier::where('status', 'active')->orderBy('name')->get();
+        $suppliers = Supplier::with('currency')->where('status', 'active')->orderBy('name')->get();
 
         return view('purchases.edit', compact('purchase', 'suppliers'));
     }
@@ -294,12 +312,12 @@ class PurchaseController extends Controller
 
                     if (($currentQty + $netChange) < 0) {
                         DB::rollBack();
-                        
+
                         if ($oldStatus === 'received' && $newStatus !== 'received') {
-                            $msg = "Cannot change purchase status because sufficient stock is not available to reverse the previously received quantity.";
+                            $msg = 'Cannot change purchase status because sufficient stock is not available to reverse the previously received quantity.';
                         } else {
                             $msg = "Cannot update purchase: stock for \"{$product->name}\" would go negative. "
-                                 . "Current stock: {$currentQty}, old purchase qty: {$oldQty}, new qty: {$newQty}.";
+                                 ."Current stock: {$currentQty}, old purchase qty: {$oldQty}, new qty: {$newQty}.";
                         }
 
                         return back()->withInput()->withErrors(['stock_error' => $msg]);
@@ -323,13 +341,17 @@ class PurchaseController extends Controller
             // Delete old line items
             $purchase->items()->delete();
 
-            // Create new items
+            // Exchange rate for this edit (submitted by form, fallback to purchase's stored rate)
+            $exchangeRate = max(1.0, (float) ($request->exchange_rate ?? $purchase->exchange_rate ?? 1));
+            $currencyId = $request->input('currency_id') ?: $purchase->currency_id;
+
+            // Create new items (convert from supplier currency → base currency for storage)
             $subTotal = 0;
             foreach ($request->items as $item) {
                 $qty = (float) $item['quantity'];
-                $price = (float) $item['purchase_price'];
-                $itemDisc = (float) ($item['discount_amount'] ?? 0);
-                $itemTax = (float) ($item['tax_amount'] ?? 0);
+                $price = (float) $item['purchase_price'] * $exchangeRate;
+                $itemDisc = (float) ($item['discount_amount'] ?? 0) * $exchangeRate;
+                $itemTax = (float) ($item['tax_amount'] ?? 0) * $exchangeRate;
                 $itemTotal = ($qty * $price) + $itemTax - $itemDisc;
                 $subTotal += ($qty * $price);
 
@@ -343,16 +365,18 @@ class PurchaseController extends Controller
                 ]);
             }
 
-            $taxAmount = (float) ($request->tax_amount ?? 0);
-            $discountAmount = (float) ($request->discount_amount ?? 0);
-            $shippingAmount = (float) ($request->shipping_amount ?? 0);
+            $taxAmount = (float) ($request->tax_amount ?? 0) * $exchangeRate;
+            $discountAmount = (float) ($request->discount_amount ?? 0) * $exchangeRate;
+            $shippingAmount = (float) ($request->shipping_amount ?? 0) * $exchangeRate;
             $grandTotal = $subTotal + $taxAmount + $shippingAmount - $discountAmount;
-            $paidAmount = (float) ($request->paid_amount ?? 0);
+            $paidAmount = (float) ($request->paid_amount ?? 0) * $exchangeRate;
             $dueAmount = max(0.00, $grandTotal - $paidAmount);
 
             $purchase->update([
                 'purchase_date' => $request->purchase_date,
                 'supplier_id' => $request->supplier_id,
+                'currency_id' => $currencyId,
+                'exchange_rate' => $exchangeRate,
                 'reference_no' => $request->reference_no,
                 'sub_total' => $subTotal,
                 'tax_amount' => $taxAmount,
@@ -387,6 +411,16 @@ class PurchaseController extends Controller
     public function destroy(Purchase $purchase, Request $request): RedirectResponse|JsonResponse
     {
         Gate::authorize('purchases.delete');
+
+        // Guard: cannot delete a purchase that has associated returns
+        if ($purchase->returns()->exists()) {
+            $msg = 'Cannot delete this purchase — it has associated purchase returns. Delete the returns first.';
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $msg], 422);
+            }
+
+            return back()->withErrors(['stock_error' => $msg]);
+        }
 
         DB::beginTransaction();
         try {
@@ -454,7 +488,13 @@ class PurchaseController extends Controller
         try {
             foreach ($ids as $id) {
                 $purchase = Purchase::with('items.product.stock')->find($id);
-                if (!$purchase) continue;
+                if (! $purchase) {
+                    continue;
+                }
+                // Skip purchases with returns — cannot delete them
+                if ($purchase->returns()->exists()) {
+                    continue;
+                }
                 if ($purchase->status === 'received') {
                     foreach ($purchase->items as $item) {
                         $currentQty = $item->product->stock->quantity ?? 0;
@@ -472,9 +512,11 @@ class PurchaseController extends Controller
             }
             DB::commit();
             ActivityLog::log('Purchases Bulk Deleted', "Deleted {$deleted} purchase(s).");
+
             return response()->json(['success' => true, 'message' => "{$deleted} purchase(s) deleted successfully."]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
@@ -493,10 +535,23 @@ class PurchaseController extends Controller
 
     /**
      * Live AJAX product search for purchase form.
+     * Accepts optional currency_rate param so prices display in the supplier's currency.
      */
     public function searchProducts(Request $request): JsonResponse
     {
         $query = $request->get('query', '');
+
+        // Use client-supplied rate if provided (supplier's currency), else fall back to session currency
+        $clientRate = $request->get('currency_rate');
+        if ($clientRate !== null && is_numeric($clientRate) && (float) $clientRate > 0) {
+            $rate = (float) $clientRate;
+            $activeCurrency = current_currency();
+            $symbol = $activeCurrency ? $activeCurrency->symbol : '₹';
+        } else {
+            $activeCurrency = current_currency();
+            $rate = $activeCurrency ? (float) $activeCurrency->exchange_rate : 1.0;
+            $symbol = $activeCurrency ? $activeCurrency->symbol : '₹';
+        }
 
         $products = Product::with(['stock'])
             ->where('status', 'active')
@@ -510,12 +565,11 @@ class PurchaseController extends Controller
             ->limit($query ? 10 : 50)
             ->get();
 
-        $activeCurrency = current_currency();
-        $rate = $activeCurrency ? $activeCurrency->exchange_rate : 1.0;
-        $symbol = $activeCurrency ? $activeCurrency->symbol : '₹';
-
         $results = [];
         foreach ($products as $p) {
+            // Convert base-currency price → supplier currency
+            // Convention: exchange_rate = how many base units equal 1 supplier-currency unit
+            // So supplier_price = base_price / rate
             $purchasePrice = $rate > 0 ? ($p->purchase_price / $rate) : $p->purchase_price;
             $sellingPrice = $rate > 0 ? ($p->selling_price / $rate) : $p->selling_price;
             $results[] = [
@@ -542,9 +596,10 @@ class PurchaseController extends Controller
     /**
      * AJAX: Generate a preview purchase number.
      */
-    public function generatePurchaseNoAjax(): \Illuminate\Http\JsonResponse
+    public function generatePurchaseNoAjax(): JsonResponse
     {
         Gate::authorize('purchases.create');
+
         return response()->json(['purchase_no' => $this->generatePurchaseNo()]);
     }
 
@@ -577,7 +632,7 @@ class PurchaseController extends Controller
                 Mail::to($email)->send(new PurchaseInvoiceMail($purchase));
             }
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Purchase invoice mail failed: ' . $e->getMessage());
+            Log::error('Purchase invoice mail failed: '.$e->getMessage());
         }
     }
 }

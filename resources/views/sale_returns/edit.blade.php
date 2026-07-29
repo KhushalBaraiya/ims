@@ -71,7 +71,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.return_date') }} <span
+                                    class="text-danger">*</span></label>
                             <input class="form-control flatpickr-date @error('return_date') is-invalid @enderror"
                                 name="return_date" required type="date"
                                 value="{{ old('return_date', $saleReturn->return_date) }}">
@@ -87,7 +88,8 @@
                         </div>
 
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.status') }} <span
+                                    class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', $saleReturn->status) === 'Completed' ? 'selected' : '' }}
                                     value="Completed">Completed
@@ -109,7 +111,8 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">{{ __('messages.refunded_amount_field') }} <span
+                                    class="text-danger">*</span></label>
                             <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
                                 min="0" name="refunded_amount" required step="0.01" type="number"
                                 value="{{ old('refunded_amount', $saleReturn->refunded_amount) }}">
@@ -140,11 +143,15 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.product') }}</th>
-                                        <th class="text-center" style="min-width:90px;">{{ __('messages.return_qty') }}</th>
-                                        <th class="text-center" style="min-width:80px;">{{ __('messages.unit_price') }}</th>
+                                        <th class="text-center" style="min-width:90px;">{{ __('messages.return_qty') }}
+                                        </th>
+                                        <th class="text-center" style="min-width:80px;">{{ __('messages.unit_price') }}
+                                        </th>
                                         <th class="text-center" style="min-width:75px;">{{ __('messages.discount') }}</th>
-                                        <th class="text-center" style="min-width:75px;">{{ __('messages.tax_label') }}</th>
-                                        <th class="text-end" style="min-width:85px;">{{ __('messages.sub_total_th') }}</th>
+                                        <th class="text-center" style="min-width:75px;">{{ __('messages.tax_label') }}
+                                        </th>
+                                        <th class="text-end" style="min-width:85px;">{{ __('messages.sub_total_th') }}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="returnItemsContainer">
@@ -202,10 +209,10 @@
                                                         value="{{ $item->product_id }}">
                                                 </td>
                                                 <td class="text-center">
-                                                    <div class="text-muted mb-1" style="font-size:10.5px;">Sold:
-                                                        {{ (int) $item->quantity }}</div>
+                                                    <div class="text-muted mb-1" style="font-size:10.5px;">Max:
+                                                        {{ $maxReturnable }}</div>
                                                     <input class="qty-input form-control form-control-sm text-center"
-                                                        max="{{ (int) $item->quantity }}" min="0"
+                                                        max="{{ $maxReturnable }}" min="0"
                                                         name="items[{{ $rowCount }}][quantity]" step="1"
                                                         style="width:72px;margin:auto;" type="number"
                                                         value="{{ old("items.{$rowCount}.quantity", $currentQty) }}">
@@ -260,7 +267,8 @@
                             <div class="card-body p-4">
                                 <ul class="list-unstyled mb-0">
                                     <li class="d-flex justify-content-between border-bottom py-2">
-                                        <span class="text-muted small fw-semibold">{{ __('messages.refund_subtotal') }}</span>
+                                        <span
+                                            class="text-muted small fw-semibold">{{ __('messages.refund_subtotal') }}</span>
                                         <span class="fw-bold"
                                             id="sum_subtotal">{{ format_currency($saleReturn->sub_total) }}</span>
                                     </li>
@@ -271,7 +279,8 @@
                                             id="sum_grandtotal">{{ format_currency($saleReturn->grand_total) }}</span>
                                     </li>
                                     <li class="d-flex justify-content-between py-2">
-                                        <span class="text-muted small fw-semibold">{{ __('messages.customer_refund') }}</span>
+                                        <span
+                                            class="text-muted small fw-semibold">{{ __('messages.customer_refund') }}</span>
                                         <span class="fw-bold text-success"
                                             id="summary_refunded">{{ format_currency($saleReturn->refunded_amount) }}</span>
                                     </li>
@@ -382,5 +391,3 @@
         });
     </script>
 @endpush
-
-

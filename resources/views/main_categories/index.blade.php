@@ -323,7 +323,7 @@
             // Delete
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id'),
-                    name = $(this).data('name'),
+                    name = $(this).data('name'),` 
                     form = $(`#delete-form-${id}`);
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',

@@ -36,6 +36,7 @@ class SupplierRequest extends FormRequest
             'state' => 'nullable|string|max:100',
             'country' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:10',
+            'currency_id' => 'nullable|exists:currencies,id',
             'status' => 'required|in:active,inactive',
             'notes' => 'nullable|string',
         ];

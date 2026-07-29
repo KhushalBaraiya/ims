@@ -27,10 +27,11 @@ class SaleReturnRequest extends FormRequest
             'refunded_amount' => 'required|numeric|min:0',
             'status' => 'required|in:Completed,Pending',
             
-            // Return items
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
+            // Return items — qty=0 rows are disabled before submit so they won't appear here.
+            // Any submitted item must have qty >= 1.
+            'items' => 'nullable|array',
+            'items.*.product_id' => 'required_with:items|exists:products,id',
+            'items.*.quantity' => 'required_with:items|integer|min:1',
             'items.*.reason' => 'nullable|string|max:255',
         ];
     }

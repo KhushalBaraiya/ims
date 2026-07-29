@@ -24,6 +24,45 @@ class SettingController extends Controller
     }
 
     /**
+     * Send a test email to verify SMTP settings.
+     */
+    public function sendTestEmail(Request $request): \Illuminate\Http\JsonResponse
+    {
+        Gate::authorize('settings.update');
+
+        $request->validate([
+            'to' => ['required', 'email'],
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::raw(
+                'This is a test email from your IMS application. Your SMTP settings are working correctly.',
+                function ($message) use ($request) {
+                    $fromAddress = $request->input('mail_from_address')
+                        ?: Setting::where('key', 'mail_from_address')->value('value')
+                        ?: config('mail.from.address');
+                    $fromName = $request->input('mail_from_name')
+                        ?: Setting::where('key', 'mail_from_name')->value('value')
+                        ?: config('mail.from.name');
+
+                    $message->to($request->input('to'))
+                        ->subject('IMS — Test Email')
+                        ->from($fromAddress, $fromName);
+                }
+            );
+
+            ActivityLog::log('Test Email Sent', 'Sent test email to: ' . $request->input('to'));
+
+            return response()->json(['success' => true, 'message' => 'Test email sent to ' . $request->input('to') . ' successfully!']);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed: ' . $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
      * Update settings.
      */
     public function update(Request $request): RedirectResponse

@@ -15,6 +15,7 @@ class SaleReturnItem extends Model
         'product_id',
         'quantity',
         'unit_price',
+        'discount_amount',
         'tax_amount',
         'total_amount',
         'reason',

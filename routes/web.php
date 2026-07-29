@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('sub-categories/{subCategory}/toggle-status', [SubCategoryController::class, 'toggleStatus'])->name('sub-categories.toggle-status');
     Route::delete('sub-categories/bulk-delete', [SubCategoryController::class, 'bulkDestroy'])->name('sub-categories.bulk-destroy');
     Route::resource('suppliers', SupplierController::class);
+    Route::get('/suppliers/{supplier}/currency', [SupplierController::class, 'getCurrency'])->name('suppliers.currency');
     Route::patch('suppliers/{supplier}/toggle-status', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle-status');
     Route::delete('suppliers/bulk-delete', [SupplierController::class, 'bulkDestroy'])->name('suppliers.bulk-destroy');
     Route::resource('customers', CustomerController::class);
@@ -158,6 +159,7 @@ Route::middleware('auth')->group(function () {
     // Settings Routes
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/test-email', [SettingController::class, 'sendTestEmail'])->name('settings.test-email');
 
     // Activity Logs Routes
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');

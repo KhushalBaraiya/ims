@@ -11,7 +11,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 /**
- * SaleSeeder — creates realistic sales across 6 months
+ * SaleSeeder â€” creates realistic sales across 6 months
  * covering: Completed, Draft, Cancelled statuses,
  * multiple customers, various payment methods,
  * partial payments (due amount > 0), and different product mixes.
@@ -35,7 +35,7 @@ class SaleSeeder extends Seeder
         };
 
         $sales = [
-            // ── January ──────────────────────────────────────────────────────
+            // â”€â”€ January â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'invoice_no'     => $makeInv(),
                 'invoice_date'   => '2026-01-05',
@@ -73,7 +73,7 @@ class SaleSeeder extends Seeder
                 ],
             ],
 
-            // ── February ──────────────────────────────────────────────────────
+            // â”€â”€ February â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'invoice_no'     => $makeInv(),
                 'invoice_date'   => '2026-02-03',
@@ -111,7 +111,7 @@ class SaleSeeder extends Seeder
                 ],
             ],
 
-            // ── March ─────────────────────────────────────────────────────────
+            // â”€â”€ March â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'invoice_no'     => $makeInv(),
                 'invoice_date'   => '2026-03-07',
@@ -148,7 +148,7 @@ class SaleSeeder extends Seeder
                 ],
             ],
 
-            // ── April ─────────────────────────────────────────────────────────
+            // â”€â”€ April â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'invoice_no'     => $makeInv(),
                 'invoice_date'   => '2026-04-02',
@@ -186,7 +186,7 @@ class SaleSeeder extends Seeder
                 ],
             ],
 
-            // ── May ───────────────────────────────────────────────────────────
+            // â”€â”€ May â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'invoice_no'     => $makeInv(),
                 'invoice_date'   => '2026-05-05',
@@ -225,7 +225,7 @@ class SaleSeeder extends Seeder
                 ],
             ],
 
-            // ── June ──────────────────────────────────────────────────────────
+            // â”€â”€ June â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'invoice_no'     => $makeInv(),
                 'invoice_date'   => '2026-06-03',
@@ -333,6 +333,7 @@ class SaleSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ SaleSeeder done — ' . count($sales) . ' sales seeded across Jan–Jun 2026.');
+        $this->command->info('âœ… SaleSeeder done â€” ' . count($sales) . ' sales seeded across Janâ€“Jun 2026.');
     }
 }
+

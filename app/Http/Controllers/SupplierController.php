@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
 use App\Models\ActivityLog;
+use App\Models\Currency;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -47,7 +48,8 @@ class SupplierController extends Controller
     {
         Gate::authorize('suppliers.create');
 
-        return view('suppliers.create');
+        $currencies = Currency::where('status', 'active')->orderBy('name')->get();
+        return view('suppliers.create', compact('currencies'));
     }
 
     /**
@@ -57,7 +59,17 @@ class SupplierController extends Controller
     {
         Gate::authorize('suppliers.create');
 
-        $supplier = Supplier::create($request->validated());
+        $data = $request->validated();
+
+        // Auto-assign currency from country if not manually selected
+        if (empty($data['currency_id']) && !empty($data['country'])) {
+            $auto = $this->resolveCurrencyFromCountry($data['country']);
+            if ($auto) {
+                $data['currency_id'] = $auto->id;
+            }
+        }
+
+        $supplier = Supplier::create($data);
 
         ActivityLog::log('Supplier Created', "Created supplier: {$supplier->name} ({$supplier->company_name})");
 
@@ -84,7 +96,8 @@ class SupplierController extends Controller
     {
         Gate::authorize('suppliers.update');
 
-        return view('suppliers.edit', compact('supplier'));
+        $currencies = Currency::where('status', 'active')->orderBy('name')->get();
+        return view('suppliers.edit', compact('supplier', 'currencies'));
     }
 
     /**
@@ -94,7 +107,17 @@ class SupplierController extends Controller
     {
         Gate::authorize('suppliers.update');
 
-        $supplier->update($request->validated());
+        $data = $request->validated();
+
+        // Auto-assign currency from country if not manually selected
+        if (empty($data['currency_id']) && !empty($data['country'])) {
+            $auto = $this->resolveCurrencyFromCountry($data['country']);
+            if ($auto) {
+                $data['currency_id'] = $auto->id;
+            }
+        }
+
+        $supplier->update($data);
 
         ActivityLog::log('Supplier Updated', "Updated supplier details for: {$supplier->name} ({$supplier->company_name})");
 
@@ -145,6 +168,34 @@ class SupplierController extends Controller
     }
 
     /**
+     * AJAX: Return supplier's currency info for purchase form auto-switch.
+     */
+    public function getCurrency(Supplier $supplier): JsonResponse
+    {
+        $supplier->load('currency');
+        $currency = $supplier->currency;
+
+        if (!$currency) {
+            // Fall back to system default currency
+            $currency = Currency::where('is_default', true)->where('status', 'active')->first()
+                     ?? Currency::where('status', 'active')->first();
+        }
+
+        if (!$currency) {
+            return response()->json(['success' => false, 'message' => 'No currency found.'], 404);
+        }
+
+        return response()->json([
+            'success'       => true,
+            'currency_id'   => $currency->id,
+            'code'          => $currency->code,
+            'symbol'        => $currency->symbol,
+            'exchange_rate' => $currency->exchange_rate,
+            'name'          => $currency->name,
+        ]);
+    }
+
+    /**
      * Bulk delete suppliers.
      */
     public function bulkDestroy(Request $request): JsonResponse
@@ -161,5 +212,90 @@ class SupplierController extends Controller
         ActivityLog::log('Suppliers Bulk Deleted', 'Deleted ' . count($ids) . ' supplier(s).');
 
         return response()->json(['success' => true, 'message' => count($ids) . ' supplier(s) deleted successfully.']);
+    }
+
+    /**
+     * Resolve a Currency model from a country name string.
+     * Matches common country names to ISO currency codes, then looks up the DB.
+     */
+    private function resolveCurrencyFromCountry(string $country): ?Currency
+    {
+        $map = [
+            'INR' => ['india', 'bharat'],
+            'CNY' => ['china', 'peoples republic of china'],
+            'JPY' => ['japan'],
+            'KRW' => ['south korea', 'korea'],
+            'SGD' => ['singapore'],
+            'HKD' => ['hong kong'],
+            'PKR' => ['pakistan'],
+            'BDT' => ['bangladesh'],
+            'LKR' => ['sri lanka', 'ceylon'],
+            'NPR' => ['nepal'],
+            'MYR' => ['malaysia'],
+            'THB' => ['thailand'],
+            'IDR' => ['indonesia'],
+            'PHP' => ['philippines'],
+            'VND' => ['vietnam', 'viet nam'],
+            'AED' => ['uae', 'united arab emirates', 'dubai', 'abu dhabi'],
+            'SAR' => ['saudi arabia', 'ksa'],
+            'QAR' => ['qatar'],
+            'KWD' => ['kuwait'],
+            'BHD' => ['bahrain'],
+            'OMR' => ['oman'],
+            'ILS' => ['israel'],
+            'TRY' => ['turkey', 'turkiye'],
+            'IRR' => ['iran'],
+            'EUR' => [
+                'germany', 'france', 'italy', 'spain', 'netherlands', 'belgium',
+                'austria', 'portugal', 'greece', 'finland', 'ireland', 'luxembourg',
+                'slovakia', 'slovenia', 'estonia', 'latvia', 'lithuania', 'malta',
+                'cyprus', 'croatia',
+            ],
+            'GBP' => ['united kingdom', 'uk', 'britain', 'england', 'great britain', 'scotland', 'wales'],
+            'CHF' => ['switzerland'],
+            'NOK' => ['norway'],
+            'SEK' => ['sweden'],
+            'DKK' => ['denmark'],
+            'PLN' => ['poland'],
+            'CZK' => ['czech republic', 'czechia'],
+            'HUF' => ['hungary'],
+            'RON' => ['romania'],
+            'RUB' => ['russia', 'russian federation'],
+            'UAH' => ['ukraine'],
+            'USD' => ['united states', 'usa', 'us', 'america', 'united states of america'],
+            'CAD' => ['canada'],
+            'MXN' => ['mexico'],
+            'BRL' => ['brazil'],
+            'ARS' => ['argentina'],
+            'CLP' => ['chile'],
+            'COP' => ['colombia'],
+            'AUD' => ['australia'],
+            'NZD' => ['new zealand'],
+            'ZAR' => ['south africa'],
+            'NGN' => ['nigeria'],
+            'KES' => ['kenya'],
+            'EGP' => ['egypt'],
+            'MAD' => ['morocco'],
+            'GHS' => ['ghana'],
+            'TZS' => ['tanzania'],
+        ];
+
+        $needle = strtolower(trim($country));
+
+        $matchedCode = null;
+        foreach ($map as $code => $keywords) {
+            foreach ($keywords as $keyword) {
+                if ($needle === $keyword || str_contains($needle, $keyword) || str_contains($keyword, $needle)) {
+                    $matchedCode = $code;
+                    break 2;
+                }
+            }
+        }
+
+        if (!$matchedCode) {
+            return null;
+        }
+
+        return Currency::where('code', $matchedCode)->where('status', 'active')->first();
     }
 }

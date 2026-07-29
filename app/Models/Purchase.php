@@ -17,6 +17,8 @@ class Purchase extends Model
         'purchase_date',
         'reference_no',
         'supplier_id',
+        'currency_id',
+        'exchange_rate',
         'sub_total',
         'tax_amount',
         'discount_amount',
@@ -50,6 +52,11 @@ class Purchase extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Currency::class);
     }
 
     public function user(): BelongsTo

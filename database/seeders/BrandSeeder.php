@@ -64,11 +64,10 @@ class BrandSeeder extends Seeder
             Brand::firstOrCreate(
                 ['slug' => $b['slug']],
                 [
-                    'name' => $b['name'],
-                    'slug' => $b['slug'],
+                    'name'        => $b['name'],
+                    'slug'        => $b['slug'],
                     'description' => $b['description'],
-                    'status' => $b['status'],
-                    'image' => $imageFile,
+                    'status'      => $b['status'],
                 ]
             );
         }

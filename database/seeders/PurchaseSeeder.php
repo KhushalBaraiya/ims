@@ -10,7 +10,7 @@ use App\Models\Supplier;
 use Illuminate\Database\Seeder;
 
 /**
- * PurchaseSeeder — creates realistic purchase orders across 6 months
+ * PurchaseSeeder â€” creates realistic purchase orders across 6 months
  * covering: Completed, Pending, Cancelled statuses,
  * multiple suppliers, various payment methods.
  */
@@ -32,12 +32,12 @@ class PurchaseSeeder extends Seeder
         };
 
         $purchases = [
-            // ── January ──────────────────────────────────────────────────────
+            // â”€â”€ January â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-01-03',
                 'supplier_email' => 'sales@mobilesparehub.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Bank Transfer',
                 'paid_pct'       => 100,
                 'items' => [
@@ -50,7 +50,7 @@ class PurchaseSeeder extends Seeder
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-01-18',
                 'supplier_email' => 'contact@laptoppartsworld.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Cheque',
                 'paid_pct'       => 100,
                 'items' => [
@@ -60,12 +60,12 @@ class PurchaseSeeder extends Seeder
                 ],
             ],
 
-            // ── February ──────────────────────────────────────────────────────
+            // â”€â”€ February â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-02-08',
                 'supplier_email' => 'rajesh@rajeshelectronics.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Cash',
                 'paid_pct'       => 100,
                 'items' => [
@@ -78,7 +78,7 @@ class PurchaseSeeder extends Seeder
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-02-20',
                 'supplier_email' => 'global@globaltech.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Bank Transfer',
                 'paid_pct'       => 80,  // partial payment
                 'items' => [
@@ -88,12 +88,12 @@ class PurchaseSeeder extends Seeder
                 ],
             ],
 
-            // ── March ─────────────────────────────────────────────────────────
+            // â”€â”€ March â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-03-05',
                 'supplier_email' => 'sales@mobilesparehub.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Bank Transfer',
                 'paid_pct'       => 100,
                 'items' => [
@@ -106,7 +106,7 @@ class PurchaseSeeder extends Seeder
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-03-22',
                 'supplier_email' => 'contact@laptoppartsworld.com',
-                'status'         => 'Pending',
+                'status'         => 'pending',
                 'payment_method' => 'Cheque',
                 'paid_pct'       => 0,
                 'items' => [
@@ -114,12 +114,12 @@ class PurchaseSeeder extends Seeder
                 ],
             ],
 
-            // ── April ─────────────────────────────────────────────────────────
+            // â”€â”€ April â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-04-10',
                 'supplier_email' => 'rajesh@rajeshelectronics.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Cash',
                 'paid_pct'       => 100,
                 'items' => [
@@ -131,7 +131,7 @@ class PurchaseSeeder extends Seeder
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-04-25',
                 'supplier_email' => 'global@globaltech.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Bank Transfer',
                 'paid_pct'       => 100,
                 'items' => [
@@ -140,12 +140,12 @@ class PurchaseSeeder extends Seeder
                 ],
             ],
 
-            // ── May ───────────────────────────────────────────────────────────
+            // â”€â”€ May â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-05-08',
                 'supplier_email' => 'sales@mobilesparehub.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Bank Transfer',
                 'paid_pct'       => 100,
                 'items' => [
@@ -158,7 +158,7 @@ class PurchaseSeeder extends Seeder
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-05-20',
                 'supplier_email' => 'contact@laptoppartsworld.com',
-                'status'         => 'Cancelled',
+                'status'         => 'draft',
                 'payment_method' => 'Cash',
                 'paid_pct'       => 0,
                 'items' => [
@@ -166,12 +166,12 @@ class PurchaseSeeder extends Seeder
                 ],
             ],
 
-            // ── June ──────────────────────────────────────────────────────────
+            // â”€â”€ June â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             [
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-06-05',
                 'supplier_email' => 'rajesh@rajeshelectronics.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Bank Transfer',
                 'paid_pct'       => 100,
                 'items' => [
@@ -184,7 +184,7 @@ class PurchaseSeeder extends Seeder
                 'purchase_no'    => $makePo(),
                 'purchase_date'  => '2026-06-18',
                 'supplier_email' => 'global@globaltech.com',
-                'status'         => 'Completed',
+                'status'         => 'received',
                 'payment_method' => 'Cash',
                 'paid_pct'       => 100,
                 'items' => [
@@ -253,7 +253,7 @@ class PurchaseSeeder extends Seeder
                 PurchaseItem::create(array_merge($item, ['purchase_id' => $purchase->id]));
 
                 // Add to stock for Completed purchases
-                if ($purchaseData['status'] === 'Completed') {
+                if ($purchaseData['status'] === 'received') {
                     $stock = Stock::firstOrCreate(
                         ['product_id' => $item['product_id']],
                         ['quantity' => 0]
@@ -263,6 +263,8 @@ class PurchaseSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ PurchaseSeeder done — ' . count($purchases) . ' purchase orders seeded across Jan–Jun 2026.');
+        $this->command->info('âœ… PurchaseSeeder done â€” ' . count($purchases) . ' purchase orders seeded across Janâ€“Jun 2026.');
     }
 }
+
+
