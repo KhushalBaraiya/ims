@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.menu_settings'))
 
 @push('styles')
@@ -425,9 +425,8 @@
                                     <i class="bx bx-envelope text-info fs-5"></i>
                                 </span>
                                 <div>
-                                    <h6 class="fw-bold mb-0">Email / SMTP Settings</h6>
-                                    <p class="text-muted small mb-0">Configure outgoing email for invoices and
-                                        notifications.</p>
+                                    <h6 class="fw-bold mb-0">{{ __('messages.set_tab_email') }} {{ __('messages.menu_settings') }}</h6>
+                                    <p class="text-muted small mb-0">{{ __('messages.set_email_desc') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -436,9 +435,7 @@
                             <div class="alert alert-info d-flex gap-2 align-items-start py-2 px-3 mb-4 rounded-3"
                                 style="font-size:.82rem;">
                                 <i class="bx bx-info-circle mt-1 flex-shrink-0 fs-6"></i>
-                                <div>For Gmail use <strong>smtp.gmail.com</strong> (Port 587, TLS) with an <strong>App
-                                        Password</strong>.
-                                    Changes are written directly to <code>.env</code>.</div>
+                                <div>{{ __('messages.set_gmail_hint') }}</div>
                             </div>
 
                             <div class="field-group">
@@ -446,7 +443,7 @@
                                     {{ __('messages.set_server_config') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="form-label fw-semibold">Mailer Driver</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_mailer_driver') }}</label>
                                         <select class="form-select @error('mail_mailer') is-invalid @enderror"
                                             name="mail_mailer">
                                             <option value="smtp"
@@ -464,7 +461,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-5">
-                                        <label class="form-label fw-semibold">SMTP Host</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_smtp_host') }}</label>
                                         <input class="form-control @error('mail_host') is-invalid @enderror"
                                             name="mail_host" type="text" placeholder="smtp.gmail.com"
                                             value="{{ old('mail_host', $settings->get('mail_host', env('MAIL_HOST', ''))) }}">
@@ -473,7 +470,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label fw-semibold">Port</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_smtp_port') }}</label>
                                         <input class="form-control @error('mail_port') is-invalid @enderror"
                                             name="mail_port" type="number" placeholder="587"
                                             value="{{ old('mail_port', $settings->get('mail_port', env('MAIL_PORT', '587'))) }}">
@@ -482,7 +479,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-3">
-                                        <label class="form-label fw-semibold">Encryption</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_encryption') }}</label>
                                         <select class="form-select @error('mail_encryption') is-invalid @enderror"
                                             name="mail_encryption">
                                             <option value="tls"
@@ -500,7 +497,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-5">
-                                        <label class="form-label fw-semibold">SMTP Username</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_smtp_username') }}</label>
                                         <input class="form-control @error('mail_username') is-invalid @enderror"
                                             name="mail_username" type="text" placeholder="your@gmail.com"
                                             value="{{ old('mail_username', $settings->get('mail_username', env('MAIL_USERNAME', ''))) }}">
@@ -528,7 +525,7 @@
                                     {{ __('messages.set_from_address') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">From Email</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_from_email') }}</label>
                                         <input class="form-control @error('mail_from_address') is-invalid @enderror"
                                             name="mail_from_address" type="email" placeholder="noreply@yourcompany.com"
                                             value="{{ old('mail_from_address', $settings->get('mail_from_address', env('MAIL_FROM_ADDRESS', ''))) }}">
@@ -537,7 +534,7 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">From Name</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_from_name') }}</label>
                                         <input class="form-control @error('mail_from_name') is-invalid @enderror"
                                             name="mail_from_name" type="text" placeholder="Your Company Name"
                                             value="{{ old('mail_from_name', $settings->get('mail_from_name', env('MAIL_FROM_NAME', ''))) }}">
@@ -556,8 +553,7 @@
                                 </div>
                                 <div class="d-flex gap-2 align-items-end">
                                     <div class="flex-grow-1">
-                                        <label class="form-label fw-semibold small">Send a test email to verify SMTP is
-                                            working</label>
+                                        <label class="form-label fw-semibold small">{{ __('messages.set_test_email_label') }}</label>
                                         <input type="email" id="testEmailAddress" class="form-control"
                                             placeholder="test@example.com" value="{{ auth()->user()->email }}">
                                     </div>
@@ -583,8 +579,8 @@
                                     <i class="bx bx-shield-alt-2 text-danger fs-5"></i>
                                 </span>
                                 <div>
-                                    <h6 class="fw-bold mb-0">Security Settings</h6>
-                                    <p class="text-muted small mb-0">Session timeout and login lockout protection.</p>
+                                    <h6 class="fw-bold mb-0">{{ __('messages.set_tab_security') }} {{ __('messages.menu_settings') }}</h6>
+                                    <p class="text-muted small mb-0">{{ __('messages.set_security_desc') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -592,16 +588,16 @@
 
                             {{-- Session Timeout --}}
                             <div class="field-group">
-                                <div class="field-group-title"><i class="bx bx-time-five"></i> Session</div>
+                                <div class="field-group-title"><i class="bx bx-time-five"></i> {{ __('messages.set_session') }}</div>
                                 <div class="d-flex align-items-start gap-4 flex-wrap">
                                     <div style="min-width:200px;">
-                                        <label class="form-label fw-semibold">Session Timeout</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_session_timeout') }}</label>
                                         <div class="input-group" style="max-width:200px;">
                                             <input class="form-control @error('session_timeout') is-invalid @enderror"
                                                 name="session_timeout" type="number" min="0" max="1440"
                                                 step="1" placeholder="e.g. 30"
                                                 value="{{ old('session_timeout', $settings->get('session_timeout', '0')) }}">
-                                            <span class="input-group-text">min</span>
+                                            <span class="input-group-text">{{ __('messages.set_minutes_short') }}</span>
                                         </div>
                                         @error('session_timeout')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -609,8 +605,7 @@
                                     </div>
                                     <div class="flex-grow-1 pt-1">
                                         <p class="text-muted small mb-0 mt-4">
-                                            Set <strong>0</strong> to disable auto-logout. Users are logged out after this
-                                            many minutes of inactivity.
+                                            {{ __('messages.set_session_hint') }}
                                         </p>
                                     </div>
                                 </div>
@@ -618,34 +613,34 @@
 
                             {{-- Login Lockout --}}
                             <div class="field-group mb-0">
-                                <div class="field-group-title"><i class="bx bx-lock-alt"></i> Login Lockout</div>
+                                <div class="field-group-title"><i class="bx bx-lock-alt"></i> {{ __('messages.set_lockout') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Max Login Attempts</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_max_attempts') }}</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bx bx-key text-muted"></i></span>
                                             <input class="form-control @error('max_login_attempts') is-invalid @enderror"
                                                 name="max_login_attempts" type="number" min="0" max="20"
                                                 step="1" placeholder="e.g. 5"
                                                 value="{{ old('max_login_attempts', $settings->get('max_login_attempts', '5')) }}">
-                                            <span class="input-group-text">tries</span>
+                                            <span class="input-group-text">{{ __('messages.set_tries') }}</span>
                                         </div>
-                                        <div class="form-text">Set <strong>0</strong> to disable lockout.</div>
+                                        <div class="form-text">{{ __('messages.set_max_attempts_hint') }}</div>
                                         @error('max_login_attempts')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Lockout Duration</label>
+                                        <label class="form-label fw-semibold">{{ __('messages.set_lockout_duration') }}</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bx bx-timer text-muted"></i></span>
                                             <input class="form-control @error('lockout_duration') is-invalid @enderror"
                                                 name="lockout_duration" type="number" min="1" max="1440"
                                                 step="1" placeholder="e.g. 15"
                                                 value="{{ old('lockout_duration', $settings->get('lockout_duration', '15')) }}">
-                                            <span class="input-group-text">min</span>
+                                            <span class="input-group-text">{{ __('messages.set_minutes_short') }}</span>
                                         </div>
-                                        <div class="form-text">How long to lock the account after max failed attempts.
+                                        <div class="form-text">{{ __('messages.set_lockout_hint') }}
                                         </div>
                                         @error('lockout_duration')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -658,10 +653,7 @@
                                     style="background:rgba(255,62,29,.05); border:1px solid rgba(255,62,29,.15);">
                                     <i class="bx bx-error-circle text-danger fs-4 flex-shrink-0"></i>
                                     <div class="small text-muted">
-                                        After <strong>{{ $settings->get('max_login_attempts', '5') }}</strong> failed
-                                        attempts,
-                                        the account will be locked for
-                                        <strong>{{ $settings->get('lockout_duration', '15') }} minutes</strong>.
+                                        {{ __('messages.set_lockout_alert', ['attempts' => $settings->get('max_login_attempts', '5'), 'duration' => $settings->get('lockout_duration', '15')]) }}
                                     </div>
                                 </div>
                             </div>

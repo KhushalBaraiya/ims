@@ -252,27 +252,27 @@
 
                 {{-- Invoice Number --}}
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Invoice Number</label>
+                    <label class="form-label fw-semibold">{{ __('messages.set_invoice_number') }}</label>
                     @if (isset($sale) && $sale->exists)
                         <input class="form-control fw-bold text-primary bg-light" id="invoice_no" name="invoice_no"
                             readonly type="text" value="{{ $sale->invoice_no }}">
                     @else
                         <div class="input-group">
                             <input {{ $isReturned ? 'disabled' : '' }} class="form-control fw-semibold" id="invoice_no"
-                                name="invoice_no" placeholder="e.g. INV-20260701-00001" type="text"
+                                name="invoice_no" placeholder="{{ __('messages.set_invoice_number') }}" type="text"
                                 value="{{ old('invoice_no') }}">
                             <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-outline-primary"
-                                id="generateInvoiceNoBtn" title="Auto-generate Invoice No" type="button">
+                                id="generateInvoiceNoBtn" title="{{ __('messages.set_invoice_number_hint') }}" type="button">
                                 <i class="bx bx-revision"></i>
                             </button>
                         </div>
-                        <div class="form-text">Leave blank to auto-generate, or enter manually.</div>
+                        <div class="form-text">{{ __('messages.set_invoice_number_hint') }}</div>
                     @endif
                 </div>
 
                 {{-- Invoice Date --}}
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Invoice Date <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.set_invoice_date') }} <span class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
                         name="invoice_date" required type="date"
@@ -284,7 +284,7 @@
 
                 {{-- Customer --}}
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Customer <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.customer') }} <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('customer_id') is-invalid @enderror" name="customer_id" required>
                         <option value="">{{ __('messages.select_customer') }}</option>
@@ -305,7 +305,7 @@
                     <input name="sales_person_id" type="hidden" value="{{ auth()->id() }}">
                 @else
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Sales Person</label>
+                        <label class="form-label fw-semibold">{{ __('messages.set_sales_person') }}</label>
                         <select {{ $isReturned ? 'disabled' : '' }}
                             class="form-select @error('sales_person_id') is-invalid @enderror" name="sales_person_id">
                             <option value="">{{ __('messages.select_sales_person') }}</option>
@@ -352,7 +352,7 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Payment Method <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.payment_method') }} <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
@@ -428,7 +428,7 @@
                     <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center"
                         id="emptyTableMsg">
                         <i class="bx bx-cart mb-2" style="font-size:2.5rem;opacity:.3;"></i>
-                        <p class="small mb-0">No products added to invoice.</p>
+                        <p class="small mb-0">{{ __('messages.set_no_products_added') }}</p>
                     </div>
                 </div>
             </div>
@@ -456,7 +456,7 @@
 
                         {{-- Subtotal (read-only) --}}
                         <div class="d-flex justify-content-between border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Subtotal (rows)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.set_subtotal_rows') }}</span>
                             <span class="fw-bold"
                                 id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
@@ -469,9 +469,9 @@
                                     <div class="form-check form-check-inline mb-0">
                                         <input {{ $isReturned ? 'disabled' : '' }}
                                             {{ old('discount_type', $sale->discount_type ?? 'fixed') === 'fixed' ? 'checked' : '' }}
-                                            class="form-check-input" id="discTypeFixed" name="discount_type"
+                                            class="form-check-input" id="discType{{ __('messages.set_fixed') }}" name="discount_type"
                                             type="radio" value="fixed">
-                                        <label class="form-check-label small" for="discTypeFixed">Fixed</label>
+                                        <label class="form-check-label small" for="discType{{ __('messages.set_fixed') }}">{{ __('messages.set_fixed') }}</label>
                                     </div>
                                     <div class="form-check form-check-inline mb-0">
                                         <input {{ $isReturned ? 'disabled' : '' }}
@@ -483,7 +483,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted small" id="discountLabel">Amount</span>
+                                <span class="text-muted small" id="discountLabel">{{ __('messages.set_amount') }}</span>
                                 <input {{ $isReturned ? 'disabled' : '' }}
                                     class="form-control form-control-sm text-end" id="discount_value" min="0"
                                     name="discount_value" step="0.01" style="width:120px;" type="number"
@@ -510,7 +510,7 @@
                         </div>
                         <input id="tax_amount" name="tax_amount" type="hidden" value="0.00">
                         <div class="d-flex justify-content-between border-bottom py-1">
-                            <span class="text-muted small">Tax Amount</span>
+                            <span class="text-muted small">Tax {{ __('messages.set_amount') }}</span>
                             <span class="fw-semibold text-warning"
                                 id="lbl_tax_amount">+{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
@@ -524,9 +524,9 @@
                                 value="{{ old('shipping_amount', $sale->shipping_amount ?? '0.00') }}">
                         </div>
 
-                        {{-- Grand Total --}}
+                        {{-- {{ __('messages.grand_total') }} --}}
                         <div class="d-flex justify-content-between border-bottom py-2">
-                            <span class="fw-bold">Grand Total</span>
+                            <span class="fw-bold">{{ __('messages.grand_total') }}</span>
                             <span class="fw-bold text-primary fs-6"
                                 id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
@@ -536,7 +536,7 @@
                             <div class="col-6">
                                 <div
                                     class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
-                                    <div class="text-danger small fw-semibold">Balance Due</div>
+                                    <div class="text-danger small fw-semibold">{{ __('messages.due_amount') }}</div>
                                     <div class="text-danger fw-bold" id="sum_due">
                                         {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
@@ -544,7 +544,7 @@
                             <div class="col-6">
                                 <div
                                     class="bg-success border-success rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
-                                    <div class="text-success small fw-semibold">Change Ret.</div>
+                                    <div class="text-success small fw-semibold">{{ __('messages.set_change_return') }}</div>
                                     <div class="text-success fw-bold" id="sum_change">
                                         {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
@@ -559,7 +559,7 @@
         {{-- Form Actions --}}
         <div class="d-flex justify-content-end mt-4 gap-2">
             <a class="btn btn-outline-secondary" href="{{ route('sales.index') }}">
-                <i class="bx bx-x me-1"></i> Cancel
+                <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
             </a>
             @can('stocks.create')
                 <button class="btn btn-outline-warning" id="btnAdjustStock"
@@ -570,7 +570,7 @@
             @if (!isset($sale) || !$sale->exists)
                 <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-outline-primary" id="btnSaveDraft"
                     type="button">
-                    <i class="bx bx-file me-1"></i> Save As Draft
+                    <i class="bx bx-file me-1"></i> {{ __('messages.set_save_as_draft') }}
                 </button>
             @endif
             <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-primary" type="submit">
@@ -591,7 +591,7 @@
             const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
 
             function fmt(n) {
-                return sym + parseFloat(n).toFixed(2);
+                return sym + parseFloat(n).to{{ __('messages.set_fixed') }}(2);
             }
 
             // ── Auto-generate Invoice No on page load ─────────────────────────
@@ -706,7 +706,7 @@
                     const itemSym = p.currency_symbol || sym;
                     const stockBadge = p.out_of_stock ?
                         `<span class="badge bg-danger-subtle text-danger">Out of stock</span>` :
-                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).toFixed(0)} in stock</span>`;
+                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).to{{ __('messages.set_fixed') }}(0)} in stock</span>`;
                     const nameStyle = p.out_of_stock ? 'color:#aab0c0;' : '';
                     return $(`
                         <div class="d-flex align-items-center gap-3 py-1" style="${p.out_of_stock ? 'opacity:.6;' : ''}">
@@ -717,7 +717,7 @@
                                 <div class="text-muted" style="font-size:11px;">SKU: ${p.sku}${p.barcode ? ' &bull; ' + p.barcode : ''}</div>
                             </div>
                             <div class="text-end flex-shrink-0">
-                                <div class="fw-bold text-primary" style="font-size:13px;">${itemSym}${parseFloat(p.price).toFixed(2)}</div>
+                                <div class="fw-bold text-primary" style="font-size:13px;">${itemSym}${parseFloat(p.price).to{{ __('messages.set_fixed') }}(2)}</div>
                                 <div style="font-size:11px;">${stockBadge}</div>
                             </div>
                         </div>`);
@@ -766,7 +766,7 @@
                 }
 
                 const priceAfterDiscount = parseFloat(p.price) - parseFloat(p.discount_amount || 0);
-                const taxAmt = parseFloat(((parseFloat(p.tax_percent) / 100) * priceAfterDiscount).toFixed(
+                const taxAmt = parseFloat(((parseFloat(p.tax_percent) / 100) * priceAfterDiscount).to{{ __('messages.set_fixed') }}(
                     2));
                 addProductRow({
                     id: p.id,
@@ -808,9 +808,9 @@
                     '</div>' +
                     '<input type="hidden" name="items[' + rowCount + '][product_id]"  value="' + p.id + '">' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][discount_amount]" class="disc-hidden" value="' + discAmt.toFixed(2) + '">' +
+                    '][discount_amount]" class="disc-hidden" value="' + discAmt.to{{ __('messages.set_fixed') }}(2) + '">' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][tax_amount]"      class="tax-hidden"  value="' + taxAmt.toFixed(2) + '">' +
+                    '][tax_amount]"      class="tax-hidden"  value="' + taxAmt.to{{ __('messages.set_fixed') }}(2) + '">' +
                     '</td>' +
 
                     // ── Col 2: Qty (stock badge above, input below) ──
@@ -831,7 +831,7 @@
                     '<td class="text-center">' +
                     '<div class="fw-semibold text-primary sale-price-cell">' + fmt(p.price) + '</div>' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][unit_price]" class="price-input" value="' + parseFloat(p.price).toFixed(2) + '">' +
+                    '][unit_price]" class="price-input" value="' + parseFloat(p.price).to{{ __('messages.set_fixed') }}(2) + '">' +
                     '<div class="text-danger sale-compact-text">-' + fmt(discAmt) + ' disc</div>' +
                     '<div class="text-success sale-compact-text">+' + fmt(taxAmt) + ' tax</div>' +
                     '</td>' +
@@ -877,12 +877,12 @@
             $('#discount_value, #tax_percentage, #shipping_amount, #paid_amount').on('input change',
                 calculateTotals);
             $('input[name="discount_type"]').on('change', function() {
-                $('#discountLabel').text($(this).val() === 'percentage' ? 'Percentage (%)' : 'Amount');
+                $('#discountLabel').text($(this).val() === 'percentage' ? 'Percentage (%)' : '{{ __('messages.set_amount') }}');
                 calculateTotals();
             });
             // Set initial label
             $('#discountLabel').text($('input[name="discount_type"]:checked').val() === 'percentage' ?
-                'Percentage (%)' : 'Amount');
+                'Percentage (%)' : '{{ __('messages.set_amount') }}');
 
             // ── Core calculation engine ───────────────────────────────────────
             // 1. Compute row totals: price - discount, then + tax on discounted price
@@ -916,20 +916,20 @@
                     discVal = 100;
                     showAdminToast('Discount percentage cannot exceed 100%.', 'error');
                 } else if (discType === 'fixed' && discVal > subtotal) {
-                    $('#discount_value').val(subtotal.toFixed(2));
+                    $('#discount_value').val(subtotal.to{{ __('messages.set_fixed') }}(2));
                     discVal = subtotal;
                     showAdminToast('Discount cannot exceed the subtotal.', 'error');
                 }
                 const discAmt = discType === 'percentage' ? subtotal * discVal / 100 : discVal;
                 const afterDisc = Math.max(0, subtotal - discAmt);
 
-                $('#discount_amount').val(discAmt.toFixed(2));
+                $('#discount_amount').val(discAmt.to{{ __('messages.set_fixed') }}(2));
                 $('#lbl_discount_amount').text('−' + fmt(discAmt));
 
                 // Global tax on (subtotal − discount)
                 const taxPct = parseFloat($('#tax_percentage').val()) || 0;
                 const taxAmt = afterDisc * taxPct / 100;
-                $('#tax_amount').val(taxAmt.toFixed(2));
+                $('#tax_amount').val(taxAmt.to{{ __('messages.set_fixed') }}(2));
                 $('#lbl_tax_amount').text('+' + fmt(taxAmt));
 
                 // Shipping + grand total

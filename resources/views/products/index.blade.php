@@ -233,7 +233,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">Stock Alert</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.stock_alert_menu') }}</label>
                             <select name="stock_filter" class="form-select form-select-sm">
                                 <option value="">All Stock</option>
                                 <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock Only</option>

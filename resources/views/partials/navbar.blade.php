@@ -58,7 +58,7 @@
                         </li>
                     @empty
                         <li>
-                            <span class="dropdown-item text-muted small py-2">No currencies available</span>
+                            <span class="dropdown-item text-muted small py-2">{{ __('messages.no_currencies_available') }}</span>
                         </li>
                     @endforelse
                 </ul>
@@ -95,7 +95,7 @@
             <li class="nav-item me-1">
                 <a class="nav-link d-flex align-items-center justify-content-center theme-toggle-btn px-2"
                     href="javascript:void(0);" id="adminThemeToggle" style="height:36px;width:36px;border-radius:8px;"
-                    title="Dark mode">
+                    title="{{ __('messages.dark_mode') }}">
                     <i class="bx bx-moon" style="font-size:1.2rem;"></i>
                 </a>
             </li>

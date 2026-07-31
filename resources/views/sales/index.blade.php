@@ -264,7 +264,7 @@
                                                 data-invoice="{{ $sale->invoice_no }}"
                                                 data-paid-amount="{{ $sale->paid_amount }}"
                                                 data-payment-method="{{ $sale->payment_method }}"
-                                                style="width:30px;height:30px;padding:0;" title="Update Payment">
+                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.set_update_payment') }}">
                                                 <i class="bx bx-credit-card" style="font-size:1rem;"></i>
                                             </button>
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
@@ -394,12 +394,12 @@
                                     style="width:28px;height:28px;background:linear-gradient(135deg,#696cff,#9c3fe4);">
                                     <i class="bx bx-lock-alt text-white" style="font-size:.85rem;"></i>
                                 </span>
-                                <strong class="text-primary small">Secure Razorpay Checkout</strong>
+                                <strong class="text-primary small">{{ __('messages.set_secure_razorpay') }}</strong>
                             </div>
                             <p class="text-muted small mb-0 ps-1">
                                 Click <strong style="color:#696cff;">"Pay via Razorpay"</strong> to open the secure payment
                                 gateway.
-                                Payment will be recorded automatically on success.
+                                {{ __('messages.set_payment_auto_recorded') }}
                             </p>
                         </div>
 

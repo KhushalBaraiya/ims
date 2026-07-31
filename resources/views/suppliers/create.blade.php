@@ -166,7 +166,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">
-                                    <i class="bx bx-coin me-1 text-warning"></i>Supplier Currency
+                                    <i class="bx bx-coin me-1 text-warning"></i>{{ __('messages.supplier_currency') }}
                                 </label>
                                 <select class="form-select @error('currency_id') is-invalid @enderror" name="currency_id"
                                     id="supplierCurrency">
@@ -179,7 +179,7 @@
                                     @endforeach
                                 </select>
                                 <div class="form-text" id="currencyAutoNote">
-                                    Used to auto-switch currency on Purchase Order form.
+                                    {{ __('messages.supplier_currency_hint') }}
                                 </div>
                                 @error('currency_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -369,7 +369,7 @@
             const note = document.getElementById('currencyAutoNote');
 
             if (!country) {
-                note.textContent = 'Used to auto-switch currency on Purchase Order form.';
+                note.textContent = '{{ __('messages.supplier_currency_hint') }}';
                 note.className = 'form-text';
                 return;
             }
