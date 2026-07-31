@@ -13,17 +13,17 @@
                 </div>
                 <span id="statusLabel"
                     class="fw-semibold {{ old('status', $brand->status ?? 'active') == 'active' ? 'text-success' : 'text-danger' }}">
-                    {{ old('status', $brand->status ?? 'active') == 'active' ? 'Active' : 'Inactive' }}
+                    {{ old('status', $brand->status ?? 'active') == 'active' ? __('messages.active') : __('messages.inactive') }}
                 </span>
             </div>
         </div>
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary">
                 <i class="bx bx-save me-1"></i>
-                {{ isset($brand) ? 'Update Brand' : 'Save Brand' }}
+                {{ isset($brand) ? __('messages.edit_brand') : __('messages.add_brand') }}
             </button>
             <a href="{{ route('brands.index') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-x me-1"></i> Cancel
+                <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
             </a>
         </div>
     </div>
@@ -35,7 +35,7 @@
         if (st) {
             st.addEventListener('change', function() {
                 const lbl = document.getElementById('statusLabel');
-                lbl.textContent = this.checked ? 'Active' : 'Inactive';
+                lbl.textContent = this.checked ? '{{ __('messages.active') }}' : '{{ __('messages.inactive') }}';
                 lbl.className = 'fw-semibold ' + (this.checked ? 'text-success' : 'text-danger');
             });
         }

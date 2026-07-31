@@ -53,7 +53,7 @@
                             </label>
                             <input type="text" name="slug" id="brandSlug"
                                 class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug', $brand->slug) }}" placeholder="e.g. NIKE" required>
+                                value="{{ old('slug', $brand->slug) }}" placeholder="{{ __('messages.ph_brand_code_eg') }}" required>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>

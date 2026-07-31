@@ -259,6 +259,10 @@ return [
     'ph_customer_name'      => 'Enter customer name',
     'ph_company_name'       => 'Enter company name',
     'ph_contact_person'     => 'Enter contact person name',
+    'ph_category_code_eg'   => 'e.g. ELECTRONICS, SMART-TV',
+    'ph_brand_code_eg'      => 'e.g. NIKE, ADIDAS',
+    'ph_sub_category_name_eg' => 'e.g. Laptops',
+    'ph_sub_category_code_eg' => 'e.g. SMARTPHONES',
 
     // ── Brands ─────────────────────────────────────────────────────────────
     'brands'                => 'Brands',
@@ -867,5 +871,8 @@ return [
     'supplier_currency_hint' => 'Used to auto-switch currency on Purchase Order form.',
     'no_currencies_available' => 'No currencies available',
     'dark_mode' => 'Dark mode',
+
+    'sku_prefix' => 'SKU Prefix',
 ];
+
 

@@ -280,6 +280,10 @@ return [
     'ph_contact_person'     => 'સંપર્ક વ્યક્તિનું નામ',
     'ph_unit_name'          => 'એકમ નામ દાખલ કરો',
     'ph_unit_short'         => 'દા.ત. KG, PCS',
+    'ph_category_code_eg'   => 'દા.ત. ઈલેક્ટ્રોનિક્સ, સ્માર્ટ-ટીવી',
+    'ph_brand_code_eg'      => 'દા.ત. નાઈકી, એડિડાસ',
+    'ph_sub_category_name_eg' => 'દા.ત. લેપટોપ',
+    'ph_sub_category_code_eg' => 'દા.ત. સ્માર્ટફોન',
 
     // ── Brands ─────────────────────────────────────────────────────────────
     'brands'                => 'બ્રાન્ડ',
@@ -1092,5 +1096,8 @@ return [
     'supplier_currency_hint' => 'ખરીદી ઓર્ડર ફોર્મ પર ચલણ આપમેળે બદલવા માટે વપરાય છે.',
     'no_currencies_available' => 'કોઈ ચલણ ઉપલબ્ધ નથી',
     'dark_mode' => 'ડાર્ક મોડ',
+
+    'sku_prefix' => 'SKU પ્રીફિક્સ',
 ];
+
 

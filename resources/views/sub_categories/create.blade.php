@@ -71,7 +71,7 @@
                                 {{ __('messages.sub_category_code') }} <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug') }}" placeholder="e.g. SMARTPHONES" required>
+                                value="{{ old('slug') }}" placeholder="{{ __('messages.ph_sub_category_code_eg') }}" required>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>

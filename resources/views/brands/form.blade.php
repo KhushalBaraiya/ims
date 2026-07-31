@@ -3,7 +3,7 @@
 <div class="mb-3">
     <label class="form-label fw-semibold">{{ __('messages.brand_name') }} <span class="text-danger">*</span></label>
     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-        value="{{ old('name', $brand->name ?? '') }}" placeholder="e.g. Nike, Adidas" required>
+        value="{{ old('name', $brand->name ?? '') }}" placeholder="{{ __('messages.ph_brand_name') }}" required>
     @error('name')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
@@ -12,8 +12,8 @@
 <div class="mb-3">
     <label class="form-label fw-semibold">{{ __('messages.brand_code') }} <span class="text-danger">*</span></label>
     <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-        value="{{ old('slug', $brand->slug ?? '') }}" placeholder="e.g. NIKE, ADIDAS" required>
-    <div class="form-text">{{ __('messages.description_label') }}</div>
+        value="{{ old('slug', $brand->slug ?? '') }}" placeholder="{{ __('messages.ph_brand_code_eg') }}" required>
+    <div class="form-text">{{ __('messages.slug_hint') }}</div>
     @error('slug')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror

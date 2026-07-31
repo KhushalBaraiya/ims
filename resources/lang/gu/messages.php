@@ -1333,4 +1333,7 @@ return [
     'supplier_currency_hint' => 'ખરીદી ઓર્ડર ફોર્મ પર ચલણ આપમેળે બદલવા માટે વપરાય છે.',
     'no_currencies_available' => 'કોઈ ચલણ ઉપલબ્ધ નથી',
     'dark_mode' => 'ડાર્ક મોડ',
+
+    'sku_prefix' => 'SKU પ્રીફિક્સ',
 ];
+

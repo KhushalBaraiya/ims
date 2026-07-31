@@ -14,8 +14,8 @@
         <label class="form-label fw-semibold">{{ __('messages.category_code') }} <span
                 class="text-danger">*</span></label>
         <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-            value="{{ old('slug', $mainCategory->slug ?? '') }}" placeholder="e.g. SMART-TV" required>
-        <div class="form-text">{{ __('messages.description_label') }}</div>
+            value="{{ old('slug', $mainCategory->slug ?? '') }}" placeholder="{{ __('messages.ph_category_code_eg') }}" required>
+        <div class="form-text">{{ __('messages.slug_hint') }}</div>
         @error('slug')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror

@@ -22,16 +22,16 @@
         <label class="form-label fw-semibold">{{ __('messages.sub_category_name') }} <span
                 class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-            value="{{ old('name', $subCategory->name ?? '') }}" placeholder="e.g. Laptops" required>
+            value="{{ old('name', $subCategory->name ?? '') }}" placeholder="{{ __('messages.ph_sub_category_name_eg') }}" required>
         @error('name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label fw-semibold">{{ __('messages.th_code') }} / SKU Prefix <span
+        <label class="form-label fw-semibold">{{ __('messages.th_code') }} / {{ __('messages.sku_prefix') }} <span
                 class="text-danger">*</span></label>
         <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-            value="{{ old('slug', $subCategory->slug ?? '') }}" placeholder="e.g. LAPTOP" required>
+            value="{{ old('slug', $subCategory->slug ?? '') }}" placeholder="{{ __('messages.ph_sub_category_code_eg') }}" required>
         <div class="form-text">{{ __('messages.slug_hint') }}</div>
         @error('slug')
             <div class="invalid-feedback">{{ $message }}</div>

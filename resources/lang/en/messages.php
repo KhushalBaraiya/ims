@@ -1349,5 +1349,8 @@ return [
     'supplier_currency_hint' => 'Used to auto-switch currency on Purchase Order form.',
     'no_currencies_available' => 'No currencies available',
     'dark_mode' => 'Dark mode',
+
+    'sku_prefix' => 'SKU Prefix',
 ];
+
 
