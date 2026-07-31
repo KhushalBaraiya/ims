@@ -142,19 +142,19 @@
                         <nav class="settings-nav nav flex-column gap-1">
                             <a href="#" class="nav-link active" data-tab="company">
                                 <span class="nav-icon"><i class="bx bx-building"></i></span>
-                                Company
+                                {{ __('messages.set_tab_company') }}
                             </a>
                             <a href="#" class="nav-link" data-tab="invoice">
                                 <span class="nav-icon"><i class="bx bx-receipt"></i></span>
-                                Invoice & Tax
+                                {{ __('messages.set_tab_invoice') }}
                             </a>
                             <a href="#" class="nav-link" data-tab="email">
                                 <span class="nav-icon"><i class="bx bx-envelope"></i></span>
-                                Email / SMTP
+                                {{ __('messages.set_tab_email') }}
                             </a>
                             <a href="#" class="nav-link" data-tab="security">
                                 <span class="nav-icon"><i class="bx bx-shield-alt-2"></i></span>
-                                Security
+                                {{ __('messages.set_tab_security') }}
                             </a>
                         </nav>
                     </div>
@@ -166,36 +166,36 @@
                         <div class="card-body p-3 d-grid gap-2">
                             @can('settings.update')
                                 <button class="btn btn-primary" type="submit">
-                                    <i class="bx bx-save me-1"></i> Save Settings
+                                    <i class="bx bx-save me-1"></i> {{ __('messages.save_settings') }}
                                 </button>
                             @endcan
                             <a class="btn btn-outline-secondary" href="{{ route('dashboard') }}">
-                                <i class="bx bx-x me-1"></i> Cancel
+                                <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                             </a>
                         </div>
                     </div>
                     <div class="card shadow-sm">
                         <div class="card-header border-bottom bg-transparent py-2 px-3">
-                            <span class="small fw-semibold text-muted"><i class="bx bx-info-circle me-1"></i>Current
-                                Values</span>
+                            <span class="small fw-semibold text-muted"><i
+                                    class="bx bx-info-circle me-1"></i>{{ __('messages.set_current_values') }}</span>
                         </div>
                         <ul class="list-unstyled mb-0 px-3 py-2">
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small">Currency</span>
+                                <span class="text-muted small">{{ __('messages.set_currency_label') }}</span>
                                 <span class="fw-bold small">{{ $settings->get('currency_code', 'INR') }}
                                     {{ $settings->get('currency_symbol', '₹') }}</span>
                             </li>
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small">Tax</span>
+                                <span class="text-muted small">{{ __('messages.set_tax_label') }}</span>
                                 <span class="fw-bold small">{{ $settings->get('tax_name', 'N/A') }}
                                     ({{ $settings->get('tax_percentage', '0') }}%)</span>
                             </li>
                             <li class="d-flex justify-content-between py-2 border-bottom">
-                                <span class="text-muted small">Invoice Prefix</span>
+                                <span class="text-muted small">{{ __('messages.set_inv_prefix_label') }}</span>
                                 <code class="small">{{ $settings->get('invoice_prefix', 'INV') }}</code>
                             </li>
                             <li class="d-flex justify-content-between py-2">
-                                <span class="text-muted small">Purchase Prefix</span>
+                                <span class="text-muted small">{{ __('messages.set_pur_prefix_label') }}</span>
                                 <code class="small">{{ $settings->get('purchase_prefix', 'PO') }}</code>
                             </li>
                         </ul>
@@ -218,8 +218,8 @@
                                     <i class="bx bx-building text-primary fs-5"></i>
                                 </span>
                                 <div>
-                                    <h6 class="fw-bold mb-0">Company Information</h6>
-                                    <p class="text-muted small mb-0">Your business details shown on invoices and emails.</p>
+                                    <h6 class="fw-bold mb-0">{{ __('messages.company_information') }}</h6>
+                                    <p class="text-muted small mb-0">{{ __('messages.set_company_desc') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -227,7 +227,8 @@
 
                             {{-- Basic Info --}}
                             <div class="field-group">
-                                <div class="field-group-title"><i class="bx bx-id-card"></i> Basic Details</div>
+                                <div class="field-group-title"><i class="bx bx-id-card"></i>
+                                    {{ __('messages.set_basic_details') }}</div>
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">{{ __('messages.company_name') }} <span
                                             class="text-danger">*</span></label>
@@ -270,7 +271,8 @@
 
                             {{-- Address --}}
                             <div class="field-group">
-                                <div class="field-group-title"><i class="bx bx-map-pin"></i> Address</div>
+                                <div class="field-group-title"><i class="bx bx-map-pin"></i>
+                                    {{ __('messages.set_address') }}</div>
                                 <textarea class="form-control @error('company_address') is-invalid @enderror" name="company_address"
                                     placeholder="Full company address..." rows="3">{{ old('company_address', $settings->get('company_address')) }}</textarea>
                                 @error('company_address')
@@ -280,7 +282,8 @@
 
                             {{-- Logo --}}
                             <div class="field-group mb-0">
-                                <div class="field-group-title"><i class="bx bx-image"></i> Company Logo</div>
+                                <div class="field-group-title"><i class="bx bx-image"></i>
+                                    {{ __('messages.set_company_logo') }}</div>
                                 <div class="d-flex align-items-center gap-3 flex-wrap">
                                     <div class="logo-preview-wrap" id="logoPreviewWrap">
                                         @if ($settings->get('company_logo'))
@@ -294,8 +297,7 @@
                                         <input class="form-control @error('company_logo') is-invalid @enderror"
                                             name="company_logo" type="file" id="logoInput"
                                             accept="image/png,image/jpeg,image/svg+xml,image/webp">
-                                        <div class="form-text">PNG, JPG, SVG or WebP. Max 2MB. Shown on invoices and
-                                            emails.</div>
+                                        <div class="form-text">{{ __('messages.set_logo_hint') }}</div>
                                         @error('company_logo')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -316,9 +318,8 @@
                                     <i class="bx bx-receipt text-warning fs-5"></i>
                                 </span>
                                 <div>
-                                    <h6 class="fw-bold mb-0">Invoice & Tax Settings</h6>
-                                    <p class="text-muted small mb-0">Configure number prefixes, tax and product display.
-                                    </p>
+                                    <h6 class="fw-bold mb-0">{{ __('messages.invoice_tax_settings') }}</h6>
+                                    <p class="text-muted small mb-0">{{ __('messages.set_invoice_desc') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -326,7 +327,8 @@
 
                             {{-- Prefixes --}}
                             <div class="field-group">
-                                <div class="field-group-title"><i class="bx bx-hash"></i> Number Prefixes</div>
+                                <div class="field-group-title"><i class="bx bx-hash"></i>
+                                    {{ __('messages.set_number_prefixes') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">{{ __('messages.invoice_prefix') }}</label>
@@ -359,7 +361,8 @@
 
                             {{-- Tax --}}
                             <div class="field-group">
-                                <div class="field-group-title"><i class="bx bx-percent"></i> Tax Configuration</div>
+                                <div class="field-group-title"><i class="bx bx-percent"></i>
+                                    {{ __('messages.set_tax_config') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">{{ __('messages.tax_name') }}</label>
@@ -389,7 +392,8 @@
 
                             {{-- Product Display --}}
                             <div class="field-group mb-0">
-                                <div class="field-group-title"><i class="bx bx-package"></i> Product Display</div>
+                                <div class="field-group-title"><i class="bx bx-package"></i>
+                                    {{ __('messages.set_product_display') }}</div>
                                 <div class="d-flex align-items-center justify-content-between p-3 rounded"
                                     style="background:rgba(0,0,0,.03); border:1px solid rgba(0,0,0,.07);">
                                     <div>
@@ -438,7 +442,8 @@
                             </div>
 
                             <div class="field-group">
-                                <div class="field-group-title"><i class="bx bx-server"></i> Server Configuration</div>
+                                <div class="field-group-title"><i class="bx bx-server"></i>
+                                    {{ __('messages.set_server_config') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-4">
                                         <label class="form-label fw-semibold">Mailer Driver</label>
@@ -504,11 +509,13 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label fw-semibold">App Password</label>
+                                        <label
+                                            class="form-label fw-semibold">{{ __('messages.set_app_password') }}</label>
                                         <input class="form-control @error('mail_password') is-invalid @enderror"
-                                            name="mail_password" type="password" placeholder="Leave blank to keep"
+                                            name="mail_password" type="password"
+                                            placeholder="{{ __('messages.set_app_password_hint') }}"
                                             autocomplete="new-password">
-                                        <div class="form-text">Leave blank to keep current.</div>
+                                        <div class="form-text">{{ __('messages.set_app_password_hint') }}</div>
                                         @error('mail_password')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -517,7 +524,8 @@
                             </div>
 
                             <div class="field-group mb-0">
-                                <div class="field-group-title"><i class="bx bx-at"></i> From Address</div>
+                                <div class="field-group-title"><i class="bx bx-at"></i>
+                                    {{ __('messages.set_from_address') }}</div>
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">From Email</label>
@@ -544,7 +552,7 @@
                             <div class="field-group mb-0"
                                 style="border-color:rgba(3,195,236,.2); background:rgba(3,195,236,.03);">
                                 <div class="field-group-title" style="color:#03c3ec;">
-                                    <i class="bx bx-send"></i> Send Test Email
+                                    <i class="bx bx-send"></i> {{ __('messages.set_test_email') }}
                                 </div>
                                 <div class="d-flex gap-2 align-items-end">
                                     <div class="flex-grow-1">
@@ -554,12 +562,11 @@
                                             placeholder="test@example.com" value="{{ auth()->user()->email }}">
                                     </div>
                                     <button type="button" id="btnTestEmail" class="btn btn-outline-info flex-shrink-0">
-                                        <i class="bx bx-send me-1"></i> Send Test
+                                        <i class="bx bx-send me-1"></i> {{ __('messages.set_send_test') }}
                                     </button>
                                 </div>
                                 <div class="form-text mt-2">
-                                    <i class="bx bx-info-circle me-1"></i>Save settings first to apply SMTP changes
-                                    before sending.
+                                    <i class="bx bx-info-circle me-1"></i>{{ __('messages.set_test_email_hint') }}
                                 </div>
                             </div>
 

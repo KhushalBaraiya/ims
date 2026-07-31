@@ -64,7 +64,32 @@
                 </ul>
             </li>
 
-            {{-- ── Language Switcher — removed ── --}}
+            {{-- ── Language Switcher ── --}}
+            <li class="nav-item dropdown me-1">
+                <a aria-expanded="false" class="nav-link d-flex align-items-center ls-trigger gap-1 px-2"
+                    data-bs-toggle="dropdown" href="javascript:void(0);" style="height:36px;" title="Language">
+                    <i class="bx bx-globe" style="font-size:1.2rem;"></i>
+                    <span class="fw-bold" style="font-size:.85rem;letter-spacing:.04em;">
+                        {{ strtoupper($currentLang['code'] ?? app()->getLocale()) }}
+                    </span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end ls-dropdown-menu">
+                    @foreach (\App\Http\Controllers\LanguageController::SUPPORTED as $locale => $lang)
+                        @php $isActiveLang = app()->getLocale() === $locale; @endphp
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center ls-lang-item {{ $isActiveLang ? 'active' : '' }} px-3 py-2"
+                                href="{{ route('language.switch', $locale) }}">
+                                <span class="ls-lang-name">{{ $lang['label'] }}</span>
+                                <span class="ms-auto ls-lang-code text-muted"
+                                    style="font-size:.72rem;font-weight:700;letter-spacing:.04em;">{{ $lang['code'] }}</span>
+                                @if ($isActiveLang)
+                                    <i class="bx bx-check ms-1" style="font-size:1rem;color:#696cff;"></i>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </li>
 
             {{-- ── Theme Toggle ── --}}
             <li class="nav-item me-1">

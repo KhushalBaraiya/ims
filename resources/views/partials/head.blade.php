@@ -460,7 +460,16 @@
             border-radius: 0.375rem !important;
             box-shadow: none !important;
             outline: none !important;
-            transition: border-color .15s ease-in-out !important;
+            transition: border-co
+            
+            
+            
+            
+            
+            
+            
+            
+            or .15s ease-in-out !important;
         }
 
         .dataTables_filter input:focus {
