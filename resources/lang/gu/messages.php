@@ -1495,4 +1495,13 @@ return [
 
     // Profile
     'ph_profile_phone'        => '+1234567890',
+
+    // ── Product form — new gallery / action keys ──────────────────────────────
+    'prod_gallery_multi'      => 'Multi-select',
+    'prod_saved_gallery'      => 'સાચવેલ ગૅલેરી',
+    'prod_gallery_photos'     => 'ફોટો',
+    'prod_clear_all'          => 'બધું કાઢો',
+    'prod_save_product'       => 'ઉત્પાદ સાચવો',
+    'prod_update_product'     => 'ઉત્પાદ અપડેટ કરો',
+    'prod_sku_error'          => 'SKU બની શક્યું નહીં.',
 ];

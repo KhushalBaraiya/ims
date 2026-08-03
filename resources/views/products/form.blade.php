@@ -4,13 +4,14 @@
 <div class="form-section">
     <div class="form-section-header">
         <div class="sec-icon bg-label-primary"><i class="bx bx-info-circle text-primary"></i></div>
-        <div class="sec-title">Basic Information</div>
+        <div class="sec-title">{{ __('messages.basic_information') }}</div>
     </div>
     <div class="form-section-body">
         <div class="row g-3">
             {{-- Product Name --}}
             <div class="col-md-5">
-                <label class="form-label fw-semibold small">Product Name <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.product_name_label') }} <span
+                        class="text-danger">*</span></label>
                 <input class="form-control @error('name') is-invalid @enderror" name="name"
                     placeholder="{{ __('messages.ph_product_name') }}" required type="text"
                     value="{{ old('name', $product->name ?? '') }}">
@@ -22,8 +23,8 @@
             {{-- SKU --}}
             <div class="col-md-3">
                 <label class="form-label fw-semibold small">
-                    SKU / Code <span class="text-danger">*</span>
-                    <span class="text-muted fw-normal">(auto or manual)</span>
+                    {{ __('messages.sku_code_label') }} <span class="text-danger">*</span>
+                    <span class="text-muted fw-normal">({{ __('messages.auto_or_manual') }})</span>
                 </label>
                 <div class="input-group">
                     <input class="form-control fw-semibold @error('code') is-invalid @enderror" id="product_code"
@@ -43,7 +44,7 @@
 
             {{-- Barcode --}}
             <div class="col-md-4">
-                <label class="form-label fw-semibold small">Barcode (EAN/ISBN)</label>
+                <label class="form-label fw-semibold small">{{ __('messages.barcode_label') }}</label>
                 <input class="form-control @error('barcode') is-invalid @enderror" name="barcode"
                     placeholder="{{ __('messages.ph_barcode') }}" type="text"
                     value="{{ old('barcode', $product->barcode ?? '') }}">
@@ -54,7 +55,8 @@
 
             {{-- Brand --}}
             <div class="col-md-4">
-                <label class="form-label fw-semibold small">Brand <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.brand_label') }} <span
+                        class="text-danger">*</span></label>
                 <select class="form-select @error('brand_id') is-invalid @enderror" name="brand_id" required>
                     <option value="">{{ __('messages.select_brand') }}</option>
                     @foreach ($brands as $b)
@@ -70,7 +72,8 @@
 
             {{-- Main Category --}}
             <div class="col-md-4">
-                <label class="form-label fw-semibold small">Main Category <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.main_category_label') }} <span
+                        class="text-danger">*</span></label>
                 <select class="form-select @error('main_category_id') is-invalid @enderror" id="main_category_id"
                     name="main_category_id" required>
                     <option value="">{{ __('messages.select_category') }}</option>
@@ -88,7 +91,7 @@
 
             {{-- Sub Category --}}
             <div class="col-md-4">
-                <label class="form-label fw-semibold small">Sub Category</label>
+                <label class="form-label fw-semibold small">{{ __('messages.sub_category_label') }}</label>
                 <select class="form-select @error('sub_category_id') is-invalid @enderror" id="sub_category_id"
                     name="sub_category_id">
                     <option value="">{{ __('messages.select_sub_category') }}</option>
@@ -100,7 +103,8 @@
 
             {{-- Unit Name --}}
             <div class="col-md-2">
-                <label class="form-label fw-semibold small">Unit Name <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.unit_name_label') }} <span
+                        class="text-danger">*</span></label>
                 <input class="form-control @error('unit_name') is-invalid @enderror" name="unit_name"
                     placeholder="{{ __('messages.ph_unit_name') }}" required type="text"
                     value="{{ old('unit_name', $product->unit_name ?? 'Piece') }}">
@@ -111,7 +115,8 @@
 
             {{-- Unit Code --}}
             <div class="col-md-2">
-                <label class="form-label fw-semibold small">Unit Code <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.unit_code_label') }} <span
+                        class="text-danger">*</span></label>
                 <input class="form-control @error('unit_code') is-invalid @enderror" name="unit_code"
                     placeholder="{{ __('messages.ph_unit_code') }}" required type="text"
                     value="{{ old('unit_code', $product->unit_code ?? 'PCS') }}">
@@ -122,13 +127,14 @@
 
             {{-- Status --}}
             <div class="col-md-2">
-                <label class="form-label fw-semibold small">Status <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.status') }} <span
+                        class="text-danger">*</span></label>
                 <select class="form-select @error('status') is-invalid @enderror" name="status" required>
                     <option {{ old('status', $product->status ?? 'active') === 'active' ? 'selected' : '' }}
-                        value="active">Active
+                        value="active">{{ __('messages.active') }}
                     </option>
                     <option {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}
-                        value="inactive">Inactive</option>
+                        value="inactive">{{ __('messages.inactive') }}</option>
                 </select>
                 @error('status')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -142,16 +148,18 @@
 <div class="form-section">
     <div class="form-section-header">
         <div class="sec-icon bg-label-success"><i class="bx bx-money text-success"></i></div>
-        <div class="sec-title">Pricing & Stock Alert</div>
-        <span class="badge bg-label-primary small ms-auto" id="profitBadge">Profit: —</span>
+        <div class="sec-title">{{ __('messages.prod_pricing_stock') }}</div>
+        <span class="badge bg-label-primary small ms-auto" id="profitBadge">{{ __('messages.prod_profit_badge') }}:
+            —</span>
     </div>
     <div class="form-section-body">
         <div class="row g-3">
             {{-- Purchase Price --}}
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Purchase Price <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_purchase_price') }} <span
+                        class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text">₹</span>
+                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                     <input class="form-control @error('purchase_price') is-invalid @enderror" id="purchase_price"
                         name="purchase_price" required step="0.01" type="number"
                         value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}">
@@ -163,9 +171,10 @@
 
             {{-- Selling Price --}}
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Selling Price <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_selling_price') }} <span
+                        class="text-danger">*</span></label>
                 <div class="input-group">
-                    <span class="input-group-text">₹</span>
+                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                     <input class="form-control @error('selling_price') is-invalid @enderror" id="selling_price"
                         name="selling_price" required step="0.01" type="number"
                         value="{{ old('selling_price', $product->selling_price ?? '0.00') }}">
@@ -177,9 +186,9 @@
 
             {{-- Discount Amount --}}
             <div class="col-md-2">
-                <label class="form-label fw-semibold small">Discount Amount</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_discount_amount') }}</label>
                 <div class="input-group">
-                    <span class="input-group-text">₹</span>
+                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                     <input class="form-control @error('discount_price_amount') is-invalid @enderror"
                         id="discount_price_amount" min="0" name="discount_price_amount" step="0.01"
                         type="number"
@@ -192,7 +201,7 @@
 
             {{-- Tax % --}}
             <div class="col-md-2">
-                <label class="form-label fw-semibold small">Selling Tax %</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_selling_tax_pct') }}</label>
                 <div class="input-group">
                     <input class="form-control @error('tax_percentage') is-invalid @enderror" id="tax_percentage"
                         max="100" min="0" name="tax_percentage"
@@ -204,12 +213,12 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-text">Max 100%</div>
+                <div class="form-text">{{ __('messages.prod_tax_max') }}</div>
             </div>
 
             {{-- Min Stock Alert --}}
             <div class="col-md-2">
-                <label class="form-label fw-semibold small">Min Stock Alert</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_min_stock_alert') }}</label>
                 <input class="form-control @error('minimum_stock_alert') is-invalid @enderror"
                     name="minimum_stock_alert" placeholder="{{ __('messages.ph_min_stock') }}" step="0.01"
                     type="number" value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}">
@@ -226,8 +235,8 @@
     <div class="form-section">
         <div class="form-section-header">
             <div class="sec-icon bg-label-warning"><i class="bx bx-box text-warning"></i></div>
-            <div class="sec-title">Opening Stock</div>
-            <span class="badge bg-label-warning small ms-auto">Create only</span>
+            <div class="sec-title">{{ __('messages.prod_opening_stock_card') }}</div>
+            <span class="badge bg-label-warning small ms-auto">{{ __('messages.prod_create_only_badge') }}</span>
         </div>
         <div class="form-section-body">
             <div class="form-check form-switch mb-0">
@@ -236,8 +245,7 @@
                 <label class="form-check-label fw-semibold" for="addOpeningStock">
                     <i class="bx bx-plus-circle text-success me-1"></i> {{ __('messages.add_initial_stock_hint') }}
                 </label>
-                <div class="form-text">When enabled, a Purchase record will be created automatically for traceability.
-                </div>
+                <div class="form-text">{{ __('messages.prod_opening_stock_desc') }}</div>
             </div>
 
             <div class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3" id="openingStockBox">
@@ -245,7 +253,7 @@
                     {{-- Supplier --}}
                     <div class="col-md-5">
                         <label class="form-label fw-semibold small" for="supplier_id">
-                            Supplier <span class="text-danger">*</span>
+                            {{ __('messages.prod_supplier_label') }} <span class="text-danger">*</span>
                         </label>
                         <select class="form-select @error('supplier_id') is-invalid @enderror" id="supplier_id"
                             name="supplier_id">
@@ -264,7 +272,7 @@
                     {{-- Opening Qty --}}
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small" for="initial_qty">
-                            Opening Qty <span class="text-danger">*</span>
+                            {{ __('messages.prod_opening_qty_label') }} <span class="text-danger">*</span>
                         </label>
                         <input class="form-control @error('initial_qty') is-invalid @enderror" id="initial_qty"
                             min="0.01" name="initial_qty" placeholder="{{ __('messages.ph_opening_qty') }}"
@@ -279,10 +287,10 @@
                         <div class="alert alert-info d-flex align-items-center mb-0 gap-2 px-3 py-2">
                             <i class="bx bx-calculator text-info fs-5"></i>
                             <div>
-                                <div class="small fw-semibold text-info">Purchase Total</div>
+                                <div class="small fw-semibold text-info">
+                                    {{ __('messages.prod_purchase_total_label') }}</div>
                                 <div class="fw-bold" id="openingStockTotal">—</div>
-                                <div class="form-text mb-0">Qty × Purchase Price. A Purchase record is auto-created.
-                                </div>
+                                <div class="form-text mb-0">{{ __('messages.prod_qty_x_price_desc') }}</div>
                             </div>
                         </div>
                     </div>
@@ -296,43 +304,43 @@
 <div class="form-section">
     <div class="form-section-header">
         <div class="sec-icon bg-label-info"><i class="bx bx-chip text-info"></i></div>
-        <div class="sec-title">Technical Specifications <span
-                class="badge bg-label-secondary small fw-normal ms-2">Optional</span></div>
+        <div class="sec-title">{{ __('messages.prod_tech_specs') }} <span
+                class="badge bg-label-secondary small fw-normal ms-2">{{ __('messages.prod_optional') }}</span></div>
     </div>
     <div class="form-section-body">
         <div class="row g-3">
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Manufacturer</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_manufacturer') }}</label>
                 <input class="form-control" name="manufacturer" placeholder="{{ __('messages.ph_manufacturer') }}"
                     type="text" value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Model Number</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_model_number') }}</label>
                 <input class="form-control" name="model_number" placeholder="{{ __('messages.ph_model_number') }}"
                     type="text" value="{{ old('model_number', $product->model_number ?? '') }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Part / Serial Number</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_part_serial') }}</label>
                 <input class="form-control" name="part_number" placeholder="{{ __('messages.ph_part_number') }}"
                     type="text" value="{{ old('part_number', $product->part_number ?? '') }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Warranty</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_warranty') }}</label>
                 <input class="form-control" name="warranty" placeholder="{{ __('messages.ph_warranty') }}"
                     type="text" value="{{ old('warranty', $product->warranty ?? '') }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Color</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_color') }}</label>
                 <input class="form-control" name="color" placeholder="{{ __('messages.ph_color') }}"
                     type="text" value="{{ old('color', $product->color ?? '') }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Weight</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_weight') }}</label>
                 <input class="form-control" name="weight" placeholder="{{ __('messages.ph_weight') }}"
                     type="text" value="{{ old('weight', $product->weight ?? '') }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label fw-semibold small">Country of Origin</label>
+                <label class="form-label fw-semibold small">{{ __('messages.prod_country_origin') }}</label>
                 <input class="form-control" name="country_of_origin"
                     placeholder="{{ __('messages.ph_country_origin') }}" type="text"
                     value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}">
@@ -345,7 +353,7 @@
 <div class="form-section">
     <div class="form-section-header">
         <div class="sec-icon bg-label-warning"><i class="bx bx-image text-warning"></i></div>
-        <div class="sec-title">Media & Description</div>
+        <div class="sec-title">{{ __('messages.prod_media_desc') }}</div>
     </div>
     <div class="form-section-body">
         <div class="row g-4">
@@ -355,7 +363,7 @@
                 {{-- Primary Image --}}
                 <div class="card bg-light mb-3 border">
                     <div class="card-body p-3">
-                        <label class="form-label fw-semibold small">Primary Image</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.prod_primary_image') }}</label>
                         <div class="d-flex align-items-center mb-2 gap-3">
                             <img class="rounded border" id="imagePreview"
                                 src="{{ isset($product) && $product->image
@@ -365,14 +373,14 @@
                             <div>
                                 <button class="btn btn-sm btn-outline-secondary mb-1" id="triggerImageBtn"
                                     type="button">
-                                    <i class="bx bx-upload me-1"></i> Upload
+                                    <i class="bx bx-upload me-1"></i> {{ __('messages.prod_upload') }}
                                 </button>
                                 <button
                                     class="btn btn-sm btn-outline-danger {{ isset($product) && $product->image ? '' : 'd-none' }}"
                                     id="removeImageBtn" type="button">
-                                    <i class="bx bx-trash me-1"></i> Remove
+                                    <i class="bx bx-trash me-1"></i> {{ __('messages.prod_remove') }}
                                 </button>
-                                <div class="form-text">PNG, JPG, WEBP. Max 2MB.</div>
+                                <div class="form-text">{{ __('messages.image_hint') }}</div>
                             </div>
                         </div>
                         <input accept="image/*" class="d-none" id="imageInput" name="image" type="file">
@@ -384,8 +392,9 @@
                 <div class="card border">
                     <div class="card-body p-3">
                         <label class="form-label fw-semibold small d-flex align-items-center gap-2">
-                            <i class="bx bx-images text-primary"></i> Gallery Images
-                            <span class="badge bg-label-secondary fw-normal">Multi-select</span>
+                            <i class="bx bx-images text-primary"></i> {{ __('messages.prod_gallery_images') }}
+                            <span
+                                class="badge bg-label-secondary fw-normal">{{ __('messages.prod_gallery_multi') }}</span>
                         </label>
 
                         {{-- Drag-drop zone --}}
@@ -394,11 +403,11 @@
                                     text-align:center;cursor:pointer;transition:border-color .2s,background .2s;
                                     background:var(--bs-body-bg);">
                             <i class="bx bx-cloud-upload d-block mb-1 text-muted" style="font-size:2rem;"></i>
-                            <p class="mb-1 small fw-semibold text-muted">Drag & drop images here</p>
-                            <p class="mb-2 text-muted" style="font-size:.72rem;">or click to browse — PNG, JPG, WEBP ·
-                                Max 2MB each</p>
+                            <p class="mb-1 small fw-semibold text-muted">{{ __('messages.prod_drop_here') }}</p>
+                            <p class="mb-2 text-muted" style="font-size:.72rem;">
+                                {{ __('messages.prod_drop_or_browse') }}</p>
                             <button class="btn btn-sm btn-outline-primary" type="button" id="galleryBrowseBtn">
-                                <i class="bx bx-folder-open me-1"></i> Browse Files
+                                <i class="bx bx-folder-open me-1"></i> {{ __('messages.prod_browse_files') }}
                             </button>
                         </div>
                         <input accept="image/*" class="d-none" id="galleryInput" multiple name="gallery[]"
@@ -416,11 +425,12 @@
                                 <div class="d-flex align-items-center justify-content-between mb-2">
                                     <small class="text-muted fw-semibold">
                                         <i class="bx bx-check-circle text-success me-1"></i>
-                                        Saved Gallery ({{ count($product->gallery) }} photos)
+                                        {{ __('messages.prod_saved_gallery') }} ({{ count($product->gallery) }}
+                                        {{ __('messages.prod_gallery_photos') }})
                                     </small>
                                     <button class="btn btn-sm btn-outline-danger py-0 px-2" id="clearAllGalleryBtn"
                                         type="button" style="font-size:.72rem;">
-                                        <i class="bx bx-trash me-1"></i> Clear All
+                                        <i class="bx bx-trash me-1"></i> {{ __('messages.prod_clear_all') }}
                                     </button>
                                 </div>
                                 <div class="d-flex flex-wrap gap-2" id="galleryPreviewContainer">
@@ -432,7 +442,8 @@
                                             <img src="{{ asset('uploads/products/' . $galImg) }}"
                                                 style="width:100%;height:100%;object-fit:cover;"
                                                 onerror="this.closest('.gallery-existing-tile').remove()">
-                                            <button class="remove-gallery-img-btn" type="button" title="Remove"
+                                            <button class="remove-gallery-img-btn" type="button"
+                                                title="{{ __('messages.prod_remove') }}"
                                                 style="position:absolute;top:2px;right:2px;
                                                        width:18px;height:18px;border-radius:50%;border:none;
                                                        background:rgba(220,53,69,.9);color:#fff;
@@ -450,7 +461,7 @@
             {{-- Right: Descriptions --}}
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold small">Short Description</label>
+                    <label class="form-label fw-semibold small">{{ __('messages.prod_short_desc_label') }}</label>
                     <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
                         placeholder="{{ __('messages.ph_short_description') }}" rows="3">{{ old('short_description', $product->short_description ?? '') }}</textarea>
                     @error('short_description')
@@ -458,7 +469,7 @@
                     @enderror
                 </div>
                 <div class="mb-0">
-                    <label class="form-label fw-semibold small">Full Description / Specifications</label>
+                    <label class="form-label fw-semibold small">{{ __('messages.prod_full_desc_label') }}</label>
                     <textarea class="form-control @error('full_description') is-invalid @enderror" name="full_description"
                         placeholder="{{ __('messages.ph_full_description') }}" rows="9">{{ old('full_description', $product->full_description ?? '') }}</textarea>
                     @error('full_description')
@@ -474,11 +485,11 @@
 {{-- ══ Form Actions ════════════════════════════════════════════════════════════ --}}
 <div class="d-flex justify-content-end gap-2 pt-2">
     <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">
-        <i class="bx bx-x me-1"></i> Cancel
+        <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
     </a>
     <button class="btn btn-primary" type="submit">
         <i class="bx bx-save me-1"></i>
-        {{ isset($isCopy) ? 'Save Copied Product' : (isset($product) && $product->exists ? 'Update Product' : 'Save Product') }}
+        {{ isset($isCopy) ? __('messages.prod_save_copied') : (isset($product) && $product->exists ? __('messages.prod_update_product') : __('messages.prod_save_product')) }}
     </button>
 </div>
 
@@ -531,7 +542,7 @@
                         btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
                     },
                     error: function() {
-                        showAdminToast('Could not generate SKU.', 'error');
+                        showAdminToast('{{ __('messages.prod_sku_error') }}', 'error');
                         btn.prop('disabled', false).html('<i class="bx bx-revision"></i>');
                     }
                 });
@@ -563,7 +574,7 @@
                     theme: 'bootstrap-5',
                     width: '100%',
                     allowClear: true,
-                    placeholder: 'Select Sub Category',
+                    placeholder: '{{ __('messages.select_sub_category') }}',
                 });
             }
 

@@ -298,23 +298,27 @@
                                             <div class="text-center px-3 py-1 rounded-2 border bg-white">
                                                 <div class="fw-bold {{ $lsOut ? 'text-danger' : 'text-warning' }}"
                                                     style="font-size:1.05rem;">{{ number_format($lsQty, 0) }}</div>
-                                                <div class="text-muted" style="font-size:.72rem;">Current Qty</div>
+                                                <div class="text-muted" style="font-size:.72rem;">
+                                                    {{ __('messages.current_qty_lbl') }}</div>
                                             </div>
                                             <div class="text-center px-3 py-1 rounded-2 border bg-white">
                                                 <div class="fw-bold text-secondary" style="font-size:1.05rem;">
                                                     {{ number_format($lsAlert, 0) }}</div>
-                                                <div class="text-muted" style="font-size:.72rem;">Alert Level</div>
+                                                <div class="text-muted" style="font-size:.72rem;">
+                                                    {{ __('messages.alert_level_lbl') }}</div>
                                             </div>
                                             @if ($lsNeeded > 0)
                                                 <div class="text-center px-3 py-1 rounded-2 border bg-white">
                                                     <div class="fw-bold text-primary" style="font-size:1.05rem;">
                                                         +{{ number_format($lsNeeded, 0) }}</div>
-                                                    <div class="text-muted" style="font-size:.72rem;">Qty Needed</div>
+                                                    <div class="text-muted" style="font-size:.72rem;">
+                                                        {{ __('messages.qty_needed_lbl') }}</div>
                                                 </div>
                                                 <div class="text-center px-3 py-1 rounded-2 border bg-white">
                                                     <div class="fw-bold text-primary" style="font-size:1.05rem;">
                                                         {{ format_currency($lsRestock) }}</div>
-                                                    <div class="text-muted" style="font-size:.72rem;">Restock Value</div>
+                                                    <div class="text-muted" style="font-size:.72rem;">
+                                                        {{ __('messages.restock_value_lbl') }}</div>
                                                 </div>
                                             @endif
                                         </div>
@@ -351,21 +355,25 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_part_serial') }}</label>
                                 <input class="form-control" name="part_number" type="text"
-                                    placeholder="{{ __(`messages.ph_part_number`) }}" value="{{ old('part_number', $product->part_number) }}">
+                                    placeholder="{{ __(`messages.ph_part_number`) }}"
+                                    value="{{ old('part_number', $product->part_number) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_warranty') }}</label>
-                                <input class="form-control" name="warranty" type="text" placeholder="{{ __(`messages.ph_warranty`) }}"
+                                <input class="form-control" name="warranty" type="text"
+                                    placeholder="{{ __(`messages.ph_warranty`) }}"
                                     value="{{ old('warranty', $product->warranty) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_color') }}</label>
-                                <input class="form-control" name="color" type="text" placeholder="{{ __(`messages.ph_color`) }}"
+                                <input class="form-control" name="color" type="text"
+                                    placeholder="{{ __(`messages.ph_color`) }}"
                                     value="{{ old('color', $product->color) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_weight') }}</label>
-                                <input class="form-control" name="weight" type="text" placeholder="{{ __(`messages.ph_weight`) }}"
+                                <input class="form-control" name="weight" type="text"
+                                    placeholder="{{ __(`messages.ph_weight`) }}"
                                     value="{{ old('weight', $product->weight) }}">
                             </div>
                             <div class="col-md-3">
@@ -402,7 +410,7 @@
                                                 class="{{ $product->image ? 'd-none' : '' }} text-muted small text-center">
                                                 <i class="bx bx-image d-block mb-1"
                                                     style="font-size:2rem;opacity:.35;"></i>
-                                                No Image
+                                                {{ __('messages.no_image') }}
                                             </span>
                                         </div>
                                         <div>
@@ -415,7 +423,7 @@
                                                 id="removeImageBtn" type="button">
                                                 <i class="bx bx-trash me-1"></i> {{ __('messages.prod_remove') }}
                                             </button>
-                                            <div class="form-text mt-1">PNG, JPG, WEBP<br>Max 2 MB</div>
+                                            <div class="form-text mt-1">{{ __('messages.image_hint') }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -440,7 +448,7 @@
                                         type="button">
                                         <i class="bx bx-images me-1"></i> {{ __('messages.prod_browse_files') }}
                                     </button>
-                                    <div class="form-text mb-0 mt-1">PNG, JPG, WEBP — Max 2 MB each</div>
+                                    <div class="form-text mb-0 mt-1">{{ __('messages.prod_drop_or_browse') }}</div>
                                 </div>
 
                                 <div id="galleryPreviewContainer"
@@ -456,7 +464,8 @@
                                                 <button
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger rounded-circle border-0 text-white shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove" type="button">&times;</button>
+                                                    title="{{ __('messages.prod_remove') }}"
+                                                    type="button">&times;</button>
                                             </div>
                                         @endforeach
                                     @endif

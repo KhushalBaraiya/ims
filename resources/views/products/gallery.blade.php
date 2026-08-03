@@ -4,8 +4,8 @@
 @push('styles')
     <style>
         /* ------------------------------------------------------------
-                                                                                                       PRODUCT GALLERY — BASE STYLES
-                                                                                                       ------------------------------------------------------------ */
+                                                                                                           PRODUCT GALLERY ï¿½ BASE STYLES
+                                                                                                           ------------------------------------------------------------ */
 
         /* -- Card -- */
         .pg-card {
@@ -182,8 +182,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                       RESPONSIVE — LARGE TABLET  (768 – 991px)
-                                                                                                       ------------------------------------------------------------ */
+                                                                                                           RESPONSIVE ï¿½ LARGE TABLET  (768 ï¿½ 991px)
+                                                                                                           ------------------------------------------------------------ */
         @media (min-width: 768px) and (max-width: 991.98px) {
 
             /* Image shorter on tablet to save vertical space */
@@ -225,8 +225,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                       RESPONSIVE — SMALL  (576 – 767px)
-                                                                                                       ------------------------------------------------------------ */
+                                                                                                           RESPONSIVE ï¿½ SMALL  (576 ï¿½ 767px)
+                                                                                                           ------------------------------------------------------------ */
         @media (min-width: 576px) and (max-width: 767.98px) {
 
             /* Image height */
@@ -279,8 +279,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                       RESPONSIVE — MOBILE  (0 – 575px)
-                                                                                                       ------------------------------------------------------------ */
+                                                                                                           RESPONSIVE ï¿½ MOBILE  (0 ï¿½ 575px)
+                                                                                                           ------------------------------------------------------------ */
         @media (max-width: 575.98px) {
 
             /* -- Page header -- */
@@ -309,7 +309,7 @@
                 justify-content: center;
             }
 
-            /* -- Stats cards — 2 per row -- */
+            /* -- Stats cards ï¿½ 2 per row -- */
             .row.g-3.mb-4 .col-6.col-xl-3 {
                 width: 50% !important;
             }
@@ -420,7 +420,7 @@
                 padding: .1em .28em !important;
             }
 
-            /* Product name — 1 line */
+            /* Product name ï¿½ 1 line */
             .pg-body h6 {
                 font-size: .78rem !important;
                 -webkit-line-clamp: 1 !important;
@@ -455,7 +455,7 @@
                 font-size: .48rem !important;
             }
 
-            /* Hide profit row — save vertical space */
+            /* Hide profit row ï¿½ save vertical space */
             .pg-price-box>div:last-child {
                 display: none !important;
             }
@@ -512,8 +512,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                       RESPONSIVE — EXTRA SMALL  (0 – 400px)
-                                                                                                       ------------------------------------------------------------ */
+                                                                                                           RESPONSIVE ï¿½ EXTRA SMALL  (0 ï¿½ 400px)
+                                                                                                           ------------------------------------------------------------ */
         @media (max-width: 400px) {
 
             /* Image thumb narrower on very small */
@@ -652,7 +652,8 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                             <input type="text" name="search" class="form-control form-control-sm"
-                                placeholder="{{ __('messages.ph_search_name_sku_short') }}" value="{{ request('search') }}">
+                                placeholder="{{ __('messages.ph_search_name_sku_short') }}"
+                                value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
@@ -715,10 +716,10 @@
 
     {{-- -- Toolbar: count + sort + per-page ---------------------- --}}
     @php
-        $sortLatest = __('messages.rpt_quick') . ' ({{ __('messages.rpt_this_week') }})';
+        $sortLatest = __('messages.rpt_quick') . ' (' . __('messages.rpt_this_week') . ')';
         $lblLatest = __('messages.updated') . ' ?';
-        $lblNameAsc = __('messages.th_name') . ' A–Z';
-        $lblNameDesc = __('messages.th_name') . ' Z–A';
+        $lblNameAsc = __('messages.th_name') . ' Aï¿½Z';
+        $lblNameDesc = __('messages.th_name') . ' Zï¿½A';
         $lblPriceUp = __('messages.prod_sell') . ' ?';
         $lblPriceDown = __('messages.prod_sell') . ' ?';
         $lblStockUp = __('messages.th_stock') . ' ?';
@@ -728,7 +729,7 @@
     <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 pg-toolbar">
         <p class="text-muted small mb-0">
             {{ __('messages.prod_showing_results') }}
-            <strong>{{ $products->firstItem() ?? 0 }}–{{ $products->lastItem() ?? 0 }}</strong>
+            <strong>{{ $products->firstItem() ?? 0 }}ï¿½{{ $products->lastItem() ?? 0 }}</strong>
             {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong> {{ __('messages.products') }}
         </p>
         <div class="d-flex gap-2 align-items-center flex-wrap">
@@ -737,9 +738,9 @@
                 <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
                     {{ __('messages.updated') }} ?</option>
                 <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>
-                    {{ __('messages.th_name') }} A–Z</option>
+                    {{ __('messages.th_name') }} Aï¿½Z</option>
                 <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>
-                    {{ __('messages.th_name') }} Z–A</option>
+                    {{ __('messages.th_name') }} Zï¿½A</option>
                 <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>
                     {{ __('messages.prod_sell') }} ?</option>
                 <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>
@@ -959,10 +960,10 @@
                 class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-1 py-3 mt-2 border-top pg-pagination">
                 <p class="text-muted small mb-0">
                     {{ __('messages.prod_showing_results') }}
-                    <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                    <strong>{{ $products->firstItem() }}</strong>ï¿½<strong>{{ $products->lastItem() }}</strong>
                     {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
                     {{ __('messages.products') }}
-                    &nbsp;·&nbsp; {{ __('messages.show') }} {{ $products->currentPage() }} /
+                    &nbsp;ï¿½&nbsp; {{ __('messages.show') }} {{ $products->currentPage() }} /
                     {{ $products->lastPage() }}
                 </p>
                 {{ $products->appends(request()->query())->links() }}

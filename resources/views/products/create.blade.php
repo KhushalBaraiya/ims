@@ -1,17 +1,18 @@
 @extends('layouts.admin')
-@section('title', isset($isCopy) ? 'Copy Product' : __('messages.create_product'))
+@section('title', isset($isCopy) ? __('messages.copy_product_title') : __('messages.create_product'))
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</h4>
+            <h4 class="fw-bold mb-1">{{ isset($isCopy) ? __('messages.copy_product_title') : __('messages.create_product') }}
+            </h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('products.index') }}">{{ __('messages.products') }}</a></li>
-                    <li class="breadcrumb-item active">{{ isset($isCopy) ? 'Copy' : __('messages.add') }}</li>
+                    <li class="breadcrumb-item active">{{ isset($isCopy) ? __('messages.copy') : __('messages.add') }}</li>
                 </ol>
             </nav>
         </div>
@@ -28,12 +29,14 @@
                 <i class="bx bx-package text-white" style="font-size:1.3rem;"></i>
             </div>
             <div class="flex-grow-1">
-                <div class="fw-bold text-white">{{ isset($isCopy) ? 'Copy Product' : __('messages.create_product') }}</div>
-                <div class="small text-white opacity-75">Fill in the details below to
-                    {{ isset($isCopy) ? 'copy this product' : 'add a new product to your catalog' }}</div>
+                <div class="fw-bold text-white">
+                    {{ isset($isCopy) ? __('messages.copy_product_title') : __('messages.create_product') }}</div>
+                <div class="small text-white opacity-75">
+                    {{ isset($isCopy) ? __('messages.copy_product_desc') : __('messages.add_product_desc') }}</div>
             </div>
             <span class="badge text-primary fw-semibold bg-white">
-                <i class="bx bx-plus me-1"></i>{{ isset($isCopy) ? 'Copy' : 'New Product' }}
+                <i
+                    class="bx bx-plus me-1"></i>{{ isset($isCopy) ? __('messages.copy_badge') : __('messages.new_product_badge') }}
             </span>
         </div>
     </div>
@@ -89,8 +92,8 @@
                                 </label>
                                 <div class="input-group">
                                     <input class="form-control @error('code') is-invalid @enderror" id="skuInput"
-                                        name="code" placeholder="{{ __(`messages.ph_sku_code`) }}" required type="text"
-                                        value="{{ old('code', $product->code ?? '') }}">
+                                        name="code" placeholder="{{ __(`messages.ph_sku_code`) }}" required
+                                        type="text" value="{{ old('code', $product->code ?? '') }}">
                                     <button class="btn btn-outline-secondary" id="generateSkuBtn" title="Auto-generate SKU"
                                         type="button">
                                         <i class="bx bx-refresh"></i>
@@ -196,9 +199,10 @@
                     <div
                         class="card-header border-bottom d-flex align-items-center justify-content-between bg-transparent py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-money text-success me-2"></i>Pricing & Stock Alert
+                            <i class="bx bx-money text-success me-2"></i>{{ __('messages.prod_pricing_stock') }}
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: ?</span>
+                        <span class="badge bg-label-primary small"
+                            id="profitBadge">{{ __('messages.prod_profit_badge') }}</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -343,9 +347,11 @@
                                         <div class="alert alert-info d-flex align-items-center mb-0 gap-2 px-3 py-2">
                                             <i class="bx bx-calculator text-info fs-5"></i>
                                             <div>
-                                                <div class="small fw-semibold text-info">Purchase Total</div>
-                                                <div class="fw-bold" id="openingStockTotal">?</div>
-                                                <div class="form-text mb-0">Qty ? Purchase Price</div>
+                                                <div class="small fw-semibold text-info">
+                                                    {{ __('messages.prod_purchase_total_label') }}</div>
+                                                <div class="fw-bold" id="openingStockTotal">—</div>
+                                                <div class="form-text mb-0">{{ __('messages.prod_qty_x_price_desc') }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -369,38 +375,42 @@
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_manufacturer') }}</label>
-                                <input class="form-control" name="manufacturer" placeholder="{{ __(`messages.ph_manufacturer`) }}"
-                                    type="text" value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
+                                <input class="form-control" name="manufacturer"
+                                    placeholder="{{ __(`messages.ph_manufacturer`) }}" type="text"
+                                    value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_model_number') }}</label>
-                                <input class="form-control" name="model_number" placeholder="{{ __(`messages.ph_model_number`) }}"
-                                    type="text" value="{{ old('model_number', $product->model_number ?? '') }}">
+                                <input class="form-control" name="model_number"
+                                    placeholder="{{ __(`messages.ph_model_number`) }}" type="text"
+                                    value="{{ old('model_number', $product->model_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_part_serial') }}</label>
-                                <input class="form-control" name="part_number" placeholder="{{ __(`messages.ph_part_number`) }}"
-                                    type="text" value="{{ old('part_number', $product->part_number ?? '') }}">
+                                <input class="form-control" name="part_number"
+                                    placeholder="{{ __(`messages.ph_part_number`) }}" type="text"
+                                    value="{{ old('part_number', $product->part_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_warranty') }}</label>
-                                <input class="form-control" name="warranty" placeholder="{{ __(`messages.ph_warranty`) }}" type="text"
+                                <input class="form-control" name="warranty"
+                                    placeholder="{{ __(`messages.ph_warranty`) }}" type="text"
                                     value="{{ old('warranty', $product->warranty ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_color') }}</label>
-                                <input class="form-control" name="color" placeholder="{{ __(`messages.ph_color`) }}" type="text"
-                                    value="{{ old('color', $product->color ?? '') }}">
+                                <input class="form-control" name="color" placeholder="{{ __(`messages.ph_color`) }}"
+                                    type="text" value="{{ old('color', $product->color ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_weight') }}</label>
-                                <input class="form-control" name="weight" placeholder="{{ __(`messages.ph_weight`) }}" type="text"
-                                    value="{{ old('weight', $product->weight ?? '') }}">
+                                <input class="form-control" name="weight" placeholder="{{ __(`messages.ph_weight`) }}"
+                                    type="text" value="{{ old('weight', $product->weight ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_country_origin') }}</label>
-                                <input class="form-control" name="country_of_origin" placeholder="{{ __(`messages.ph_country_origin`) }}"
-                                    type="text"
+                                <input class="form-control" name="country_of_origin"
+                                    placeholder="{{ __(`messages.ph_country_origin`) }}" type="text"
                                     value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}">
                             </div>
                         </div>
@@ -451,7 +461,7 @@
                                                 id="removeImageBtn" type="button">
                                                 <i class="bx bx-trash me-1"></i> {{ __('messages.prod_remove') }}
                                             </button>
-                                            <div class="form-text mt-1">PNG, JPG, WEBP<br>Max 2 MB</div>
+                                            <div class="form-text mt-1">{{ __('messages.image_hint') }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -459,7 +469,8 @@
                                 <input id="remove_image" name="remove_image" type="hidden" value="0">
 
                                 {{-- Gallery Images --}}
-                                <label class="form-label fw-semibold mb-2">Gallery Images</label>
+                                <label
+                                    class="form-label fw-semibold mb-2">{{ __('messages.prod_gallery_images') }}</label>
                                 <input accept="image/*" class="d-none" id="galleryInput" multiple name="gallery[]"
                                     type="file">
                                 <input id="clear_gallery" name="clear_gallery" type="hidden" value="0">
@@ -472,11 +483,11 @@
                                     style="border-color:rgba(105,108,255,.35)!important;background:rgba(105,108,255,.03);cursor:pointer;transition:border-color .2s,background .2s;">
                                     <i class="bx bx-cloud-upload d-block text-primary mb-1"
                                         style="font-size:1.8rem;opacity:.6;"></i>
-                                    <div class="small text-muted">Drop images here or</div>
+                                    <div class="small text-muted">{{ __('messages.prod_drop_here') }}</div>
                                     <button class="btn btn-outline-primary mt-1" id="triggerGalleryBtn" type="button">
-                                        <i class="bx bx-images me-1"></i> Browse Files
+                                        <i class="bx bx-images me-1"></i> {{ __('messages.prod_browse_files') }}
                                     </button>
-                                    <div class="form-text mb-0 mt-1">PNG, JPG, WEBP ? Max 2MB each</div>
+                                    <div class="form-text mb-0 mt-1">{{ __('messages.prod_drop_or_browse') }}</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -493,7 +504,8 @@
                                                 <button
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger rounded-circle border-0 text-white shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove" type="button">?</button>
+                                                    title="{{ __('messages.prod_remove') }}"
+                                                    type="button">&times;</button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -565,7 +577,7 @@
                         <div class="d-grid gap-2">
                             <button class="btn btn-primary" type="submit">
                                 <i class="bx bx-save me-1"></i>
-                                {{ isset($isCopy) ? 'Save Copied Product' : __('messages.save') }}
+                                {{ isset($isCopy) ? __('messages.prod_save_copied') : __('messages.save') }}
                             </button>
                             <a class="btn btn-outline-secondary" href="{{ route('products.index') }}">
                                 <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
@@ -578,17 +590,21 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
                         <h6 class="fw-semibold mb-3">
-                            <i class="bx bx-bulb text-warning me-2"></i>Quick Tips
+                            <i class="bx bx-bulb text-warning me-2"></i>{{ __('messages.quick_tips_title') }}
                         </h6>
                         <ul class="list-unstyled small text-muted mb-0">
-                            <li class="mb-2"><i class="bx bx-check-circle text-success me-1"></i>SKU must be unique
-                                across all products.</li>
-                            <li class="mb-2"><i class="bx bx-check-circle text-success me-1"></i>Select Main Category
-                                first to load Sub Categories.</li>
-                            <li class="mb-2"><i class="bx bx-check-circle text-success me-1"></i>Enable Opening Stock to
-                                auto-create a purchase record.</li>
-                            <li class="mb-0"><i class="bx bx-check-circle text-success me-1"></i>Primary image max size
-                                is 2MB (PNG/JPG/WEBP).</li>
+                            <li class="mb-2"><i
+                                    class="bx bx-check-circle text-success me-1"></i>{{ __('messages.quick_tips_sku') }}
+                            </li>
+                            <li class="mb-2"><i
+                                    class="bx bx-check-circle text-success me-1"></i>{{ __('messages.quick_tips_cat') }}
+                            </li>
+                            <li class="mb-2"><i
+                                    class="bx bx-check-circle text-success me-1"></i>{{ __('messages.quick_tips_stock') }}
+                            </li>
+                            <li class="mb-0"><i
+                                    class="bx bx-check-circle text-success me-1"></i>{{ __('messages.quick_tips_img') }}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -680,7 +696,7 @@
                     theme: 'bootstrap-5',
                     width: '100%',
                     allowClear: true,
-                    placeholder: 'Select Sub Category',
+                    placeholder: '{{ __('messages.select_sub_category') }}',
                 });
             }
 
@@ -702,11 +718,13 @@
                     const pct = ((profit / buy) * 100).toFixed(1);
                     const sign = profit >= 0 ? '+' : '';
                     $('#profitBadge')
-                        .text(`Profit: ${sign}?${profit.toFixed(2)} (${sign}${pct}%)`)
+                        .text(
+                            `{{ __('messages.prod_profit_badge') }}: ${sign}{{ current_currency()?->symbol ?? '₹' }}${profit.toFixed(2)} (${sign}${pct}%)`
+                        )
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: ?');
+                    $('#profitBadge').text('{{ __('messages.prod_profit_badge') }}');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);

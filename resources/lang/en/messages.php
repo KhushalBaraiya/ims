@@ -1550,6 +1550,15 @@ return [
 
     // Profile
     'ph_profile_phone'        => '+1234567890',
+
+    // ── Product form — new gallery / action keys ──────────────────────────────
+    'prod_gallery_multi'      => 'Multi-select',
+    'prod_saved_gallery'      => 'Saved Gallery',
+    'prod_gallery_photos'     => 'photos',
+    'prod_clear_all'          => 'Clear All',
+    'prod_save_product'       => 'Save Product',
+    'prod_update_product'     => 'Update Product',
+    'prod_sku_error'          => 'Could not generate SKU.',
 ];
 
 

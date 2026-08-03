@@ -1539,6 +1539,15 @@ return [
 
     // Profile
     'ph_profile_phone'        => '+1234567890',
+
+    // ── Product form — new gallery / action keys ──────────────────────────────
+    'prod_gallery_multi'      => 'Multi-select',
+    'prod_saved_gallery'      => 'सहेजी गई गैलरी',
+    'prod_gallery_photos'     => 'फ़ोटो',
+    'prod_clear_all'          => 'सब हटाएं',
+    'prod_save_product'       => 'उत्पाद सहेजें',
+    'prod_update_product'     => 'उत्पाद अपडेट करें',
+    'prod_sku_error'          => 'SKU जनरेट नहीं हो सका।',
 ];
 
 

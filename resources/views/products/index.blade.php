@@ -119,7 +119,7 @@
     {{-- Summary Stats --}}
     <div class="row g-3 mb-4">
         @php
-            // Use DB aggregates — $products is now paginated, not a full collection
+            // Use DB aggregates ï¿½ $products is now paginated, not a full collection
             $total = \App\Models\Product::count();
             $active = \App\Models\Product::where('status', 'active')->count();
             $lowStock = \App\Models\Product::whereHas(
@@ -235,9 +235,11 @@
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.stock_alert_menu') }}</label>
                             <select name="stock_filter" class="form-select form-select-sm">
-                                <option value="">All Stock</option>
-                                <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock Only</option>
-                                <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>Out of Stock Only</option>
+                                <option value="">{{ __('messages.all_stock') }}</option>
+                                <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>
+                                    {{ __('messages.low_stock_only') }}</option>
+                                <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>
+                                    {{ __('messages.out_of_stock_only') }}</option>
                             </select>
                         </div>
                         <div class="col-6 col-md-1">
@@ -300,7 +302,7 @@
                             placeholder="{{ __('messages.search') }}..." value="{{ request('search') }}">
                         @if (request('search'))
                             <a href="{{ route('products.index', request()->except('search', 'page')) }}"
-                                class="btn btn-outline-secondary" title="Clear search">
+                                class="btn btn-outline-secondary" title="{{ __('messages.clear_search') }}">
                                 <i class="bx bx-x"></i>
                             </a>
                         @endif
@@ -363,8 +365,8 @@
                                 </td>
                                 <td><code class="small">{{ $product->code }}</code></td>
                                 <td>
-                                    <div class="small fw-semibold">{{ $product->brand->name ?? '—' }}</div>
-                                    <small class="text-muted">{{ $product->mainCategory->name ?? '—' }}</small>
+                                    <div class="small fw-semibold">{{ $product->brand->name ?? 'ï¿½' }}</div>
+                                    <small class="text-muted">{{ $product->mainCategory->name ?? 'ï¿½' }}</small>
                                 </td>
                                 <td class="text-end fw-semibold small">{{ format_currency($product->purchase_price) }}
                                 </td>
@@ -377,7 +379,7 @@
                                             <span class="{{ $sCls }}">{{ number_format($sq, 0) }}</span>
                                         </span>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">ï¿½</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -385,7 +387,8 @@
                                         <button type="button"
                                             class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $product->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
                                             style="background:transparent;cursor:pointer;" data-id="{{ $product->id }}"
-                                            data-status="{{ $product->status }}" title="Click to toggle status">
+                                            data-status="{{ $product->status }}"
+                                            title="{{ __('messages.toggle_status') }}">
                                             {{ ucfirst($product->status) }}
                                         </button>
                                     @else
@@ -511,7 +514,7 @@
                 <p class="text-muted small mb-0">
                     @if ($products->total() > 0)
                         {{ __('messages.prod_showing_results') }}
-                        <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                        <strong>{{ $products->firstItem() }}</strong>ï¿½<strong>{{ $products->lastItem() }}</strong>
                         {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
                         {{ __('messages.prod_results') }}
                     @else
@@ -551,7 +554,7 @@
             function loadSubs(catId, pre = '') {
                 const $s = $('#filter_sub_category_id');
                 if ($s.hasClass('select2-hidden-accessible')) $s.select2('destroy');
-                $s.html('<option value="">All Sub-cats</option>');
+                $s.html('<option value="">' + '{{ __('messages.prod_all_subcats') }}' + '</option>');
                 if (!catId) {
                     $s.select2({
                         theme: 'bootstrap-5',
@@ -567,7 +570,7 @@
                     theme: 'bootstrap-5',
                     width: '100%',
                     allowClear: true,
-                    placeholder: 'All Sub-cats'
+                    placeholder: '{{ __('messages.prod_all_subcats') }}'
                 });
             }
 
@@ -579,7 +582,7 @@
             const initCat = "{{ request('main_category_id') }}";
             if (initCat) loadSubs(initCat, selSub);
             else if (selSub) {
-                // sub selected but no main selected — find the matching main and pre-load
+                // sub selected but no main selected ï¿½ find the matching main and pre-load
                 const matchedSub = subs.find(s => s.id == selSub);
                 if (matchedSub) {
                     // Set main category dropdown value then load subs
