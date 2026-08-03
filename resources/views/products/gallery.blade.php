@@ -1,11 +1,11 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Product Gallery')
+@section('title', __('messages.product_gallery'))
 
 @push('styles')
     <style>
         /* ════════════════════════════════════════════════════════════
-                                                   PRODUCT GALLERY — BASE STYLES
-                                                   ════════════════════════════════════════════════════════════ */
+                                                                                                       PRODUCT GALLERY — BASE STYLES
+                                                                                                       ════════════════════════════════════════════════════════════ */
 
         /* ── Card ── */
         .pg-card {
@@ -182,8 +182,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                                   RESPONSIVE — LARGE TABLET  (768 – 991px)
-                                                   ════════════════════════════════════════════════════════════ */
+                                                                                                       RESPONSIVE — LARGE TABLET  (768 – 991px)
+                                                                                                       ════════════════════════════════════════════════════════════ */
         @media (min-width: 768px) and (max-width: 991.98px) {
 
             /* Image shorter on tablet to save vertical space */
@@ -225,8 +225,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                                   RESPONSIVE — SMALL  (576 – 767px)
-                                                   ════════════════════════════════════════════════════════════ */
+                                                                                                       RESPONSIVE — SMALL  (576 – 767px)
+                                                                                                       ════════════════════════════════════════════════════════════ */
         @media (min-width: 576px) and (max-width: 767.98px) {
 
             /* Image height */
@@ -279,8 +279,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                                   RESPONSIVE — MOBILE  (0 – 575px)
-                                                   ════════════════════════════════════════════════════════════ */
+                                                                                                       RESPONSIVE — MOBILE  (0 – 575px)
+                                                                                                       ════════════════════════════════════════════════════════════ */
         @media (max-width: 575.98px) {
 
             /* ── Page header ── */
@@ -512,8 +512,8 @@
         }
 
         /* ════════════════════════════════════════════════════════════
-                                                   RESPONSIVE — EXTRA SMALL  (0 – 400px)
-                                                   ════════════════════════════════════════════════════════════ */
+                                                                                                       RESPONSIVE — EXTRA SMALL  (0 – 400px)
+                                                                                                       ════════════════════════════════════════════════════════════ */
         @media (max-width: 400px) {
 
             /* Image thumb narrower on very small */
@@ -553,13 +553,13 @@
     {{-- ── Header ──────────────────────────────────────────────── --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Product Gallery</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.product_gallery') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('products.index') }}">{{ __('messages.products') }}</a>
                     </li>
-                    <li class="breadcrumb-item active">Gallery</li>
+                    <li class="breadcrumb-item active">{{ __('messages.prod_gallery') }}</li>
                 </ol>
             </nav>
         </div>
@@ -569,10 +569,10 @@
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             <a href="{{ route('products.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bx bx-list-ul"></i> List View
+                <i class="bx bx-list-ul"></i> {{ __('messages.list_view') }}
             </a>
             <a href="{{ route('products.by-category') }}" class="btn btn-outline-success d-flex align-items-center gap-1">
-                <i class="bx bx-category"></i> By Category
+                <i class="bx bx-category"></i> {{ __('messages.prod_by_category') }}
             </a>
             @can('products.create')
                 <a href="{{ route('products.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
@@ -588,7 +588,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Total</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_total_products') }}</p>
                         <h4 class="mb-0 fw-bold text-primary">{{ $products->total() }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;">
@@ -601,7 +601,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Active</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_active') }}</p>
                         <h4 class="mb-0 fw-bold text-success">{{ $activeCount }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
@@ -614,7 +614,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Low Stock</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_low_stock') }}</p>
                         <h4 class="mb-0 fw-bold text-warning">{{ $lowStockCount }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.1rem;">
@@ -627,7 +627,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">Out of Stock</p>
+                        <p class="mb-0 text-muted small">{{ __('messages.prod_out_of_stock') }}</p>
                         <h4 class="mb-0 fw-bold text-danger">{{ $outOfStockCount }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1.1rem;">
@@ -677,15 +677,17 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">Stock</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.available_stock') }}</label>
                             <select name="stock_filter" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_stock') }}</option>
-                                <option value="ok" {{ request('stock_filter') === 'ok' ? 'selected' : '' }}>In Stock
+                                <option value="ok" {{ request('stock_filter') === 'ok' ? 'selected' : '' }}>
+                                    {{ __('messages.in_stock') }}
                                 </option>
-                                <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>Low Stock
+                                <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>
+                                    {{ __('messages.low_stock_badge') }}
                                 </option>
-                                <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>Out of
-                                    Stock</option>
+                                <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>
+                                    {{ __('messages.out_of_stock') }}</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -712,29 +714,51 @@
     </div>
 
     {{-- ── Toolbar: count + sort + per-page ────────────────────── --}}
+    @php
+        $sortLatest = __('messages.rpt_quick') . ' ({{ __('messages.rpt_this_week') }})';
+        $lblLatest = __('messages.updated') . ' ▼';
+        $lblNameAsc = __('messages.th_name') . ' A–Z';
+        $lblNameDesc = __('messages.th_name') . ' Z–A';
+        $lblPriceUp = __('messages.prod_sell') . ' ↑';
+        $lblPriceDown = __('messages.prod_sell') . ' ↓';
+        $lblStockUp = __('messages.th_stock') . ' ↑';
+        $lblStockDown = __('messages.th_stock') . ' ↓';
+        $lblPage = __('messages.entries');
+    @endphp
     <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 pg-toolbar">
         <p class="text-muted small mb-0">
-            Showing
+            {{ __('messages.prod_showing_results') }}
             <strong>{{ $products->firstItem() ?? 0 }}–{{ $products->lastItem() ?? 0 }}</strong>
-            of <strong>{{ $products->total() }}</strong> products
+            {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong> {{ __('messages.products') }}
         </p>
         <div class="d-flex gap-2 align-items-center flex-wrap">
             <select class="form-select form-select-sm" style="width:auto;" data-no-select2
                 onchange="applyParam('sort',this.value)">
-                <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>Latest</option>
-                <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Name A–Z</option>
-                <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>Name Z–A</option>
-                <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>Price ↑</option>
-                <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>Price ↓</option>
-                <option value="stock_asc" {{ request('sort') === 'stock_asc' ? 'selected' : '' }}>Stock ↑</option>
-                <option value="stock_desc" {{ request('sort') === 'stock_desc' ? 'selected' : '' }}>Stock ↓</option>
+                <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
+                    {{ __('messages.updated') }} ▼</option>
+                <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>
+                    {{ __('messages.th_name') }} A–Z</option>
+                <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>
+                    {{ __('messages.th_name') }} Z–A</option>
+                <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>
+                    {{ __('messages.prod_sell') }} ↑</option>
+                <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>
+                    {{ __('messages.prod_sell') }} ↓</option>
+                <option value="stock_asc" {{ request('sort') === 'stock_asc' ? 'selected' : '' }}>
+                    {{ __('messages.th_stock') }} ↑</option>
+                <option value="stock_desc" {{ request('sort') === 'stock_desc' ? 'selected' : '' }}>
+                    {{ __('messages.th_stock') }} ↓</option>
             </select>
             <select class="form-select form-select-sm" style="width:auto;" data-no-select2
                 onchange="applyParam('per_page',this.value)">
-                <option value="12" {{ request('per_page', 24) == 12 ? 'selected' : '' }}>12 / page</option>
-                <option value="24" {{ request('per_page', 24) == 24 ? 'selected' : '' }}>24 / page</option>
-                <option value="48" {{ request('per_page', 24) == 48 ? 'selected' : '' }}>48 / page</option>
-                <option value="96" {{ request('per_page', 24) == 96 ? 'selected' : '' }}>96 / page</option>
+                <option value="12" {{ request('per_page', 24) == 12 ? 'selected' : '' }}>12 /
+                    {{ __('messages.entries') }}</option>
+                <option value="24" {{ request('per_page', 24) == 24 ? 'selected' : '' }}>24 /
+                    {{ __('messages.entries') }}</option>
+                <option value="48" {{ request('per_page', 24) == 48 ? 'selected' : '' }}>48 /
+                    {{ __('messages.entries') }}</option>
+                <option value="96" {{ request('per_page', 24) == 96 ? 'selected' : '' }}>96 /
+                    {{ __('messages.entries') }}</option>
             </select>
         </div>
     </div>
@@ -743,8 +767,8 @@
     @if ($products->isEmpty())
         <div class="text-center py-5 text-muted">
             <i class="bx bx-package d-block mb-3" style="font-size:4rem;opacity:.12;"></i>
-            <p class="fw-semibold mb-1">No products found.</p>
-            <p class="small mb-0">Try adjusting your filters.</p>
+            <p class="fw-semibold mb-1">{{ __('messages.prod_no_products_yet') }}</p>
+            <p class="small mb-0">{{ __('messages.prod_clear_filters_hint') }}</p>
         </div>
     @else
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-2 g-sm-3 mb-4">
@@ -760,7 +784,11 @@
                     $inactive = $product->status !== 'active';
                     $sCls = $isOut ? 'text-danger' : ($isLow ? 'text-warning' : 'text-success');
                     $sBadge = $isOut ? 'bg-danger' : ($isLow ? 'bg-warning text-dark' : 'bg-success');
-                    $sLabel = $isOut ? 'Out of Stock' : ($isLow ? 'Low Stock' : 'In Stock');
+                    $sLabel = $isOut
+                        ? __('messages.out_of_stock')
+                        : ($isLow
+                            ? __('messages.low_stock_badge')
+                            : __('messages.in_stock'));
                 @endphp
                 <div class="col">
                     <div class="card pg-card shadow-sm {{ $inactive ? 'opacity-75' : '' }}"
@@ -804,7 +832,8 @@
                             {{-- inactive / gallery count TR --}}
                             <div class="pg-tr">
                                 @if ($inactive)
-                                    <span class="badge bg-secondary" style="font-size:.58rem;">Inactive</span>
+                                    <span class="badge bg-secondary"
+                                        style="font-size:.58rem;">{{ __('messages.inactive') }}</span>
                                 @endif
                                 @if (count($gallery))
                                     <span class="badge bg-dark bg-opacity-55" style="font-size:.58rem;">
@@ -844,21 +873,22 @@
                                     <div>
                                         <div
                                             style="font-size:.58rem;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.05em;line-height:1.2;">
-                                            Sell</div>
+                                            {{ __('messages.prod_sell') }}</div>
                                         <div class="fw-bold text-primary lh-1" style="font-size:.95rem;">
                                             {{ format_currency($product->selling_price) }}</div>
                                     </div>
                                     <div class="text-end">
                                         <div
                                             style="font-size:.58rem;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.05em;line-height:1.2;">
-                                            Cost</div>
+                                            {{ __('messages.prod_cost') }}</div>
                                         <div class="text-muted fw-semibold lh-1" style="font-size:.75rem;">
                                             {{ format_currency($product->purchase_price) }}</div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mt-1 pt-1"
                                     style="border-top:1px solid rgba(0,0,0,.07);">
-                                    <span style="font-size:.58rem;color:#bbb;font-weight:600;">Profit</span>
+                                    <span
+                                        style="font-size:.58rem;color:#bbb;font-weight:600;">{{ __('messages.profit') }}</span>
                                     <span class="fw-bold {{ $pct >= 0 ? 'text-success' : 'text-danger' }}"
                                         style="font-size:.68rem;">
                                         {{ format_currency($profit) }}
@@ -904,13 +934,15 @@
                                 @can('products.view')
                                     <a href="{{ route('products.show', $product->id) }}"
                                         class="btn btn-outline-secondary flex-fill">
-                                        <i class="bx bx-show"></i><span class="pg-btn-label ms-1">View</span>
+                                        <i class="bx bx-show"></i><span
+                                            class="pg-btn-label ms-1">{{ __('messages.view') }}</span>
                                     </a>
                                 @endcan
                                 @can('products.update')
                                     <a href="{{ route('products.edit', $product->id) }}"
                                         class="btn btn-outline-primary flex-fill">
-                                        <i class="bx bx-edit"></i><span class="pg-btn-label ms-1">Edit</span>
+                                        <i class="bx bx-edit"></i><span
+                                            class="pg-btn-label ms-1">{{ __('messages.edit') }}</span>
                                     </a>
                                 @endcan
                             </div>
@@ -926,9 +958,12 @@
             <div
                 class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-1 py-3 mt-2 border-top pg-pagination">
                 <p class="text-muted small mb-0">
-                    Showing <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
-                    of <strong>{{ $products->total() }}</strong> products
-                    &nbsp;·&nbsp; Page {{ $products->currentPage() }} of {{ $products->lastPage() }}
+                    {{ __('messages.prod_showing_results') }}
+                    <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                    {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
+                    {{ __('messages.products') }}
+                    &nbsp;·&nbsp; {{ __('messages.show') }} {{ $products->currentPage() }} /
+                    {{ $products->lastPage() }}
                 </p>
                 {{ $products->appends(request()->query())->links() }}
             </div>

@@ -1351,6 +1351,18 @@ return [
     'dark_mode' => 'Dark mode',
 
     'sku_prefix' => 'SKU Prefix',
+
+    // ── Product create/edit field labels (previously missing) ─────────────
+    'product_name_label'  => 'Product Name',
+    'sku_code_label'      => 'SKU / Code',
+    'auto_or_manual'      => 'auto or manual',
+    'barcode_label'       => 'Barcode',
+    'basic_information'   => 'Basic Information',
+    'brand_label'         => 'Brand',
+    'main_category_label' => 'Main Category',
+    'sub_category_label'  => 'Sub Category',
+    'unit_name_label'     => 'Unit Name',
+    'unit_code_label'     => 'Unit Code',
 ];
 
 

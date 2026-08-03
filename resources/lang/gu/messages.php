@@ -1335,5 +1335,17 @@ return [
     'dark_mode' => 'ડાર્ક મોડ',
 
     'sku_prefix' => 'SKU પ્રીફિક્સ',
+
+    // ── Product create/edit field labels (previously missing) ─────────────
+    'product_name_label'  => 'ઉત્પાદ નામ',
+    'sku_code_label'      => 'SKU / કોડ',
+    'auto_or_manual'      => 'સ્વ-નિર્મિત અથવા મૅન્યુઅલ',
+    'barcode_label'       => 'બારકૉડ',
+    'basic_information'   => 'મૂળભૂત માહિતી',
+    'brand_label'         => 'બ્રાન્ડ',
+    'main_category_label' => 'મુખ્ય શ્રેણી',
+    'sub_category_label'  => 'પેટા-શ્રેણી',
+    'unit_name_label'     => 'એકમ નામ',
+    'unit_code_label'     => 'એકમ કોડ',
 ];
 

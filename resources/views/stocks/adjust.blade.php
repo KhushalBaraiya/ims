@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.create_adjustment'))
 
 @section('content')

@@ -20,11 +20,11 @@
         <div class="d-flex gap-2 flex-wrap">
             @if (request('from') === 'low_stock')
                 <a class="btn btn-outline-warning btn-sm" href="{{ route('stocks.low_stock') }}">
-                    <i class="bx bx-error-circle me-1"></i> Back to Low Stock Alert
+                    <i class="bx bx-error-circle me-1"></i> {{ __('messages.low_stock_alert') }}
                 </a>
             @endif
             <a class="btn btn-outline-info btn-sm" href="{{ route('products.show', $product->id) }}">
-                <i class="bx bx-show me-1"></i> View
+                <i class="bx bx-show me-1"></i> {{ __('messages.prod_view_btn_txt') }}
             </a>
             <a class="btn btn-outline-secondary btn-sm" href="{{ route('products.index') }}">
                 <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
@@ -100,13 +100,13 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-info-circle text-primary me-2"></i>Basic Information
+                            <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.basic_information') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Product Name <span
+                                <label class="form-label fw-semibold">{{ __('messages.product_name_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('name') is-invalid @enderror" name="name"
                                     type="text" required placeholder="e.g. Core i9 Processor"
@@ -116,7 +116,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">SKU / Code <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.sku_code_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input class="form-control @error('code') is-invalid @enderror" name="code"
                                     type="text" required readonly value="{{ old('code', $product->code) }}">
                                 @error('code')
@@ -124,7 +125,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Barcode</label>
+                                <label class="form-label fw-semibold">{{ __('messages.barcode_label') }}</label>
                                 <input class="form-control @error('barcode') is-invalid @enderror" name="barcode"
                                     type="text" placeholder="e.g. 8901234567890"
                                     value="{{ old('barcode', $product->barcode) }}">
@@ -133,7 +134,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Main Category <span
+                                <label class="form-label fw-semibold">{{ __('messages.main_category_label') }} <span
                                         class="text-danger">*</span></label>
                                 <select class="form-select @error('main_category_id') is-invalid @enderror"
                                     id="main_category_id" name="main_category_id" required>
@@ -149,7 +150,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Sub Category</label>
+                                <label class="form-label fw-semibold">{{ __('messages.sub_category_label') }}</label>
                                 <select class="form-select @error('sub_category_id') is-invalid @enderror"
                                     id="sub_category_id" name="sub_category_id">
                                     <option value="">{{ __('messages.select_sub_category') }}</option>
@@ -159,7 +160,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Brand <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.brand_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <select class="form-select @error('brand_id') is-invalid @enderror" name="brand_id"
                                     required>
                                     <option value="">{{ __('messages.select_brand') }}</option>
@@ -174,7 +176,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Unit Name <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.unit_name_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_name') is-invalid @enderror" name="unit_name"
                                     type="text" required placeholder="Piece"
                                     value="{{ old('unit_name', $product->unit_name) }}">
@@ -183,7 +186,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Unit Code <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.unit_code_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_code') is-invalid @enderror" name="unit_code"
                                     type="text" required placeholder="PCS"
                                     value="{{ old('unit_code', $product->unit_code) }}">
@@ -199,14 +203,15 @@
                 <div class="card mb-4 shadow-sm" id="pricingStockCard">
                     <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-money text-success me-2"></i>Pricing &amp; Stock Alert
+                            <i class="bx bx-money text-success me-2"></i>{{ __('messages.prod_pricing_stock') }}
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: —</span>
+                        <span class="badge bg-label-primary small"
+                            id="profitBadge">{{ __('messages.prod_profit_badge') }}: —</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Purchase Price <span
+                                <label class="form-label fw-semibold">{{ __('messages.prod_purchase_price') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
@@ -220,7 +225,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Selling Price <span
+                                <label class="form-label fw-semibold">{{ __('messages.prod_selling_price') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
@@ -234,7 +239,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Discount Amount</label>
+                                <label class="form-label fw-semibold">{{ __('messages.discount') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                                     <input class="form-control @error('discount_price_amount') is-invalid @enderror"
@@ -247,7 +252,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Selling Tax %</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_tax_pct') }}</label>
                                 <div class="input-group">
                                     <input class="form-control @error('tax_percentage') is-invalid @enderror"
                                         id="tax_percentage" name="tax_percentage" type="number" step="0.01"
@@ -259,10 +264,10 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="form-text">Max 100%</div>
+                                <div class="form-text">{{ __('messages.prod_tax_max') }}</div>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Min Stock Alert</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_min_stock_alert') }}</label>
                                 <input class="form-control @error('minimum_stock_alert') is-invalid @enderror"
                                     name="minimum_stock_alert" type="number" step="0.01" min="0"
                                     placeholder="e.g. 5"
@@ -324,46 +329,47 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-chip text-info me-2"></i>Technical Specifications
-                            <span class="badge bg-label-secondary small fw-normal ms-2">Optional</span>
+                            <i class="bx bx-chip text-info me-2"></i>{{ __('messages.prod_tech_specs') }}
+                            <span
+                                class="badge bg-label-secondary small fw-normal ms-2">{{ __('messages.prod_optional') }}</span>
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Manufacturer</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_manufacturer') }}</label>
                                 <input class="form-control" name="manufacturer" type="text"
                                     placeholder="e.g. Intel, Asus"
                                     value="{{ old('manufacturer', $product->manufacturer) }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Model Number</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_model_number') }}</label>
                                 <input class="form-control" name="model_number" type="text"
                                     placeholder="e.g. ROG-STRIX-Z790"
                                     value="{{ old('model_number', $product->model_number) }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Part / Serial No.</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_part_serial') }}</label>
                                 <input class="form-control" name="part_number" type="text"
                                     placeholder="e.g. 90MB1CS0" value="{{ old('part_number', $product->part_number) }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Warranty</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_warranty') }}</label>
                                 <input class="form-control" name="warranty" type="text" placeholder="e.g. 3 Years"
                                     value="{{ old('warranty', $product->warranty) }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Color</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_color') }}</label>
                                 <input class="form-control" name="color" type="text" placeholder="e.g. Space Grey"
                                     value="{{ old('color', $product->color) }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Weight</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_weight') }}</label>
                                 <input class="form-control" name="weight" type="text" placeholder="e.g. 1.2 kg"
                                     value="{{ old('weight', $product->weight) }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Country of Origin</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_country_origin') }}</label>
                                 <input class="form-control" name="country_of_origin" type="text"
                                     placeholder="e.g. Taiwan"
                                     value="{{ old('country_of_origin', $product->country_of_origin) }}">
@@ -376,13 +382,14 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-image text-warning me-2"></i>Media &amp; Description
+                            <i class="bx bx-image text-warning me-2"></i>{{ __('messages.prod_media_desc') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-4">
                             <div class="col-md-5">
-                                <label class="form-label fw-semibold mb-2">Primary Image</label>
+                                <label
+                                    class="form-label fw-semibold mb-2">{{ __('messages.prod_primary_image') }}</label>
                                 <div class="rounded-3 mb-3 border p-3" style="background:rgba(105,108,255,.03);">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0 overflow-hidden border"
@@ -401,12 +408,12 @@
                                         <div>
                                             <button class="btn btn-primary d-block mb-2" id="triggerImageBtn"
                                                 type="button">
-                                                <i class="bx bx-upload me-1"></i> Upload
+                                                <i class="bx bx-upload me-1"></i> {{ __('messages.prod_upload') }}
                                             </button>
                                             <button
                                                 class="btn btn-outline-danger d-block {{ $product->image ? '' : 'd-none' }}"
                                                 id="removeImageBtn" type="button">
-                                                <i class="bx bx-trash me-1"></i> Remove
+                                                <i class="bx bx-trash me-1"></i> {{ __('messages.prod_remove') }}
                                             </button>
                                             <div class="form-text mt-1">PNG, JPG, WEBP<br>Max 2 MB</div>
                                         </div>
@@ -415,7 +422,8 @@
                                 <input accept="image/*" class="d-none" id="imageInput" name="image" type="file">
                                 <input id="remove_image" name="remove_image" type="hidden" value="0">
 
-                                <label class="form-label fw-semibold mb-2">Gallery Images</label>
+                                <label
+                                    class="form-label fw-semibold mb-2">{{ __('messages.prod_gallery_images') }}</label>
                                 <input accept="image/*" class="d-none" id="galleryInput" multiple name="gallery[]"
                                     type="file">
                                 <input id="clear_gallery" name="clear_gallery" type="hidden" value="0">
@@ -427,10 +435,10 @@
                                     style="border-color:rgba(105,108,255,.35)!important;background:rgba(105,108,255,.03);cursor:pointer;">
                                     <i class="bx bx-cloud-upload d-block text-primary mb-1"
                                         style="font-size:1.8rem;opacity:.6;"></i>
-                                    <div class="small text-muted">Drop images here or</div>
+                                    <div class="small text-muted">{{ __('messages.prod_drop_here') }}</div>
                                     <button class="btn btn-outline-primary btn-sm mt-1" id="triggerGalleryBtn"
                                         type="button">
-                                        <i class="bx bx-images me-1"></i> Browse Files
+                                        <i class="bx bx-images me-1"></i> {{ __('messages.prod_browse_files') }}
                                     </button>
                                     <div class="form-text mb-0 mt-1">PNG, JPG, WEBP — Max 2 MB each</div>
                                 </div>
@@ -439,9 +447,11 @@
                                     style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:4px;">
                                     @if ($product->gallery && count($product->gallery) > 0)
                                         @foreach ($product->gallery as $galImg)
-                                            <div class="position-relative gallery-thumb" data-image="{{ $galImg }}"
+                                            <div class="position-relative gallery-thumb"
+                                                data-image="{{ $galImg }}"
                                                 style="aspect-ratio:1;border-radius:8px;overflow:visible;">
-                                                <img class="w-100 h-100" src="{{ asset('uploads/products/' . $galImg) }}"
+                                                <img class="w-100 h-100"
+                                                    src="{{ asset('uploads/products/' . $galImg) }}"
                                                     style="object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,.12);">
                                                 <button
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger rounded-circle border-0 text-white shadow"
@@ -455,13 +465,13 @@
                                 <button
                                     class="btn btn-link text-danger {{ $product->gallery && count($product->gallery) > 0 ? '' : 'd-none' }} mt-1 px-0"
                                     id="clearAllGalleryBtn" type="button">
-                                    <i class="bx bx-trash me-1"></i> Clear All
+                                    <i class="bx bx-trash me-1"></i> {{ __('messages.prod_clear_all') }}
                                 </button>
                             </div>
 
                             <div class="col-md-7">
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Short Description</label>
+                                    <label class="form-label fw-semibold">{{ __('messages.prod_short_desc') }}</label>
                                     <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
                                         rows="3" placeholder="Key features summary...">{{ old('short_description', $product->short_description) }}</textarea>
                                     @error('short_description')
@@ -469,7 +479,7 @@
                                     @enderror
                                 </div>
                                 <div class="mb-0">
-                                    <label class="form-label fw-semibold">Full Description / Specifications</label>
+                                    <label class="form-label fw-semibold">{{ __('messages.prod_full_desc') }}</label>
                                     <textarea class="form-control @error('full_description') is-invalid @enderror" name="full_description"
                                         rows="8" placeholder="Complete specifications, box contents...">{{ old('full_description', $product->full_description) }}</textarea>
                                     @error('full_description')
@@ -518,7 +528,7 @@
                             <i class="bx bx-save me-1"></i> {{ __('messages.update') }}
                         </button>
                         <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-secondary">
-                            <i class="bx bx-show me-1"></i> View Product
+                            <i class="bx bx-show me-1"></i> {{ __('messages.prod_view_product') }}
                         </a>
                         <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
                             <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
@@ -532,7 +542,7 @@
                 <div class="card shadow-sm border-warning border-opacity-50">
                     <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-slider text-warning me-2"></i>Quick Stock Adjust
+                            <i class="bx bx-slider text-warning me-2"></i>{{ __('messages.stock_adjust_title') }}
                         </h6>
                         <span
                             class="badge {{ ($product->stock->quantity ?? 0) > 0 ? 'bg-success' : 'bg-danger' }} fw-semibold"
@@ -583,10 +593,10 @@
                             <input type="date" class="form-control form-control-sm mb-2" name="transaction_date"
                                 value="{{ date('Y-m-d') }}" required>
                             <textarea class="form-control form-control-sm mb-3" name="notes" rows="2"
-                                placeholder="Reason (optional)..."></textarea>
+                                placeholder="{{ __('messages.reason_placeholder') }}"></textarea>
 
                             <button type="submit" class="btn btn-warning btn-sm w-100 fw-semibold">
-                                <i class="bx bx-save me-1"></i> Save Adjustment
+                                <i class="bx bx-save me-1"></i> {{ __('messages.save_adjustment') }}
                             </button>
                         </form>
                     </div>
@@ -597,7 +607,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 border-bottom">
                     <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-info-circle text-secondary me-2"></i>Product Info
+                        <i class="bx bx-info-circle text-secondary me-2"></i>{{ __('messages.prod_info_card') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -621,10 +631,10 @@
                             </strong>
                         </li>
                         <li class="d-flex justify-content-between py-2">
-                            <span class="text-muted fw-semibold">Full History</span>
+                            <span class="text-muted fw-semibold">{{ __('messages.prod_tab_adjustments') }}</span>
                             <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
                                 class="text-warning small">
-                                <i class="bx bx-slider me-1"></i>Adjust Page
+                                <i class="bx bx-slider me-1"></i>{{ __('messages.prod_adjust_stock_btn') }}
                             </a>
                         </li>
                     </ul>
@@ -708,6 +718,10 @@
             if (initMainCat) loadSubcategories(initMainCat, selectedSubCategoryId);
 
             // Profit badge
+            @php
+                $profitLabel = __('messages.prod_profit_badge');
+            @endphp
+
             function updateProfitBadge() {
                 var buy = parseFloat($('#purchase_price').val()) || 0;
                 var sell = parseFloat($('#selling_price').val()) || 0;
@@ -715,11 +729,13 @@
                     var profit = sell - buy;
                     var pct = ((profit / buy) * 100).toFixed(1);
                     var sign = profit >= 0 ? '+' : '';
-                    $('#profitBadge').text('Profit: ' + sign + profit.toFixed(2) + ' (' + sign + pct + '%)')
+                    $('#profitBadge').text('{{ $profitLabel }}: ' + sign + profit.toFixed(2) + ' (' + sign +
+                            pct + '%)')
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: —').removeClass('bg-label-danger').addClass('bg-label-primary');
+                    $('#profitBadge').text('{{ $profitLabel }}: —').removeClass('bg-label-danger').addClass(
+                        'bg-label-primary');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
@@ -785,7 +801,7 @@
                             '<div class="position-relative gallery-thumb gallery-new" style="aspect-ratio:1;border-radius:8px;overflow:visible;"><img src="' +
                             ev.target.result +
                             '" class="w-100 h-100" style="object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,.12);"><button type="button" class="remove-new-gallery-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow" style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;" title="Remove">&times;</button></div>'
-                            );
+                        );
                         $thumb.data('file', file);
                         $('#galleryPreviewContainer').append($thumb);
                         syncClearAllBtn();

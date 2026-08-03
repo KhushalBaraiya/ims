@@ -1340,6 +1340,18 @@ return [
     'dark_mode' => 'डार्क मोड',
 
     'sku_prefix' => 'एसकेयू उपसर्ग',
+
+    // ── Product create/edit field labels (previously missing) ─────────────
+    'product_name_label'  => 'उत्पाद नाम',
+    'sku_code_label'      => 'SKU / कोड',
+    'auto_or_manual'      => 'स्वतः या मैन्युअल',
+    'barcode_label'       => 'बारकोड',
+    'basic_information'   => 'मूल जानकारी',
+    'brand_label'         => 'ब्रांड',
+    'main_category_label' => 'मुख्य श्रेणी',
+    'sub_category_label'  => 'उप-श्रेणी',
+    'unit_name_label'     => 'इकाई नाम',
+    'unit_code_label'     => 'इकाई कोड',
 ];
 
 

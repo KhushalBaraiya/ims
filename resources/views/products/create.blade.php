@@ -62,7 +62,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-transparent py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-info-circle text-primary me-2"></i>Basic Information
+                            <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.basic_information') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -70,7 +70,7 @@
 
                             {{-- Product Name --}}
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Product Name <span
+                                <label class="form-label fw-semibold">{{ __('messages.product_name_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('name') is-invalid @enderror" name="name"
                                     placeholder="e.g. Core i9 Processor" required type="text"
@@ -83,8 +83,9 @@
                             {{-- SKU --}}
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">
-                                    SKU / Code <span class="text-danger">*</span>
-                                    <span class="text-muted small fw-normal ms-1">(auto or manual)</span>
+                                    {{ __('messages.sku_code_label') }} <span class="text-danger">*</span>
+                                    <span
+                                        class="text-muted small fw-normal ms-1">({{ __('messages.auto_or_manual') }})</span>
                                 </label>
                                 <div class="input-group">
                                     <input class="form-control @error('code') is-invalid @enderror" id="skuInput"
@@ -102,7 +103,7 @@
 
                             {{-- Barcode --}}
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Barcode</label>
+                                <label class="form-label fw-semibold">{{ __('messages.barcode_label') }}</label>
                                 <input class="form-control @error('barcode') is-invalid @enderror" name="barcode"
                                     placeholder="e.g. 8901234567890" type="text"
                                     value="{{ old('barcode', $product->barcode ?? '') }}">
@@ -113,7 +114,7 @@
 
                             {{-- Main Category --}}
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Main Category <span
+                                <label class="form-label fw-semibold">{{ __('messages.main_category_label') }} <span
                                         class="text-danger">*</span></label>
                                 <select class="form-select @error('main_category_id') is-invalid @enderror"
                                     id="main_category_id" name="main_category_id" required>
@@ -133,7 +134,7 @@
 
                             {{-- Sub Category --}}
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Sub Category</label>
+                                <label class="form-label fw-semibold">{{ __('messages.sub_category_label') }}</label>
                                 <select class="form-select @error('sub_category_id') is-invalid @enderror"
                                     id="sub_category_id" name="sub_category_id">
                                     <option value="">{{ __('messages.select_sub_category') }}</option>
@@ -145,7 +146,8 @@
 
                             {{-- Brand --}}
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Brand <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.brand_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <select class="form-select @error('brand_id') is-invalid @enderror" name="brand_id"
                                     required>
                                     <option value="">{{ __('messages.select_brand') }}</option>
@@ -163,7 +165,8 @@
 
                             {{-- Unit Name --}}
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Unit Name <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.unit_name_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_name') is-invalid @enderror" name="unit_name"
                                     placeholder="Piece" required type="text"
                                     value="{{ old('unit_name', $product->unit_name ?? 'Piece') }}">
@@ -174,7 +177,8 @@
 
                             {{-- Unit Code --}}
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Unit Code <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.unit_code_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_code') is-invalid @enderror" name="unit_code"
                                     placeholder="PCS" required type="text"
                                     value="{{ old('unit_code', $product->unit_code ?? 'PCS') }}">
@@ -319,7 +323,7 @@
                                         @error('supplier_id')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    </div> 
+                                    </div>
 
                                     {{-- Opening Qty --}}
                                     <div class="col-md-3">

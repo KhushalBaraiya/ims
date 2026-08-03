@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Products by Category')
+@section('title', __('messages.prod_by_category'))
 
 @push('styles')
     <style>
@@ -286,12 +286,13 @@
     {{-- ── Page Header ───────────────────────────────── --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Products by Category</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.prod_by_category') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></li>
-                    <li class="breadcrumb-item active">By Category</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('products.index') }}">{{ __('messages.products') }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ __('messages.prod_by_category') }}</li>
                 </ol>
             </nav>
         </div>
@@ -301,10 +302,10 @@
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
             <a href="{{ route('products.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bx bx-list-ul"></i> List View
+                <i class="bx bx-list-ul"></i> {{ __('messages.list_view') }}
             </a>
             <a href="{{ route('products.gallery') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bx bx-grid-alt"></i> Gallery View
+                <i class="bx bx-grid-alt"></i> {{ __('messages.gallery_view') }}
             </a>
             @can('products.create')
                 <a href="{{ route('products.create') }}" class="btn btn-primary d-flex align-items-center gap-1">
@@ -451,10 +452,10 @@
     @if ($totalShown === 0)
         <div class="text-center py-5 text-muted">
             <i class="bx bx-package" style="font-size:4rem;opacity:.15;display:block;"></i>
-            <p class="mt-3 fw-semibold mb-1">No products found.</p>
-            <p class="small mb-3">Try adjusting your filters or add products to a category.</p>
+            <p class="mt-3 fw-semibold mb-1">{{ __('messages.no_products_found') }}</p>
+            <p class="small mb-3">{{ __('messages.prod_no_match_filters') }}</p>
             <a href="{{ route('products.by-category') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-reset me-1"></i>Clear Filters
+                <i class="bx bx-reset me-1"></i>{{ __('messages.prod_clear_filters_btn') }}
             </a>
         </div>
     @else
