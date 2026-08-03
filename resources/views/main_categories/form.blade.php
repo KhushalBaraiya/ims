@@ -5,7 +5,7 @@
         <label class="form-label fw-semibold">{{ __('messages.category_name') }} <span
                 class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-            value="{{ old('name', $mainCategory->name ?? '') }}" placeholder="e.g. Smart TV, Laptop" required>
+            value="{{ old('name', $mainCategory->name ?? '') }}" placeholder="{{ __('messages.ph_category_name') }}" required>
         @error('name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror

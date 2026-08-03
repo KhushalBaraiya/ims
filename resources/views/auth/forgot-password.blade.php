@@ -55,7 +55,7 @@
             <div class="mb-field">
                 <label class="form-label-dark" for="email">{{ __('messages.email_address_label') }}</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}"
-                    placeholder="name@company.com" autocomplete="email" autofocus required
+                    placeholder="{{ __('messages.ph_email_example') }}" autocomplete="email" autofocus required
                     class="input-dark @error('email') is-invalid @enderror" />
                 @error('email')
                     <div class="field-error"><i class="bx bx-info-circle"></i> {{ $message }}</div>

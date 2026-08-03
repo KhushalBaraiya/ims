@@ -109,7 +109,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.product_name_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('name') is-invalid @enderror" name="name"
-                                    type="text" required placeholder="e.g. Core i9 Processor"
+                                    type="text" required placeholder="{{ __(`messages.ph_product_name`) }}"
                                     value="{{ old('name', $product->name) }}">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -127,7 +127,7 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.barcode_label') }}</label>
                                 <input class="form-control @error('barcode') is-invalid @enderror" name="barcode"
-                                    type="text" placeholder="e.g. 8901234567890"
+                                    type="text" placeholder="{{ __(`messages.ph_barcode`) }}"
                                     value="{{ old('barcode', $product->barcode) }}">
                                 @error('barcode')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -179,7 +179,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.unit_name_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_name') is-invalid @enderror" name="unit_name"
-                                    type="text" required placeholder="Piece"
+                                    type="text" required placeholder="{{ __(`messages.ph_unit_name`) }}"
                                     value="{{ old('unit_name', $product->unit_name) }}">
                                 @error('unit_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -189,7 +189,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.unit_code_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_code') is-invalid @enderror" name="unit_code"
-                                    type="text" required placeholder="PCS"
+                                    type="text" required placeholder="{{ __(`messages.ph_unit_code`) }}"
                                     value="{{ old('unit_code', $product->unit_code) }}">
                                 @error('unit_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -270,7 +270,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.prod_min_stock_alert') }}</label>
                                 <input class="form-control @error('minimum_stock_alert') is-invalid @enderror"
                                     name="minimum_stock_alert" type="number" step="0.01" min="0"
-                                    placeholder="e.g. 5"
+                                    placeholder="{{ __(`messages.ph_min_stock`) }}"
                                     value="{{ old('minimum_stock_alert', $product->minimum_stock_alert) }}">
                                 @error('minimum_stock_alert')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -339,39 +339,39 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_manufacturer') }}</label>
                                 <input class="form-control" name="manufacturer" type="text"
-                                    placeholder="e.g. Intel, Asus"
+                                    placeholder="{{ __(`messages.ph_manufacturer`) }}"
                                     value="{{ old('manufacturer', $product->manufacturer) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_model_number') }}</label>
                                 <input class="form-control" name="model_number" type="text"
-                                    placeholder="e.g. ROG-STRIX-Z790"
+                                    placeholder="{{ __(`messages.ph_model_number`) }}"
                                     value="{{ old('model_number', $product->model_number) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_part_serial') }}</label>
                                 <input class="form-control" name="part_number" type="text"
-                                    placeholder="e.g. 90MB1CS0" value="{{ old('part_number', $product->part_number) }}">
+                                    placeholder="{{ __(`messages.ph_part_number`) }}" value="{{ old('part_number', $product->part_number) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_warranty') }}</label>
-                                <input class="form-control" name="warranty" type="text" placeholder="e.g. 3 Years"
+                                <input class="form-control" name="warranty" type="text" placeholder="{{ __(`messages.ph_warranty`) }}"
                                     value="{{ old('warranty', $product->warranty) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_color') }}</label>
-                                <input class="form-control" name="color" type="text" placeholder="e.g. Space Grey"
+                                <input class="form-control" name="color" type="text" placeholder="{{ __(`messages.ph_color`) }}"
                                     value="{{ old('color', $product->color) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_weight') }}</label>
-                                <input class="form-control" name="weight" type="text" placeholder="e.g. 1.2 kg"
+                                <input class="form-control" name="weight" type="text" placeholder="{{ __(`messages.ph_weight`) }}"
                                     value="{{ old('weight', $product->weight) }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_country_origin') }}</label>
                                 <input class="form-control" name="country_of_origin" type="text"
-                                    placeholder="e.g. Taiwan"
+                                    placeholder="{{ __(`messages.ph_country_origin`) }}"
                                     value="{{ old('country_of_origin', $product->country_of_origin) }}">
                             </div>
                         </div>
@@ -473,7 +473,7 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">{{ __('messages.prod_short_desc') }}</label>
                                     <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
-                                        rows="3" placeholder="Key features summary...">{{ old('short_description', $product->short_description) }}</textarea>
+                                        rows="3" placeholder="{{ __(`messages.ph_short_description`) }}">{{ old('short_description', $product->short_description) }}</textarea>
                                     @error('short_description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -481,7 +481,7 @@
                                 <div class="mb-0">
                                     <label class="form-label fw-semibold">{{ __('messages.prod_full_desc') }}</label>
                                     <textarea class="form-control @error('full_description') is-invalid @enderror" name="full_description"
-                                        rows="8" placeholder="Complete specifications, box contents...">{{ old('full_description', $product->full_description) }}</textarea>
+                                        rows="8" placeholder="{{ __(`messages.ph_full_description`) }}">{{ old('full_description', $product->full_description) }}</textarea>
                                     @error('full_description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.products_catalog'))
 
 @push('styles')
@@ -119,7 +119,7 @@
     {{-- Summary Stats --}}
     <div class="row g-3 mb-4">
         @php
-            // Use DB aggregates — $products is now paginated, not a full collection
+            // Use DB aggregates � $products is now paginated, not a full collection
             $total = \App\Models\Product::count();
             $active = \App\Models\Product::where('status', 'active')->count();
             $lowStock = \App\Models\Product::whereHas(
@@ -193,7 +193,7 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                             <input type="text" name="search" class="form-control form-control-sm"
-                                value="{{ request('search') }}" placeholder="Name, SKU, Barcode…">
+                                value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_name_sku') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
@@ -242,15 +242,15 @@
                         </div>
                         <div class="col-6 col-md-1">
                             <label class="form-label fw-semibold small">{{ __('messages.prod_price_min') }}
-                                {{ optional(current_currency())->symbol ?? '₹' }}</label>
+                                {{ optional(current_currency())->symbol ?? '?' }}</label>
                             <input type="number" step="0.01" name="price_min" class="form-control form-control-sm"
-                                value="{{ request('price_min') }}" placeholder="0">
+                                value="{{ request('price_min') }}" placeholder="{{ __('messages.ph_price_min') }}">
                         </div>
                         <div class="col-6 col-md-1">
                             <label class="form-label fw-semibold small">{{ __('messages.prod_price_max') }}
-                                {{ optional(current_currency())->symbol ?? '₹' }}</label>
+                                {{ optional(current_currency())->symbol ?? '?' }}</label>
                             <input type="number" step="0.01" name="price_max" class="form-control form-control-sm"
-                                value="{{ request('price_max') }}" placeholder="∞">
+                                value="{{ request('price_max') }}" placeholder="{{ __('messages.ph_price_max') }}">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
@@ -363,8 +363,8 @@
                                 </td>
                                 <td><code class="small">{{ $product->code }}</code></td>
                                 <td>
-                                    <div class="small fw-semibold">{{ $product->brand->name ?? '—' }}</div>
-                                    <small class="text-muted">{{ $product->mainCategory->name ?? '—' }}</small>
+                                    <div class="small fw-semibold">{{ $product->brand->name ?? '�' }}</div>
+                                    <small class="text-muted">{{ $product->mainCategory->name ?? '�' }}</small>
                                 </td>
                                 <td class="text-end fw-semibold small">{{ format_currency($product->purchase_price) }}
                                 </td>
@@ -377,7 +377,7 @@
                                             <span class="{{ $sCls }}">{{ number_format($sq, 0) }}</span>
                                         </span>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">�</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -511,7 +511,7 @@
                 <p class="text-muted small mb-0">
                     @if ($products->total() > 0)
                         {{ __('messages.prod_showing_results') }}
-                        <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                        <strong>{{ $products->firstItem() }}</strong>�<strong>{{ $products->lastItem() }}</strong>
                         {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
                         {{ __('messages.prod_results') }}
                     @else
@@ -530,7 +530,7 @@
     <script>
         $(document).ready(function() {
 
-            // ── Filter toggle ─────────────────────────────────────────────────
+            // -- Filter toggle -------------------------------------------------
             let open = localStorage.getItem('prod_filters_open') === 'true';
             if (open) {
                 $('#filtersCard').removeClass('d-none');
@@ -544,7 +544,7 @@
                 localStorage.setItem('prod_filters_open', isOpen);
             });
 
-            // ── Sub-category filter ───────────────────────────────────────────
+            // -- Sub-category filter -------------------------------------------
             const subs = @json($subCategories);
             const selSub = "{{ request('sub_category_id') }}";
 
@@ -579,7 +579,7 @@
             const initCat = "{{ request('main_category_id') }}";
             if (initCat) loadSubs(initCat, selSub);
             else if (selSub) {
-                // sub selected but no main selected — find the matching main and pre-load
+                // sub selected but no main selected � find the matching main and pre-load
                 const matchedSub = subs.find(s => s.id == selSub);
                 if (matchedSub) {
                     // Set main category dropdown value then load subs
@@ -588,7 +588,7 @@
                 }
             }
 
-            // ── AJAX Status Toggle ─────────────────────────────────────────
+            // -- AJAX Status Toggle -----------------------------------------
             $(document).on('click', '.status-toggle-btn', function() {
                 const btn = $(this);
                 const id = btn.data('id');
@@ -611,7 +611,7 @@
                                 'border-success text-success' : 'border-danger text-danger');
                             btn.text(res.status === 'active' ? 'Active' : 'Inactive');
                             showAdminToast(res.message, 'success');
-                            // ── Update Active stat card live ──────────────
+                            // -- Update Active stat card live --------------
                             $('#statActiveCount').text($('.status-toggle-btn.border-success')
                                 .length);
                         } else {
@@ -628,7 +628,7 @@
                 });
             });
 
-            // ── AJAX Delete with SweetAlert2 ──────────────────────────────────
+            // -- AJAX Delete with SweetAlert2 ----------------------------------
             $(document).on('click', '.delete-btn', function() {
                 const id = $(this).data('id');
                 const name = $(this).data('name');
@@ -668,7 +668,7 @@
                 });
             });
 
-            // ── Bulk Select ──────────────────────────────────────────────
+            // -- Bulk Select ----------------------------------------------
             $('#selectAll').on('change', function() {
                 $('.row-checkbox').prop('checked', this.checked);
                 toggleBulkBtn();
@@ -683,7 +683,7 @@
                 count > 0 ? $('#bulkDeleteBtn').removeClass('d-none') : $('#bulkDeleteBtn').addClass('d-none');
             }
 
-            // ── Bulk Delete ──────────────────────────────────────────────
+            // -- Bulk Delete ----------------------------------------------
             $('#bulkDeleteBtn').on('click', function() {
                 const ids = $('.row-checkbox:checked').map(function() {
                     return $(this).val();

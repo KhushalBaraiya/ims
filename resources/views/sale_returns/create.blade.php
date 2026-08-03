@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Create Sales Return')
 
 @section('content')
@@ -39,7 +39,7 @@
 
         <div class="row g-4">
 
-            {{-- ══ LEFT COLUMN ══ --}}
+            {{-- -- LEFT COLUMN -- --}}
             <div class="col-lg-3">
 
                 {{-- Return Details --}}
@@ -60,7 +60,7 @@
                                 @foreach ($sales as $s)
                                     <option {{ old('sale_id', request('sale_id')) == $s->id ? 'selected' : '' }}
                                         value="{{ $s->id }}">
-                                        {{ $s->invoice_no }} — {{ $s->customer->name }}
+                                        {{ $s->invoice_no }} � {{ $s->customer->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -71,7 +71,7 @@
 
                         <div class="alert alert-light d-none mb-3 border px-3 py-2" id="customerInfoBox">
                             <div class="small fw-semibold text-muted">{{ __('messages.customer_label') }}</div>
-                            <div class="fw-bold" id="customerInfoName">—</div>
+                            <div class="fw-bold" id="customerInfoName">�</div>
                         </div>
 
                         <div class="mb-3">
@@ -86,7 +86,7 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
-                            <input class="form-control" name="reference_no" placeholder="Optional reference..."
+                            <input class="form-control" name="reference_no" placeholder="{{ __('messages.ph_optional_ref') }}"
                                 type="text" value="{{ old('reference_no') }}">
                         </div>
 
@@ -127,7 +127,7 @@
 
             </div>{{-- /col-lg-3 --}}
 
-            {{-- ══ RIGHT COLUMN ══ --}}
+            {{-- -- RIGHT COLUMN -- --}}
             <div class="col-lg-9">
 
                 {{-- Invoice Return Items --}}
@@ -148,7 +148,7 @@
                                     <i class="bx bx-search text-muted"></i>
                                 </span>
                                 <input type="text" id="productFilterInput" class="form-control border-start-0 ps-0"
-                                    placeholder="Filter products by name or SKU…" autocomplete="off">
+                                    placeholder="{{ __('messages.ph_filter_product_sku') }}" autocomplete="off">
                                 <button type="button" class="btn btn-outline-secondary" id="clearFilterBtn"
                                     style="display:none;">
                                     <i class="bx bx-x"></i>
@@ -220,7 +220,7 @@
                                 </h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea class="form-control" name="notes" placeholder="Return reasons, item conditions..." rows="5"
+                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}" rows="5"
                                     style="resize:vertical;">{{ old('notes') }}</textarea>
                             </div>
                         </div>
@@ -287,7 +287,7 @@
             const submitBtn = $('#submitBtn');
             const refundedInput = $('#refunded_amount');
             const itemCountBadge = $('#itemCountBadge');
-            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '?') }}';
 
             const fmt = v => currencySymbol + parseFloat(v || 0).toFixed(2);
 
@@ -342,7 +342,7 @@
                         }
 
                         // Show customer info
-                        $('#customerInfoName').text(response.customer_name || '—');
+                        $('#customerInfoName').text(response.customer_name || '�');
                         $('#customerInfoBox').removeClass('d-none');
 
                         let rowCount = 0,
@@ -375,7 +375,7 @@
                                          value="0"
                                          class="qty-input form-control form-control-sm text-center"
                                          style="width:72px;margin:auto;"
-                                         placeholder="0">
+                                         placeholder="{{ __('messages.ph_refund_amount') }}">
                                  </td>
                                  <td class="text-center price-cell fw-semibold text-muted" style="font-size:12.5px;"
                                      data-price="${item.unit_price}">
@@ -442,7 +442,7 @@
                 loadSaleItems(saleIdSelect.val());
             }
 
-            // ── Product Filter Search ─────────────────────────────────────────
+            // -- Product Filter Search -----------------------------------------
             $('#productFilterInput').on('input', function() {
                 const q = $(this).val().trim().toLowerCase();
                 const rows = itemsContainer.find('tr.item-row');
@@ -481,7 +481,7 @@
                 $('#productFilterInput').val('').trigger('input');
             });
 
-            // ── Remove row button ─────────────────────────────────────────────
+            // -- Remove row button ---------------------------------------------
             $(document).on('click', '.remove-row-btn', function() {
                 $(this).closest('tr').remove();
                 // If no rows left, show empty state

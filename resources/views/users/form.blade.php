@@ -1,4 +1,4 @@
-@csrf
+﻿@csrf
 
 {{-- Profile Photo --}}
 <div class="mb-4 d-flex align-items-center gap-3">
@@ -29,7 +29,7 @@
     <div class="col-md-6">
         <label class="form-label fw-semibold">{{ __('messages.name_label') }} <span class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-            value="{{ old('name', $user->name ?? '') }}" placeholder="John Doe" required>
+            value="{{ old('name', $user->name ?? '') }}" placeholder="{{ __('messages.ph_john_doe') }}" required>
         @error('name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -38,7 +38,7 @@
         <label class="form-label fw-semibold">{{ __('messages.email_address') }} <span
                 class="text-danger">*</span></label>
         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-            value="{{ old('email', $user->email ?? '') }}" placeholder="john@company.com" required>
+            value="{{ old('email', $user->email ?? '') }}" placeholder="{{ __('messages.ph_john_company') }}" required>
         @error('email')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -46,7 +46,7 @@
     <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.phone_label') }}</label>
         <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
-            value="{{ old('phone', $user->phone ?? '') }}" placeholder="+1234567890">
+            value="{{ old('phone', $user->phone ?? '') }}" placeholder="{{ __('messages.ph_phone_number') }}">
         @error('phone')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -89,7 +89,7 @@
             @endif
         </label>
         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-            placeholder="••••••••" {{ !isset($user) ? 'required' : '' }}>
+            placeholder="{{ __('messages.ph_password_dots') }}" {{ !isset($user) ? 'required' : '' }}>
         @error('password')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -100,7 +100,7 @@
                 <span class="text-danger">*</span>
             @endif
         </label>
-        <input type="password" name="password_confirmation" class="form-control" placeholder="••••••••"
+        <input type="password" name="password_confirmation" class="form-control" placeholder="{{ __('messages.ph_password_dots') }}"
             {{ !isset($user) ? 'required' : '' }}>
     </div>
 </div>

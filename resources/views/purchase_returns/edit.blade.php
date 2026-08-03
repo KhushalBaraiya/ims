@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', 'Edit Purchase Return')
 
 @section('content')
@@ -83,7 +83,7 @@
 
         <div class="row g-4">
 
-            {{-- ══ LEFT COLUMN ══ --}}
+            {{-- -- LEFT COLUMN -- --}}
             <div class="col-lg-3 col-md-4">
 
                 {{-- Return Details Card --}}
@@ -126,7 +126,7 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
-                            <input class="form-control" name="reference_no" placeholder="Optional..." type="text"
+                            <input class="form-control" name="reference_no" placeholder="{{ __('messages.ph_optional') }}" type="text"
                                 value="{{ old('reference_no', $purchaseReturn->reference_no ?? '') }}">
                         </div>
 
@@ -167,7 +167,7 @@
 
             </div>{{-- /col-lg-3 --}}
 
-            {{-- ══ RIGHT COLUMN ══ --}}
+            {{-- -- RIGHT COLUMN -- --}}
             <div class="col-lg-9 col-md-8">
 
                 {{-- Search / Products Card --}}
@@ -188,7 +188,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bx bx-search"></i></span>
                                 <input autocomplete="off" class="form-control" id="productSearchInput"
-                                    placeholder="Type Product Name, SKU, or Scan Barcode..." type="text">
+                                    placeholder="{{ __('messages.ph_type_sku_barcode') }}" type="text">
                             </div>
                             <div class="position-absolute w-100 d-none rounded" id="autocompleteResults"
                                 style="z-index:1050;max-height:280px;overflow-y:auto;top:100%;">
@@ -234,7 +234,7 @@
                                 <h6 class="fw-semibold mb-0"><i class="bx bx-note text-warning me-2"></i>Return Notes</h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea class="form-control" name="notes" placeholder="Describe return reason, item conditions..."
+                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}"
                                     rows="5" style="resize:vertical;">{{ old('notes', $purchaseReturn->notes ?? '') }}</textarea>
                             </div>
                         </div>
@@ -249,19 +249,19 @@
                                 <div class="d-flex justify-content-between border-bottom py-2">
                                     <span class="text-muted small fw-semibold">Return Subtotal</span>
                                     <span class="fw-bold"
-                                        id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00 <span
+                                        id="sum_subtotal">{{ optional(current_currency())->symbol ?? '?' }}0.00 <span
                                             class="text-muted fw-normal small">(0 units)</span></span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom py-2">
                                     <span class="fw-bold">Grand Refund Total</span>
                                     <span class="fw-bold text-primary fs-6"
-                                        id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
+                                        id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '?' }}0.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mt-3 rounded p-3"
                                     style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
                                     <span class="text-muted small fw-semibold">Refunded to Company</span>
                                     <span class="fw-bold text-success fs-6"
-                                        id="summary_refunded">{{ optional(current_currency())->symbol ?? '₹' }}{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
+                                        id="summary_refunded">{{ optional(current_currency())->symbol ?? '?' }}{{ number_format($purchaseReturn->refunded_amount, 2) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -291,7 +291,7 @@
             const IS_LINKED = {{ $purchaseReturn->purchase_id ? 'true' : 'false' }};
             const PURCHASE_ID = {{ $purchaseReturn->purchase_id ?? 'null' }};
             const RETURN_ID = {{ $purchaseReturn->id }};
-            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '?') }}';
 
             const searchInput = $('#productSearchInput');
             const resultsBox = $('#autocompleteResults');
@@ -304,7 +304,7 @@
 
             const fmt = v => currencySymbol + parseFloat(v).toFixed(2);
 
-            // ── Existing items to pre-populate ───────────────────────────────
+            // -- Existing items to pre-populate -------------------------------
             @php $restoreItems = old('items') ?: null; @endphp
             @if ($restoreItems !== null)
                 const existingItems = [
@@ -332,7 +332,7 @@
                 ];
             @endif
 
-            // ── Startup ───────────────────────────────────────────────────────
+            // -- Startup -------------------------------------------------------
             if (IS_LINKED) {
                 $.ajax({
                     url: '/purchases/' + PURCHASE_ID + '/return-data?exclude_return_id=' + RETURN_ID,
@@ -382,7 +382,7 @@
                 @endforeach
             }
 
-            // ── Product search ────────────────────────────────────────────────
+            // -- Product search ------------------------------------------------
             var searchTimer = null;
             searchInput.on('input', function() {
                 clearTimeout(searchTimer);
@@ -511,7 +511,7 @@
                 searchInput.val('');
             });
 
-            // ── Add row ───────────────────────────────────────────────────────
+            // -- Add row -------------------------------------------------------
             function addRow(item, qty, reason, isLinked) {
                 noItemsMsg.addClass('d-none');
                 var maxInt = item.max_returnable !== null ? parseInt(item.max_returnable) : 99999;
@@ -549,7 +549,7 @@
                     '" name="items[' + rowCount + '][quantity]" value="' + qty +
                     '" class="qty-input form-control form-control-sm text-center ret-qty-input"></td>' +
                     '<td><input type="text" name="items[' + rowCount + '][reason]" value="' + reason +
-                    '" class="form-control form-control-sm" placeholder="Reason..."></td>' +
+                    '" class="form-control form-control-sm" placeholder="{{ __('messages.ph_reason_short') }}"></td>' +
                     '<td class="text-end fw-bold subtotal-cell ret-subtotal-cell">' + fmt(price * qty) +
                     '</td>' +
                     '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;"><i class="bx bx-trash" style="font-size:13px;"></i></button></td>' +

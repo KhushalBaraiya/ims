@@ -99,7 +99,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" id="moduleInput" name="module" list="moduleList"
-                                    class="form-control @error('module') is-invalid @enderror" placeholder="e.g. products"
+                                    class="form-control @error('module') is-invalid @enderror" placeholder="{{ __('messages.ph_permission_module_eg') }}"
                                     value="{{ old('module', $currentModule) }}" required autocomplete="off">
                                 <datalist id="moduleList">
                                     @foreach ($allModules as $mod)
@@ -120,7 +120,7 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" id="actionInput" name="action" list="actionList"
-                                    class="form-control @error('action') is-invalid @enderror" placeholder="e.g. view"
+                                    class="form-control @error('action') is-invalid @enderror" placeholder="{{ __('messages.ph_permission_action_eg') }}"
                                     value="{{ old('action', $currentAction) }}" required autocomplete="off">
                                 <datalist id="actionList">
                                     <option value="view">

@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.purchase_returns'))
 
 @section('content')
@@ -109,7 +109,7 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.return_no_label') }}</label>
                             <input type="text" name="return_no" class="form-control form-control-sm"
-                                value="{{ request('return_no') }}" placeholder="PRET-YYYYMMDD-XXXXX">
+                                value="{{ request('return_no') }}" placeholder="{{ __('messages.ph_purchase_ret_format') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.supplier') }}</label>
@@ -288,7 +288,7 @@
                 }
             });
 
-            // Filters toggle � persist state
+            // Filters toggle ? persist state
             let filtersOpen = localStorage.getItem('pur_returns_filters_open') === 'true';
             if (filtersOpen) {
                 $('#filtersCard').removeClass('d-none');

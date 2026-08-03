@@ -1,5 +1,5 @@
-﻿@extends('layouts.admin')
-@section('title', 'Edit Sales Return — ' . $saleReturn->return_no)
+@extends('layouts.admin')
+@section('title', 'Edit Sales Return � ' . $saleReturn->return_no)
 
 @section('content')
 
@@ -39,7 +39,7 @@
 
         <div class="row g-4">
 
-            {{-- ══ LEFT COLUMN ══ --}}
+            {{-- -- LEFT COLUMN -- --}}
             <div class="col-lg-3">
 
                 {{-- Return Details --}}
@@ -83,7 +83,7 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
-                            <input class="form-control" name="reference_no" placeholder="Optional reference..."
+                            <input class="form-control" name="reference_no" placeholder="{{ __('messages.ph_optional_ref') }}"
                                 type="text" value="{{ old('reference_no', $saleReturn->reference_no) }}">
                         </div>
 
@@ -126,7 +126,7 @@
 
             </div>{{-- /col-lg-3 --}}
 
-            {{-- ══ RIGHT COLUMN ══ --}}
+            {{-- -- RIGHT COLUMN -- --}}
             <div class="col-lg-9">
 
                 {{-- Invoice Return Items --}}
@@ -252,7 +252,7 @@
                                 </h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea class="form-control" name="notes" placeholder="Return reasons, item conditions..." rows="5"
+                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}" rows="5"
                                     style="resize:vertical;">{{ old('notes', $saleReturn->notes) }}</textarea>
                             </div>
                         </div>
@@ -311,7 +311,7 @@
         $(document).ready(function() {
 
             const refundedInput = $('#refunded_amount');
-            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            const currencySymbol = '{{ addslashes(optional(current_currency())->symbol ?? '?') }}';
             const fmt = v => currencySymbol + parseFloat(v || 0).toFixed(2);
 
             $(document).on('input change', '.qty-input', function() {

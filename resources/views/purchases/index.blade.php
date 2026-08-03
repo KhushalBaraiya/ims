@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.purchase_orders'))
 
 @section('content')
@@ -108,7 +108,7 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.purchase_no_label') }}</label>
-                            <input class="form-control form-control-sm" name="purchase_no" placeholder="PUR-YYYYMMDD-XXXXX"
+                            <input class="form-control form-control-sm" name="purchase_no" placeholder="{{ __('messages.ph_purchase_no_format') }}"
                                 type="text" value="{{ request('purchase_no') }}">
                         </div>
                         <div class="col-md-3">
@@ -351,7 +351,7 @@
                                     </div>
                                     <div class="fw-bold text-primary" style="font-size:1.4rem;"
                                         id="modal_grand_total_text">
-                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00
+                                        {{ optional(current_currency())->symbol ?? '?' }}0.00
                                     </div>
                                     <input id="modal_grand_total" type="hidden">
                                 </div>
@@ -364,7 +364,7 @@
                                     </div>
                                     <div class="fw-bold text-danger" style="font-size:1.4rem;"
                                         id="modal_balance_due_text">
-                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00
+                                        {{ optional(current_currency())->symbol ?? '?' }}0.00
                                     </div>
                                 </div>
                             </div>
@@ -378,7 +378,7 @@
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text bg-light border-end-0 fw-bold text-primary"
                                     style="font-size:1rem;">
-                                    {{ optional(current_currency())->symbol ?? '₹' }}
+                                    {{ optional(current_currency())->symbol ?? '?' }}
                                 </span>
                                 <input class="form-control border-start-0 fw-bold ps-0" id="modal_paid_amount"
                                     min="0" name="paid_amount" required step="0.01" type="number"
@@ -393,8 +393,8 @@
                             </label>
                             <select class="form-select" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required style="height:46px;">
-                                <option value="Cash">💵 {{ __('messages.pm_cash') }}</option>
-                                <option value="Razorpay">⚡ Razorpay (Online Payment)</option>
+                                <option value="Cash">?? {{ __('messages.pm_cash') }}</option>
+                                <option value="Razorpay">? Razorpay (Online Payment)</option>
                             </select>
                         </div>
 
@@ -670,7 +670,7 @@
                 }
                 const btn = $(this);
                 btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm me-1"></span> Processing…');
+                    '<span class="spinner-border spinner-border-sm me-1"></span> Processing�');
 
                 $.ajax({
                     url: "{{ route('razorpay.create-order') }}",
@@ -685,7 +685,7 @@
                             amount: res.amount,
                             currency: res.currency,
                             name: '{{ addslashes(config('app.name')) }}',
-                            description: 'Purchase Payment — ' + $('#modal_purchase_no')
+                            description: 'Purchase Payment � ' + $('#modal_purchase_no')
                                 .val(),
                             order_id: res.order_id,
                             prefill: {
@@ -775,7 +775,7 @@
 
             $('#paymentForm').on('submit', function(e) {
                 e.preventDefault();
-                // If Razorpay is selected, the Razorpay button handles submission — not this form
+                // If Razorpay is selected, the Razorpay button handles submission � not this form
                 if ($('#modal_payment_method').val() === 'Razorpay') return;
 
                 const form = $(this);

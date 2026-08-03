@@ -1,5 +1,5 @@
-﻿@extends('layouts.admin')
-@section('title', 'Product — ' . $product->name)
+@extends('layouts.admin')
+@section('title', 'Product � ' . $product->name)
 
 @push('styles')
     {{-- Swiper --}}
@@ -7,7 +7,7 @@
     {{-- GLightbox --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
     <style>
-        /* ── Swiper main ── */
+        /* -- Swiper main -- */
         .prod-swiper-main {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -100,7 +100,7 @@
             background: #fff;
         }
 
-        /* ── Swiper thumbs ── */
+        /* -- Swiper thumbs -- */
         .prod-swiper-thumbs {
             margin-top: 10px;
         }
@@ -127,7 +127,7 @@
             object-fit: cover;
         }
 
-        /* ── No-image placeholder ── */
+        /* -- No-image placeholder -- */
         .prod-no-image {
             aspect-ratio: 1/1;
             border-radius: 12px;
@@ -190,7 +190,7 @@
         $saleReturns = $product->saleReturnItems->sortByDesc(fn($i) => $i->saleReturn?->return_date);
     @endphp
 
-    {{-- ── Page Header ── --}}
+    {{-- -- Page Header -- --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.prod_detail') }}</h4>
@@ -229,7 +229,7 @@
         </div>
     </div>
 
-    {{-- ── Hero Banner ── --}}
+    {{-- -- Hero Banner -- --}}
     <div class="card border-0 shadow-sm mb-4" style="background:linear-gradient(135deg,#696cff,#9c3fe4);">
         <div class="card-body py-3 px-4 d-flex align-items-center gap-3 flex-wrap">
             @if ($product->image)
@@ -248,13 +248,13 @@
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-barcode me-1"></i>{{ $product->code }}</span>
                     @if ($product->mainCategory)
-                        <span>· {{ $product->mainCategory->name }}</span>
+                        <span>� {{ $product->mainCategory->name }}</span>
                     @endif
                     @if ($product->brand)
-                        <span>· {{ $product->brand->name }}</span>
+                        <span>� {{ $product->brand->name }}</span>
                     @endif
                     @if ($product->barcode)
-                        <span>· {{ $product->barcode }}</span>
+                        <span>� {{ $product->barcode }}</span>
                     @endif
                 </div>
             </div>
@@ -271,15 +271,15 @@
         </div>
     </div>
 
-    {{-- ── Main content row ── --}}
+    {{-- -- Main content row -- --}}
     <div class="row g-4">
 
-        {{-- ════════════════════════════════════════════════════════
+        {{-- --------------------------------------------------------
              LEFT  col-lg-8
-        ════════════════════════════════════════════════════════ --}}
+        -------------------------------------------------------- --}}
         <div class="col-lg-8">
 
-            {{-- ── Product Detail Card ── --}}
+            {{-- -- Product Detail Card -- --}}
             <div class="card shadow-sm mb-4">
                 <div
                     class="card-header bg-transparent py-3 border-bottom d-flex justify-content-between align-items-center">
@@ -294,7 +294,7 @@
                 <div class="card-body p-4">
                     <div class="row g-4">
 
-                        {{-- ── Image Swiper (left) ── --}}
+                        {{-- -- Image Swiper (left) -- --}}
                         <div class="col-12 col-sm-5">
                             @if ($allImgs)
                                 {{-- Hidden lightbox anchors --}}
@@ -352,7 +352,7 @@
                             @endif
                         </div>
 
-                        {{-- ── Product info (right of carousel) ── --}}
+                        {{-- -- Product info (right of carousel) -- --}}
                         <div class="col-12 col-sm-7 d-flex flex-column gap-3">
                             {{-- Category / Brand badges --}}
                             <div class="d-flex flex-wrap gap-1">
@@ -380,8 +380,8 @@
                                         <span><i class="bx bx-qr-scan me-1"></i>Barcode:
                                             <code>{{ $product->barcode }}</code></span>
                                     @endif
-                                    <span><i class="bx bx-ruler me-1"></i>{{ $product->unit_name ?? '—' }}
-                                        ({{ $product->unit_code ?? '—' }})</span>
+                                    <span><i class="bx bx-ruler me-1"></i>{{ $product->unit_name ?? '�' }}
+                                        ({{ $product->unit_code ?? '�' }})</span>
                                     <span><i
                                             class="bx bx-calendar me-1"></i>{{ $product->created_at->format('d M Y') }}</span>
                                 </div>
@@ -391,7 +391,7 @@
                             <div>
                                 <span class="badge {{ $sBadge }} fs-6 px-3 py-2">
                                     <i class="bx {{ $sIcon }} me-1"></i>{{ $sLabel }}
-                                    &nbsp;—&nbsp;<strong>{{ number_format($qty, 0) }}</strong>
+                                    &nbsp;�&nbsp;<strong>{{ number_format($qty, 0) }}</strong>
                                     {{ $product->unit_code ?? 'PCS' }}
                                 </span>
                             </div>
@@ -447,7 +447,7 @@
                 </div>{{-- /card-body --}}
             </div>{{-- /Product Detail Card --}}
 
-            {{-- ── Technical Specifications ── --}}
+            {{-- -- Technical Specifications -- --}}
             @if (count($specs))
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
@@ -466,7 +466,7 @@
                 </div>
             @endif
 
-            {{-- ── Transaction History (tabs) ── --}}
+            {{-- -- Transaction History (tabs) -- --}}
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <ul class="nav nav-tabs card-header-tabs" id="txnTabs" role="tablist"
@@ -537,12 +537,12 @@
                                             @php $pur = $item->purchase; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-primary fw-semibold">{{ $pur?->purchase_no ?? '—' }}</code>
+                                                        class="small text-primary fw-semibold">{{ $pur?->purchase_no ?? '�' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $pur?->purchase_date ? \Carbon\Carbon::parse($pur->purchase_date)->format('d M Y') : '—' }}
+                                                    {{ $pur?->purchase_date ? \Carbon\Carbon::parse($pur->purchase_date)->format('d M Y') : '�' }}
                                                 </td>
-                                                <td class="fw-semibold small">{{ $pur?->supplier?->name ?? '—' }}</td>
+                                                <td class="fw-semibold small">{{ $pur?->supplier?->name ?? '�' }}</td>
                                                 <td class="text-end fw-semibold">{{ number_format($item->quantity, 2) }}
                                                 </td>
                                                 <td class="text-end small">
@@ -564,7 +564,7 @@
                                                         <span
                                                             class="badge bg-secondary rounded-pill">{{ $pur->status }}</span>
                                                     @else
-                                                        <span class="text-muted">—</span>
+                                                        <span class="text-muted">�</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
@@ -611,10 +611,10 @@
                                             @php $sale = $item->sale; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-success fw-semibold">{{ $sale?->invoice_no ?? '—' }}</code>
+                                                        class="small text-success fw-semibold">{{ $sale?->invoice_no ?? '�' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $sale?->invoice_date ? \Carbon\Carbon::parse($sale->invoice_date)->format('d M Y') : '—' }}
+                                                    {{ $sale?->invoice_date ? \Carbon\Carbon::parse($sale->invoice_date)->format('d M Y') : '�' }}
                                                 </td>
                                                 <td class="fw-semibold small">
                                                     {{ $sale?->customer?->name ?? __('messages.prod_walk_in') }}</td>
@@ -636,7 +636,7 @@
                                                         <span
                                                             class="badge bg-danger rounded-pill">{{ __('messages.unpaid') }}</span>
                                                     @else
-                                                        <span class="text-muted">—</span>
+                                                        <span class="text-muted">�</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
@@ -679,14 +679,14 @@
                                     <tbody>
                                         @foreach ($adjustments as $adj)
                                             <tr>
-                                                <td><code class="small">{{ $adj->voucher_no ?? '—' }}</code></td>
+                                                <td><code class="small">{{ $adj->voucher_no ?? '�' }}</code></td>
                                                 <td class="text-muted small">
                                                     {{ $adj->transaction_date ? \Carbon\Carbon::parse($adj->transaction_date)->format('d M Y') : $adj->created_at->format('d M Y') }}
                                                 </td>
                                                 <td>
                                                     @if ($adj->adjustment_type === 'Plus')
                                                     <span class="badge bg-success">+ Add</span>@else<span
-                                                            class="badge bg-danger">− Remove</span>
+                                                            class="badge bg-danger">- Remove</span>
                                                     @endif
                                                 </td>
                                                 <td
@@ -695,7 +695,7 @@
                                                 </td>
                                                 <td class="text-muted small">
                                                     {{ $adj->user?->name ?? __('messages.system') }}</td>
-                                                <td class="text-muted small">{{ Str::limit($adj->notes ?? '—', 35) }}
+                                                <td class="text-muted small">{{ Str::limit($adj->notes ?? '�', 35) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -729,12 +729,12 @@
                                             @php $ret = $item->purchaseReturn; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-info fw-semibold">{{ $ret?->return_no ?? '—' }}</code>
+                                                        class="small text-info fw-semibold">{{ $ret?->return_no ?? '�' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : '—' }}
+                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : '�' }}
                                                 </td>
-                                                <td class="small">{{ $ret?->purchase?->supplier?->name ?? '—' }}</td>
+                                                <td class="small">{{ $ret?->purchase?->supplier?->name ?? '�' }}</td>
                                                 <td class="text-end fw-semibold">{{ number_format($item->quantity, 2) }}
                                                 </td>
                                                 <td class="text-end fw-bold text-info">
@@ -772,10 +772,10 @@
                                             @php $ret = $item->saleReturn; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-danger fw-semibold">{{ $ret?->return_no ?? '—' }}</code>
+                                                        class="small text-danger fw-semibold">{{ $ret?->return_no ?? '�' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : '—' }}
+                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : '�' }}
                                                 </td>
                                                 <td class="small">
                                                     {{ $ret?->sale?->customer?->name ?? __('messages.prod_walk_in') }}
@@ -798,9 +798,9 @@
 
         </div>{{-- /col-lg-8 --}}
 
-        {{-- ════════════════════════════════════════════════════════
+        {{-- --------------------------------------------------------
              RIGHT  col-lg-4
-        ════════════════════════════════════════════════════════ --}}
+        -------------------------------------------------------- --}}
         <div class="col-lg-4">
 
             {{-- Information Card --}}
@@ -849,7 +849,7 @@
                             ],
                             [
                                 'label' => __('messages.unit_label'),
-                                'value' => ($product->unit_name ?? '—') . ' (' . ($product->unit_code ?? '—') . ')',
+                                'value' => ($product->unit_name ?? '�') . ' (' . ($product->unit_code ?? '�') . ')',
                                 'type' => 'text',
                             ],
                             [
@@ -880,7 +880,7 @@
                         ];
                     @endphp
                     @foreach ($infoRows as $row)
-                        @if ($row['value'] !== null && $row['value'] !== '' && $row['value'] !== '—')
+                        @if ($row['value'] !== null && $row['value'] !== '' && $row['value'] !== '�')
                             <div class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom">
                                 <span class="text-muted small fw-semibold">{{ $row['label'] }}</span>
                                 <span class="fw-semibold small text-end">
@@ -948,9 +948,9 @@
         </div>{{-- /col-lg-4 --}}
     </div>{{-- /row --}}
 
-    {{-- ─────────────────────────────────────────────────────────────────────
+    {{-- ---------------------------------------------------------------------
          Quick Stock Adjustment Modal
-    ───────────────────────────────────────────────────────────────────── --}}
+    --------------------------------------------------------------------- --}}
     @can('stocks.create')
         <div class="modal fade" id="quickAdjustModal" tabindex="-1" aria-labelledby="quickAdjustModalLabel"
             aria-hidden="true">
@@ -1054,7 +1054,7 @@
                             {{-- Notes --}}
                             <div class="mb-0">
                                 <label class="form-label fw-semibold">Notes</label>
-                                <textarea class="form-control" name="notes" rows="2" placeholder="Reason for adjustment..."></textarea>
+                                <textarea class="form-control" name="notes" rows="2" placeholder="{{ __('messages.ph_adj_reason') }}"></textarea>
                             </div>
                         </div>
 
@@ -1082,7 +1082,7 @@
     <script>
         $(document).ready(function() {
 
-            // ── Tab persistence ──
+            // -- Tab persistence --
             const tabKey = 'prod_show_tab_{{ $product->id }}';
             const saved = localStorage.getItem(tabKey);
             if (saved) {
@@ -1093,7 +1093,7 @@
                 localStorage.setItem(tabKey, $(e.target).data('bs-target'));
             });
 
-            // ── Swiper setup ──
+            // -- Swiper setup --
             @if ($allImgs && count($allImgs) > 0)
                 @if (count($allImgs) > 1)
                     // Thumbs swiper
@@ -1131,13 +1131,13 @@
                         }
                     });
                 @else
-                    // Single image — no navigation needed
+                    // Single image � no navigation needed
                     const swiperMain = new Swiper('#productSwiperMain', {
                         spaceBetween: 0
                     });
                 @endif
 
-                // ── GLightbox ──
+                // -- GLightbox --
                 const lightbox = GLightbox({
                     selector: '.glightbox-prod',
                     touchNavigation: true,
@@ -1170,7 +1170,7 @@
                 });
             @endif
 
-            // ── Delete confirm ──
+            // -- Delete confirm --
             $(document).on('click', '.delete-btn', function() {
                 const name = $(this).data('name');
                 Swal.fire({

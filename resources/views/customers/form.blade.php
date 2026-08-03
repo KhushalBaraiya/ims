@@ -5,7 +5,7 @@
         <label class="form-label fw-semibold">{{ __('messages.customer_name') }} <span
                 class="text-danger">*</span></label>
         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-            value="{{ old('name', $customer->name ?? '') }}" placeholder="e.g. John Doe" required>
+            value="{{ old('name', $customer->name ?? '') }}" placeholder="{{ __('messages.ph_full_name') }}" required>
         @error('name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -13,7 +13,7 @@
     <div class="col-md-6">
         <label class="form-label fw-semibold">{{ __('messages.th_email') }}</label>
         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-            value="{{ old('email', $customer->email ?? '') }}" placeholder="john@example.com">
+            value="{{ old('email', $customer->email ?? '') }}" placeholder="{{ __('messages.ph_email_field') }}">
         @error('email')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -22,7 +22,7 @@
         <label class="form-label fw-semibold">{{ __('messages.phone_label') }} <span
                 class="text-danger">*</span></label>
         <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
-            value="{{ old('phone', $customer->phone ?? '') }}" placeholder="+1234567890" required>
+            value="{{ old('phone', $customer->phone ?? '') }}" placeholder="{{ __('messages.ph_phone_number') }}" required>
         @error('phone')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -30,7 +30,7 @@
     <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.gst_number') }}</label>
         <input type="text" name="gst_number" class="form-control @error('gst_number') is-invalid @enderror"
-            value="{{ old('gst_number', $customer->gst_number ?? '') }}" placeholder="22AAAAA0000A1Z5">
+            value="{{ old('gst_number', $customer->gst_number ?? '') }}" placeholder="{{ __('messages.ph_gst_number') }}">
         @error('gst_number')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -39,7 +39,7 @@
         <label class="form-label fw-semibold">{{ __('messages.opening_balance') }}</label>
         <input type="number" step="0.01" name="opening_balance"
             class="form-control @error('opening_balance') is-invalid @enderror"
-            value="{{ old('opening_balance', $customer->opening_balance ?? '0.00') }}" placeholder="0.00">
+            value="{{ old('opening_balance', $customer->opening_balance ?? '0.00') }}" placeholder="{{ __('messages.ph_opening_balance') }}">
         @error('opening_balance')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -67,7 +67,7 @@
     <div class="col-12">
         <label class="form-label fw-semibold">{{ __('messages.address_label') }}</label>
         <textarea name="address" rows="2" class="form-control @error('address') is-invalid @enderror"
-            placeholder="Street address...">{{ old('address', $customer->address ?? '') }}</textarea>
+            placeholder="{{ __('messages.ph_street_address') }}">{{ old('address', $customer->address ?? '') }}</textarea>
         @error('address')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror

@@ -39,7 +39,7 @@
                     <div class="col-md-5">
                         <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
-                            value="{{ request('search') }}" placeholder="Category name or code...">
+                            value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_category') }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>

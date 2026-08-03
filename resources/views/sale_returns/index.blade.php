@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.sale_returns'))
 
 @section('content')
@@ -106,12 +106,12 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.return_no_label') }}</label>
                             <input type="text" name="return_no" class="form-control form-control-sm"
-                                value="{{ request('return_no') }}" placeholder="RET-YYYYMMDD-XXXXX">
+                                value="{{ request('return_no') }}" placeholder="{{ __('messages.ph_sale_ret_format') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.sale_invoice_no') }}</label>
                             <input type="text" name="sale_invoice" class="form-control form-control-sm"
-                                value="{{ request('sale_invoice') }}" placeholder="INV-YYYYMMDD-XXXXX">
+                                value="{{ request('sale_invoice') }}" placeholder="{{ __('messages.ph_sale_ret_inv_format') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.customer') }}</label>

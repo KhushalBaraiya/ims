@@ -11,7 +11,7 @@
             {{ __('messages.display_name') }} <span class="text-danger">*</span>
         </label>
         <input type="text" id="displayNameInput" name="display_name"
-            class="form-control @error('display_name') is-invalid @enderror" placeholder="e.g. HR Manager"
+            class="form-control @error('display_name') is-invalid @enderror" placeholder="{{ __('messages.ph_role_name') }}"
             value="{{ $displayName }}" required>
         @error('display_name')
             <div class="invalid-feedback">{{ $message }}</div>

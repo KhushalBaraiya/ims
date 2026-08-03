@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.role_management'))
 
 @section('content')
@@ -39,7 +39,7 @@
                         <label class="form-label fw-semibold small">{{ __('messages.search') }}
                             {{ __('messages.role') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
-                            value="{{ request('search') }}" placeholder="Role name...">
+                            value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_role') }}">
                     </div>
                     <div class="col-md-3 d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">

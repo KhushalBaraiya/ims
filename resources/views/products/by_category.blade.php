@@ -1,9 +1,9 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.prod_by_category'))
 
 @push('styles')
     <style>
-        /* ── Category Section ─────────────────────────── */
+        /* -- Category Section --------------------------- */
         .cat-section {
             margin-bottom: 2.5rem;
         }
@@ -80,7 +80,7 @@
             background: #fff;
         }
 
-        /* ── Product Card ─────────────────────────────── */
+        /* -- Product Card ------------------------------- */
         .pc-card {
             border-radius: 10px;
             border: 1px solid rgba(0, 0, 0, .07);
@@ -186,7 +186,7 @@
             display: none !important;
         }
 
-        /* ── Dark mode ────────────────────────────────── */
+        /* -- Dark mode ---------------------------------- */
         [data-bs-theme="dark"] .pc-card {
             background: #2b2c40;
             border-color: rgba(255, 255, 255, .07);
@@ -214,7 +214,7 @@
             background: linear-gradient(135deg, #25264a, #2e1a44);
         }
 
-        /* ── Jump to pills ────────────────────────────── */
+        /* -- Jump to pills ------------------------------ */
         .jump-pill {
             display: inline-flex;
             align-items: center;
@@ -283,7 +283,7 @@
 
 @section('content')
 
-    {{-- ── Page Header ───────────────────────────────── --}}
+    {{-- -- Page Header --------------------------------- --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.prod_by_category') }}</h4>
@@ -315,7 +315,7 @@
         </div>
     </div>
 
-    {{-- ── Summary Stats ──────────────────────────────── --}}
+    {{-- -- Summary Stats -------------------------------- --}}
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
@@ -373,7 +373,7 @@
         </div>
     </div>
 
-    {{-- ── Sticky Search / Filter Bar ─────────────────── --}}
+    {{-- -- Sticky Search / Filter Bar ------------------- --}}
     <div id="filtersCard" class="{{ $search || $statusFilter || $stockFilter ? '' : 'd-none' }} mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
@@ -387,7 +387,7 @@
                         <div class="col-md-4">
                             <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                             <input type="text" name="search" class="form-control form-control-sm"
-                                placeholder="Search product name or SKU…" value="{{ $search }}">
+                                placeholder="{{ __('messages.ph_search_product_sku') }}" value="{{ $search }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.th_status') }}</label>
@@ -421,7 +421,7 @@
         </div>
     </div>
 
-    {{-- ── Category Quick-Jump ─────────────────────────── --}}
+    {{-- -- Category Quick-Jump --------------------------- --}}
     @if ($categories->count() > 2)
         <div class="d-flex gap-2 flex-wrap mb-4 align-items-center">
             <span class="text-muted small fw-semibold d-flex align-items-center gap-1 me-1">
@@ -444,7 +444,7 @@
         </div>
     @endif
 
-    {{-- ── Categories Loop ─────────────────────────────── --}}
+    {{-- -- Categories Loop ------------------------------- --}}
     @php
         $totalShown = $categories->sum(fn($c) => $c->products->count()) + $uncategorized->count();
     @endphp
@@ -523,7 +523,7 @@
         @endforelse
     @endif {{-- end totalShown check --}}
 
-    {{-- ── Uncategorized ───────────────────────────────── --}}
+    {{-- -- Uncategorized --------------------------------- --}}
     @if ($uncategorized->count() > 0)
         <div class="cat-section" id="cat-uncategorized">
             <div class="cat-section-header" style="background: linear-gradient(135deg, #fd9f3c 0%, #e57c1b 100%);">
@@ -551,7 +551,7 @@
 
 @push('scripts')
     <script>
-        // ── Filters toggle ────────────────────────────────────────────────
+        // -- Filters toggle ------------------------------------------------
         $(document).ready(function() {
             // Auto-open chevron if filter is active
             @if ($search || $statusFilter || $stockFilter)
@@ -567,7 +567,7 @@
             });
         });
         /**
-         * Sub-category tab filter — show/hide product cards within a category section.
+         * Sub-category tab filter � show/hide product cards within a category section.
          */
         function filterSubcat(catId, subcatId, btn) {
             // Update active button

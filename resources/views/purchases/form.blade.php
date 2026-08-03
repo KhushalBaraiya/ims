@@ -146,7 +146,7 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Reference / PO No</label>
                     <input {{ $isReturned ? 'disabled' : '' }} class="form-control" name="reference_no"
-                        placeholder="Optional reference..." type="text"
+                        placeholder="{{ __('messages.ph_optional_ref') }}" type="text"
                         value="{{ old('reference_no', $purchase->reference_no ?? '') }}">
                 </div>
                 <div class="mb-0">
@@ -324,7 +324,7 @@
                     </div>
                     <div class="card-body p-3">
                         <textarea {{ $isReturned ? 'disabled' : '' }} class="form-control" name="notes"
-                            placeholder="Delivery instructions, warranty terms..." rows="6">{{ old('notes', $purchase->notes ?? '') }}</textarea>
+                            placeholder="{{ __('messages.ph_delivery_instructions') }}" rows="6">{{ old('notes', $purchase->notes ?? '') }}</textarea>
                     </div>
                 </div>
             </div>

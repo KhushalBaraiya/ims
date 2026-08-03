@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+﻿@extends('layouts.auth')
 @section('title', __('messages.login'))
 
 @section('content')
@@ -36,7 +36,7 @@
         <div class="mb-field">
             <label class="form-label-dark" for="email">{{ __('messages.email_address_label') }}</label>
             <input autocomplete="email" autofocus class="input-dark @error('email') is-invalid @enderror" id="email"
-                name="email" placeholder="name@company.com" required type="email" value="{{ old('email') }}" />
+                name="email" placeholder="{{ __('messages.ph_email_example') }}" required type="email" value="{{ old('email') }}" />
             @error('email')
                 @php
                     $isLocked = str_starts_with($message, 'LOCKED:');
@@ -136,7 +136,7 @@
             </div>
             <div class="pw-wrap">
                 <input autocomplete="current-password" class="input-dark @error('password') is-invalid @enderror"
-                    id="password" name="password" placeholder="••••••••" required type="password" />
+                    id="password" name="password" placeholder="{{ __('messages.ph_password_dots') }}" required type="password" />
                 <button class="pw-toggle" id="togglePw" tabindex="-1" type="button">
                     <i class="bx bx-hide" id="pwIcon"></i>
                 </button>

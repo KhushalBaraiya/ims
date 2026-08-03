@@ -41,7 +41,7 @@
                                 </label>
                                 <input type="text" id="displayNameInput" name="display_name"
                                     class="form-control @error('display_name') is-invalid @enderror"
-                                    placeholder="e.g. HR Manager" value="{{ old('display_name') }}" required>
+                                    placeholder="{{ __('messages.ph_role_name') }}" value="{{ old('display_name') }}" required>
                                 @error('display_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

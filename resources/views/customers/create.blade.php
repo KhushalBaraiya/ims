@@ -77,7 +77,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.gst_number') }}</label>
                                 <input type="text" name="gst_number"
                                     class="form-control @error('gst_number') is-invalid @enderror"
-                                    value="{{ old('gst_number') }}" placeholder="e.g. 22AAAAA0000A1Z5">
+                                    value="{{ old('gst_number') }}" placeholder="{{ __('messages.ph_gst_number') }}">
                                 @error('gst_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -89,7 +89,7 @@
                                     <span class="input-group-text">₹</span>
                                     <input type="number" step="0.01" min="0" name="opening_balance"
                                         class="form-control @error('opening_balance') is-invalid @enderror"
-                                        value="{{ old('opening_balance', '0.00') }}" placeholder="0.00">
+                                        value="{{ old('opening_balance', '0.00') }}" placeholder="{{ __('messages.ph_opening_balance') }}">
                                 </div>
                                 @error('opening_balance')
                                     <div class="invalid-feedback">{{ $message }}</div>

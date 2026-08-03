@@ -1,13 +1,13 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.product_gallery'))
 
 @push('styles')
     <style>
-        /* ════════════════════════════════════════════════════════════
-                                                                                                       PRODUCT GALLERY — BASE STYLES
-                                                                                                       ════════════════════════════════════════════════════════════ */
+        /* ------------------------------------------------------------
+                                                                                                       PRODUCT GALLERY � BASE STYLES
+                                                                                                       ------------------------------------------------------------ */
 
-        /* ── Card ── */
+        /* -- Card -- */
         .pg-card {
             border-radius: 12px;
             border: 1px solid rgba(0, 0, 0, .07);
@@ -26,7 +26,7 @@
             border-color: rgba(105, 108, 255, .25);
         }
 
-        /* ── Image area ── */
+        /* -- Image area -- */
         .pg-img-wrap {
             position: relative;
             height: 180px;
@@ -68,7 +68,7 @@
             text-transform: uppercase;
         }
 
-        /* ── Overlay badges ── */
+        /* -- Overlay badges -- */
         .pg-tl {
             position: absolute;
             top: 8px;
@@ -87,7 +87,7 @@
             align-items: flex-end;
         }
 
-        /* ── Card body ── */
+        /* -- Card body -- */
         .pg-body {
             padding: .85rem;
             flex: 1;
@@ -95,7 +95,7 @@
             flex-direction: column;
         }
 
-        /* ── Price box ── */
+        /* -- Price box -- */
         .pg-price-box {
             background: linear-gradient(135deg, #f0f1ff, #f5f0ff);
             border-radius: 8px;
@@ -103,14 +103,14 @@
             margin-bottom: .6rem;
         }
 
-        /* ── Action buttons ── */
+        /* -- Action buttons -- */
         .pg-actions .btn {
             font-size: .75rem;
             padding: .3rem .6rem;
             border-radius: 6px;
         }
 
-        /* ── Gallery thumbs ── */
+        /* -- Gallery thumbs -- */
         .pg-thumb {
             width: 26px;
             height: 26px;
@@ -119,13 +119,13 @@
             border: 1.5px solid #dee2e6;
         }
 
-        /* ── Toolbar selects ── */
+        /* -- Toolbar selects -- */
         .pg-toolbar select.form-select {
             min-width: 0;
             flex: 1 1 auto;
         }
 
-        /* ── Dark mode ── */
+        /* -- Dark mode -- */
         [data-bs-theme="dark"] .pg-card {
             background: #2b2c40;
             border-color: rgba(255, 255, 255, .07);
@@ -143,7 +143,7 @@
             background: linear-gradient(135deg, #25264a, #2e1a44);
         }
 
-        /* ── Pagination ── */
+        /* -- Pagination -- */
         .pg-pagination .pagination {
             gap: 4px;
             flex-wrap: wrap;
@@ -181,9 +181,9 @@
             background: transparent;
         }
 
-        /* ════════════════════════════════════════════════════════════
-                                                                                                       RESPONSIVE — LARGE TABLET  (768 – 991px)
-                                                                                                       ════════════════════════════════════════════════════════════ */
+        /* ------------------------------------------------------------
+                                                                                                       RESPONSIVE � LARGE TABLET  (768 � 991px)
+                                                                                                       ------------------------------------------------------------ */
         @media (min-width: 768px) and (max-width: 991.98px) {
 
             /* Image shorter on tablet to save vertical space */
@@ -224,9 +224,9 @@
             }
         }
 
-        /* ════════════════════════════════════════════════════════════
-                                                                                                       RESPONSIVE — SMALL  (576 – 767px)
-                                                                                                       ════════════════════════════════════════════════════════════ */
+        /* ------------------------------------------------------------
+                                                                                                       RESPONSIVE � SMALL  (576 � 767px)
+                                                                                                       ------------------------------------------------------------ */
         @media (min-width: 576px) and (max-width: 767.98px) {
 
             /* Image height */
@@ -278,12 +278,12 @@
             }
         }
 
-        /* ════════════════════════════════════════════════════════════
-                                                                                                       RESPONSIVE — MOBILE  (0 – 575px)
-                                                                                                       ════════════════════════════════════════════════════════════ */
+        /* ------------------------------------------------------------
+                                                                                                       RESPONSIVE � MOBILE  (0 � 575px)
+                                                                                                       ------------------------------------------------------------ */
         @media (max-width: 575.98px) {
 
-            /* ── Page header ── */
+            /* -- Page header -- */
             .d-flex.align-items-center.justify-content-between.mb-4 {
                 flex-direction: column !important;
                 align-items: flex-start !important;
@@ -309,12 +309,12 @@
                 justify-content: center;
             }
 
-            /* ── Stats cards — 2 per row ── */
+            /* -- Stats cards � 2 per row -- */
             .row.g-3.mb-4 .col-6.col-xl-3 {
                 width: 50% !important;
             }
 
-            /* ── Filters ── */
+            /* -- Filters -- */
             #filtersCard .col-md-3,
             #filtersCard .col-md-2,
             #filtersCard [class*="col-md-"] {
@@ -336,7 +336,7 @@
                 justify-content: center;
             }
 
-            /* ── Toolbar ── */
+            /* -- Toolbar -- */
             .pg-toolbar {
                 flex-direction: column !important;
                 align-items: flex-start !important;
@@ -358,7 +358,7 @@
                 font-size: .78rem !important;
             }
 
-            /* ── 1-column: horizontal card layout ── */
+            /* -- 1-column: horizontal card layout -- */
             .pg-card {
                 flex-direction: row !important;
                 height: auto !important;
@@ -420,7 +420,7 @@
                 padding: .1em .28em !important;
             }
 
-            /* Product name — 1 line */
+            /* Product name � 1 line */
             .pg-body h6 {
                 font-size: .78rem !important;
                 -webkit-line-clamp: 1 !important;
@@ -455,7 +455,7 @@
                 font-size: .48rem !important;
             }
 
-            /* Hide profit row — save vertical space */
+            /* Hide profit row � save vertical space */
             .pg-price-box>div:last-child {
                 display: none !important;
             }
@@ -492,7 +492,7 @@
                 display: inline !important;
             }
 
-            /* ── Pagination row ── */
+            /* -- Pagination row -- */
             .d-flex.align-items-center.justify-content-between.flex-wrap.gap-2.px-1.py-3 {
                 flex-direction: column !important;
                 align-items: flex-start !important;
@@ -511,9 +511,9 @@
             }
         }
 
-        /* ════════════════════════════════════════════════════════════
-                                                                                                       RESPONSIVE — EXTRA SMALL  (0 – 400px)
-                                                                                                       ════════════════════════════════════════════════════════════ */
+        /* ------------------------------------------------------------
+                                                                                                       RESPONSIVE � EXTRA SMALL  (0 � 400px)
+                                                                                                       ------------------------------------------------------------ */
         @media (max-width: 400px) {
 
             /* Image thumb narrower on very small */
@@ -550,7 +550,7 @@
 
 @section('content')
 
-    {{-- ── Header ──────────────────────────────────────────────── --}}
+    {{-- -- Header ------------------------------------------------ --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h4 class="fw-bold mb-1">{{ __('messages.product_gallery') }}</h4>
@@ -582,7 +582,7 @@
         </div>
     </div>
 
-    {{-- ── Stats ────────────────────────────────────────────────── --}}
+    {{-- -- Stats -------------------------------------------------- --}}
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
@@ -638,7 +638,7 @@
         </div>
     </div>
 
-    {{-- ── Collapsible Filters ──────────────────────────────────── --}}
+    {{-- -- Collapsible Filters ------------------------------------ --}}
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
@@ -652,7 +652,7 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                             <input type="text" name="search" class="form-control form-control-sm"
-                                placeholder="Name, SKU…" value="{{ request('search') }}">
+                                placeholder="{{ __('messages.ph_search_name_sku_short') }}" value="{{ request('search') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
@@ -713,41 +713,41 @@
         </div>
     </div>
 
-    {{-- ── Toolbar: count + sort + per-page ────────────────────── --}}
+    {{-- -- Toolbar: count + sort + per-page ---------------------- --}}
     @php
         $sortLatest = __('messages.rpt_quick') . ' ({{ __('messages.rpt_this_week') }})';
-        $lblLatest = __('messages.updated') . ' ▼';
-        $lblNameAsc = __('messages.th_name') . ' A–Z';
-        $lblNameDesc = __('messages.th_name') . ' Z–A';
-        $lblPriceUp = __('messages.prod_sell') . ' ↑';
-        $lblPriceDown = __('messages.prod_sell') . ' ↓';
-        $lblStockUp = __('messages.th_stock') . ' ↑';
-        $lblStockDown = __('messages.th_stock') . ' ↓';
+        $lblLatest = __('messages.updated') . ' ?';
+        $lblNameAsc = __('messages.th_name') . ' A�Z';
+        $lblNameDesc = __('messages.th_name') . ' Z�A';
+        $lblPriceUp = __('messages.prod_sell') . ' ?';
+        $lblPriceDown = __('messages.prod_sell') . ' ?';
+        $lblStockUp = __('messages.th_stock') . ' ?';
+        $lblStockDown = __('messages.th_stock') . ' ?';
         $lblPage = __('messages.entries');
     @endphp
     <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2 pg-toolbar">
         <p class="text-muted small mb-0">
             {{ __('messages.prod_showing_results') }}
-            <strong>{{ $products->firstItem() ?? 0 }}–{{ $products->lastItem() ?? 0 }}</strong>
+            <strong>{{ $products->firstItem() ?? 0 }}�{{ $products->lastItem() ?? 0 }}</strong>
             {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong> {{ __('messages.products') }}
         </p>
         <div class="d-flex gap-2 align-items-center flex-wrap">
             <select class="form-select form-select-sm" style="width:auto;" data-no-select2
                 onchange="applyParam('sort',this.value)">
                 <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
-                    {{ __('messages.updated') }} ▼</option>
+                    {{ __('messages.updated') }} ?</option>
                 <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>
-                    {{ __('messages.th_name') }} A–Z</option>
+                    {{ __('messages.th_name') }} A�Z</option>
                 <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>
-                    {{ __('messages.th_name') }} Z–A</option>
+                    {{ __('messages.th_name') }} Z�A</option>
                 <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>
-                    {{ __('messages.prod_sell') }} ↑</option>
+                    {{ __('messages.prod_sell') }} ?</option>
                 <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>
-                    {{ __('messages.prod_sell') }} ↓</option>
+                    {{ __('messages.prod_sell') }} ?</option>
                 <option value="stock_asc" {{ request('sort') === 'stock_asc' ? 'selected' : '' }}>
-                    {{ __('messages.th_stock') }} ↑</option>
+                    {{ __('messages.th_stock') }} ?</option>
                 <option value="stock_desc" {{ request('sort') === 'stock_desc' ? 'selected' : '' }}>
-                    {{ __('messages.th_stock') }} ↓</option>
+                    {{ __('messages.th_stock') }} ?</option>
             </select>
             <select class="form-select form-select-sm" style="width:auto;" data-no-select2
                 onchange="applyParam('per_page',this.value)">
@@ -763,7 +763,7 @@
         </div>
     </div>
 
-    {{-- ── Grid ──────────────────────────────────────────────────── --}}
+    {{-- -- Grid ---------------------------------------------------- --}}
     @if ($products->isEmpty())
         <div class="text-center py-5 text-muted">
             <i class="bx bx-package d-block mb-3" style="font-size:4rem;opacity:.12;"></i>
@@ -794,7 +794,7 @@
                     <div class="card pg-card shadow-sm {{ $inactive ? 'opacity-75' : '' }}"
                         onclick="window.location='{{ route('products.show', $product->id) }}'">
 
-                        {{-- ── Image ─── --}}
+                        {{-- -- Image --- --}}
                         <div class="pg-img-wrap"
                             @if (count($gallery)) data-gallery-imgs="{{ json_encode(array_merge($product->image ? [$product->image] : [], $gallery)) }}" @endif>
                             @php $allCardImgs = array_values(array_filter(array_merge($product->image ? [$product->image] : [], $gallery))); @endphp
@@ -843,7 +843,7 @@
                             </div>
                         </div>
 
-                        {{-- ── Body ─── --}}
+                        {{-- -- Body --- --}}
                         <div class="pg-body">
 
                             {{-- Brand / Category chips --}}
@@ -953,16 +953,16 @@
             @endforeach
         </div>
 
-        {{-- ── Pagination ───────────────────────────────────────── --}}
+        {{-- -- Pagination ----------------------------------------- --}}
         @if ($products->hasPages())
             <div
                 class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-1 py-3 mt-2 border-top pg-pagination">
                 <p class="text-muted small mb-0">
                     {{ __('messages.prod_showing_results') }}
-                    <strong>{{ $products->firstItem() }}</strong>–<strong>{{ $products->lastItem() }}</strong>
+                    <strong>{{ $products->firstItem() }}</strong>�<strong>{{ $products->lastItem() }}</strong>
                     {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
                     {{ __('messages.products') }}
-                    &nbsp;·&nbsp; {{ __('messages.show') }} {{ $products->currentPage() }} /
+                    &nbsp;�&nbsp; {{ __('messages.show') }} {{ $products->currentPage() }} /
                     {{ $products->lastPage() }}
                 </p>
                 {{ $products->appends(request()->query())->links() }}
@@ -997,7 +997,7 @@
                 $chevron.toggleClass('bx-chevron-down', hidden).toggleClass('bx-chevron-up', !hidden);
             });
 
-            // ── Multi-image hover cycling ──────────────────────────────────────
+            // -- Multi-image hover cycling --------------------------------------
             $('.pg-img-wrap[data-gallery-imgs]').each(function() {
                 const $wrap = $(this);
                 const imgs = JSON.parse($wrap.attr('data-gallery-imgs') || '[]');

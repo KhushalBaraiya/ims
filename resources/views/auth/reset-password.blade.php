@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+﻿@extends('layouts.auth')
 @section('title', 'Reset Password')
 
 @section('content')
@@ -37,7 +37,7 @@
         <div class="mb-field">
             <label class="form-label-dark" for="password">{{ __('messages.new_password_label') }}</label>
             <div class="pw-wrap">
-                <input type="password" id="password" name="password" placeholder="Min 8 characters"
+                <input type="password" id="password" name="password" placeholder="{{ __('messages.ph_min_8_chars') }}"
                     autocomplete="new-password" required class="input-dark @error('password') is-invalid @enderror"
                     oninput="checkStrength(this.value); checkMatch();" />
                 <button type="button" class="pw-toggle" id="togglePw" tabindex="-1">
@@ -69,7 +69,7 @@
         <div class="mb-field">
             <label class="form-label-dark" for="password_confirmation">Confirm New Password</label>
             <div class="pw-wrap">
-                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••"
+                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="{{ __('messages.ph_password_dots') }}"
                     autocomplete="new-password" required class="input-dark" oninput="checkMatch();" />
                 <button type="button" class="pw-toggle" id="toggleConfirm" tabindex="-1">
                     <i class="bx bx-hide" id="confirmIcon"></i>

@@ -74,7 +74,7 @@
                                 </span>
                                 <input type="password" name="current_password"
                                     class="form-control border-start-0 @error('current_password') is-invalid @enderror"
-                                    placeholder="Enter current password" required>
+                                    placeholder="{{ __('messages.ph_current_password') }}" required>
                                 @error('current_password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -93,7 +93,7 @@
                                 </span>
                                 <input type="password" name="password" id="newPassword"
                                     class="form-control border-start-0 @error('password') is-invalid @enderror"
-                                    placeholder="Enter new password" required>
+                                    placeholder="{{ __('messages.ph_new_password') }}" required>
                                 @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -119,7 +119,7 @@
                                     <i class="bx bx-check-shield text-muted"></i>
                                 </span>
                                 <input type="password" name="password_confirmation" id="confirmPassword"
-                                    class="form-control border-start-0" placeholder="Confirm new password" required>
+                                    class="form-control border-start-0" placeholder="{{ __('messages.ph_confirm_new_password') }}" required>
                             </div>
                             <small class="d-none text-danger mt-1" id="matchWarning">
                                 <i class="bx bx-x-circle me-1"></i>Passwords do not match

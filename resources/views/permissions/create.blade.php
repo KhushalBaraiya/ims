@@ -57,7 +57,7 @@
                                 {{ __('messages.module_label') }} <span class="text-danger">*</span>
                             </label>
                             <input type="text" id="moduleInput" name="module" list="moduleList"
-                                class="form-control form-control-lg @error('module') is-invalid @enderror" placeholder="e.g. products, sales, reports"
+                                class="form-control form-control-lg @error('module') is-invalid @enderror" placeholder="{{ __('messages.ph_permission_module') }}"
                                 value="{{ old('module') }}" required autocomplete="off">
                             <datalist id="moduleList">
                                 @foreach ($allModules as $mod)
@@ -113,7 +113,7 @@
                             <div class="input-group input-group-merge style-input-group">
                                 <span class="input-group-text"><i class="bx bx-plus-circle"></i></span>
                                 <input type="text" id="customActionInput" name="custom_action" class="form-control"
-                                    placeholder="e.g. export, print, approve" value="{{ old('custom_action') }}">
+                                    placeholder="{{ __('messages.ph_permission_action') }}" value="{{ old('custom_action') }}">
                             </div>
                             <div class="form-text">If typed, this custom action will be included in the batch.</div>
                         </div>

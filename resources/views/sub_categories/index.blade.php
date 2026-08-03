@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.sub_categories'))
 
 @section('content')
@@ -39,7 +39,7 @@
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
-                            value="{{ request('search') }}" placeholder="Sub category name...">
+                            value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_sub_category') }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.main_category') }}</label>
@@ -192,7 +192,7 @@
                                             {{ $subCategory->mainCategory->name }}
                                         </a>
                                     @else
-                                        <span class="text-muted small">—</span>
+                                        <span class="text-muted small">�</span>
                                     @endif
                                 </td>
                                 <td class="text-center">

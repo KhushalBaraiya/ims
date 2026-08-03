@@ -678,6 +678,7 @@ return [
     'delete_role' => 'ભૂમિકા કાઢી નાખો',
 
     // Permissions module
+    'other_permissions'         => 'અન્ય પરવાનગીઓ',
     'menu_permissions'          => 'પરવાનગી',
     'permission_management'     => 'પરવાનગી સંચાલન',
     'add_permission_title'      => 'પરવાનગી બનાવો',
@@ -1385,4 +1386,113 @@ return [
     'by_cat_stock_label'      => 'સ્ટૉક',
     'by_cat_products_count'   => 'ઉત્પાદ',
     'by_cat_product_count'    => 'ઉત્પાદ',
+
+    // ── Hardcoded Placeholder strings ────────────────────────────────────
+
+    // Categories
+    'ph_category_name'        => 'દા.ત. Smart TV, Laptop',
+
+    // Products
+    'ph_product_name'         => 'દા.ત. Core i9 Processor',
+    'ph_sku_code'             => 'દા.ત. PRD-CORE-A3X9',
+    'ph_barcode'              => 'દા.ત. 8901234567890',
+    'ph_unit_name'            => 'દા.ત. Piece',
+    'ph_unit_code'            => 'દા.ત. PCS',
+    'ph_min_stock'            => 'દા.ત. 5',
+    'ph_opening_qty'          => 'દા.ત. 10',
+    'ph_manufacturer'         => 'દા.ત. Intel, Asus',
+    'ph_model_number'         => 'દા.ત. ROG-STRIX-Z790',
+    'ph_part_number'          => 'દા.ત. 90MB1CS0',
+    'ph_warranty'             => 'દા.ત. 3 વર્ષ',
+    'ph_color'                => 'દા.ત. Space Grey',
+    'ph_weight'               => 'દા.ત. 1.2 kg',
+    'ph_country_origin'       => 'દા.ત. ભારત',
+    'ph_short_description'    => 'મુખ્ય વિશેષતાઓ...',
+    'ph_full_description'     => 'સંપૂર્ણ વિગત, બૉક્સ સામગ્રી...',
+    'ph_search_name_sku'      => 'નામ, SKU, બારકૉડ...',
+    'ph_search_name_sku_short'=> 'નામ, SKU…',
+    'ph_adj_reason'           => 'ઍડ્જસ્ટ કારણ...',
+    'ph_price_min'            => '0',
+    'ph_price_max'            => '∞',
+
+    // Auth / Password
+    'ph_current_password'     => 'વર્તમાન પાસવર્ડ દાખલ કરો',
+    'ph_new_password'         => 'નવો પાસવર્ડ દાખલ કરો',
+    'ph_confirm_new_password' => 'નવો પાસવર્ડ ની પુષ્ટિ',
+    'ph_password_dots'        => '••••••••',
+    'ph_min_8_chars'          => 'ઓછામાં ઓછા 8 અક્ષર',
+    'ph_email_example'        => 'name@company.com',
+    'ph_phone_number'         => '+1234567890',
+    'ph_phone_india'          => '+91 9999999999',
+
+    // Customers / Suppliers / Users
+    'ph_full_name'            => 'દા.ત. John Doe',
+    'ph_email_field'          => 'john@example.com',
+    'ph_gst_number'           => 'દા.ત. 22AAAAA0000A1Z5',
+    'ph_pan_number'           => 'દા.ત. ABCDE1234F',
+    'ph_opening_balance'      => '0.00',
+    'ph_street_address'       => 'શેરી સરનામું...',
+    'ph_search_customer'      => 'નામ, ફોન અથવા ઇ-મેઇલ...',
+    'ph_search_supplier'      => 'નામ, કંપની, ફોન અથવા ઇ-મેઇલ...',
+    'ph_supplier_name_eg'     => 'દા.ત. Acme Corporation',
+    'ph_company_name_eg'      => 'દા.ત. Acme Corp Inc.',
+    'ph_supplier_email'       => 'supplier@company.com',
+    'ph_user_name'            => 'પૂરું નામ',
+    'ph_user_email'           => 'email@example.com',
+    'ph_john_doe'             => 'John Doe',
+    'ph_john_company'         => 'john@company.com',
+
+    // Roles / Permissions
+    'ph_role_name'            => 'દા.ત. HR Manager',
+    'ph_search_role'          => 'ભૂમિકા નામ...',
+    'ph_permission_module'    => 'દા.ત. products, sales, reports',
+    'ph_permission_action'    => 'દા.ત. export, print, approve',
+    'ph_permission_module_eg' => 'દા.ત. products',
+    'ph_permission_action_eg' => 'દા.ત. view',
+    'ph_search_permission'    => 'દા.ત. products.view',
+
+    // Brands / Categories
+    'ph_search_brand'         => 'બ્રાન્ડ નામ અથવા કોડ...',
+    'ph_search_category'      => 'શ્રેણી નામ અથવા કોડ...',
+    'ph_search_sub_category'  => 'પેટા-શ્રેણી નામ...',
+    'ph_search_user'          => 'નામ અથવા ઇ-મેઇલ...',
+
+    // Sales / Purchases / Returns
+    'ph_invoice_no_format'    => 'INV-YYYYMMDD-XXXXX',
+    'ph_purchase_no_format'   => 'PUR-YYYYMMDD-XXXXX',
+    'ph_purchase_ret_format'  => 'PRET-YYYYMMDD-XXXXX',
+    'ph_sale_ret_format'      => 'RET-YYYYMMDD-XXXXX',
+    'ph_sale_ret_inv_format'  => 'INV-YYYYMMDD-XXXXX',
+    'ph_optional_ref'         => 'વૈકલ્પિક સંદર્ભ...',
+    'ph_optional'             => 'વૈકલ્પિક...',
+    'ph_delivery_instructions'=> 'ડિલિવરી સૂચના, વૉરન્ટી શરતો...',
+    'ph_return_reason_desc'   => 'પરત કારણ, ઉત્પાદ સ્થિતિ...',
+    'ph_reason_short'         => 'કારણ...',
+    'ph_payment_notes'        => 'ચૂકવણી નોંધ, ડિલિવરી સ્કેજ્યૂલ...',
+    'ph_filter_product_sku'   => 'નામ અથવા SKU થી ફિલ્ટર...',
+    'ph_search_product_sku'   => 'ઉત્પાદ નામ અથવા SKU શોધો...',
+    'ph_type_sku_barcode'     => 'ઉત્પાદ નામ, SKU, અથવા બારકૉડ સ્કૅન...',
+    'ph_refund_amount'        => '0',
+
+    // Settings
+    'ph_company_name_set'     => 'દા.ત. My Company Ltd.',
+    'ph_company_email'        => 'admin@example.com',
+    'ph_company_phone'        => '+1 234 567 8900',
+    'ph_company_address'      => 'સંપૂર્ણ કંપની સરનામું...',
+    'ph_invoice_prefix'       => 'INV',
+    'ph_purchase_prefix'      => 'PO',
+    'ph_tax_name'             => 'દા.ત. GST, VAT',
+    'ph_tax_percent'          => 'દા.ત. 18',
+    'ph_smtp_host'            => 'smtp.gmail.com',
+    'ph_smtp_port'            => '587',
+    'ph_smtp_user'            => 'your@gmail.com',
+    'ph_from_email'           => 'noreply@yourcompany.com',
+    'ph_from_name'            => 'Your Company Name',
+    'ph_test_email'           => 'test@example.com',
+    'ph_session_timeout'      => 'દા.ત. 30',
+    'ph_max_attempts'         => 'દા.ત. 5',
+    'ph_lockout_duration'     => 'દા.ત. 15',
+
+    // Profile
+    'ph_profile_phone'        => '+1234567890',
 ];

@@ -1,12 +1,12 @@
-﻿@php
+@php
     $isReturned = isset($sale) && $sale->returns->isNotEmpty();
     $showOutOfStock = $showOutOfStock ?? false;
 @endphp
 
 <style>
-    /* ══════════════════════════════════════════════════════════════
-       SALES FORM — Product Table  (light + dark)
-    ══════════════════════════════════════════════════════════════ */
+    /* --------------------------------------------------------------
+       SALES FORM � Product Table  (light + dark)
+    -------------------------------------------------------------- */
     #saleItemsTable th,
     #saleItemsTable td {
         padding: 8px 14px !important;
@@ -72,7 +72,7 @@
         font-size: 13px !important;
     }
 
-    /* ── Autocomplete Container ─────────────────────────────────── */
+    /* -- Autocomplete Container ----------------------------------- */
     #autocompleteResults {
         background: #fff;
         border: 1px solid #e2e8f0 !important;
@@ -87,7 +87,7 @@
         box-shadow: 0 10px 32px rgba(0, 0, 0, .4) !important;
     }
 
-    /* ── Each Item ──────────────────────────────────────────────── */
+    /* -- Each Item ------------------------------------------------ */
     .autocomplete-item {
         transition: background .13s ease;
         border-bottom: 1px solid #f1f5f9 !important;
@@ -102,7 +102,7 @@
         border-bottom-color: rgba(255, 255, 255, .07) !important;
     }
 
-    /* Hover — in-stock only */
+    /* Hover � in-stock only */
     .autocomplete-item:not(.oos-item):hover {
         background: rgba(105, 108, 255, .08) !important;
     }
@@ -111,7 +111,7 @@
         background: rgba(105, 108, 255, .15) !important;
     }
 
-    /* ── Product Image ──────────────────────────────────────────── */
+    /* -- Product Image -------------------------------------------- */
     .autocomplete-item .ac-img {
         width: 40px;
         height: 40px;
@@ -125,7 +125,7 @@
         border-color: rgba(255, 255, 255, .12);
     }
 
-    /* ── Product Name ───────────────────────────────────────────── */
+    /* -- Product Name --------------------------------------------- */
     .autocomplete-item .ac-name {
         font-size: 13px;
         font-weight: 600;
@@ -137,7 +137,7 @@
         color: #cfd3ec;
     }
 
-    /* ── SKU ────────────────────────────────────────────────────── */
+    /* -- SKU ------------------------------------------------------ */
     .autocomplete-item .ac-sku {
         font-size: 11px;
         color: #94a3b8;
@@ -148,7 +148,7 @@
         color: #7983bb;
     }
 
-    /* ── Price ──────────────────────────────────────────────────── */
+    /* -- Price ---------------------------------------------------- */
     .autocomplete-item .ac-price {
         font-size: 13px;
         font-weight: 700;
@@ -160,7 +160,7 @@
         color: #8b8fff;
     }
 
-    /* ── Stock text ─────────────────────────────────────────────── */
+    /* -- Stock text ----------------------------------------------- */
     .autocomplete-item .ac-stock {
         font-size: 11px;
         color: #94a3b8;
@@ -171,7 +171,7 @@
         color: #7983bb;
     }
 
-    /* ── Out-of-Stock Item ──────────────────────────────────────── */
+    /* -- Out-of-Stock Item ---------------------------------------- */
     .autocomplete-item.oos-item {
         background: #fafafa !important;
         cursor: not-allowed !important;
@@ -203,7 +203,7 @@
         color: #4f5570 !important;
     }
 
-    /* ── Out-of-Stock Badge ─────────────────────────────────────── */
+    /* -- Out-of-Stock Badge --------------------------------------- */
     .oos-badge {
         font-size: 10px !important;
         padding: 2px 7px !important;
@@ -211,7 +211,7 @@
         letter-spacing: .3px;
     }
 
-    /* ── No-results message ─────────────────────────────────────── */
+    /* -- No-results message --------------------------------------- */
     .ac-no-results {
         color: #94a3b8;
     }
@@ -239,7 +239,7 @@
 
 <div class="row g-4">
 
-    {{-- ── Left Column: Invoice Info + Payment ── --}}
+    {{-- -- Left Column: Invoice Info + Payment -- --}}
     <div class="col-lg-3">
 
         {{-- Invoice Info Card --}}
@@ -360,12 +360,12 @@
                         <option
                             {{ old('payment_method', $sale->payment_method ?? 'Cash') === 'Cash' ? 'selected' : '' }}
                             value="Cash">
-                            💵 Cash
+                            ?? Cash
                         </option>
                         <option
                             {{ old('payment_method', $sale->payment_method ?? '') === 'Razorpay' ? 'selected' : '' }}
                             value="Razorpay">
-                            ⚡ Razorpay (Online Payment)
+                            ? Razorpay (Online Payment)
                         </option>
                     </select>
                     @error('payment_method')
@@ -388,7 +388,7 @@
 
     </div>
 
-    {{-- ── Right Column: Products + Totals ── --}}
+    {{-- -- Right Column: Products + Totals -- --}}
     <div class="col-lg-9">
 
         {{-- Product Search & Line Items --}}
@@ -443,7 +443,7 @@
                     </div>
                     <div class="card-body p-3">
                         <textarea {{ $isReturned ? 'disabled' : '' }} class="form-control" name="notes"
-                            placeholder="Payment notes, delivery schedules..." rows="6">{{ old('notes', $sale->notes ?? '') }}</textarea>
+                            placeholder="{{ __('messages.ph_payment_notes') }}" rows="6">{{ old('notes', $sale->notes ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -458,13 +458,13 @@
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span class="text-muted small fw-semibold">{{ __('messages.set_subtotal_rows') }}</span>
                             <span class="fw-bold"
-                                id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
+                                id="sum_subtotal">{{ optional(current_currency())->symbol ?? '?' }}0.00</span>
                         </div>
 
                         {{-- Global Discount --}}
                         <div class="border-bottom py-2">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-muted small fw-semibold">Global Discount (−)</span>
+                                <span class="text-muted small fw-semibold">Global Discount (-)</span>
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="form-check form-check-inline mb-0">
                                         <input {{ $isReturned ? 'disabled' : '' }}
@@ -492,7 +492,7 @@
                             <input id="discount_amount" name="discount_amount" type="hidden" value="0.00">
                             <div class="mt-1 text-end">
                                 <small class="text-danger fw-semibold"
-                                    id="lbl_discount_amount">−{{ optional(current_currency())->symbol ?? '₹' }}0.00</small>
+                                    id="lbl_discount_amount">-{{ optional(current_currency())->symbol ?? '?' }}0.00</small>
                             </div>
                         </div>
 
@@ -512,7 +512,7 @@
                         <div class="d-flex justify-content-between border-bottom py-1">
                             <span class="text-muted small">Tax {{ __('messages.set_amount') }}</span>
                             <span class="fw-semibold text-warning"
-                                id="lbl_tax_amount">+{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
+                                id="lbl_tax_amount">+{{ optional(current_currency())->symbol ?? '?' }}0.00</span>
                         </div>
 
                         {{-- Shipping --}}
@@ -528,7 +528,7 @@
                         <div class="d-flex justify-content-between border-bottom py-2">
                             <span class="fw-bold">{{ __('messages.grand_total') }}</span>
                             <span class="fw-bold text-primary fs-6"
-                                id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
+                                id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '?' }}0.00</span>
                         </div>
 
                         {{-- Due / Change --}}
@@ -538,7 +538,7 @@
                                     class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
                                     <div class="text-danger small fw-semibold">{{ __('messages.due_amount') }}</div>
                                     <div class="text-danger fw-bold" id="sum_due">
-                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
+                                        {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -546,7 +546,7 @@
                                     class="bg-success border-success rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
                                     <div class="text-success small fw-semibold">{{ __('messages.set_change_return') }}</div>
                                     <div class="text-success fw-bold" id="sum_change">
-                                        {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
+                                        {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                 </div>
                             </div>
                         </div>
@@ -588,13 +588,13 @@
             let rowCount = 0;
             const isReturned = {{ $isReturned ? 'true' : 'false' }};
             const showOutOfStock = {{ $showOutOfStock ? 'true' : 'false' }};
-            const sym = '{{ addslashes(optional(current_currency())->symbol ?? '₹') }}';
+            const sym = '{{ addslashes(optional(current_currency())->symbol ?? '?') }}';
 
             function fmt(n) {
                 return sym + parseFloat(n).to{{ __('messages.set_fixed') }}(2);
             }
 
-            // ── Auto-generate Invoice No on page load ─────────────────────────
+            // -- Auto-generate Invoice No on page load -------------------------
             @if (!isset($sale) || !$sale->exists)
                 (function autoFillInvoiceNo() {
                     $.get("{{ route('sales.generate-invoice-no') }}", function(res) {
@@ -603,7 +603,7 @@
                 })();
             @endif
 
-            // ── Refresh button ────────────────────────────────────────────────
+            // -- Refresh button ------------------------------------------------
             $('#generateInvoiceNoBtn').on('click', function() {
                 const btn = $(this);
                 btn.prop('disabled', true).html('<i class="bx bx-loader-alt bx-spin"></i>');
@@ -614,7 +614,7 @@
                 });
             });
 
-            // ── Restore items: old() after validation fail → edit mode → nothing ──
+            // -- Restore items: old() after validation fail ? edit mode ? nothing --
             @if (old('items'))
                 {{-- Validation failed: re-hydrate from old() input --}}
                 @foreach (old('items', []) as $oldIndex => $oldItem)
@@ -657,7 +657,7 @@
                 @endforeach
             @endif
 
-            // ── Select2 AJAX Product Search ──────────────────────────────────
+            // -- Select2 AJAX Product Search ----------------------------------
             $('#productSelect').select2({
                 theme: 'bootstrap-5',
                 width: '100%',
@@ -699,7 +699,7 @@
                 templateResult: function(p) {
                     if (p.loading) {
                         return $(
-                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
+                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching�</span>');
                     }
                     if (!p.id) return p.text;
                     const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img';
@@ -785,7 +785,7 @@
                 $(this).val(null).trigger('change');
             });
 
-            // ── Build row ─────────────────────────────────────────────────────
+            // -- Build row -----------------------------------------------------
             function addProductRow(p) {
                 $('#emptyTableMsg').addClass('d-none');
                 const taxAmt = typeof p.taxAmt !== 'undefined' ? p.taxAmt : (p.tax || 0);
@@ -797,7 +797,7 @@
                 $('#invoiceItemsContainer').append(
                     '<tr class="item-row" data-product-id="' + p.id + '">' +
 
-                    // ── Col 1: Product (img + name + SKU) ──
+                    // -- Col 1: Product (img + name + SKU) --
                     '<td style="min-width:200px;">' +
                     '<div class="d-flex align-items-center gap-2">' +
                     '<img src="' + p.image_url + '" class="sale-prod-img rounded" onerror="imgError(this)">' +
@@ -813,7 +813,7 @@
                     '][tax_amount]"      class="tax-hidden"  value="' + taxAmt.to{{ __('messages.set_fixed') }}(2) + '">' +
                     '</td>' +
 
-                    // ── Col 2: Qty (stock badge above, input below) ──
+                    // -- Col 2: Qty (stock badge above, input below) --
                     '<td class="text-center stock-cell" data-max="' + stockQty + '">' +
                     '<div class="mb-1">' +
                     '<span class="badge ' + (stockQty > 0 ? 'bg-label-success' : 'bg-label-danger') +
@@ -827,7 +827,7 @@
                     (isReturned ? 'disabled' : '') + '>' +
                     '</td>' +
 
-                    // ── Col 3: Net Price / Disc / Tax (read-only) ──
+                    // -- Col 3: Net Price / Disc / Tax (read-only) --
                     '<td class="text-center">' +
                     '<div class="fw-semibold text-primary sale-price-cell">' + fmt(p.price) + '</div>' +
                     '<input type="hidden" name="items[' + rowCount +
@@ -836,11 +836,11 @@
                     '<div class="text-success sale-compact-text">+' + fmt(taxAmt) + ' tax</div>' +
                     '</td>' +
 
-                    // ── Col 4: Row Total ──
+                    // -- Col 4: Row Total --
                     '<td class="text-end fw-bold subtotal-cell sale-subtotal-cell">' + fmt(netPrice * qty) +
                     '</td>' +
 
-                    // ── Col 5: Remove ──
+                    // -- Col 5: Remove --
                     '<td class="text-center">' +
                     (isReturned ? '' :
                         '<button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn" style="width:28px;height:28px;padding:0;">' +
@@ -859,7 +859,7 @@
                 calculateTotals();
             });
 
-            // ── Recalculate on any input change ──────────────────────────────
+            // -- Recalculate on any input change ------------------------------
             $(document).on('input change', '.qty-input, .price-input', function() {
                 const row = $(this).closest('tr');
                 const qtyInp = row.find('.qty-input');
@@ -884,11 +884,11 @@
             $('#discountLabel').text($('input[name="discount_type"]:checked').val() === 'percentage' ?
                 'Percentage (%)' : '{{ __('messages.set_amount') }}');
 
-            // ── Core calculation engine ───────────────────────────────────────
+            // -- Core calculation engine ---------------------------------------
             // 1. Compute row totals: price - discount, then + tax on discounted price
             // 2. Apply global discount (fixed or %) on subtotal
             // 3. Apply global tax (%) on (subtotal - discount)
-            // 4. Add shipping → grand total
+            // 4. Add shipping ? grand total
             function calculateTotals() {
                 let subtotal = 0;
 
@@ -899,11 +899,11 @@
                     const discU = parseFloat(row.find('.disc-hidden').val()) || 0;
                     const taxU = parseFloat(row.find('.tax-hidden').val()) || 0;
 
-                    // Row calculation: (price - discount + tax) × qty
+                    // Row calculation: (price - discount + tax) � qty
                     const priceAfterDiscount = price - discU;
                     const rowTot = (priceAfterDiscount + taxU) * qty;
                     row.find('.subtotal-cell').text(fmt(rowTot));
-                    subtotal += price * qty; // subtotal = sum of (qty × unit_price), raw
+                    subtotal += price * qty; // subtotal = sum of (qty � unit_price), raw
                 });
 
                 $('#sum_subtotal').text(fmt(subtotal));
@@ -924,9 +924,9 @@
                 const afterDisc = Math.max(0, subtotal - discAmt);
 
                 $('#discount_amount').val(discAmt.to{{ __('messages.set_fixed') }}(2));
-                $('#lbl_discount_amount').text('−' + fmt(discAmt));
+                $('#lbl_discount_amount').text('-' + fmt(discAmt));
 
-                // Global tax on (subtotal − discount)
+                // Global tax on (subtotal - discount)
                 const taxPct = parseFloat($('#tax_percentage').val()) || 0;
                 const taxAmt = afterDisc * taxPct / 100;
                 $('#tax_amount').val(taxAmt.to{{ __('messages.set_fixed') }}(2));
@@ -951,7 +951,7 @@
                 $(this).closest('form').submit();
             });
 
-            // ── Adjust Stock: collect current invoice product IDs → open adjust page ──
+            // -- Adjust Stock: collect current invoice product IDs ? open adjust page --
             $('#btnAdjustStock').on('click', function() {
                 const ids = [];
                 $('#invoiceItemsContainer tr[data-product-id]').each(function() {

@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', isset($isCopy) ? 'Copy Product' : __('messages.create_product'))
 
 @section('content')
@@ -73,7 +73,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.product_name_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('name') is-invalid @enderror" name="name"
-                                    placeholder="e.g. Core i9 Processor" required type="text"
+                                    placeholder="{{ __('messages.ph_product_name') }}" required type="text"
                                     value="{{ old('name', $product->name ?? '') }}">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -89,7 +89,7 @@
                                 </label>
                                 <div class="input-group">
                                     <input class="form-control @error('code') is-invalid @enderror" id="skuInput"
-                                        name="code" placeholder="e.g. PRD-CORE-A3X9" required type="text"
+                                        name="code" placeholder="{{ __(`messages.ph_sku_code`) }}" required type="text"
                                         value="{{ old('code', $product->code ?? '') }}">
                                     <button class="btn btn-outline-secondary" id="generateSkuBtn" title="Auto-generate SKU"
                                         type="button">
@@ -105,7 +105,7 @@
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.barcode_label') }}</label>
                                 <input class="form-control @error('barcode') is-invalid @enderror" name="barcode"
-                                    placeholder="e.g. 8901234567890" type="text"
+                                    placeholder="{{ __('messages.ph_barcode') }}" type="text"
                                     value="{{ old('barcode', $product->barcode ?? '') }}">
                                 @error('barcode')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -168,7 +168,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.unit_name_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_name') is-invalid @enderror" name="unit_name"
-                                    placeholder="Piece" required type="text"
+                                    placeholder="{{ __('messages.ph_unit_name') }}" required type="text"
                                     value="{{ old('unit_name', $product->unit_name ?? 'Piece') }}">
                                 @error('unit_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -180,7 +180,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.unit_code_label') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control @error('unit_code') is-invalid @enderror" name="unit_code"
-                                    placeholder="PCS" required type="text"
+                                    placeholder="{{ __('messages.ph_unit_code') }}" required type="text"
                                     value="{{ old('unit_code', $product->unit_code ?? 'PCS') }}">
                                 @error('unit_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -198,7 +198,7 @@
                         <h6 class="fw-semibold mb-0">
                             <i class="bx bx-money text-success me-2"></i>Pricing & Stock Alert
                         </h6>
-                        <span class="badge bg-label-primary small" id="profitBadge">Profit: �</span>
+                        <span class="badge bg-label-primary small" id="profitBadge">Profit: ?</span>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -208,7 +208,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.prod_purchase_price') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
+                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '?' }}</span>
                                     <input class="form-control @error('purchase_price') is-invalid @enderror"
                                         id="purchase_price" name="purchase_price" required step="0.01" type="number"
                                         value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}">
@@ -223,7 +223,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.prod_selling_price') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
+                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '?' }}</span>
                                     <input class="form-control @error('selling_price') is-invalid @enderror"
                                         id="selling_price" name="selling_price" required step="0.01" type="number"
                                         value="{{ old('selling_price', $product->selling_price ?? '0.00') }}">
@@ -237,7 +237,7 @@
                             <div class="col-md-2">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_discount_amount') }}</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
+                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '?' }}</span>
                                     <input class="form-control @error('discount_price_amount') is-invalid @enderror"
                                         id="discount_price_amount" min="0" name="discount_price_amount"
                                         step="0.01" type="number"
@@ -269,7 +269,8 @@
                             <div class="col-md-2">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_min_stock_alert') }}</label>
                                 <input class="form-control @error('minimum_stock_alert') is-invalid @enderror"
-                                    name="minimum_stock_alert" placeholder="e.g. 5" step="0.01" type="number"
+                                    name="minimum_stock_alert" placeholder="{{ __('messages.ph_min_stock') }}"
+                                    step="0.01" type="number"
                                     value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}">
                                 @error('minimum_stock_alert')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -329,8 +330,9 @@
                                         <label class="form-label fw-semibold">{{ __('messages.prod_opening_qty_label') }}
                                             <span class="text-danger">*</span></label>
                                         <input class="form-control @error('initial_qty') is-invalid @enderror"
-                                            id="initial_qty" min="0.01" name="initial_qty" placeholder="e.g. 10"
-                                            step="0.01" type="number" value="{{ old('initial_qty', '') }}">
+                                            id="initial_qty" min="0.01" name="initial_qty"
+                                            placeholder="{{ __('messages.ph_opening_qty') }}" step="0.01"
+                                            type="number" value="{{ old('initial_qty', '') }}">
                                         @error('initial_qty')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -342,8 +344,8 @@
                                             <i class="bx bx-calculator text-info fs-5"></i>
                                             <div>
                                                 <div class="small fw-semibold text-info">Purchase Total</div>
-                                                <div class="fw-bold" id="openingStockTotal">�</div>
-                                                <div class="form-text mb-0">Qty � Purchase Price</div>
+                                                <div class="fw-bold" id="openingStockTotal">?</div>
+                                                <div class="form-text mb-0">Qty ? Purchase Price</div>
                                             </div>
                                         </div>
                                     </div>
@@ -367,37 +369,37 @@
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_manufacturer') }}</label>
-                                <input class="form-control" name="manufacturer" placeholder="e.g. Intel, Asus"
+                                <input class="form-control" name="manufacturer" placeholder="{{ __(`messages.ph_manufacturer`) }}"
                                     type="text" value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_model_number') }}</label>
-                                <input class="form-control" name="model_number" placeholder="e.g. ROG-STRIX-Z790"
+                                <input class="form-control" name="model_number" placeholder="{{ __(`messages.ph_model_number`) }}"
                                     type="text" value="{{ old('model_number', $product->model_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_part_serial') }}</label>
-                                <input class="form-control" name="part_number" placeholder="e.g. 90MB1CS0"
+                                <input class="form-control" name="part_number" placeholder="{{ __(`messages.ph_part_number`) }}"
                                     type="text" value="{{ old('part_number', $product->part_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_warranty') }}</label>
-                                <input class="form-control" name="warranty" placeholder="e.g. 3 Years" type="text"
+                                <input class="form-control" name="warranty" placeholder="{{ __(`messages.ph_warranty`) }}" type="text"
                                     value="{{ old('warranty', $product->warranty ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_color') }}</label>
-                                <input class="form-control" name="color" placeholder="e.g. Space Grey" type="text"
+                                <input class="form-control" name="color" placeholder="{{ __(`messages.ph_color`) }}" type="text"
                                     value="{{ old('color', $product->color ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_weight') }}</label>
-                                <input class="form-control" name="weight" placeholder="e.g. 1.2 kg" type="text"
+                                <input class="form-control" name="weight" placeholder="{{ __(`messages.ph_weight`) }}" type="text"
                                     value="{{ old('weight', $product->weight ?? '') }}">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">{{ __('messages.prod_country_origin') }}</label>
-                                <input class="form-control" name="country_of_origin" placeholder="e.g. Taiwan"
+                                <input class="form-control" name="country_of_origin" placeholder="{{ __(`messages.ph_country_origin`) }}"
                                     type="text"
                                     value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}">
                             </div>
@@ -419,7 +421,8 @@
                             <div class="col-md-5">
 
                                 {{-- Primary Image --}}
-                                <label class="form-label fw-semibold mb-2">{{ __('messages.prod_primary_image') }}</label>
+                                <label
+                                    class="form-label fw-semibold mb-2">{{ __('messages.prod_primary_image') }}</label>
                                 <div class="rounded-3 mb-3 border p-3" style="background:rgba(105,108,255,.03);">
                                     <div class="d-flex align-items-center gap-3">
                                         {{-- Preview box --}}
@@ -473,7 +476,7 @@
                                     <button class="btn btn-outline-primary mt-1" id="triggerGalleryBtn" type="button">
                                         <i class="bx bx-images me-1"></i> Browse Files
                                     </button>
-                                    <div class="form-text mb-0 mt-1">PNG, JPG, WEBP � Max 2MB each</div>
+                                    <div class="form-text mb-0 mt-1">PNG, JPG, WEBP ? Max 2MB each</div>
                                 </div>
 
                                 {{-- Thumbnail Grid --}}
@@ -490,7 +493,7 @@
                                                 <button
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger rounded-circle border-0 text-white shadow"
                                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                                    title="Remove" type="button">�</button>
+                                                    title="Remove" type="button">?</button>
                                             </div>
                                         @endforeach
                                     @endif
@@ -507,7 +510,7 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Short Description</label>
                                     <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
-                                        placeholder="Key features summary..." rows="3">{{ old('short_description', $product->short_description ?? '') }}</textarea>
+                                        placeholder="{{ __(`messages.ph_short_description`) }}" rows="3">{{ old('short_description', $product->short_description ?? '') }}</textarea>
                                     @error('short_description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -515,7 +518,7 @@
                                 <div class="mb-0">
                                     <label class="form-label fw-semibold">Full Description / Specifications</label>
                                     <textarea class="form-control @error('full_description') is-invalid @enderror" name="full_description"
-                                        placeholder="Complete specifications, box contents..." rows="8">{{ old('full_description', $product->full_description ?? '') }}</textarea>
+                                        placeholder="{{ __(`messages.ph_full_description`) }}" rows="8">{{ old('full_description', $product->full_description ?? '') }}</textarea>
                                     @error('full_description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -703,7 +706,7 @@
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: �');
+                    $('#profitBadge').text('Profit: ?');
                 }
             }
             $('#purchase_price, #selling_price').on('input', updateProfitBadge);
@@ -716,7 +719,7 @@
                 if (!checked) {
                     $('#supplier_id').val('').trigger('change');
                     $('#initial_qty').val('');
-                    $('#openingStockTotal').text('�');
+                    $('#openingStockTotal').text('?');
                 }
             }
 
@@ -740,7 +743,7 @@
                         minimumFractionDigits: 2
                     }));
                 } else {
-                    $('#openingStockTotal').text('�');
+                    $('#openingStockTotal').text('?');
                 }
             }
             $('#initial_qty, #purchase_price').on('input', updateOpeningTotal);
@@ -815,7 +818,7 @@
                                 <button type="button"
                                     class="remove-new-gallery-btn position-absolute d-flex align-items-center justify-content-center bg-danger text-white border-0 rounded-circle shadow"
                                     style="width:20px;height:20px;font-size:12px;font-weight:700;line-height:1;padding:0;cursor:pointer;top:-6px;right:-6px;z-index:2;"
-                                    title="Remove">�</button>
+                                    title="Remove">?</button>
                             </div>`);
                         thumb.data('file', file);
                         $('#galleryPreviewContainer').append(thumb);
@@ -830,7 +833,7 @@
                 addGalleryFiles(this.files);
             });
 
-            // Remove a NEW (not-yet-uploaded) thumbnail � rebuild the FileList
+            // Remove a NEW (not-yet-uploaded) thumbnail ? rebuild the FileList
             $(document).on('click', '.remove-new-gallery-btn', function() {
                 $(this).closest('.gallery-new').remove();
                 rebuildGalleryInput();

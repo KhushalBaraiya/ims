@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 @section('title', __('messages.user_management'))
 
 @section('content')
@@ -38,7 +38,7 @@
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
-                            value="{{ request('search') }}" placeholder="Name or email...">
+                            value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_user') }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.role') }}</label>
@@ -183,7 +183,7 @@
                                     </div>
                                 </td>
                                 <td class="text-muted">{{ $u->email }}</td>
-                                <td class="text-muted">{{ $u->phone ?: '�' }}</td>
+                                <td class="text-muted">{{ $u->phone ?: '?' }}</td>
                                 <td>
                                     <span class="badge bg-label-primary">
                                         {{ $u->roles->pluck('name')->implode(', ') ?: __('messages.role') }}
@@ -230,7 +230,7 @@
                                                 title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                            {{-- Unlock button — shown only when account is locked --}}
+                                            {{-- Unlock button � shown only when account is locked --}}
                                             @if ($u->locked_until && now()->lt($u->locked_until))
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action btn-unlock"

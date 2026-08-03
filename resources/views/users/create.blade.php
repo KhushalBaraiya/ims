@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.add_user_title'))
 
 @section('content')
@@ -61,7 +61,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="name"
                                     class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
-                                    placeholder="Full Name" required>
+                                    placeholder="{{ __('messages.ph_user_name') }}" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -71,7 +71,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="email" name="email"
                                     class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
-                                    placeholder="email@example.com" required>
+                                    placeholder="{{ __('messages.ph_user_email') }}" required>
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -80,7 +80,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.phone_label') }}</label>
                                 <input type="text" name="phone"
                                     class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}"
-                                    placeholder="+91 9999999999">
+                                    placeholder="{{ __('messages.ph_phone_india') }}">
                                 @error('phone')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -106,7 +106,7 @@
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" id="password" name="password"
-                                        class="form-control @error('password') is-invalid @enderror" placeholder="••••••••"
+                                        class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('messages.ph_password_dots') }}"
                                         required>
                                     <button class="btn btn-outline-secondary" type="button"
                                         onclick="togglePwd('password', this)">
@@ -122,7 +122,7 @@
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" id="password_confirmation" name="password_confirmation"
-                                        class="form-control" placeholder="••••••••" required>
+                                        class="form-control" placeholder="{{ __('messages.ph_password_dots') }}" required>
                                     <button class="btn btn-outline-secondary" type="button"
                                         onclick="togglePwd('password_confirmation', this)">
                                         <i class="bx bx-hide"></i>

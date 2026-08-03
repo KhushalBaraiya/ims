@@ -4,7 +4,7 @@
     <div class="col-md-6">
         <label class="form-label fw-semibold">{{ __('messages.supplier_name') }} <span
                 class="text-danger">*</span></label>
-        <input class="form-control @error('name') is-invalid @enderror" name="name" placeholder="e.g. Acme Corporation"
+        <input class="form-control @error('name') is-invalid @enderror" name="name" placeholder="{{ __('messages.ph_supplier_name_eg') }}"
             required type="text" value="{{ old('name', $supplier->name ?? '') }}">
         @error('name')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -13,7 +13,7 @@
     <div class="col-md-6">
         <label class="form-label fw-semibold">{{ __('messages.company_name') }}</label>
         <input class="form-control @error('company_name') is-invalid @enderror" name="company_name"
-            placeholder="e.g. Acme Corp Inc." type="text"
+            placeholder="{{ __('messages.ph_company_name_eg') }}" type="text"
             value="{{ old('company_name', $supplier->company_name ?? '') }}">
         @error('company_name')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -22,7 +22,7 @@
     <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.phone_label') }} <span
                 class="text-danger">*</span></label>
-        <input class="form-control @error('phone') is-invalid @enderror" name="phone" placeholder="+1234567890"
+        <input class="form-control @error('phone') is-invalid @enderror" name="phone" placeholder="{{ __('messages.ph_phone_number') }}"
             required type="text" value="{{ old('phone', $supplier->phone ?? '') }}">
         @error('phone')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -31,7 +31,7 @@
     <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.th_email') }}</label>
         <input class="form-control @error('email') is-invalid @enderror" name="email"
-            placeholder="supplier@company.com" type="email" value="{{ old('email', $supplier->email ?? '') }}">
+            placeholder="{{ __('messages.ph_supplier_email') }}" type="email" value="{{ old('email', $supplier->email ?? '') }}">
         @error('email')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -39,7 +39,7 @@
     <div class="col-md-4">
         <label class="form-label fw-semibold">{{ __('messages.gst_number') }}</label>
         <input class="form-control @error('gst_number') is-invalid @enderror" name="gst_number"
-            placeholder="22AAAAA0000A1Z5" type="text" value="{{ old('gst_number', $supplier->gst_number ?? '') }}">
+            placeholder="{{ __('messages.ph_gst_number') }}" type="text" value="{{ old('gst_number', $supplier->gst_number ?? '') }}">
         @error('gst_number')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -66,7 +66,7 @@
     </div>
     <div class="col-12">
         <label class="form-label fw-semibold">{{ __('messages.address_label') }}</label>
-        <textarea class="form-control @error('address') is-invalid @enderror" name="address" placeholder="Street address..."
+        <textarea class="form-control @error('address') is-invalid @enderror" name="address" placeholder="{{ __('messages.ph_street_address') }}"
             rows="2">{{ old('address', $supplier->address ?? '') }}</textarea>
         @error('address')
             <div class="invalid-feedback">{{ $message }}</div>

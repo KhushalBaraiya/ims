@@ -233,7 +233,7 @@
                                     <label class="form-label fw-semibold">{{ __('messages.company_name') }} <span
                                             class="text-danger">*</span></label>
                                     <input class="form-control @error('company_name') is-invalid @enderror"
-                                        name="company_name" placeholder="e.g. My Company Ltd." required type="text"
+                                        name="company_name" placeholder="{{ __('messages.ph_company_name_set') }}" required type="text"
                                         value="{{ old('company_name', $settings->get('company_name')) }}">
                                     @error('company_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -246,7 +246,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bx bx-envelope text-muted"></i></span>
                                             <input class="form-control @error('company_email') is-invalid @enderror"
-                                                name="company_email" placeholder="admin@example.com" required
+                                                name="company_email" placeholder="{{ __('messages.ph_company_email') }}" required
                                                 type="email"
                                                 value="{{ old('company_email', $settings->get('company_email')) }}">
                                         </div>
@@ -259,7 +259,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bx bx-phone text-muted"></i></span>
                                             <input class="form-control @error('company_phone') is-invalid @enderror"
-                                                name="company_phone" placeholder="+1 234 567 8900" type="text"
+                                                name="company_phone" placeholder="{{ __('messages.ph_company_phone') }}" type="text"
                                                 value="{{ old('company_phone', $settings->get('company_phone')) }}">
                                         </div>
                                         @error('company_phone')
@@ -274,7 +274,7 @@
                                 <div class="field-group-title"><i class="bx bx-map-pin"></i>
                                     {{ __('messages.set_address') }}</div>
                                 <textarea class="form-control @error('company_address') is-invalid @enderror" name="company_address"
-                                    placeholder="Full company address..." rows="3">{{ old('company_address', $settings->get('company_address')) }}</textarea>
+                                    placeholder="{{ __('messages.ph_company_address') }}" rows="3">{{ old('company_address', $settings->get('company_address')) }}</textarea>
                                 @error('company_address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -335,7 +335,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text fw-bold text-primary">INV-</span>
                                             <input class="form-control @error('invoice_prefix') is-invalid @enderror"
-                                                name="invoice_prefix" placeholder="INV" type="text"
+                                                name="invoice_prefix" placeholder="{{ __('messages.ph_invoice_prefix') }}" type="text"
                                                 value="{{ old('invoice_prefix', $settings->get('invoice_prefix')) }}">
                                         </div>
                                         <div class="form-text">{{ __('messages.invoice_prefix_hint') }}</div>
@@ -348,7 +348,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text fw-bold text-success">PO-</span>
                                             <input class="form-control @error('purchase_prefix') is-invalid @enderror"
-                                                name="purchase_prefix" placeholder="PO" type="text"
+                                                name="purchase_prefix" placeholder="{{ __('messages.ph_purchase_prefix') }}" type="text"
                                                 value="{{ old('purchase_prefix', $settings->get('purchase_prefix')) }}">
                                         </div>
                                         <div class="form-text">{{ __('messages.purchase_prefix_hint') }}</div>
@@ -367,7 +367,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">{{ __('messages.tax_name') }}</label>
                                         <input class="form-control @error('tax_name') is-invalid @enderror"
-                                            name="tax_name" placeholder="e.g. GST, VAT" type="text"
+                                            name="tax_name" placeholder="{{ __('messages.ph_tax_name') }}" type="text"
                                             value="{{ old('tax_name', $settings->get('tax_name')) }}">
                                         @error('tax_name')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -379,7 +379,7 @@
                                         <div class="input-group">
                                             <input class="form-control @error('tax_percentage') is-invalid @enderror"
                                                 max="100" min="0" name="tax_percentage"
-                                                placeholder="e.g. 18" step="0.01" type="number"
+                                                placeholder="{{ __('messages.ph_tax_percent') }}" step="0.01" type="number"
                                                 value="{{ old('tax_percentage', $settings->get('tax_percentage')) }}">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -463,7 +463,7 @@
                                     <div class="col-md-5">
                                         <label class="form-label fw-semibold">{{ __('messages.set_smtp_host') }}</label>
                                         <input class="form-control @error('mail_host') is-invalid @enderror"
-                                            name="mail_host" type="text" placeholder="smtp.gmail.com"
+                                            name="mail_host" type="text" placeholder="{{ __('messages.ph_smtp_host') }}"
                                             value="{{ old('mail_host', $settings->get('mail_host', env('MAIL_HOST', ''))) }}">
                                         @error('mail_host')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -472,7 +472,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label fw-semibold">{{ __('messages.set_smtp_port') }}</label>
                                         <input class="form-control @error('mail_port') is-invalid @enderror"
-                                            name="mail_port" type="number" placeholder="587"
+                                            name="mail_port" type="number" placeholder="{{ __('messages.ph_smtp_port') }}"
                                             value="{{ old('mail_port', $settings->get('mail_port', env('MAIL_PORT', '587'))) }}">
                                         @error('mail_port')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -499,7 +499,7 @@
                                     <div class="col-md-5">
                                         <label class="form-label fw-semibold">{{ __('messages.set_smtp_username') }}</label>
                                         <input class="form-control @error('mail_username') is-invalid @enderror"
-                                            name="mail_username" type="text" placeholder="your@gmail.com"
+                                            name="mail_username" type="text" placeholder="{{ __('messages.ph_smtp_user') }}"
                                             value="{{ old('mail_username', $settings->get('mail_username', env('MAIL_USERNAME', ''))) }}">
                                         @error('mail_username')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -527,7 +527,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">{{ __('messages.set_from_email') }}</label>
                                         <input class="form-control @error('mail_from_address') is-invalid @enderror"
-                                            name="mail_from_address" type="email" placeholder="noreply@yourcompany.com"
+                                            name="mail_from_address" type="email" placeholder="{{ __('messages.ph_from_email') }}"
                                             value="{{ old('mail_from_address', $settings->get('mail_from_address', env('MAIL_FROM_ADDRESS', ''))) }}">
                                         @error('mail_from_address')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -536,7 +536,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label fw-semibold">{{ __('messages.set_from_name') }}</label>
                                         <input class="form-control @error('mail_from_name') is-invalid @enderror"
-                                            name="mail_from_name" type="text" placeholder="Your Company Name"
+                                            name="mail_from_name" type="text" placeholder="{{ __('messages.ph_from_name') }}"
                                             value="{{ old('mail_from_name', $settings->get('mail_from_name', env('MAIL_FROM_NAME', ''))) }}">
                                         @error('mail_from_name')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -555,7 +555,7 @@
                                     <div class="flex-grow-1">
                                         <label class="form-label fw-semibold small">{{ __('messages.set_test_email_label') }}</label>
                                         <input type="email" id="testEmailAddress" class="form-control"
-                                            placeholder="test@example.com" value="{{ auth()->user()->email }}">
+                                            placeholder="{{ __('messages.ph_test_email') }}" value="{{ auth()->user()->email }}">
                                     </div>
                                     <button type="button" id="btnTestEmail" class="btn btn-outline-info flex-shrink-0">
                                         <i class="bx bx-send me-1"></i> {{ __('messages.set_send_test') }}
@@ -595,7 +595,7 @@
                                         <div class="input-group" style="max-width:200px;">
                                             <input class="form-control @error('session_timeout') is-invalid @enderror"
                                                 name="session_timeout" type="number" min="0" max="1440"
-                                                step="1" placeholder="e.g. 30"
+                                                step="1" placeholder="{{ __('messages.ph_session_timeout') }}"
                                                 value="{{ old('session_timeout', $settings->get('session_timeout', '0')) }}">
                                             <span class="input-group-text">{{ __('messages.set_minutes_short') }}</span>
                                         </div>
@@ -621,7 +621,7 @@
                                             <span class="input-group-text"><i class="bx bx-key text-muted"></i></span>
                                             <input class="form-control @error('max_login_attempts') is-invalid @enderror"
                                                 name="max_login_attempts" type="number" min="0" max="20"
-                                                step="1" placeholder="e.g. 5"
+                                                step="1" placeholder="{{ __('messages.ph_max_attempts') }}"
                                                 value="{{ old('max_login_attempts', $settings->get('max_login_attempts', '5')) }}">
                                             <span class="input-group-text">{{ __('messages.set_tries') }}</span>
                                         </div>
@@ -636,7 +636,7 @@
                                             <span class="input-group-text"><i class="bx bx-timer text-muted"></i></span>
                                             <input class="form-control @error('lockout_duration') is-invalid @enderror"
                                                 name="lockout_duration" type="number" min="1" max="1440"
-                                                step="1" placeholder="e.g. 15"
+                                                step="1" placeholder="{{ __('messages.ph_lockout_duration') }}"
                                                 value="{{ old('lockout_duration', $settings->get('lockout_duration', '15')) }}">
                                             <span class="input-group-text">{{ __('messages.set_minutes_short') }}</span>
                                         </div>

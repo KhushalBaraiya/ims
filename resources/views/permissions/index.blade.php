@@ -41,7 +41,7 @@
                     <div class="col-md-4">
                         <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
                         <input type="text" name="search" class="form-control form-control-sm"
-                            value="{{ request('search') }}" placeholder="e.g. products.view">
+                            value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_permission') }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.module_label') }}</label>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.edit_user') . ' — ' . $user->name)
 
 @section('content')
@@ -115,7 +115,7 @@
                                 </label>
                                 <div class="input-group">
                                     <input type="password" id="password" name="password"
-                                        class="form-control @error('password') is-invalid @enderror" placeholder="••••••••">
+                                        class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('messages.ph_password_dots') }}">
                                     <button class="btn btn-outline-secondary" type="button"
                                         onclick="togglePwd('password', this)">
                                         <i class="bx bx-hide"></i>
@@ -129,7 +129,7 @@
                                 <label class="form-label fw-semibold">{{ __('messages.confirm_password') }}</label>
                                 <div class="input-group">
                                     <input type="password" id="password_confirmation" name="password_confirmation"
-                                        class="form-control" placeholder="••••••••">
+                                        class="form-control" placeholder="{{ __('messages.ph_password_dots') }}">
                                     <button class="btn btn-outline-secondary" type="button"
                                         onclick="togglePwd('password_confirmation', this)">
                                         <i class="bx bx-hide"></i>
