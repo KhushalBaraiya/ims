@@ -72,7 +72,8 @@
                                 {{ __('messages.sub_category_code') }} <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug', $subCategory->slug) }}" placeholder="{{ __('messages.ph_sub_category_code_eg') }}" required>
+                                value="{{ old('slug', $subCategory->slug) }}"
+                                placeholder="{{ __('messages.ph_sub_category_code_eg') }}" required>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -174,9 +175,11 @@
             });
         }
 
-        // Slug field uppercase
+        // Slug field: enforce uppercase + underscore style
         document.querySelector('input[name="slug"]').addEventListener('input', function() {
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+            const pos = this.selectionStart;
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            this.setSelectionRange(pos, pos);
         });
     </script>
 @endpush

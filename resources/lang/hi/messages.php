@@ -1352,6 +1352,44 @@ return [
     'sub_category_label'  => 'उप-श्रेणी',
     'unit_name_label'     => 'इकाई नाम',
     'unit_code_label'     => 'इकाई कोड',
+
+    // ── Category / Sub-category / Brand placeholder keys ──────────────────
+    'ph_category_code_eg'     => 'उदा. ELECTRONICS',
+    'ph_sub_category_code_eg' => 'उदा. MOBILE_PHONES',
+    'ph_sub_category_name_eg' => 'उदा. मोबाइल फोन, लैपटॉप',
+    'ph_brand_code_eg'        => 'उदा. SAMSUNG_ELECTRONICS',
+
+    // ── Products create — remaining labels ────────────────────────────────
+    'prod_discount_amount'    => 'छूट राशि',
+    'prod_selling_tax_pct'    => 'बिक्री कर %',
+    'prod_opening_stock_card' => 'शुरुआती स्टॉक',
+    'prod_create_only_badge'  => 'केवल बनाएं',
+    'prod_opening_stock_desc' => 'सक्षम होने पर ट्रेसेबिलिटी के लिए खरीद रिकॉर्ड स्वतः बनेगा।',
+    'prod_supplier_label'     => 'आपूर्तिकर्ता',
+    'prod_opening_qty_label'  => 'शुरुआती मात्रा',
+    'prod_purchase_total_lbl' => 'खरीद कुल',
+    'prod_qty_x_price_lbl'    => 'मात्रा × खरीद मूल्य',
+    'prod_quick_tips'         => 'त्वरित टिप्स',
+    'prod_tip_sku'            => 'SKU सभी उत्पादों के लिए अनन्य होना चाहिए।',
+    'prod_tip_category'       => 'उप-श्रेणी लोड करने के लिए पहले मुख्य श्रेणी चुनें।',
+    'prod_tip_stock'          => 'खरीद रिकॉर्ड स्वतः बनाने के लिए Opening Stock चालू करें।',
+    'prod_tip_image'          => 'मुख्य छवि अधिकतम 2MB (PNG/JPG/WEBP)।',
+    'prod_publish_card_title' => 'प्रकाशित करें',
+    'prod_save_copied'        => 'कॉपी उत्पाद सहेजें',
+    'prod_copy_title'         => 'उत्पाद कॉपी',
+    'prod_copy_crumb'         => 'कॉपी',
+    'prod_create_desc'        => 'नया उत्पाद जोड़ने के लिए नीचे विवरण भरें',
+    'prod_copy_desc'          => 'इस उत्पाद को कॉपी करने के लिए नीचे विवरण भरें',
+
+    // ── By-category page ─────────────────────────────────────────────────
+    'by_cat_total'            => 'कुल उत्पाद',
+    'by_cat_categories'       => 'श्रेणियाँ',
+    'by_cat_showing'          => 'दिखा रहा',
+    'by_cat_jump_to'          => 'जाएं:',
+    'by_cat_all_tab'          => 'सभी',
+    'by_cat_stock_label'      => 'स्टॉक',
+    'by_cat_products_count'   => 'उत्पाद',
+    'by_cat_product_count'    => 'उत्पाद',
 ];
 
 

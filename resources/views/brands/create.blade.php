@@ -167,18 +167,36 @@
             });
         }
 
+        // Generate unique uppercase code (removes duplicate words, uses underscore)
+        function generateCode(name) {
+            const words = name.toUpperCase().trim()
+                .replace(/[^A-Z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .split(' ')
+                .filter(Boolean);
+            const seen = new Set();
+            const unique = [];
+            words.forEach(w => {
+                if (!seen.has(w)) {
+                    seen.add(w);
+                    unique.push(w);
+                }
+            });
+            return unique.join('_');
+        }
+
         // Auto-generate slug from name
         document.getElementById('brandName').addEventListener('input', function() {
             const slugField = document.getElementById('brandSlug');
             if (!slugField.dataset.manual) {
-                slugField.value = this.value.toUpperCase().trim()
-                    .replace(/\s+/g, '-')
-                    .replace(/[^A-Z0-9\-]/g, '');
+                slugField.value = generateCode(this.value);
             }
         });
         document.getElementById('brandSlug').addEventListener('input', function() {
             this.dataset.manual = '1';
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+            const pos = this.selectionStart;
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            this.setSelectionRange(pos, pos);
         });
 
         // Image preview

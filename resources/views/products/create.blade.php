@@ -205,10 +205,10 @@
 
                             {{-- Purchase Price --}}
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Purchase Price <span
+                                <label class="form-label fw-semibold">{{ __('messages.prod_purchase_price') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">?</span>
+                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                                     <input class="form-control @error('purchase_price') is-invalid @enderror"
                                         id="purchase_price" name="purchase_price" required step="0.01" type="number"
                                         value="{{ old('purchase_price', $product->purchase_price ?? '0.00') }}">
@@ -220,10 +220,10 @@
 
                             {{-- Selling Price --}}
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Selling Price <span
+                                <label class="form-label fw-semibold">{{ __('messages.prod_selling_price') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                                     <input class="form-control @error('selling_price') is-invalid @enderror"
                                         id="selling_price" name="selling_price" required step="0.01" type="number"
                                         value="{{ old('selling_price', $product->selling_price ?? '0.00') }}">
@@ -235,9 +235,9 @@
 
                             {{-- Discount Amount --}}
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Discount Amount</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_discount_amount') }}</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">₹</span>
+                                    <span class="input-group-text">{{ current_currency()?->symbol ?? '₹' }}</span>
                                     <input class="form-control @error('discount_price_amount') is-invalid @enderror"
                                         id="discount_price_amount" min="0" name="discount_price_amount"
                                         step="0.01" type="number"
@@ -250,7 +250,7 @@
 
                             {{-- Selling Tax % --}}
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Selling Tax %</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_selling_tax_pct') }}</label>
                                 <div class="input-group">
                                     <input class="form-control @error('tax_percentage') is-invalid @enderror"
                                         id="tax_percentage" max="100" min="0" name="tax_percentage"
@@ -262,12 +262,12 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="form-text">Max 100%</div>
+                                <div class="form-text">{{ __('messages.prod_tax_max') }}</div>
                             </div>
 
                             {{-- Min Stock Alert --}}
                             <div class="col-md-2">
-                                <label class="form-label fw-semibold">Min Stock Alert</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_min_stock_alert') }}</label>
                                 <input class="form-control @error('minimum_stock_alert') is-invalid @enderror"
                                     name="minimum_stock_alert" placeholder="e.g. 5" step="0.01" type="number"
                                     value="{{ old('minimum_stock_alert', $product->minimum_stock_alert ?? '0.00') }}">
@@ -286,9 +286,9 @@
                         <div
                             class="card-header border-bottom d-flex align-items-center justify-content-between bg-transparent py-3">
                             <h6 class="fw-semibold mb-0">
-                                <i class="bx bx-box text-warning me-2"></i>Opening Stock
+                                <i class="bx bx-box text-warning me-2"></i>{{ __('messages.prod_opening_stock_card') }}
                             </h6>
-                            <span class="badge bg-label-warning small">Create only</span>
+                            <span class="badge bg-label-warning small">{{ __('messages.prod_create_only_badge') }}</span>
                         </div>
                         <div class="card-body p-4">
                             <div class="form-check form-switch mb-0">
@@ -299,8 +299,7 @@
                                     <i class="bx bx-plus-circle text-success me-1"></i>
                                     {{ __('messages.add_initial_stock_hint') }}
                                 </label>
-                                <div class="form-text">When enabled, a Purchase record will be created automatically for
-                                    traceability.</div>
+                                <div class="form-text">{{ __('messages.prod_opening_stock_desc') }}</div>
                             </div>
 
                             <div class="{{ old('add_opening_stock') ? '' : 'd-none' }} mt-3" id="openingStockBox">
@@ -308,8 +307,8 @@
 
                                     {{-- Supplier --}}
                                     <div class="col-md-5">
-                                        <label class="form-label fw-semibold">Supplier <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label fw-semibold">{{ __('messages.prod_supplier_label') }}
+                                            <span class="text-danger">*</span></label>
                                         <select class="form-select @error('supplier_id') is-invalid @enderror"
                                             id="supplier_id" name="supplier_id">
                                             <option value="">{{ __('messages.select_supplier') }}</option>
@@ -327,8 +326,8 @@
 
                                     {{-- Opening Qty --}}
                                     <div class="col-md-3">
-                                        <label class="form-label fw-semibold">Opening Qty <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label fw-semibold">{{ __('messages.prod_opening_qty_label') }}
+                                            <span class="text-danger">*</span></label>
                                         <input class="form-control @error('initial_qty') is-invalid @enderror"
                                             id="initial_qty" min="0.01" name="initial_qty" placeholder="e.g. 10"
                                             step="0.01" type="number" value="{{ old('initial_qty', '') }}">
@@ -359,44 +358,45 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-transparent py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-chip text-info me-2"></i>Technical Specifications
-                            <span class="badge bg-label-secondary small fw-normal ms-2">Optional</span>
+                            <i class="bx bx-chip text-info me-2"></i>{{ __('messages.prod_tech_specs') }}
+                            <span
+                                class="badge bg-label-secondary small fw-normal ms-2">{{ __('messages.prod_optional') }}</span>
                         </h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Manufacturer</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_manufacturer') }}</label>
                                 <input class="form-control" name="manufacturer" placeholder="e.g. Intel, Asus"
                                     type="text" value="{{ old('manufacturer', $product->manufacturer ?? '') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Model Number</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_model_number') }}</label>
                                 <input class="form-control" name="model_number" placeholder="e.g. ROG-STRIX-Z790"
                                     type="text" value="{{ old('model_number', $product->model_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Part / Serial No.</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_part_serial') }}</label>
                                 <input class="form-control" name="part_number" placeholder="e.g. 90MB1CS0"
                                     type="text" value="{{ old('part_number', $product->part_number ?? '') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Warranty</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_warranty') }}</label>
                                 <input class="form-control" name="warranty" placeholder="e.g. 3 Years" type="text"
                                     value="{{ old('warranty', $product->warranty ?? '') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Color</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_color') }}</label>
                                 <input class="form-control" name="color" placeholder="e.g. Space Grey" type="text"
                                     value="{{ old('color', $product->color ?? '') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Weight</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_weight') }}</label>
                                 <input class="form-control" name="weight" placeholder="e.g. 1.2 kg" type="text"
                                     value="{{ old('weight', $product->weight ?? '') }}">
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Country of Origin</label>
+                                <label class="form-label fw-semibold">{{ __('messages.prod_country_origin') }}</label>
                                 <input class="form-control" name="country_of_origin" placeholder="e.g. Taiwan"
                                     type="text"
                                     value="{{ old('country_of_origin', $product->country_of_origin ?? '') }}">
@@ -409,7 +409,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-transparent py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-image text-warning me-2"></i>Media & Description
+                            <i class="bx bx-image text-warning me-2"></i>{{ __('messages.prod_media_desc') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -419,7 +419,7 @@
                             <div class="col-md-5">
 
                                 {{-- Primary Image --}}
-                                <label class="form-label fw-semibold mb-2">Primary Image</label>
+                                <label class="form-label fw-semibold mb-2">{{ __('messages.prod_primary_image') }}</label>
                                 <div class="rounded-3 mb-3 border p-3" style="background:rgba(105,108,255,.03);">
                                     <div class="d-flex align-items-center gap-3">
                                         {{-- Preview box --}}
@@ -441,12 +441,12 @@
                                         <div>
                                             <button class="btn btn-primary d-block mb-2" id="triggerImageBtn"
                                                 type="button">
-                                                <i class="bx bx-upload me-1"></i> Upload
+                                                <i class="bx bx-upload me-1"></i> {{ __('messages.prod_upload') }}
                                             </button>
                                             <button
                                                 class="btn btn-outline-danger d-block {{ isset($product) && $product->image ? '' : 'd-none' }}"
                                                 id="removeImageBtn" type="button">
-                                                <i class="bx bx-trash me-1"></i> Remove
+                                                <i class="bx bx-trash me-1"></i> {{ __('messages.prod_remove') }}
                                             </button>
                                             <div class="form-text mt-1">PNG, JPG, WEBP<br>Max 2 MB</div>
                                         </div>
@@ -481,9 +481,11 @@
                                     style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:4px;">
                                     @if (isset($product) && $product->gallery && count($product->gallery) > 0)
                                         @foreach ($product->gallery as $galImg)
-                                            <div class="position-relative gallery-thumb" data-image="{{ $galImg }}"
+                                            <div class="position-relative gallery-thumb"
+                                                data-image="{{ $galImg }}"
                                                 style="aspect-ratio:1;border-radius:8px;overflow:visible;">
-                                                <img class="w-100 h-100" src="{{ asset('uploads/products/' . $galImg) }}"
+                                                <img class="w-100 h-100"
+                                                    src="{{ asset('uploads/products/' . $galImg) }}"
                                                     style="object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,.12);">
                                                 <button
                                                     class="remove-gallery-img-btn position-absolute d-flex align-items-center justify-content-center bg-danger rounded-circle border-0 text-white shadow"

@@ -51,8 +51,16 @@
                             <label class="form-label fw-semibold">
                                 {{ __('messages.category_code') }} <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug', $mainCategory->slug) }}" placeholder="{{ __('messages.ph_category_code_eg') }}" required>
+                            <div class="input-group">
+                                <input type="text" id="slugField" name="slug"
+                                    class="form-control @error('slug') is-invalid @enderror"
+                                    value="{{ old('slug', $mainCategory->slug) }}"
+                                    placeholder="{{ __('messages.ph_category_code_eg') }}" required>
+                                <button type="button" class="btn btn-outline-secondary" id="regenSlugBtn"
+                                    title="{{ __('messages.slug_hint') }}">
+                                    <i class="bx bx-refresh"></i>
+                                </button>
+                            </div>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>

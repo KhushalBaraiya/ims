@@ -49,8 +49,15 @@
                             <label class="form-label fw-semibold">
                                 {{ __('messages.category_code') }} <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug') }}" placeholder="{{ __('messages.ph_category_code_eg') }}" required>
+                            <div class="input-group">
+                                <input type="text" id="slugField" name="slug"
+                                    class="form-control @error('slug') is-invalid @enderror" value="{{ old('slug') }}"
+                                    placeholder="{{ __('messages.ph_category_code_eg') }}" required>
+                                <button type="button" class="btn btn-outline-secondary" id="regenSlugBtn"
+                                    title="{{ __('messages.slug_hint') }}">
+                                    <i class="bx bx-refresh"></i>
+                                </button>
+                            </div>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -127,16 +134,47 @@
             });
         }
 
-        // Auto-generate slug from name
-        document.querySelector('input[name="name"]').addEventListener('input', function() {
-            const slugField = document.querySelector('input[name="slug"]');
+        // Generate unique uppercase code from name (removes duplicate words, uses underscore)
+        function generateCode(name) {
+            const words = name.toUpperCase().trim()
+                .replace(/[^A-Z0-9\s]/g, ' ') // non-alphanumeric → space
+                .replace(/\s+/g, ' ') // collapse spaces
+                .split(' ')
+                .filter(Boolean);
+            // Remove consecutive duplicates & overall duplicates
+            const seen = new Set();
+            const unique = [];
+            words.forEach(w => {
+                if (!seen.has(w)) {
+                    seen.add(w);
+                    unique.push(w);
+                }
+            });
+            return unique.join('_');
+        }
+
+        const nameField = document.querySelector('input[name="name"]');
+        const slugField = document.getElementById('slugField');
+        const regenBtn = document.getElementById('regenSlugBtn');
+
+        nameField.addEventListener('input', function() {
             if (!slugField.dataset.manual) {
-                slugField.value = this.value.toUpperCase().trim().replace(/\s+/g, '-').replace(/[^A-Z0-9\-]/g, '');
+                slugField.value = generateCode(this.value);
             }
         });
-        document.querySelector('input[name="slug"]').addEventListener('input', function() {
+
+        slugField.addEventListener('input', function() {
+            // Allow manual edit but enforce uppercase + allowed chars
             this.dataset.manual = '1';
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+            const pos = this.selectionStart;
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            this.setSelectionRange(pos, pos);
+        });
+
+        regenBtn.addEventListener('click', function() {
+            slugField.removeAttribute('data-manual');
+            slugField.value = generateCode(nameField.value);
+            slugField.focus();
         });
     </script>
 @endpush

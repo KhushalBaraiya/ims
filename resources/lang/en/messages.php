@@ -1363,6 +1363,44 @@ return [
     'sub_category_label'  => 'Sub Category',
     'unit_name_label'     => 'Unit Name',
     'unit_code_label'     => 'Unit Code',
+
+    // ── Category / Sub-category / Brand placeholder keys ──────────────────
+    'ph_category_code_eg'     => 'e.g. ELECTRONICS',
+    'ph_sub_category_code_eg' => 'e.g. MOBILE_PHONES',
+    'ph_sub_category_name_eg' => 'e.g. Mobile Phones, Laptops',
+    'ph_brand_code_eg'        => 'e.g. SAMSUNG_ELECTRONICS',
+
+    // ── Products create — remaining labels ────────────────────────────────
+    'prod_discount_amount'    => 'Discount Amount',
+    'prod_selling_tax_pct'    => 'Selling Tax %',
+    'prod_opening_stock_card' => 'Opening Stock',
+    'prod_create_only_badge'  => 'Create only',
+    'prod_opening_stock_desc' => 'When enabled, a Purchase record will be created automatically for traceability.',
+    'prod_supplier_label'     => 'Supplier',
+    'prod_opening_qty_label'  => 'Opening Qty',
+    'prod_purchase_total_lbl' => 'Purchase Total',
+    'prod_qty_x_price_lbl'    => 'Qty × Purchase Price',
+    'prod_quick_tips'         => 'Quick Tips',
+    'prod_tip_sku'            => 'SKU must be unique across all products.',
+    'prod_tip_category'       => 'Select Main Category first to load Sub Categories.',
+    'prod_tip_stock'          => 'Enable Opening Stock to auto-create a purchase record.',
+    'prod_tip_image'          => 'Primary image max size is 2MB (PNG/JPG/WEBP).',
+    'prod_publish_card_title' => 'Publish',
+    'prod_save_copied'        => 'Save Copied Product',
+    'prod_copy_title'         => 'Copy Product',
+    'prod_copy_crumb'         => 'Copy',
+    'prod_create_desc'        => 'Fill in the details below to add a new product to your catalog',
+    'prod_copy_desc'          => 'Fill in the details below to copy this product',
+
+    // ── By-category page ─────────────────────────────────────────────────
+    'by_cat_total'            => 'Total Products',
+    'by_cat_categories'       => 'Categories',
+    'by_cat_showing'          => 'Showing',
+    'by_cat_jump_to'          => 'Jump to:',
+    'by_cat_all_tab'          => 'All',
+    'by_cat_stock_label'      => 'Stock',
+    'by_cat_products_count'   => 'Products',
+    'by_cat_product_count'    => 'Product',
 ];
 
 

@@ -1,4 +1,4 @@
-﻿@csrf
+@csrf
 
 {{-- ══ SECTION 1 : Basic Information ══════════════════════════════════════════ --}}
 <div class="form-section">

@@ -1347,5 +1347,42 @@ return [
     'sub_category_label'  => 'પેટા-શ્રેણી',
     'unit_name_label'     => 'એકમ નામ',
     'unit_code_label'     => 'એકમ કોડ',
-];
 
+    // ── Category / Sub-category / Brand placeholder keys ──────────────────
+    'ph_category_code_eg'     => 'દા.ત. ઇલેક્ટ્રોનિક્સ',
+    'ph_sub_category_code_eg' => 'દા.ત. મોબાઇલ ફોન',
+    'ph_sub_category_name_eg' => 'દા.ત. મોબાઇલ ફોન, લૅપટૉપ',
+    'ph_brand_code_eg'        => 'દા.ત. ઇલેક્ટ્રોનિક્સ',
+
+    // ── Products create — remaining labels ────────────────────────────────
+    'prod_discount_amount'    => 'ડિસ્કાઉન્ટ રકમ',
+    'prod_selling_tax_pct'    => 'વેચાણ ટૅક્સ %',
+    'prod_opening_stock_card' => 'શરૂઆતી સ્ટૉક',
+    'prod_create_only_badge'  => 'ફક્ત બનાવો',
+    'prod_opening_stock_desc' => 'ચાલુ હોય ત્યારે, ટ્રૅકિંગ માટે ખરીદ નોંધ સ્વ-બને.',
+    'prod_supplier_label'     => 'સપ્લાયર',
+    'prod_opening_qty_label'  => 'શરૂઆતી જથ્થો',
+    'prod_purchase_total_lbl' => 'ખરીદ કુલ',
+    'prod_qty_x_price_lbl'    => 'જથ્થો × ખરીદ ભાવ',
+    'prod_quick_tips'         => 'ઝડપી ટિપ્સ',
+    'prod_tip_sku'            => 'SKU બધા ઉત્પાદ માટે અનોખો હોવો જોઈએ.',
+    'prod_tip_category'       => 'પેટા-શ્રેણી લોડ કરવા પ્રથમ મુખ્ય શ્રેણી પસંદ કરો.',
+    'prod_tip_stock'          => 'ખરીદ નોંધ સ્વ-બનાવવા Opening Stock ચાલુ કરો.',
+    'prod_tip_image'          => 'મૂળ છબી મહ. 2MB (PNG/JPG/WEBP).',
+    'prod_publish_card_title' => 'પ્રકાશિત',
+    'prod_save_copied'        => 'કૉપી ઉત્પાદ સાચવો',
+    'prod_copy_title'         => 'ઉત્પાદ કૉપિ',
+    'prod_copy_crumb'         => 'કૉપિ',
+    'prod_create_desc'        => 'નવું ઉત્પાદ ઉમેરવા નીચેની વિગત ભરો',
+    'prod_copy_desc'          => 'આ ઉત્પાદ કૉપિ કરવા નીચેની વિગત ભરો',
+
+    // ── By-category page ─────────────────────────────────────────────────
+    'by_cat_total'            => 'કુલ ઉત્પાદ',
+    'by_cat_categories'       => 'શ્રેણીઓ',
+    'by_cat_showing'          => 'બતાવ્યા',
+    'by_cat_jump_to'          => 'ઝૂંપ:',
+    'by_cat_all_tab'          => 'બધા',
+    'by_cat_stock_label'      => 'સ્ટૉક',
+    'by_cat_products_count'   => 'ઉત્પાદ',
+    'by_cat_product_count'    => 'ઉત્પાદ',
+];

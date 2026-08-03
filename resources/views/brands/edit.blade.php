@@ -53,7 +53,8 @@
                             </label>
                             <input type="text" name="slug" id="brandSlug"
                                 class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug', $brand->slug) }}" placeholder="{{ __('messages.ph_brand_code_eg') }}" required>
+                                value="{{ old('slug', $brand->slug) }}"
+                                placeholder="{{ __('messages.ph_brand_code_eg') }}" required>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -212,9 +213,11 @@
             });
         }
 
-        // Slug uppercase
+        // Slug uppercase (underscore style, no dashes)
         document.getElementById('brandSlug').addEventListener('input', function() {
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+            const pos = this.selectionStart;
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            this.setSelectionRange(pos, pos);
         });
 
         // Image preview

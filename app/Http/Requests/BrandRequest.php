@@ -35,7 +35,7 @@ class BrandRequest extends FormRequest
                 'required',
                 'string',
                 'max:50',
-                'alpha_dash',
+                'regex:/^[A-Z0-9_]+$/',
                 'unique:brands,slug,' . $brandId,
             ],
             'description' => [
@@ -75,8 +75,8 @@ class BrandRequest extends FormRequest
     {
         return [
             'slug.required' => 'The Brand Code field is required.',
-            'slug.unique' => 'This Brand Code has already been taken.',
-            'slug.alpha_dash' => 'The Brand Code must only contain letters, numbers, dashes, and underscores.',
+            'slug.unique'   => 'This Brand Code has already been taken.',
+            'slug.regex'    => 'The Brand Code must be uppercase letters, numbers, and underscores only.',
         ];
     }
 }

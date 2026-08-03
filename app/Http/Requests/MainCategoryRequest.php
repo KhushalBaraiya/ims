@@ -69,8 +69,8 @@ class MainCategoryRequest extends FormRequest
     {
         return [
             'slug.required' => 'The Category Code field is required.',
-            'slug.unique' => 'This Category Code has already been taken.',
-            'slug.alpha_dash' => 'The Category Code must only contain letters, numbers, dashes, and underscores.',
+            'slug.unique'   => 'This Category Code has already been taken.',
+            'slug.regex'    => 'The Category Code must be uppercase letters, numbers, and underscores only.',
         ];
     }
 }

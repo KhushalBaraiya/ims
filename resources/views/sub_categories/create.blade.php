@@ -71,7 +71,8 @@
                                 {{ __('messages.sub_category_code') }} <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                value="{{ old('slug') }}" placeholder="{{ __('messages.ph_sub_category_code_eg') }}" required>
+                                value="{{ old('slug') }}" placeholder="{{ __('messages.ph_sub_category_code_eg') }}"
+                                required>
                             <div class="form-text">{{ __('messages.slug_hint') }}</div>
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -148,16 +149,36 @@
             });
         }
 
+        // Generate unique uppercase code (removes duplicate words, uses underscore)
+        function generateCode(name) {
+            const words = name.toUpperCase().trim()
+                .replace(/[^A-Z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .split(' ')
+                .filter(Boolean);
+            const seen = new Set();
+            const unique = [];
+            words.forEach(w => {
+                if (!seen.has(w)) {
+                    seen.add(w);
+                    unique.push(w);
+                }
+            });
+            return unique.join('_');
+        }
+
         // Auto-generate slug from name
         document.querySelector('input[name="name"]').addEventListener('input', function() {
             const slugField = document.querySelector('input[name="slug"]');
             if (!slugField.dataset.manual) {
-                slugField.value = this.value.toUpperCase().trim().replace(/\s+/g, '-').replace(/[^A-Z0-9\-]/g, '');
+                slugField.value = generateCode(this.value);
             }
         });
         document.querySelector('input[name="slug"]').addEventListener('input', function() {
             this.dataset.manual = '1';
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+            const pos = this.selectionStart;
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            this.setSelectionRange(pos, pos);
         });
     </script>
 @endpush

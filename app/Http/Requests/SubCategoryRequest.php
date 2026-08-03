@@ -29,7 +29,7 @@ class SubCategoryRequest extends FormRequest
                 'required',
                 'string',
                 'max:50',
-                'alpha_dash',
+                'regex:/^[A-Z0-9_]+$/',
                 'unique:sub_categories,slug,' . $subCategoryId,
             ],
             'description' => 'nullable|string',
@@ -58,8 +58,8 @@ class SubCategoryRequest extends FormRequest
     {
         return [
             'slug.required' => 'The Sub Category Code field is required.',
-            'slug.unique' => 'This Sub Category Code has already been taken.',
-            'slug.alpha_dash' => 'The Sub Category Code must only contain letters, numbers, dashes, and underscores.',
+            'slug.unique'   => 'This Sub Category Code has already been taken.',
+            'slug.regex'    => 'The Sub Category Code must be uppercase letters, numbers, and underscores only.',
         ];
     }
 }
