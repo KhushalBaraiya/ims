@@ -207,7 +207,7 @@
                                                 @endphp
                                                 <li class="mb-1" style="font-size:0.85rem;">
                                                     <i class="bx bx-subdirectory-right text-muted me-1"></i>
-                                                    <strong>{{ $adj->product->name ?? 'Deleted Product' }}</strong>
+                                                    <strong>{{ $adj->product->name ?? __('messages.deleted_product') }}</strong>
                                                     (<code
                                                         class="small text-muted">{{ $adj->product->code ?? '-' }}</code>)
                                                     &rarr;

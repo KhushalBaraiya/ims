@@ -18,12 +18,12 @@
         <div class="d-flex gap-2">
             @can('sale_returns.view')
                 <a href="{{ route('sale-returns.print', $saleReturn->id) }}" target="_blank" class="btn btn-outline-success">
-                    <i class="bx bx-printer me-1"></i> Print
+                    <i class="bx bx-printer me-1"></i> {{ __('messages.print') }}
                 </a>
             @endcan
             @can('sale_returns.update')
                 <a href="{{ route('sale-returns.edit', $saleReturn->id) }}" class="btn btn-primary">
-                    <i class="bx bx-edit me-1"></i> Edit Return
+                    <i class="bx bx-edit me-1"></i> {{ __('messages.edit_return') }}
                 </a>
             @endcan
             <a href="{{ route('sale-returns.index') }}" class="btn btn-outline-secondary">
@@ -68,7 +68,7 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-info-circle me-2 text-primary"></i>Return Summary
+                        <i class="bx bx-info-circle me-2 text-primary"></i>{{ __('messages.return_summary_lbl') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -124,7 +124,7 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-credit-card me-2 text-success"></i>Refund Summary
+                        <i class="bx bx-credit-card me-2 text-success"></i>{{ __('messages.refund_summary') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -154,7 +154,7 @@
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-note me-2 text-warning"></i>Notes
+                            <i class="bx bx-note me-2 text-warning"></i>{{ __('messages.notes') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -167,24 +167,24 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-bolt-circle me-2 text-warning"></i>Quick Actions
+                        <i class="bx bx-bolt-circle me-2 text-warning"></i>{{ __('messages.quick_actions') }}
                     </h6>
                 </div>
                 <div class="card-body p-4 d-grid gap-2">
                     @can('sale_returns.update')
                         <a href="{{ route('sale-returns.edit', $saleReturn->id) }}" class="btn btn-primary">
-                            <i class="bx bx-edit me-1"></i> Edit Return
+                            <i class="bx bx-edit me-1"></i> {{ __('messages.edit_return') }}
                         </a>
                     @endcan
                     @can('sale_returns.view')
                         <a href="{{ route('sale-returns.print', $saleReturn->id) }}" target="_blank"
                             class="btn btn-outline-success">
-                            <i class="bx bx-printer me-1"></i> Print Return Sheet
+                            <i class="bx bx-printer me-1"></i> {{ __('messages.print_return_sheet') }}
                         </a>
                     @endcan
                     @if ($saleReturn->sale)
                         <a href="{{ route('sales.show', $saleReturn->sale_id) }}" class="btn btn-outline-info">
-                            <i class="bx bx-receipt me-1"></i> View Original Invoice
+                            <i class="bx bx-receipt me-1"></i> {{ __('messages.view_original_invoice') }}
                         </a>
                     @endif
                     @can('sale_returns.delete')
@@ -192,7 +192,7 @@
                             @csrf @method('DELETE')
                             <button type="button" class="btn btn-outline-danger w-100 delete-btn"
                                 data-return="{{ $saleReturn->return_no }}">
-                                <i class="bx bx-trash me-1"></i> Delete Return
+                                <i class="bx bx-trash me-1"></i> {{ __('messages.delete_return') }}
                             </button>
                         </form>
                     @endcan
@@ -209,9 +209,10 @@
                 <div
                     class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-undo me-2 text-primary"></i>Returned Items
+                        <i class="bx bx-undo me-2 text-primary"></i>{{ __('messages.returned_items') }}
                     </h6>
-                    <span class="badge bg-label-primary">{{ $saleReturn->items->count() }} item(s)</span>
+                    <span class="badge bg-label-primary">{{ $saleReturn->items->count() }}
+                        {{ __('messages.item_s') }}</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -265,7 +266,8 @@
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
-                                    <td colspan="6" class="text-end fw-bold">{{ __('messages.grand_refund_total') }}</td>
+                                    <td colspan="6" class="text-end fw-bold">{{ __('messages.grand_refund_total') }}
+                                    </td>
                                     <td class="text-end fw-bold text-primary fs-6">
                                         {{ format_currency($saleReturn->grand_total) }}</td>
                                 </tr>
@@ -279,7 +281,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-user me-2 text-secondary"></i>Return Meta
+                        <i class="bx bx-user me-2 text-secondary"></i>{{ __('messages.return_meta') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -324,7 +326,3 @@
         });
     </script>
 @endpush
-
-
-
-

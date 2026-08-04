@@ -29,7 +29,8 @@
     {{-- Date Filter --}}
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-success"></i>Date Range</h6>
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-success"></i>{{ __('messages.date_range') }}
+            </h6>
         </div>
         <div class="card-body p-4">
             <form method="GET">
@@ -54,11 +55,11 @@
                     </div>
                     <div class="col-md-4 d-flex gap-2 flex-wrap">
                         <a href="?date_from={{ now()->startOfMonth()->toDateString() }}&date_to={{ now()->toDateString() }}"
-                            class="btn btn-outline-secondary btn-sm">This Month</a>
+                            class="btn btn-outline-secondary btn-sm">{{ __('messages.rpt_this_month') }}</a>
                         <a href="?date_from={{ now()->subMonth()->startOfMonth()->toDateString() }}&date_to={{ now()->subMonth()->endOfMonth()->toDateString() }}"
-                            class="btn btn-outline-secondary btn-sm">Last Month</a>
+                            class="btn btn-outline-secondary btn-sm">{{ __('messages.rpt_last_month') }}</a>
                         <a href="?date_from={{ now()->startOfYear()->toDateString() }}&date_to={{ now()->toDateString() }}"
-                            class="btn btn-outline-secondary btn-sm">This Year</a>
+                            class="btn btn-outline-secondary btn-sm">{{ __('messages.rpt_this_year') }}</a>
                     </div>
                 </div>
             </form>
@@ -76,7 +77,7 @@
                     </span>
                     <p class="text-muted small mb-1">{{ __('messages.total_revenue_rpt') }}</p>
                     <h4 class="fw-bold text-primary mb-1">{{ format_currency($totalRevenue) }}</h4>
-                    <small class="text-muted">{{ $totalSalesCount }} completed invoices</small>
+                    <small class="text-muted">{{ $totalSalesCount }} {{ __('messages.completed_invoices') }}</small>
                 </div>
             </div>
         </div>
@@ -142,7 +143,7 @@
                         <tbody>
                             <tr class="table-light">
                                 <td colspan="2" class="fw-bold ps-4 py-2 small text-uppercase text-muted">
-                                    <i class="bx bx-trending-up me-1 text-primary"></i>Income
+                                    <i class="bx bx-trending-up me-1 text-primary"></i>{{ __('messages.income_section') }}
                                 </td>
                             </tr>
                             <tr>
@@ -160,7 +161,7 @@
 
                             <tr class="table-light">
                                 <td colspan="2" class="fw-bold ps-4 py-2 small text-uppercase text-muted">
-                                    <i class="bx bx-package me-1 text-danger"></i>Expenses
+                                    <i class="bx bx-package me-1 text-danger"></i>{{ __('messages.expenses_section') }}
                                 </td>
                             </tr>
                             <tr>
@@ -176,7 +177,8 @@
 
                             <tr class="table-light">
                                 <td colspan="2" class="fw-bold ps-4 py-2 small text-uppercase text-muted">
-                                    <i class="bx bx-transfer me-1 text-warning"></i>Adjustments
+                                    <i
+                                        class="bx bx-transfer me-1 text-warning"></i>{{ __('messages.adjustments_section') }}
                                 </td>
                             </tr>
                             <tr>
@@ -209,7 +211,7 @@
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="mb-0 fw-semibold">
-                        <i class="bx bx-bar-chart-alt-2 me-2 text-primary"></i>Monthly Revenue Breakdown
+                        <i class="bx bx-bar-chart-alt-2 me-2 text-primary"></i>{{ __('messages.monthly_revenue') }}
                     </h6>
                     @if ($monthlyData->count())
                         <span class="badge bg-label-primary">{{ $monthlyData->count() }} month(s)</span>
@@ -305,6 +307,3 @@
         }
     </style>
 @endpush
-
-
-

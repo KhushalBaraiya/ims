@@ -59,7 +59,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">Received</p>
+                        <p class="text-muted small mb-0">{{ __('messages.received') }}</p>
                         <h4 class="fw-bold text-success mb-0">{{ $completedPurchases }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
@@ -72,7 +72,7 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">Total Amount</p>
+                        <p class="text-muted small mb-0">{{ __('messages.total_amount_lbl') }}</p>
                         <h4 class="fw-bold text-info mb-0">{{ format_currency($totalAmount) }}</h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
@@ -108,8 +108,9 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.purchase_no_label') }}</label>
-                            <input class="form-control form-control-sm" name="purchase_no" placeholder="{{ __('messages.ph_purchase_no_format') }}"
-                                type="text" value="{{ request('purchase_no') }}">
+                            <input class="form-control form-control-sm" name="purchase_no"
+                                placeholder="{{ __('messages.ph_purchase_no_format') }}" type="text"
+                                value="{{ request('purchase_no') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.supplier') }}</label>
@@ -126,13 +127,17 @@
                             <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
                             <select class="form-select form-select-sm" name="status">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
-                                <option {{ request('status') === 'received' ? 'selected' : '' }} value="received">Received
+                                <option {{ request('status') === 'received' ? 'selected' : '' }} value="received">
+                                    {{ __('messages.received') }}
                                 </option>
-                                <option {{ request('status') === 'pending' ? 'selected' : '' }} value="pending">Pending
+                                <option {{ request('status') === 'pending' ? 'selected' : '' }} value="pending">
+                                    {{ __('messages.pending') }}
                                 </option>
-                                <option {{ request('status') === 'ordered' ? 'selected' : '' }} value="ordered">Ordered
+                                <option {{ request('status') === 'ordered' ? 'selected' : '' }} value="ordered">
+                                    {{ __('messages.ordered') }}
                                 </option>
-                                <option {{ request('status') === 'draft' ? 'selected' : '' }} value="draft">Draft</option>
+                                <option {{ request('status') === 'draft' ? 'selected' : '' }} value="draft">
+                                    {{ __('messages.draft') }}</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -321,7 +326,8 @@
                             <i class="bx bx-credit-card text-white" style="font-size:1.3rem;"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="modal-title fw-bold mb-0" id="paymentModalLabel">Manage Payment</h5>
+                            <h5 class="modal-title fw-bold mb-0" id="paymentModalLabel">
+                                {{ __('messages.manage_payment') }}</h5>
                             <input class="bg-transparent border-0 text-white opacity-75 small p-0 w-100"
                                 id="modal_purchase_no" readonly style="outline:none;" type="text">
                         </div>
@@ -347,7 +353,7 @@
                                 <div class="rounded-3 p-3 text-center h-100"
                                     style="background:#f0f4ff;border:1.5px solid #d0d8ff;">
                                     <div class="text-muted small fw-semibold mb-1">
-                                        <i class="bx bx-receipt me-1"></i>Grand Total
+                                        <i class="bx bx-receipt me-1"></i>{{ __('messages.grand_total') }}
                                     </div>
                                     <div class="fw-bold text-primary" style="font-size:1.4rem;"
                                         id="modal_grand_total_text">
@@ -360,7 +366,7 @@
                                 <div class="rounded-3 p-3 text-center h-100 balance-due-card"
                                     style="background:#fff0f0;border:1.5px solid#ffd0d0;">
                                     <div class="small fw-semibold mb-1 text-danger">
-                                        <i class="bx bx-time-five me-1"></i>Balance Due
+                                        <i class="bx bx-time-five me-1"></i>{{ __('messages.balance_due') }}
                                     </div>
                                     <div class="fw-bold text-danger" style="font-size:1.4rem;"
                                         id="modal_balance_due_text">
@@ -389,12 +395,12 @@
                         {{-- Payment Method --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-uppercase text-muted">
-                                Payment Method <span class="text-danger">*</span>
+                                {{ __('messages.payment_method_lbl') }} <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required style="height:46px;">
-                                <option value="Cash">?? {{ __('messages.pm_cash') }}</option>
-                                <option value="Razorpay">? Razorpay (Online Payment)</option>
+                                <option value="Cash">ðŸ’µ {{ __('messages.pm_cash') }}</option>
+                                <option value="Razorpay">âš¡ {{ __('messages.razorpay_option') }}</option>
                             </select>
                         </div>
 
@@ -407,11 +413,12 @@
                                     style="width:28px;height:28px;background:#696cff;">
                                     <i class="bx bx-lock-alt text-white" style="font-size:.85rem;"></i>
                                 </span>
-                                <strong class="text-primary small">Secure Razorpay Checkout</strong>
+                                <strong class="text-primary small">{{ __('messages.secure_razorpay') }}</strong>
                             </div>
                             <p class="text-muted small mb-0 ps-1">
-                                Click <strong>"Pay via Razorpay"</strong> below to open the secure payment gateway.
-                                Your payment will be recorded automatically on success.
+                                {{ __('messages.set_click') }} <strong>"{{ __('messages.pay_via_razorpay') }}"</strong>
+                                {{ __('messages.set_open_payment_gateway') }}
+                                {{ __('messages.set_payment_auto_recorded') }}
                             </p>
                         </div>
 
@@ -426,14 +433,14 @@
                     <div class="modal-footer border-top px-4 py-3 gap-2 bg-light" style="border-radius:0 0 16px 16px;">
                         <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal"
                             type="button">
-                            <i class="bx bx-x me-1"></i> Cancel
+                            <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                         </button>
                         <button class="btn btn-primary rounded-pill px-4 ms-auto" id="btnSavePayment" type="submit">
-                            <i class="bx bx-save me-1"></i> Update Payment
+                            <i class="bx bx-save me-1"></i> {{ __('messages.update_payment') }}
                         </button>
                         <button class="btn rounded-pill px-4 ms-auto d-none" id="btnModalPayRazorpay" type="button"
                             style="background:linear-gradient(135deg,#696cff,#9c3fe4);color:#fff;border:none;">
-                            <i class="bx bx-bolt-circle me-1"></i> Pay via Razorpay
+                            <i class="bx bx-bolt-circle me-1"></i> {{ __('messages.pay_via_razorpay') }}
                         </button>
                     </div>
                 </form>
@@ -670,7 +677,7 @@
                 }
                 const btn = $(this);
                 btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm me-1"></span> Processing…');
+                    '<span class="spinner-border spinner-border-sm me-1"></span> Processingï¿½');
 
                 $.ajax({
                     url: "{{ route('razorpay.create-order') }}",
@@ -685,7 +692,7 @@
                             amount: res.amount,
                             currency: res.currency,
                             name: '{{ addslashes(config('app.name')) }}',
-                            description: 'Purchase Payment — ' + $('#modal_purchase_no')
+                            description: 'Purchase Payment ï¿½ ' + $('#modal_purchase_no')
                                 .val(),
                             order_id: res.order_id,
                             prefill: {
@@ -775,7 +782,7 @@
 
             $('#paymentForm').on('submit', function(e) {
                 e.preventDefault();
-                // If Razorpay is selected, the Razorpay button handles submission — not this form
+                // If Razorpay is selected, the Razorpay button handles submission ï¿½ not this form
                 if ($('#modal_payment_method').val() === 'Razorpay') return;
 
                 const form = $(this);

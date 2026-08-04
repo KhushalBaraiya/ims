@@ -19,12 +19,12 @@
         <div class="d-flex gap-2">
             @can('purchases.view')
                 <a class="btn btn-outline-success" href="{{ route('purchases.print', $purchase->id) }}" target="_blank">
-                    <i class="bx bx-printer me-1"></i> Print
+                    <i class="bx bx-printer me-1"></i> {{ __('messages.print') }}
                 </a>
             @endcan
             @can('purchases.update')
                 <a class="btn btn-primary" href="{{ route('purchases.edit', $purchase->id) }}">
-                    <i class="bx bx-edit me-1"></i> Edit Order
+                    <i class="bx bx-edit me-1"></i> {{ __('messages.edit_order') }}
                 </a>
             @endcan
             <a class="btn btn-outline-secondary" href="{{ route('purchases.index') }}">
@@ -78,7 +78,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-info-circle text-primary me-2"></i>Order Summary
+                        <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.order_summary') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -97,7 +97,7 @@
                         </li>
                         @if ($purchase->supplier && $purchase->supplier->currency)
                             <li class="d-flex justify-content-between border-bottom py-2">
-                                <span class="text-muted small fw-semibold">Currency</span>
+                                <span class="text-muted small fw-semibold">{{ __('messages.currency_lbl') }}</span>
                                 <span class="fw-semibold text-end">
                                     <span class="badge bg-warning-subtle text-warning border border-warning-subtle"
                                         style="font-size:11px;padding:3px 8px;">
@@ -149,7 +149,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-credit-card text-success me-2"></i>Payment Details
+                        <i class="bx bx-credit-card text-success me-2"></i>{{ __('messages.payment_details') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -194,7 +194,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-note text-warning me-2"></i>Notes
+                            <i class="bx bx-note text-warning me-2"></i>{{ __('messages.notes') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -207,19 +207,19 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-bolt-circle text-warning me-2"></i>Quick Actions
+                        <i class="bx bx-bolt-circle text-warning me-2"></i>{{ __('messages.quick_actions') }}
                     </h6>
                 </div>
                 <div class="card-body d-grid gap-2 p-4">
                     @can('purchases.update')
                         <a class="btn btn-primary" href="{{ route('purchases.edit', $purchase->id) }}">
-                            <i class="bx bx-edit me-1"></i> Edit Order
+                            <i class="bx bx-edit me-1"></i> {{ __('messages.edit_order') }}
                         </a>
                     @endcan
                     @can('purchases.view')
                         <a class="btn btn-outline-success" href="{{ route('purchases.print', $purchase->id) }}"
                             target="_blank">
-                            <i class="bx bx-printer me-1"></i> Print Order
+                            <i class="bx bx-printer me-1"></i> {{ __('messages.print_order') }}
                         </a>
                     @endcan
                     @if ($purchase->status === 'received')
@@ -227,14 +227,14 @@
                             @can('purchase_returns.view')
                                 <a class="btn btn-outline-warning"
                                     href="{{ route('purchase-returns.show', $purchase->returns->first()->id) }}">
-                                    <i class="bx bx-undo me-1"></i> View Return
+                                    <i class="bx bx-undo me-1"></i> {{ __('messages.view_return') }}
                                 </a>
                             @endcan
                         @else
                             @can('purchase_returns.create')
                                 <a class="btn btn-outline-warning"
                                     href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}">
-                                    <i class="bx bx-undo me-1"></i> Create Return
+                                    <i class="bx bx-undo me-1"></i> {{ __('messages.create_return') }}
                                 </a>
                             @endcan
                         @endif
@@ -244,7 +244,7 @@
                             @csrf @method('DELETE')
                             <button class="btn btn-outline-danger w-100" id="deletePurchaseBtn"
                                 data-no="{{ $purchase->purchase_no }}" type="button">
-                                <i class="bx bx-trash me-1"></i> Delete Order
+                                <i class="bx bx-trash me-1"></i> {{ __('messages.delete_order') }}
                             </button>
                         </form>
                     @endcan
@@ -261,9 +261,10 @@
                 <div
                     class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-package text-primary me-2"></i>Purchased Items
+                        <i class="bx bx-package text-primary me-2"></i>{{ __('messages.purchased_items') }}
                     </h6>
-                    <span class="badge bg-label-primary">{{ $purchase->items->count() }} product(s)</span>
+                    <span class="badge bg-label-primary">{{ $purchase->items->count() }}
+                        {{ __('messages.product_s') }}</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -357,7 +358,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-user text-secondary me-2"></i>Order Meta
+                        <i class="bx bx-user text-secondary me-2"></i>{{ __('messages.order_meta') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">

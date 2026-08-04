@@ -58,7 +58,8 @@
                         </li>
                     @empty
                         <li>
-                            <span class="dropdown-item text-muted small py-2">{{ __('messages.no_currencies_available') }}</span>
+                            <span
+                                class="dropdown-item text-muted small py-2">{{ __('messages.no_currencies_available') }}</span>
                         </li>
                     @endforelse
                 </ul>
@@ -535,7 +536,9 @@
 
                                 // Show toast if available
                                 if (typeof showAdminToast === 'function') {
-                                    showAdminToast('Currency changed to ' + currencyName,
+                                    showAdminToast(
+                                        '{{ __('messages.currency_changed_to') }} ' +
+                                        currencyName,
                                         'success');
                                 }
 
@@ -547,7 +550,8 @@
                         }.bind(this))
                         .catch(function() {
                             if (typeof showAdminToast === 'function') {
-                                showAdminToast('Failed to switch currency.', 'error');
+                                showAdminToast('{{ __('messages.currency_switch_failed') }}',
+                                    'error');
                             }
                         });
                 });

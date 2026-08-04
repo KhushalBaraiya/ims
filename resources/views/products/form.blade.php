@@ -31,8 +31,8 @@
                         name="code" placeholder="{{ __('messages.ph_sku_code') }}" required type="text"
                         value="{{ old('code', $product->code ?? '') }}">
                     @if (!isset($product) || !$product->exists)
-                        <button class="btn btn-outline-primary" id="generateSkuBtn" title="Auto-generate SKU"
-                            type="button">
+                        <button class="btn btn-outline-primary" id="generateSkuBtn"
+                            title="{{ __('messages.auto_generate_sku') }}" type="button">
                             <i class="bx bx-revision"></i>
                         </button>
                     @endif
@@ -597,11 +597,13 @@
                     const pct = ((profit / buy) * 100).toFixed(1);
                     const sign = profit >= 0 ? '+' : '';
                     $('#profitBadge')
-                        .text(`Profit: ${sign}₹${profit.toFixed(2)} (${sign}${pct}%)`)
+                        .text(
+                            `{{ __('messages.prod_profit_badge') }}: ${sign}{{ current_currency()?->symbol ?? '₹' }}${profit.toFixed(2)} (${sign}${pct}%)`
+                            )
                         .removeClass('bg-label-primary bg-label-danger')
                         .addClass(profit >= 0 ? 'bg-label-primary' : 'bg-label-danger');
                 } else {
-                    $('#profitBadge').text('Profit: —');
+                    $('#profitBadge').text('{{ __('messages.prod_profit_badge') }}: —');
                 }
             }
 

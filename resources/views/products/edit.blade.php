@@ -569,12 +569,12 @@
                                 <input type="radio" class="btn-check" name="items[0][type]" id="qa_plus" value="Plus"
                                     checked>
                                 <label class="btn btn-outline-success btn-sm w-50 fw-semibold" for="qa_plus">
-                                    <i class="bx bx-plus-circle me-1"></i> Plus (+)
+                                    <i class="bx bx-plus-circle me-1"></i> {{ __('messages.plus_label') }}
                                 </label>
                                 <input type="radio" class="btn-check" name="items[0][type]" id="qa_minus"
                                     value="Minus">
                                 <label class="btn btn-outline-danger btn-sm w-50 fw-semibold" for="qa_minus">
-                                    <i class="bx bx-minus-circle me-1"></i> Minus (-)
+                                    <i class="bx bx-minus-circle me-1"></i> {{ __('messages.minus_label') }}
                                 </label>
                             </div>
 
@@ -592,7 +592,7 @@
 
                             <div class="rounded-2 px-3 py-2 mb-3 d-flex align-items-center justify-content-between small"
                                 style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
-                                <span class="text-muted fw-semibold">After Adjustment</span>
+                                <span class="text-muted fw-semibold">{{ __('messages.after_adjustment_lbl') }}</span>
                                 <span class="fw-bold text-primary" id="qa_preview">
                                     {{ number_format(($product->stock->quantity ?? 0) + 1, 0) }}
                                     {{ $product->unit_code ?? 'PCS' }}

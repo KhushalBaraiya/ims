@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Top Selling Products')
+@section('title', __('messages.top_selling_title'))
 
 @section('content')
 
@@ -28,7 +28,8 @@
     {{-- Filters --}}
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-warning"></i>Filter &amp; Sort</h6>
+            <h6 class="mb-0 fw-semibold"><i
+                    class="bx bx-filter-alt me-2 text-warning"></i>{{ __('messages.filter_sort_lbl') }}</h6>
         </div>
         <div class="card-body p-4">
             <form method="GET">
@@ -46,18 +47,26 @@
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.sort_by_label') }}</label>
                         <select name="sort_by" class="form-select form-select-sm">
-                            <option value="quantity" {{ $sortBy === 'quantity' ? 'selected' : '' }}>Most Sold (Qty)</option>
-                            <option value="revenue" {{ $sortBy === 'revenue' ? 'selected' : '' }}>Highest Revenue</option>
-                            <option value="profit" {{ $sortBy === 'profit' ? 'selected' : '' }}>Highest Profit</option>
+                            <option value="quantity" {{ $sortBy === 'quantity' ? 'selected' : '' }}>
+                                {{ __('messages.most_sold_qty') }}
+                            </option>
+                            <option value="revenue" {{ $sortBy === 'revenue' ? 'selected' : '' }}>
+                                {{ __('messages.highest_revenue') }}</option>
+                            <option value="profit" {{ $sortBy === 'profit' ? 'selected' : '' }}>
+                                {{ __('messages.highest_profit') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold small">{{ __('messages.show_top') }}</label>
                         <select name="limit" class="form-select form-select-sm">
-                            <option value="10" {{ $limit == 10 ? 'selected' : '' }}>Top 10</option>
-                            <option value="20" {{ $limit == 20 ? 'selected' : '' }}>Top 20</option>
-                            <option value="50" {{ $limit == 50 ? 'selected' : '' }}>Top 50</option>
-                            <option value="100" {{ $limit == 100 ? 'selected' : '' }}>Top 100</option>
+                            <option value="10" {{ $limit == 10 ? 'selected' : '' }}>{{ __('messages.show_top') }} 10
+                            </option>
+                            <option value="20" {{ $limit == 20 ? 'selected' : '' }}>{{ __('messages.show_top') }} 20
+                            </option>
+                            <option value="50" {{ $limit == 50 ? 'selected' : '' }}>{{ __('messages.show_top') }} 50
+                            </option>
+                            <option value="100" {{ $limit == 100 ? 'selected' : '' }}>{{ __('messages.show_top') }} 100
+                            </option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex gap-1">
@@ -70,9 +79,9 @@
                     </div>
                     <div class="col-md-2 d-flex gap-1">
                         <a href="?date_from={{ now()->startOfMonth()->toDateString() }}&date_to={{ now()->toDateString() }}&sort_by={{ $sortBy }}&limit={{ $limit }}"
-                            class="btn btn-outline-secondary btn-sm flex-fill">This Month</a>
+                            class="btn btn-outline-secondary btn-sm flex-fill">{{ __('messages.rpt_this_month') }}</a>
                         <a href="?date_from={{ now()->startOfYear()->toDateString() }}&date_to={{ now()->toDateString() }}&sort_by={{ $sortBy }}&limit={{ $limit }}"
-                            class="btn btn-outline-secondary btn-sm flex-fill">This Year</a>
+                            class="btn btn-outline-secondary btn-sm flex-fill">{{ __('messages.rpt_this_year') }}</a>
                     </div>
                 </div>
             </form>
@@ -156,14 +165,14 @@
         <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
             <h6 class="mb-0 fw-semibold">
                 <i class="bx bx-trophy me-2 text-warning"></i>
-                Top {{ $limit }} Products
+                {{ __('messages.show_top') }} {{ $limit }} {{ __('messages.products') }}
                 @if ($dateFrom || $dateTo)
                     <span class="badge bg-label-secondary ms-2 fw-normal">
                         {{ $dateFrom ?? 'All time' }} → {{ $dateTo ?? 'Today' }}
                     </span>
                 @endif
             </h6>
-            <span class="badge bg-label-warning">Sorted by: {{ ucfirst($sortBy) }}</span>
+            <span class="badge bg-label-warning">{{ __('messages.sorted_by_lbl') }}: {{ ucfirst($sortBy) }}</span>
         </div>
         <div class="card-body p-0">
             @if ($topProducts->count())
@@ -295,7 +304,7 @@
                     dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                     language: {
                         search: "_INPUT_",
-                        searchPlaceholder: "Search products...",
+                        searchPlaceholder: "{{ __('messages.search_products_ph') }}",
                         lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
                         info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
                         infoEmpty: "{{ __('messages.no_entries') }}",
@@ -310,7 +319,3 @@
         });
     </script>
 @endpush
-
-
-
-

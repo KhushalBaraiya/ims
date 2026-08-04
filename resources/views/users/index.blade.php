@@ -209,8 +209,8 @@
                                     {{-- Locked badge --}}
                                     @if ($u->locked_until && now()->lt($u->locked_until))
                                         <span class="badge rounded-pill bg-warning text-dark ms-1"
-                                            title="Locked until {{ $u->locked_until->format('d M Y H:i') }}">
-                                            <i class="bx bx-lock-alt me-1"></i>Locked
+                                            title="{{ __('messages.locked_badge') }} {{ __('messages.to') }} {{ $u->locked_until->format('d M Y H:i') }}">
+                                            <i class="bx bx-lock-alt me-1"></i>{{ __('messages.locked_badge') }}
                                         </span>
                                     @endif
                                 </td>
@@ -230,12 +230,13 @@
                                                 title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                            {{-- Unlock button — shown only when account is locked --}}
+                                            {{-- Unlock button ï¿½ shown only when account is locked --}}
                                             @if ($u->locked_until && now()->lt($u->locked_until))
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action btn-unlock"
                                                     data-id="{{ $u->id }}" data-name="{{ $u->name }}"
-                                                    title="Unlock Account" style="width:30px;height:30px;padding:0;">
+                                                    title="{{ __('messages.unlock_account') }}"
+                                                    style="width:30px;height:30px;padding:0;">
                                                     <i class="bx bx-lock-open-alt" style="font-size:1rem;"></i>
                                                 </button>
                                             @endif
@@ -348,13 +349,13 @@
                 const name = $(this).data('name');
                 const btn = $(this);
                 Swal.fire({
-                    title: 'Unlock Account',
-                    text: `Unlock "${name}"? This will reset failed login attempts.`,
+                    title: '{{ __('messages.unlock_account') }}',
+                    text: `{{ __('messages.unlock_account_text') }} "${name}"?`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#696cff',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, Unlock',
+                    confirmButtonText: '{{ __('messages.yes_unlock') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (!r.isConfirmed) return;

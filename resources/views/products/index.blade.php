@@ -612,20 +612,23 @@
                                 'border-success text-success border-danger text-danger');
                             btn.addClass(res.status === 'active' ?
                                 'border-success text-success' : 'border-danger text-danger');
-                            btn.text(res.status === 'active' ? 'Active' : 'Inactive');
+                            btn.text(res.status === 'active' ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}');
                             showAdminToast(res.message, 'success');
                             // -- Update Active stat card live --------------
                             $('#statActiveCount').text($('.status-toggle-btn.border-success')
                                 .length);
                         } else {
-                            btn.text(cur === 'active' ? 'Active' : 'Inactive');
+                            btn.text(cur === 'active' ? '{{ __('messages.active') }}' :
+                                '{{ __('messages.inactive') }}');
                             showAdminToast(res.message ||
                                 '{{ __('messages.error_occurred') }}', 'error');
                         }
                     },
                     error: () => {
-                        btn.prop('disabled', false).text(cur === 'active' ? 'Active' :
-                            'Inactive');
+                        btn.prop('disabled', false).text(cur === 'active' ?
+                            '{{ __('messages.active') }}' :
+                            '{{ __('messages.inactive') }}');
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }
                 });

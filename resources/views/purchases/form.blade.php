@@ -1,4 +1,4 @@
-@csrf
+﻿@csrf
 @php
     $isReturned = isset($purchase) && $purchase->returns->isNotEmpty();
 @endphp
@@ -85,7 +85,7 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Purchase No <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.purchase_no_label') }} <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <input {{ $isReturned ? 'disabled' : '' }} {{ isset($purchase) ? 'readonly' : '' }}
                             class="form-control fw-bold @error('purchase_no') is-invalid @enderror" id="purchase_no"
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Purchase Date <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.purchase_date_field') }} <span class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control flatpickr-date @error('purchase_date') is-invalid @enderror"
                         name="purchase_date" required type="date"
@@ -112,7 +112,7 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Supplier <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.supplier_field') }} <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('supplier_id') is-invalid @enderror" id="supplierSelect"
                         name="supplier_id" required>
@@ -144,7 +144,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Reference / PO No</label>
+                    <label class="form-label fw-semibold">{{ __('messages.reference_po_field') }}</label>
                     <input {{ $isReturned ? 'disabled' : '' }} class="form-control" name="reference_no"
                         placeholder="{{ __('messages.ph_optional_ref') }}" type="text"
                         value="{{ old('reference_no', $purchase->reference_no ?? '') }}">
@@ -182,7 +182,7 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Payment Method <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.payment_method_field') }} <span class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
@@ -227,7 +227,7 @@
                                 style="width:30px;height:30px;background:linear-gradient(135deg,#696cff,#9c3fe4);">
                                 <i class="bx bx-lock-alt text-white" style="font-size:.9rem;"></i>
                             </span>
-                            <strong style="color:#4f46e5;font-size:.85rem;">Secure Razorpay Checkout</strong>
+                            <strong style="color:#4f46e5;font-size:.85rem;">{{ __('messages.secure_razorpay') }}</strong>
                         </div>
                         <p class="mb-0 text-muted" style="font-size:.8rem;line-height:1.5;">
                             Click <strong style="color:#696cff;">"Pay via Razorpay"</strong> below to open the
@@ -235,13 +235,13 @@
                         </p>
                         <div class="d-flex align-items-center gap-3 mt-2 pt-2" style="border-top:1px dashed #c7d2fe;">
                             <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
-                                <i class="bx bx-shield-check" style="color:#696cff;"></i> 256-bit SSL
+                                <i class="bx bx-shield-check" style="color:#696cff;"></i> {{ __('messages.ssl_badge') }}
                             </span>
                             <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
-                                <i class="bx bx-check-circle" style="color:#696cff;"></i> PCI DSS Compliant
+                                <i class="bx bx-check-circle" style="color:#696cff;"></i> {{ __('messages.pci_badge') }}
                             </span>
                             <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
-                                <i class="bx bx-credit-card" style="color:#696cff;"></i> Cards / UPI / NetBanking
+                                <i class="bx bx-credit-card" style="color:#696cff;"></i> {{ __('messages.cards_upi_badge') }}
                             </span>
                         </div>
                     </div>
@@ -311,7 +311,7 @@
                 <div class="text-muted d-flex flex-column align-items-center justify-content-center py-5 text-center w-100"
                     id="emptyTableMsg">
                     <i class="bx bx-package mb-2 d-block mx-auto" style="font-size:2.5rem;opacity:.3;"></i>
-                    <p class="small mb-0">No products added yet. Search above to add products.</p>
+                    <p class="small mb-0">{{ __('messages.no_products_added_msg') }}</p>
                 </div>
             </div>
         </div>
@@ -340,14 +340,14 @@
                                 id="sum_subtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Total Discount (-)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.total_discount_lbl') }}</span>
                             <input id="discount_amount" name="discount_amount" type="hidden"
                                 value="{{ old('discount_amount', $purchase->discount_amount ?? '0.00') }}">
                             <span class="fw-bold text-danger"
                                 id="lbl_discount_amount">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                            <span class="text-muted small fw-semibold">Total Tax (+)</span>
+                            <span class="text-muted small fw-semibold">{{ __('messages.total_tax_lbl') }}</span>
                             <input id="tax_amount" name="tax_amount" type="hidden"
                                 value="{{ old('tax_amount', $purchase->tax_amount ?? '0.00') }}">
                             <span class="fw-bold text-success"
@@ -361,7 +361,7 @@
                                 value="{{ old('shipping_amount', $purchase->shipping_amount ?? '0.00') }}">
                         </div>
                         <div class="d-flex justify-content-between border-bottom py-2">
-                            <span class="fw-bold">Grand Total</span>
+                            <span class="fw-bold">{{ __('messages.grand_total') }}</span>
                             <span class="fw-bold text-primary fs-6"
                                 id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '₹' }}0.00</span>
                         </div>
@@ -369,7 +369,7 @@
                             <div class="col-6">
                                 <div
                                     class="bg-danger border-danger rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
-                                    <div class="text-danger small fw-semibold">Balance Due</div>
+                                    <div class="text-danger small fw-semibold">{{ __('messages.balance_due') }}</div>
                                     <div class="text-danger fw-bold" id="sum_due">
                                         {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
@@ -377,7 +377,7 @@
                             <div class="col-6">
                                 <div
                                     class="bg-success border-success rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
-                                    <div class="text-success small fw-semibold">Overpaid</div>
+                                    <div class="text-success small fw-semibold">{{ __('messages.overpaid_lbl') }}</div>
                                     <div class="text-success fw-bold" id="sum_change">
                                         {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
@@ -390,11 +390,11 @@
 
         <div class="d-flex justify-content-end mt-4 gap-2">
             <a class="btn btn-outline-secondary" href="{{ route('purchases.index') }}">
-                <i class="bx bx-x me-1"></i> Cancel
+                <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
             </a>
             @if ((!isset($purchase) || !$purchase->exists) && !$isReturned)
                 <button class="btn btn-outline-primary" id="btnSaveDraft" type="button">
-                    <i class="bx bx-file me-1"></i> Save As Draft
+                    <i class="bx bx-file me-1"></i> {{ __('messages.save_as_draft') }}
                 </button>
             @endif
             {{-- Normal save button (hidden when Razorpay is selected) --}}
@@ -412,10 +412,10 @@
                     onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 16px rgba(105,108,255,.4)';"
                     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(105,108,255,.3)';">
                     <i class="bx bx-bolt-circle me-2" style="font-size:1.1rem;"></i>
-                    Pay via Razorpay
+                    {{ __('messages.pay_via_razorpay') }}
                     <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success"
                         style="font-size:.6rem;padding:.25rem .5rem;">
-                        Secure
+                        {{ __('messages.secured_badge') }}
                     </span>
                 </button>
             @endif

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Product — ' . $product->name)
+@section('title', 'Product ï¿½ ' . $product->name)
 
 @push('styles')
     {{-- Swiper --}}
@@ -174,13 +174,13 @@
         );
 
         $specs = array_filter([
-            'Manufacturer' => $product->manufacturer,
-            'Model Number' => $product->model_number,
-            'Part / MPN' => $product->part_number,
-            'Warranty' => $product->warranty,
-            'Color' => $product->color,
-            'Weight' => $product->weight,
-            'Country of Origin' => $product->country_of_origin,
+            __('messages.prod_manufacturer') => $product->manufacturer,
+            __('messages.prod_model_number') => $product->model_number,
+            __('messages.prod_part_serial') => $product->part_number,
+            __('messages.prod_warranty') => $product->warranty,
+            __('messages.prod_color') => $product->color,
+            __('messages.prod_weight') => $product->weight,
+            __('messages.prod_country_origin') => $product->country_of_origin,
         ]);
 
         $purchases = $product->purchaseItems->sortByDesc(fn($i) => $i->purchase?->purchase_date);
@@ -207,7 +207,7 @@
         <div class="d-flex gap-2 flex-wrap">
             @can('stocks.create')
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#quickAdjustModal">
-                    <i class="bx bx-plus-circle me-1"></i>Quick Adjust
+                    <i class="bx bx-plus-circle me-1"></i>{{ __('messages.quick_adjust_btn') }}
                 </button>
                 <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}" class="btn btn-outline-warning btn-sm">
                     <i class="bx bx-slider me-1"></i>{{ __('messages.prod_adjust_stock_btn') }}
@@ -248,13 +248,13 @@
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-barcode me-1"></i>{{ $product->code }}</span>
                     @if ($product->mainCategory)
-                        <span>· {{ $product->mainCategory->name }}</span>
+                        <span>ï¿½ {{ $product->mainCategory->name }}</span>
                     @endif
                     @if ($product->brand)
-                        <span>· {{ $product->brand->name }}</span>
+                        <span>ï¿½ {{ $product->brand->name }}</span>
                     @endif
                     @if ($product->barcode)
-                        <span>· {{ $product->barcode }}</span>
+                        <span>ï¿½ {{ $product->barcode }}</span>
                     @endif
                 </div>
             </div>
@@ -327,7 +327,8 @@
                                         <span class="swiper-counter" id="swiperCounter">1 / {{ count($allImgs) }}</span>
                                     @endif
                                     {{-- Expand / lightbox button --}}
-                                    <button class="swiper-expand-btn" id="swiperExpandBtn" title="View fullscreen">
+                                    <button class="swiper-expand-btn" id="swiperExpandBtn"
+                                        title="{{ __('messages.view_fullscreen') }}">
                                         <i class="bx bx-expand-alt" style="font-size:.95rem;color:#555;"></i>
                                     </button>
                                 </div>
@@ -374,14 +375,14 @@
                             <div>
                                 <h5 class="fw-bold mb-1">{{ $product->name }}</h5>
                                 <div class="d-flex flex-wrap gap-2 text-muted small mt-1">
-                                    <span><i class="bx bx-barcode me-1"></i>SKU: <code
+                                    <span><i class="bx bx-barcode me-1"></i>{{ __('messages.sku') }}: <code
                                             class="text-primary fw-semibold">{{ $product->code }}</code></span>
                                     @if ($product->barcode)
-                                        <span><i class="bx bx-qr-scan me-1"></i>Barcode:
+                                        <span><i class="bx bx-qr-scan me-1"></i>{{ __('messages.barcode') }}:
                                             <code>{{ $product->barcode }}</code></span>
                                     @endif
-                                    <span><i class="bx bx-ruler me-1"></i>{{ $product->unit_name ?? '—' }}
-                                        ({{ $product->unit_code ?? '—' }})</span>
+                                    <span><i class="bx bx-ruler me-1"></i>{{ $product->unit_name ?? 'ï¿½' }}
+                                        ({{ $product->unit_code ?? 'ï¿½' }})</span>
                                     <span><i
                                             class="bx bx-calendar me-1"></i>{{ $product->created_at->format('d M Y') }}</span>
                                 </div>
@@ -391,7 +392,7 @@
                             <div>
                                 <span class="badge {{ $sBadge }} fs-6 px-3 py-2">
                                     <i class="bx {{ $sIcon }} me-1"></i>{{ $sLabel }}
-                                    &nbsp;—&nbsp;<strong>{{ number_format($qty, 0) }}</strong>
+                                    &nbsp;ï¿½&nbsp;<strong>{{ number_format($qty, 0) }}</strong>
                                     {{ $product->unit_code ?? 'PCS' }}
                                 </span>
                             </div>
@@ -537,12 +538,12 @@
                                             @php $pur = $item->purchase; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-primary fw-semibold">{{ $pur?->purchase_no ?? '—' }}</code>
+                                                        class="small text-primary fw-semibold">{{ $pur?->purchase_no ?? 'ï¿½' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $pur?->purchase_date ? \Carbon\Carbon::parse($pur->purchase_date)->format('d M Y') : '—' }}
+                                                    {{ $pur?->purchase_date ? \Carbon\Carbon::parse($pur->purchase_date)->format('d M Y') : 'ï¿½' }}
                                                 </td>
-                                                <td class="fw-semibold small">{{ $pur?->supplier?->name ?? '—' }}</td>
+                                                <td class="fw-semibold small">{{ $pur?->supplier?->name ?? 'ï¿½' }}</td>
                                                 <td class="text-end fw-semibold">{{ number_format($item->quantity, 2) }}
                                                 </td>
                                                 <td class="text-end small">
@@ -564,7 +565,7 @@
                                                         <span
                                                             class="badge bg-secondary rounded-pill">{{ $pur->status }}</span>
                                                     @else
-                                                        <span class="text-muted">—</span>
+                                                        <span class="text-muted">ï¿½</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
@@ -611,10 +612,10 @@
                                             @php $sale = $item->sale; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-success fw-semibold">{{ $sale?->invoice_no ?? '—' }}</code>
+                                                        class="small text-success fw-semibold">{{ $sale?->invoice_no ?? 'ï¿½' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $sale?->invoice_date ? \Carbon\Carbon::parse($sale->invoice_date)->format('d M Y') : '—' }}
+                                                    {{ $sale?->invoice_date ? \Carbon\Carbon::parse($sale->invoice_date)->format('d M Y') : 'ï¿½' }}
                                                 </td>
                                                 <td class="fw-semibold small">
                                                     {{ $sale?->customer?->name ?? __('messages.prod_walk_in') }}</td>
@@ -636,7 +637,7 @@
                                                         <span
                                                             class="badge bg-danger rounded-pill">{{ __('messages.unpaid') }}</span>
                                                     @else
-                                                        <span class="text-muted">—</span>
+                                                        <span class="text-muted">ï¿½</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
@@ -679,14 +680,15 @@
                                     <tbody>
                                         @foreach ($adjustments as $adj)
                                             <tr>
-                                                <td><code class="small">{{ $adj->voucher_no ?? '—' }}</code></td>
+                                                <td><code class="small">{{ $adj->voucher_no ?? 'ï¿½' }}</code></td>
                                                 <td class="text-muted small">
                                                     {{ $adj->transaction_date ? \Carbon\Carbon::parse($adj->transaction_date)->format('d M Y') : $adj->created_at->format('d M Y') }}
                                                 </td>
                                                 <td>
                                                     @if ($adj->adjustment_type === 'Plus')
-                                                    <span class="badge bg-success">+ Add</span>@else<span
-                                                            class="badge bg-danger">- Remove</span>
+                                                        <span
+                                                        class="badge bg-success">{{ __('messages.adj_add_badge') }}</span>@else<span
+                                                            class="badge bg-danger">{{ __('messages.adj_remove_badge') }}</span>
                                                     @endif
                                                 </td>
                                                 <td
@@ -695,7 +697,7 @@
                                                 </td>
                                                 <td class="text-muted small">
                                                     {{ $adj->user?->name ?? __('messages.system') }}</td>
-                                                <td class="text-muted small">{{ Str::limit($adj->notes ?? '—', 35) }}
+                                                <td class="text-muted small">{{ Str::limit($adj->notes ?? 'ï¿½', 35) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -729,12 +731,12 @@
                                             @php $ret = $item->purchaseReturn; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-info fw-semibold">{{ $ret?->return_no ?? '—' }}</code>
+                                                        class="small text-info fw-semibold">{{ $ret?->return_no ?? 'ï¿½' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : '—' }}
+                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : 'ï¿½' }}
                                                 </td>
-                                                <td class="small">{{ $ret?->purchase?->supplier?->name ?? '—' }}</td>
+                                                <td class="small">{{ $ret?->purchase?->supplier?->name ?? 'ï¿½' }}</td>
                                                 <td class="text-end fw-semibold">{{ number_format($item->quantity, 2) }}
                                                 </td>
                                                 <td class="text-end fw-bold text-info">
@@ -772,10 +774,10 @@
                                             @php $ret = $item->saleReturn; @endphp
                                             <tr>
                                                 <td><code
-                                                        class="small text-danger fw-semibold">{{ $ret?->return_no ?? '—' }}</code>
+                                                        class="small text-danger fw-semibold">{{ $ret?->return_no ?? 'ï¿½' }}</code>
                                                 </td>
                                                 <td class="text-muted small">
-                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : '—' }}
+                                                    {{ $ret?->return_date ? \Carbon\Carbon::parse($ret->return_date)->format('d M Y') : 'ï¿½' }}
                                                 </td>
                                                 <td class="small">
                                                     {{ $ret?->sale?->customer?->name ?? __('messages.prod_walk_in') }}
@@ -849,7 +851,7 @@
                             ],
                             [
                                 'label' => __('messages.unit_label'),
-                                'value' => ($product->unit_name ?? '—') . ' (' . ($product->unit_code ?? '—') . ')',
+                                'value' => ($product->unit_name ?? 'ï¿½') . ' (' . ($product->unit_code ?? 'ï¿½') . ')',
                                 'type' => 'text',
                             ],
                             [
@@ -880,7 +882,7 @@
                         ];
                     @endphp
                     @foreach ($infoRows as $row)
-                        @if ($row['value'] !== null && $row['value'] !== '' && $row['value'] !== '—')
+                        @if ($row['value'] !== null && $row['value'] !== '' && $row['value'] !== 'ï¿½')
                             <div class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom">
                                 <span class="text-muted small fw-semibold">{{ $row['label'] }}</span>
                                 <span class="fw-semibold small text-end">
@@ -971,9 +973,10 @@
                                     <i class="bx bx-slider text-warning fs-5"></i>
                                 </span>
                                 <div>
-                                    <h6 class="modal-title fw-bold mb-0" id="quickAdjustModalLabel">Quick Stock Adjustment
+                                    <h6 class="modal-title fw-bold mb-0" id="quickAdjustModalLabel">
+                                        {{ __('messages.quick_adj_modal_title') }}
                                     </h6>
-                                    <div class="text-muted small">{{ $product->name }} &bull; SKU:
+                                    <div class="text-muted small">{{ $product->name }} &bull; {{ __('messages.sku') }}:
                                         <code>{{ $product->code }}</code>
                                     </div>
                                 </div>
@@ -988,7 +991,7 @@
                                 style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
                                 <i class="bx bx-package text-primary fs-3"></i>
                                 <div>
-                                    <div class="small text-muted fw-semibold">Current Stock</div>
+                                    <div class="small text-muted fw-semibold">{{ __('messages.current_stock_lbl') }}</div>
                                     <div class="fw-bold fs-5 text-primary" id="qa_current_stock">
                                         {{ number_format($qty, 0) }} {{ $product->unit_code ?? 'PCS' }}
                                     </div>
@@ -1000,25 +1003,26 @@
 
                             {{-- Type (Plus / Minus) --}}
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Adjustment Type <span
+                                <label class="form-label fw-semibold">{{ __('messages.adj_type_label') }} <span
                                         class="text-danger">*</span></label>
                                 <div class="d-flex gap-2">
                                     <input type="radio" class="btn-check" name="items[0][type]" id="qa_type_plus"
                                         value="Plus" checked>
                                     <label class="btn btn-outline-success w-50 fw-semibold" for="qa_type_plus">
-                                        <i class="bx bx-plus-circle me-1"></i> Plus (+)
+                                        <i class="bx bx-plus-circle me-1"></i> {{ __('messages.plus_label') }}
                                     </label>
                                     <input type="radio" class="btn-check" name="items[0][type]" id="qa_type_minus"
                                         value="Minus">
                                     <label class="btn btn-outline-danger w-50 fw-semibold" for="qa_type_minus">
-                                        <i class="bx bx-minus-circle me-1"></i> Minus (-)
+                                        <i class="bx bx-minus-circle me-1"></i> {{ __('messages.minus_label') }}
                                     </label>
                                 </div>
                             </div>
 
                             {{-- Quantity --}}
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Quantity <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.quantity_label') }} <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <button class="btn btn-outline-secondary" type="button" id="qa_minus_btn">
                                         <i class="bx bx-minus"></i>
@@ -1037,7 +1041,7 @@
                                 style="background:rgba(40,199,111,.07);border:1px solid rgba(40,199,111,.2);">
                                 <i class="bx bx-trending-up text-success fs-4"></i>
                                 <div>
-                                    <div class="small text-muted fw-semibold">After Adjustment</div>
+                                    <div class="small text-muted fw-semibold">{{ __('messages.after_adjustment_lbl') }}</div>
                                     <div class="fw-bold fs-5 text-success" id="qa_after_stock">
                                         {{ number_format($qty + 1, 0) }} {{ $product->unit_code ?? 'PCS' }}
                                     </div>
@@ -1046,24 +1050,25 @@
 
                             {{-- Date --}}
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Date <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">{{ __('messages.date_label_short') }} <span
+                                        class="text-danger">*</span></label>
                                 <input type="date" class="form-control" name="transaction_date"
                                     value="{{ date('Y-m-d') }}" required>
                             </div>
 
                             {{-- Notes --}}
                             <div class="mb-0">
-                                <label class="form-label fw-semibold">Notes</label>
+                                <label class="form-label fw-semibold">{{ __('messages.notes_label') }}</label>
                                 <textarea class="form-control" name="notes" rows="2" placeholder="{{ __('messages.ph_adj_reason') }}"></textarea>
                             </div>
                         </div>
 
                         <div class="modal-footer border-top py-3">
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                <i class="bx bx-x me-1"></i> Cancel
+                                <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                             </button>
                             <button type="submit" class="btn btn-warning fw-semibold">
-                                <i class="bx bx-save me-1"></i> Save Adjustment
+                                <i class="bx bx-save me-1"></i> {{ __('messages.save_adjustment_btn') }}
                             </button>
                         </div>
                     </form>
@@ -1131,7 +1136,7 @@
                         }
                     });
                 @else
-                    // Single image — no navigation needed
+                    // Single image ï¿½ no navigation needed
                     const swiperMain = new Swiper('#productSwiperMain', {
                         spaceBetween: 0
                     });

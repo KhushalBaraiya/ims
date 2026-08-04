@@ -1,11 +1,11 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.product_gallery'))
 
 @push('styles')
     <style>
         /* ------------------------------------------------------------
-                                                                                                           PRODUCT GALLERY � BASE STYLES
-                                                                                                           ------------------------------------------------------------ */
+                                                                                                               PRODUCT GALLERY � BASE STYLES
+                                                                                                               ------------------------------------------------------------ */
 
         /* -- Card -- */
         .pg-card {
@@ -182,8 +182,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                           RESPONSIVE � LARGE TABLET  (768 � 991px)
-                                                                                                           ------------------------------------------------------------ */
+                                                                                                               RESPONSIVE � LARGE TABLET  (768 � 991px)
+                                                                                                               ------------------------------------------------------------ */
         @media (min-width: 768px) and (max-width: 991.98px) {
 
             /* Image shorter on tablet to save vertical space */
@@ -225,8 +225,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                           RESPONSIVE � SMALL  (576 � 767px)
-                                                                                                           ------------------------------------------------------------ */
+                                                                                                               RESPONSIVE � SMALL  (576 � 767px)
+                                                                                                               ------------------------------------------------------------ */
         @media (min-width: 576px) and (max-width: 767.98px) {
 
             /* Image height */
@@ -279,8 +279,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                           RESPONSIVE � MOBILE  (0 � 575px)
-                                                                                                           ------------------------------------------------------------ */
+                                                                                                               RESPONSIVE � MOBILE  (0 � 575px)
+                                                                                                               ------------------------------------------------------------ */
         @media (max-width: 575.98px) {
 
             /* -- Page header -- */
@@ -512,8 +512,8 @@
         }
 
         /* ------------------------------------------------------------
-                                                                                                           RESPONSIVE � EXTRA SMALL  (0 � 400px)
-                                                                                                           ------------------------------------------------------------ */
+                                                                                                               RESPONSIVE � EXTRA SMALL  (0 � 400px)
+                                                                                                               ------------------------------------------------------------ */
         @media (max-width: 400px) {
 
             /* Image thumb narrower on very small */
@@ -736,19 +736,19 @@
             <select class="form-select form-select-sm" style="width:auto;" data-no-select2
                 onchange="applyParam('sort',this.value)">
                 <option value="latest" {{ request('sort', 'latest') === 'latest' ? 'selected' : '' }}>
-                    {{ __('messages.updated') }} ?</option>
+                    {{ __('messages.sort_latest') }}</option>
                 <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>
-                    {{ __('messages.th_name') }} A�Z</option>
+                    {{ __('messages.sort_name_asc') }}</option>
                 <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>
-                    {{ __('messages.th_name') }} Z�A</option>
+                    {{ __('messages.sort_name_desc') }}</option>
                 <option value="price_asc" {{ request('sort') === 'price_asc' ? 'selected' : '' }}>
-                    {{ __('messages.prod_sell') }} ?</option>
+                    {{ __('messages.sort_price_asc') }}</option>
                 <option value="price_desc" {{ request('sort') === 'price_desc' ? 'selected' : '' }}>
-                    {{ __('messages.prod_sell') }} ?</option>
+                    {{ __('messages.sort_price_desc') }}</option>
                 <option value="stock_asc" {{ request('sort') === 'stock_asc' ? 'selected' : '' }}>
-                    {{ __('messages.th_stock') }} ?</option>
+                    {{ __('messages.sort_stock_asc') }}</option>
                 <option value="stock_desc" {{ request('sort') === 'stock_desc' ? 'selected' : '' }}>
-                    {{ __('messages.th_stock') }} ?</option>
+                    {{ __('messages.sort_stock_desc') }}</option>
             </select>
             <select class="form-select form-select-sm" style="width:auto;" data-no-select2
                 onchange="applyParam('per_page',this.value)">
@@ -911,7 +911,7 @@
                                 </div>
                                 @if ($product->tax_percentage)
                                     <span class="badge bg-label-warning" style="font-size:.55rem;padding:.18em .42em;">
-                                        GST {{ $product->tax_percentage }}%
+                                        {{ __('messages.gst_label') }} {{ $product->tax_percentage }}%
                                     </span>
                                 @endif
                             </div>

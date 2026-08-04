@@ -18,12 +18,12 @@
         <div class="d-flex gap-2">
             @can('sales.view')
                 <a class="btn btn-outline-success" href="{{ route('sales.print', $sale->id) }}" target="_blank">
-                    <i class="bx bx-printer me-1"></i> Print
+                    <i class="bx bx-printer me-1"></i> {{ __('messages.print') }}
                 </a>
             @endcan
             @can('sales.update')
                 <a class="btn btn-primary" href="{{ route('sales.edit', $sale->id) }}">
-                    <i class="bx bx-edit me-1"></i> Edit Invoice
+                    <i class="bx bx-edit me-1"></i> {{ __('messages.edit_invoice') }}
                 </a>
             @endcan
             <a class="btn btn-outline-secondary" href="{{ route('sales.index') }}">
@@ -77,7 +77,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-info-circle text-primary me-2"></i>Invoice Summary
+                        <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.invoice_summary') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -141,7 +141,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-credit-card text-success me-2"></i>Payment Details
+                        <i class="bx bx-credit-card text-success me-2"></i>{{ __('messages.payment_details') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -185,7 +185,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-transparent py-3 border-bottom">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-note text-warning me-2"></i>Notes
+                            <i class="bx bx-note text-warning me-2"></i>{{ __('messages.notes') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -198,13 +198,13 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-bolt-circle text-warning me-2"></i>Quick Actions
+                        <i class="bx bx-bolt-circle text-warning me-2"></i>{{ __('messages.quick_actions') }}
                     </h6>
                 </div>
                 <div class="card-body d-grid gap-2 p-4">
                     @can('sales.update')
                         <a class="btn btn-primary" href="{{ route('sales.edit', $sale->id) }}">
-                            <i class="bx bx-edit me-1"></i> Edit Invoice
+                            <i class="bx bx-edit me-1"></i> {{ __('messages.edit_invoice') }}
                         </a>
                         <button class="btn btn-outline-success btn-payment-modal"
                             data-action="{{ route('sales.update-payment', $sale->id) }}"
@@ -212,12 +212,12 @@
                             data-id="{{ $sale->id }}" data-invoice="{{ $sale->invoice_no }}"
                             data-paid-amount="{{ $sale->paid_amount }}" data-payment-method="{{ $sale->payment_method }}"
                             type="button">
-                            <i class="bx bx-credit-card me-1"></i> Update Payment
+                            <i class="bx bx-credit-card me-1"></i> {{ __('messages.update_payment') }}
                         </button>
                     @endcan
                     @can('sales.view')
                         <a class="btn btn-outline-success" href="{{ route('sales.print', $sale->id) }}" target="_blank">
-                            <i class="bx bx-printer me-1"></i> Print Invoice
+                            <i class="bx bx-printer me-1"></i> {{ __('messages.print_invoice') }}
                         </a>
                     @endcan
                     @if ($sale->status === 'Completed')
@@ -259,9 +259,10 @@
                 <div
                     class="card-header bg-transparent py-3 border-bottom d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-receipt text-primary me-2"></i>Invoice Items
+                        <i class="bx bx-receipt text-primary me-2"></i>{{ __('messages.invoice_items') }}
                     </h6>
-                    <span class="badge bg-label-primary">{{ $sale->items->count() }} product(s)</span>
+                    <span class="badge bg-label-primary">{{ $sale->items->count() }}
+                        {{ __('messages.product_s') }}</span>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -331,7 +332,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-user text-secondary me-2"></i>Invoice Meta
+                        <i class="bx bx-user text-secondary me-2"></i>{{ __('messages.invoice_meta') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -361,7 +362,7 @@
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-primary py-3 text-white">
                     <h5 class="modal-title fw-bold" id="paymentModalLabel">
-                        <i class="bx bx-credit-card me-2"></i>Manage Payment
+                        <i class="bx bx-credit-card me-2"></i>{{ __('messages.manage_payment') }}
                     </h5>
                     <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         type="button"></button>
@@ -413,10 +414,10 @@
                     </div>
                     <div class="modal-footer bg-light border-top p-3">
                         <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">
-                            <i class="bx bx-x me-1"></i> Close
+                            <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                         </button>
                         <button class="btn btn-primary" id="btnSavePayment" type="submit">
-                            <i class="bx bx-save me-1"></i> Update Payment
+                            <i class="bx bx-save me-1"></i> {{ __('messages.update_payment') }}
                         </button>
                     </div>
                 </form>
@@ -493,7 +494,8 @@
                 const btn = $('#btnSavePayment');
                 const orig = btn.html();
                 btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm me-1"></span> Saving...');
+                    '<span class="spinner-border spinner-border-sm me-1"></span> {{ __('messages.saving_lbl') }}'
+                    );
 
                 $.ajax({
                     url: form.attr('action'),

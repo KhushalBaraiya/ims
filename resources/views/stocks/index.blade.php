@@ -218,7 +218,8 @@
                                                 class="badge rounded-pill bg-success">{{ __('messages.in_stock') }}</span>
                                         @endif
                                     @else
-                                        <span class="badge rounded-pill bg-secondary bg-opacity-75">{{ __('messages.na_label') }}</span>
+                                        <span
+                                            class="badge rounded-pill bg-secondary bg-opacity-75">{{ __('messages.na_label') }}</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -226,7 +227,8 @@
                                         @can('stocks.create')
                                             <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="Adjust Stock" style="width:30px;height:30px;padding:0;">
+                                                title="{{ __('messages.prod_adjust_stock_btn') }}"
+                                                style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-slider" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
@@ -250,7 +252,7 @@
                     @if ($products->isNotEmpty())
                         <tfoot>
                             <tr class="table-light fw-bold">
-                                <td colspan="8" class="text-end">Total Inventory Value:</td>
+                                <td colspan="8" class="text-end">{{ __('messages.total_inventory_value') }}:</td>
                                 <td class="text-end text-success">{{ format_currency($totalInvValue) }}</td>
                                 <td colspan="2"></td>
                             </tr>
@@ -294,4 +296,3 @@
         });
     </script>
 @endpush
-

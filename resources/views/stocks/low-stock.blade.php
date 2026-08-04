@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Low Stock Alert')
+@section('title', __('messages.low_stock_alert'))
 
 @section('content')
 
     {{-- Page header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Low Stock Alert</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.low_stock_alert') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>

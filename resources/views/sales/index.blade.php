@@ -107,8 +107,9 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.invoice_no_label') }}</label>
-                            <input class="form-control form-control-sm" name="invoice_no" placeholder="{{ __('messages.ph_invoice_no_format') }}"
-                                type="text" value="{{ request('invoice_no') }}">
+                            <input class="form-control form-control-sm" name="invoice_no"
+                                placeholder="{{ __('messages.ph_invoice_no_format') }}" type="text"
+                                value="{{ request('invoice_no') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.customer') }}</label>
@@ -128,7 +129,7 @@
                                 @foreach (['Completed', 'Pending', 'Draft', 'Repair', 'Ordered'] as $statusOpt)
                                     <option {{ request('status') === $statusOpt ? 'selected' : '' }}
                                         value="{{ $statusOpt }}">
-                                        {{ $statusOpt }}
+                                        {{ __('messages.' . strtolower($statusOpt)) }}
                                     </option>
                                 @endforeach
                             </select>
@@ -138,10 +139,11 @@
                             <select class="form-select form-select-sm" name="payment_status">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option {{ request('payment_status') === 'Unpaid' ? 'selected' : '' }} value="Unpaid">
-                                    Unpaid</option>
+                                    {{ __('messages.unpaid') }}</option>
                                 <option {{ request('payment_status') === 'Partial' ? 'selected' : '' }} value="Partial">
-                                    Partial</option>
-                                <option {{ request('payment_status') === 'Paid' ? 'selected' : '' }} value="Paid">Paid
+                                    {{ __('messages.partial') }}</option>
+                                <option {{ request('payment_status') === 'Paid' ? 'selected' : '' }} value="Paid">
+                                    {{ __('messages.paid') }}
                                 </option>
                             </select>
                         </div>
@@ -264,7 +266,8 @@
                                                 data-invoice="{{ $sale->invoice_no }}"
                                                 data-paid-amount="{{ $sale->paid_amount }}"
                                                 data-payment-method="{{ $sale->payment_method }}"
-                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.set_update_payment') }}">
+                                                style="width:30px;height:30px;padding:0;"
+                                                title="{{ __('messages.set_update_payment') }}">
                                                 <i class="bx bx-credit-card" style="font-size:1rem;"></i>
                                             </button>
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
@@ -309,7 +312,8 @@
                             <i class="bx bx-credit-card text-white" style="font-size:1.3rem;"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="modal-title fw-bold mb-0" id="paymentModalLabel">Manage Payment</h5>
+                            <h5 class="modal-title fw-bold mb-0" id="paymentModalLabel">
+                                {{ __('messages.manage_payment') }}</h5>
                             <input class="bg-transparent border-0 text-white opacity-75 small p-0 w-100"
                                 id="modal_invoice_no" readonly style="outline:none;" type="text">
                         </div>
@@ -334,7 +338,7 @@
                                 <div class="rounded-3 p-3 text-center h-100"
                                     style="background:#f0f4ff;border:1.5px solid #d0d8ff;">
                                     <div class="text-muted small fw-semibold mb-1">
-                                        <i class="bx bx-receipt me-1"></i>Grand Total
+                                        <i class="bx bx-receipt me-1"></i>{{ __('messages.grand_total') }}
                                     </div>
                                     <div class="fw-bold text-primary" style="font-size:1.4rem;"
                                         id="modal_grand_total_text">
@@ -347,7 +351,7 @@
                                 <div class="rounded-3 p-3 text-center h-100 balance-due-card"
                                     style="background:#fff0f0;border:1.5px solid #ffd0d0;">
                                     <div class="small fw-semibold mb-1 text-danger">
-                                        <i class="bx bx-time-five me-1"></i>Balance Due
+                                        <i class="bx bx-time-five me-1"></i>{{ __('messages.balance_due') }}
                                     </div>
                                     <div class="fw-bold text-danger" style="font-size:1.4rem;"
                                         id="modal_balance_due_text">
@@ -376,12 +380,12 @@
                         {{-- Payment Method --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-uppercase text-muted">
-                                Payment Method <span class="text-danger">*</span>
+                                {{ __('messages.payment_method_lbl') }} <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required style="height:46px;">
-                                <option value="Cash">?? {{ __('messages.pm_cash') }}</option>
-                                <option value="Razorpay">? Razorpay (Online Payment)</option>
+                                <option value="Cash">ðŸ’µ {{ __('messages.pm_cash') }}</option>
+                                <option value="Razorpay">âš¡ {{ __('messages.razorpay_option') }}</option>
                             </select>
                         </div>
 
@@ -414,14 +418,14 @@
                     <div class="modal-footer border-top px-4 py-3 gap-2 bg-light" style="border-radius:0 0 16px 16px;">
                         <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal"
                             type="button">
-                            <i class="bx bx-x me-1"></i> Cancel
+                            <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                         </button>
                         <button class="btn btn-primary rounded-pill px-4 ms-auto" id="btnSavePayment" type="submit">
-                            <i class="bx bx-save me-1"></i> Update Payment
+                            <i class="bx bx-save me-1"></i> {{ __('messages.update_payment') }}
                         </button>
                         <button class="btn rounded-pill px-4 ms-auto d-none" id="btnModalPayRazorpay" type="button"
                             style="background:linear-gradient(135deg,#696cff,#9c3fe4);color:#fff;border:none;">
-                            <i class="bx bx-bolt-circle me-1"></i> Pay via Razorpay
+                            <i class="bx bx-bolt-circle me-1"></i> {{ __('messages.pay_via_razorpay') }}
                         </button>
                     </div>
                 </form>
@@ -653,7 +657,7 @@
                 }
                 const btn = $(this);
                 btn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm me-1"></span> Processing…');
+                    '<span class="spinner-border spinner-border-sm me-1"></span> Processingï¿½');
 
                 $.ajax({
                     url: "{{ route('razorpay.create-order') }}",
@@ -668,7 +672,7 @@
                             amount: res.amount,
                             currency: res.currency,
                             name: '{{ addslashes(config('app.name')) }}',
-                            description: 'Sale Payment — ' + $('#modal_invoice_no').val(),
+                            description: 'Sale Payment ï¿½ ' + $('#modal_invoice_no').val(),
                             order_id: res.order_id,
                             prefill: {
                                 name: '{{ addslashes(auth()->user()->name ?? '') }}',

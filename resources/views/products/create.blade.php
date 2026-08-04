@@ -94,8 +94,8 @@
                                     <input class="form-control @error('code') is-invalid @enderror" id="skuInput"
                                         name="code" placeholder="{{ __(`messages.ph_sku_code`) }}" required
                                         type="text" value="{{ old('code', $product->code ?? '') }}">
-                                    <button class="btn btn-outline-secondary" id="generateSkuBtn" title="Auto-generate SKU"
-                                        type="button">
+                                    <button class="btn btn-outline-secondary" id="generateSkuBtn"
+                                        title="{{ __('messages.auto_generate_sku') }}" type="button">
                                         <i class="bx bx-refresh"></i>
                                     </button>
                                     @error('code')
@@ -447,7 +447,7 @@
                                                 id="imageNoPreview">
                                                 <i class="bx bx-image d-block mb-1"
                                                     style="font-size:2rem;opacity:.35;"></i>
-                                                No Image
+                                                {{ __('messages.no_image') }}
                                             </span>
                                         </div>
                                         {{-- Buttons --}}
@@ -513,14 +513,15 @@
 
                                 <button class="btn btn-link text-danger d-none mt-2 px-0" id="clearAllGalleryBtn"
                                     type="button">
-                                    <i class="bx bx-trash me-1"></i> Clear All
+                                    <i class="bx bx-trash me-1"></i> {{ __('messages.prod_clear_all') }}
                                 </button>
                             </div>
 
                             {{-- Descriptions --}}
                             <div class="col-md-7">
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">Short Description</label>
+                                    <label
+                                        class="form-label fw-semibold">{{ __('messages.prod_short_desc_label') }}</label>
                                     <textarea class="form-control @error('short_description') is-invalid @enderror" name="short_description"
                                         placeholder="{{ __(`messages.ph_short_description`) }}" rows="3">{{ old('short_description', $product->short_description ?? '') }}</textarea>
                                     @error('short_description')
@@ -528,7 +529,8 @@
                                     @enderror
                                 </div>
                                 <div class="mb-0">
-                                    <label class="form-label fw-semibold">Full Description / Specifications</label>
+                                    <label
+                                        class="form-label fw-semibold">{{ __('messages.prod_full_desc_label') }}</label>
                                     <textarea class="form-control @error('full_description') is-invalid @enderror" name="full_description"
                                         placeholder="{{ __(`messages.ph_full_description`) }}" rows="8">{{ old('full_description', $product->full_description ?? '') }}</textarea>
                                     @error('full_description')
@@ -550,7 +552,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-transparent py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-send text-primary me-2"></i>Publish
+                            <i class="bx bx-send text-primary me-2"></i>{{ __('messages.publish') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">

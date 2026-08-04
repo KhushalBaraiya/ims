@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.brands'))
 
 @section('content')
@@ -305,8 +305,7 @@
                         }
                     },
                     error: () => {
-                        btn.prop('disabled', false).text(cur === 'active' ?
-                            '{{ __('messages.active') }}' :
+                        btn.prop('disabled', false).text(cur === 'active' ? '{{ __(' + [char]39 + 'messages.active' + [char]39 + ') }}' : '{{ __(' + [char]39 + 'messages.inactive' + [char]39 + ') }}') }}' :
                             '{{ __('messages.inactive') }}');
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }
@@ -368,7 +367,7 @@
                 if (!ids.length) return;
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
-                    text: `Delete ${ids.length} item(s)?`,
+                    text: `{{ __('messages.bulk_delete_items') }}`.replace(':count', ids.length),
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
