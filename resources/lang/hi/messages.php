@@ -1775,4 +1775,108 @@ return [
     'remarks_conditions'     => 'टिप्पणी / शर्तें',
     'secured_badge'          => 'सुरक्षित',
 
+    // ── Adjust stock button (alternate) ──────────────────────────────────
+    'adjust_stock_btn2'          => 'स्टॉक समायोजन',
+
+    // ── Auth lockout / error UI ────────────────────────────────────────────
+    'account_locked'             => 'खाता लॉक',
+    'lockout_too_many_attempts'  => 'बहुत अधिक गलत लॉगिन प्रयास। कृपया कुछ देर प्रतीक्षा करें।',
+    'try_again_in'               => 'फिर कोशिश करें',
+    'invalid_credentials_title'  => 'गलत जानकारी',
+    'login_failed_title'         => 'लॉगिन विफल',
+    'demo_credentials'           => 'डेमो परिचय',
+
+    // ── Auth page titles / subtitles ──────────────────────────────────────
+    'forgot_password_title'      => 'पासवर्ड भूल गए?',
+    'reset_password_page_title'  => 'पासवर्ड रीसेट',
+    'set_new_password_title'     => 'नया पासवर्ड सेट करें',
+    'password_reset_link_title'  => 'पासवर्ड रीसेट लिंक',
+    'password_reset_link_sub'    => 'नीचे के खाते के लिए पासवर्ड रीसेट करें',
+    'reset_my_password_btn'      => 'मेरा पासवर्ड रीसेट करें',
+    'copy_reset_link_label'      => 'रीसेट लिंक मैन्युअल कॉपी करें',
+    'sending_label'              => 'भेज रहे हैं...',
+    'resetting_label'            => 'रीसेट हो रहा है...',
+
+    // ── Password requirements ─────────────────────────────────────────────
+    'req_min_8'                  => 'कम से कम 8 अक्षर',
+    'req_uppercase'              => 'एक बड़ा अक्षर',
+    'req_lowercase'              => 'एक छोटा अक्षर',
+    'req_number'                 => 'एक संख्या',
+    'pw_strength_weak'           => 'कमज़ोर',
+    'pw_strength_fair'           => 'सामान्य',
+    'pw_strength_good'           => 'ठीक',
+    'pw_strength_strong'         => 'मज़बूत',
+    'pw_strength_great'          => 'उत्तम',
+    'pw_match'                   => 'पासवर्ड मेल खाते हैं',
+    'pw_no_match'                => 'पासवर्ड मेल नहीं खाते',
+
+    // ── Session timeout banner ────────────────────────────────────────────
+    'session_expiring_in'        => 'सत्र',
+    'session_seconds_suffix'     => 'सेकंड में समाप्त —',
+    'stay_logged_in'             => 'लॉगिन रहें',
+
+    // ── Change password page ──────────────────────────────────────────────
+    'update_account_password'    => 'अपना खाता पासवर्ड अपडेट करें',
+    'back_to_profile'            => 'प्रोफ़ाइल पर वापस',
+    'password_tips_title'        => 'पासवर्ड टिप्स:',
+    'password_tips_body'         => 'कम से कम 8 अक्षर, बड़े, छोटे अक्षर, संख्या और प्रतीक का मिश्रण करें।',
+    'passwords_do_not_match'     => 'पासवर्ड मेल नहीं खाते',
+
+    // ── Stock adjustment show ─────────────────────────────────────────────
+    'voucher_summary'            => 'वाउचर सारांश',
+    'review_adj_notes'           => 'मात्रा और समायोजन नोट्स की समीक्षा करें',
+
+    // ── Permissions create ────────────────────────────────────────────────
+    'module_actions_selection'   => '1. मॉड्यूल और क्रिया चयन',
+    'select_all_actions'         => 'सभी क्रियाएं चुनें',
+    'generated_permissions'      => 'उत्पन्न अनुमतियाँ:',
+    'select_actions_to_create'   => 'बनाने के लिए क्रियाएं चुनें',
+    'or_add_custom_action'       => 'या कस्टम क्रिया जोड़ें (वैकल्पिक)',
+    'custom_action_batch_hint'   => 'टाइप करने पर यह क्रिया batch में शामिल होगी।',
+    'assign_to_roles_title'      => '2. भूमिकाओं को सीधे असाइन करें',
+    'assign_to_roles_sub'        => 'निर्माण पर प्रत्येक भूमिका को कौन सी क्रियाएं असाइन हों',
+    'role_name_col'              => 'भूमिका नाम',
+    'publish_save_title'         => 'प्रकाशित और सहेजें',
+    'perm_instant_hint'          => 'बनाई गई अनुमतियाँ seeder चलाए बिना तुरंत भूमिकाओं को असाइन होंगी।',
+    'save_permissions_roles'     => 'अनुमतियाँ और भूमिकाएं सहेजें',
+    'super_admin_all_btn'        => 'Super Admin सभी',
+    'clear_all_btn'              => 'सभी साफ़',
+
+    // ── Reports / stock alert ─────────────────────────────────────────────
+    'stock_alert_report_title'   => 'स्टॉक चेतावनी रिपोर्ट',
+    'filter_alerts'              => 'चेतावनी फ़िल्टर',
+    'alert_type'                 => 'चेतावनी प्रकार',
+    'all_alerts'                 => 'सभी चेतावनी (कम + खत्म)',
+    'out_of_stock_only'          => 'केवल स्टॉक खत्म',
+    'low_stock_only'             => 'केवल कम स्टॉक',
+    'alert_products_title'       => 'चेतावनी उत्पाद',
+    'total_alerts'               => 'कुल चेतावनी',
+    'restock_value'              => 'री-स्टॉक मूल्य',
+    'current_qty'                => 'वर्तमान मात्रा',
+    'qty_needed'                 => 'आवश्यक मात्रा',
+    'total_restock_value'        => 'कुल री-स्टॉक मूल्य',
+    'restock_btn'                => 'री-स्टॉक',
+    'no_products_alert'          => 'कोई उत्पाद चेतावनी स्तर से नीचे नहीं है।',
+    'manage_stock_btn'           => 'स्टॉक प्रबंधन',
+    'export_csv'                 => 'CSV निर्यात',
+    'print_btn'                  => 'प्रिंट',
+
+    // ── Product category card ─────────────────────────────────────────────
+    'sell_label'                 => 'बेचें',
+    'cost_label'                 => 'लागत',
+    'profit_label'               => 'लाभ',
+
+    // ── JS inline strings ─────────────────────────────────────────────────
+    'same_as_base_currency'      => 'आधार मुद्रा समान',
+    'no_auto_match_currency'     => 'ऑटो-मैच नहीं मिला — मुद्रा मैन्युअल चुनें।',
+    'no_invoice_selected'        => 'इनवॉइस नहीं चुना',
+    'all_items_returned_js'      => 'सभी आइटम वापस',
+    'no_products_match_search'   => 'आपकी खोज से कोई उत्पाद नहीं मिला।',
+    'no_products_match_filter'   => 'फ़िल्टर से कोई उत्पाद नहीं',
+    'please_enter_test_email'    => 'कृपया टेस्ट ईमेल दर्ज करें।',
+    'sending_spinner'            => 'भेज रहे हैं...',
+    'out_of_stock_js'            => 'स्टॉक खत्म',
+    'view_label'                 => 'देखें',
+    'edit_label_btn'             => 'संपादित',
+
 ];

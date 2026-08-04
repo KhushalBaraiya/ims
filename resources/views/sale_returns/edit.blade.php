@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Edit Sales Return — ' . $saleReturn->return_no)
+@section('title', 'Edit Sales Return ï¿½ ' . $saleReturn->return_no)
 
 @section('content')
 
@@ -83,8 +83,9 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
-                            <input class="form-control" name="reference_no" placeholder="{{ __('messages.ph_optional_ref') }}"
-                                type="text" value="{{ old('reference_no', $saleReturn->reference_no) }}">
+                            <input class="form-control" name="reference_no"
+                                placeholder="{{ __('messages.ph_optional_ref') }}" type="text"
+                                value="{{ old('reference_no', $saleReturn->reference_no) }}">
                         </div>
 
                         <div class="mb-0">
@@ -252,8 +253,8 @@
                                 </h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}" rows="5"
-                                    style="resize:vertical;">{{ old('notes', $saleReturn->notes) }}</textarea>
+                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}"
+                                    rows="5" style="resize:vertical;">{{ old('notes', $saleReturn->notes) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -319,7 +320,9 @@
                 const max = parseInt($(this).attr('max')) || 0;
                 if (max > 0 && val > max) {
                     $(this).val(max);
-                    showAdminToast(`Max returnable: ${max} unit(s).`, 'error');
+                    showAdminToast(
+                        `{{ __('messages.max_returnable') }}: ${max} {{ __('messages.units_to_return') }}.`,
+                        'error');
                     val = max;
                 }
                 if (val < 0) $(this).val(0);

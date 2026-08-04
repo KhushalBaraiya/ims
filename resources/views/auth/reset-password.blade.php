@@ -1,14 +1,14 @@
 ﻿@extends('layouts.auth')
-@section('title', 'Reset Password')
+@section('title', __('messages.reset_password_page_title'))
 
 @section('content')
 
     <div class="brand-wrap">
         <div class="brand-icon"><i class="bx bx-bolt-circle"></i></div>
-        <span class="brand-name">Kalathiya POS</span>
+        <span class="brand-name">{{ config('app.name') }}</span>
     </div>
 
-    <div class="auth-title">Set New Password 🔑</div>
+    <div class="auth-title">{{ __('messages.set_new_password_title') }} 🔑</div>
     <div class="auth-subtitle">{{ __('messages.reset_password_desc') }}</div>
 
     {{-- Validation errors summary --}}
@@ -58,19 +58,20 @@
 
             {{-- Requirements checklist --}}
             <ul class="pw-reqs" id="pwReqs">
-                <li id="req-len"><i class="bx bx-circle"></i> At least 8 characters</li>
-                <li id="req-upper"><i class="bx bx-circle"></i> One uppercase letter</li>
-                <li id="req-lower"><i class="bx bx-circle"></i> One lowercase letter</li>
-                <li id="req-num"><i class="bx bx-circle"></i> One number</li>
+                <li id="req-len"><i class="bx bx-circle"></i> {{ __('messages.req_min_8') }}</li>
+                <li id="req-upper"><i class="bx bx-circle"></i> {{ __('messages.req_uppercase') }}</li>
+                <li id="req-lower"><i class="bx bx-circle"></i> {{ __('messages.req_lowercase') }}</li>
+                <li id="req-num"><i class="bx bx-circle"></i> {{ __('messages.req_number') }}</li>
             </ul>
         </div>
 
         {{-- Confirm password --}}
         <div class="mb-field">
-            <label class="form-label-dark" for="password_confirmation">Confirm New Password</label>
+            <label class="form-label-dark" for="password_confirmation">{{ __('messages.confirm_new_password') }}</label>
             <div class="pw-wrap">
-                <input type="password" id="password_confirmation" name="password_confirmation" placeholder="{{ __('messages.ph_password_dots') }}"
-                    autocomplete="new-password" required class="input-dark" oninput="checkMatch();" />
+                <input type="password" id="password_confirmation" name="password_confirmation"
+                    placeholder="{{ __('messages.ph_password_dots') }}" autocomplete="new-password" required
+                    class="input-dark" oninput="checkMatch();" />
                 <button type="button" class="pw-toggle" id="toggleConfirm" tabindex="-1">
                     <i class="bx bx-hide" id="confirmIcon"></i>
                 </button>
@@ -252,31 +253,31 @@
             var configs = [{
                     w: '20%',
                     bg: '#f87171',
-                    txt: 'Weak',
+                    txt: '{{ __('messages.pw_strength_weak') }}',
                     color: '#f87171'
                 },
                 {
                     w: '40%',
                     bg: '#fb923c',
-                    txt: 'Fair',
+                    txt: '{{ __('messages.pw_strength_fair') }}',
                     color: '#fb923c'
                 },
                 {
                     w: '60%',
                     bg: '#facc15',
-                    txt: 'Good',
+                    txt: '{{ __('messages.pw_strength_good') }}',
                     color: '#facc15'
                 },
                 {
                     w: '80%',
                     bg: '#4ade80',
-                    txt: 'Strong',
+                    txt: '{{ __('messages.pw_strength_strong') }}',
                     color: '#4ade80'
                 },
                 {
                     w: '100%',
                     bg: '#34d399',
-                    txt: 'Great',
+                    txt: '{{ __('messages.pw_strength_great') }}',
                     color: '#34d399'
                 },
             ];
@@ -301,10 +302,10 @@
 
             if (pw === conf) {
                 msg.className = 'match-msg ok';
-                msg.innerHTML = '<i class="bx bx-check-circle"></i> Passwords match';
+                msg.innerHTML = '<i class="bx bx-check-circle"></i> {{ __('messages.pw_match') }}';
             } else {
                 msg.className = 'match-msg bad';
-                msg.innerHTML = '<i class="bx bx-x-circle"></i> Passwords do not match';
+                msg.innerHTML = '<i class="bx bx-x-circle"></i> {{ __('messages.pw_no_match') }}';
             }
         }
 
@@ -318,7 +319,7 @@
                 var msg = document.getElementById('matchMsg');
                 msg.style.display = 'flex';
                 msg.className = 'match-msg bad';
-                msg.innerHTML = '<i class="bx bx-x-circle"></i> Passwords do not match';
+                msg.innerHTML = '<i class="bx bx-x-circle"></i> {{ __('messages.pw_no_match') }}';
                 document.getElementById('password_confirmation').focus();
                 return;
             }
@@ -329,7 +330,7 @@
             btn.disabled = true;
             btn.style.opacity = '.75';
             icon.className = 'bx bx-loader-alt bx-spin';
-            text.textContent = 'Resetting…';
+            text.textContent = '{{ __('messages.resetting_label') }}';
         });
     </script>
 

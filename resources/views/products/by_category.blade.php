@@ -400,12 +400,15 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">Stock</label>
+                            <label class="form-label fw-semibold small">{{ __('messages.stock_label') }}</label>
                             <select name="stock_filter" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_stock') }}</option>
-                                <option value="ok" {{ $stockFilter === 'ok' ? 'selected' : '' }}>In Stock</option>
-                                <option value="low" {{ $stockFilter === 'low' ? 'selected' : '' }}>Low Stock</option>
-                                <option value="out" {{ $stockFilter === 'out' ? 'selected' : '' }}>Out of Stock</option>
+                                <option value="ok" {{ $stockFilter === 'ok' ? 'selected' : '' }}>
+                                    {{ __('messages.in_stock') }}</option>
+                                <option value="low" {{ $stockFilter === 'low' ? 'selected' : '' }}>
+                                    {{ __('messages.low_stock') }}</option>
+                                <option value="out" {{ $stockFilter === 'out' ? 'selected' : '' }}>
+                                    {{ __('messages.out_of_stock') }}</option>
                             </select>
                         </div>
                     </div>
@@ -567,7 +570,7 @@
             });
         });
         /**
-         * Sub-category tab filter — show/hide product cards within a category section.
+         * Sub-category tab filter ï¿½ show/hide product cards within a category section.
          */
         function filterSubcat(catId, subcatId, btn) {
             // Update active button

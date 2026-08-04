@@ -1931,4 +1931,105 @@ return [
     'clear_all_btn'          => 'Clear All',
     'drop_images_here'       => 'Drop images here or',
 
+    // ── Auth lockout / error UI ────────────────────────────────────────────
+    'account_locked'             => 'Account Locked',
+    'lockout_too_many_attempts'  => 'Too many failed login attempts. Please wait before trying again.',
+    'try_again_in'               => 'Try again in',
+    'invalid_credentials_title'  => 'Invalid Credentials',
+    'login_failed_title'         => 'Login Failed',
+    'demo_credentials'           => 'Demo Credentials',
+
+    // ── Auth page titles / subtitles ──────────────────────────────────────
+    'forgot_password_title'      => 'Forgot Password?',
+    'reset_password_page_title'  => 'Reset Password',
+    'set_new_password_title'     => 'Set New Password',
+    'password_reset_link_title'  => 'Password Reset Link',
+    'password_reset_link_sub'    => 'Click the button below to reset your password for',
+    'reset_my_password_btn'      => 'Reset My Password Now',
+    'copy_reset_link_label'      => 'Copy reset link manually',
+    'sending_label'              => 'Sending…',
+    'resetting_label'            => 'Resetting…',
+
+    // ── Password requirements checklist ───────────────────────────────────
+    'req_min_8'                  => 'At least 8 characters',
+    'req_uppercase'              => 'One uppercase letter',
+    'req_lowercase'              => 'One lowercase letter',
+    'req_number'                 => 'One number',
+    'pw_strength_weak'           => 'Weak',
+    'pw_strength_fair'           => 'Fair',
+    'pw_strength_good'           => 'Good',
+    'pw_strength_strong'         => 'Strong',
+    'pw_strength_great'          => 'Great',
+    'pw_match'                   => 'Passwords match',
+    'pw_no_match'                => 'Passwords do not match',
+
+    // ── Session timeout banner ────────────────────────────────────────────
+    'session_expiring_in'        => 'Session expiring in',
+    'session_seconds_suffix'     => 's —',
+    'stay_logged_in'             => 'Stay Logged In',
+
+    // ── Change password page ──────────────────────────────────────────────
+    'update_account_password'    => 'Update your account password',
+    'back_to_profile'            => 'Back to Profile',
+    'password_tips_title'        => 'Password Tips:',
+    'password_tips_body'         => 'Use at least 8 characters with a mix of uppercase, lowercase, numbers and symbols.',
+    'passwords_do_not_match'     => 'Passwords do not match',
+
+    // ── Stock adjustment show ─────────────────────────────────────────────
+    'voucher_summary'            => 'Voucher Summary',
+    'review_adj_notes'           => 'Review quantities and adjustment notes',
+
+    // ── Permissions create ────────────────────────────────────────────────
+    'module_actions_selection'   => '1. Module & Actions Selection',
+    'select_all_actions'         => 'Select All Actions',
+    'generated_permissions'      => 'Generated Permissions:',
+    'select_actions_to_create'   => 'Select Actions to Create',
+    'or_add_custom_action'       => 'Or Add Custom Action (Optional)',
+    'custom_action_batch_hint'   => 'If typed, this custom action will be included in the batch.',
+    'assign_to_roles_title'      => '2. Assign to Roles Directly',
+    'assign_to_roles_sub'        => 'Select which actions are assigned to each role upon creation',
+    'role_name_col'              => 'Role Name',
+    'publish_save_title'         => 'Publish & Save',
+    'perm_instant_hint'          => 'Created permissions will be assigned to selected roles instantly without running seeders.',
+    'save_permissions_roles'     => 'Save Permissions & Roles',
+    'super_admin_all_btn'        => 'Super Admin All',
+    'clear_all_btn'              => 'Clear All',
+
+    // ── Reports / stock alert ─────────────────────────────────────────────
+    'stock_alert_report_title'   => 'Stock Alert Report',
+    'filter_alerts'              => 'Filter Alerts',
+    'alert_type'                 => 'Alert Type',
+    'all_alerts'                 => 'All Alerts (Low + Out)',
+    'out_of_stock_only'          => 'Out of Stock Only',
+    'low_stock_only'             => 'Low Stock Only',
+    'alert_products_title'       => 'Alert Products',
+    'total_alerts'               => 'Total Alerts',
+    'restock_value'              => 'Restock Value',
+    'current_qty'                => 'Current Qty',
+    'qty_needed'                 => 'Qty Needed',
+    'total_restock_value'        => 'Total Restock Value',
+    'restock_btn'                => 'Restock',
+    'no_products_alert'          => 'No products are below alert threshold.',
+    'manage_stock_btn'           => 'Manage Stock',
+    'export_csv'                 => 'Export CSV',
+    'print_btn'                  => 'Print',
+
+    // ── Product category card ─────────────────────────────────────────────
+    'sell_label'                 => 'Sell',
+    'cost_label'                 => 'Cost',
+    'profit_label'               => 'Profit',
+
+    // ── JS inline strings ─────────────────────────────────────────────────
+    'same_as_base_currency'      => 'Same as base currency',
+    'no_auto_match_currency'     => 'No auto-match found — please select currency manually.',
+    'no_invoice_selected'        => 'No invoice selected',
+    'all_items_returned_js'      => 'All items returned',
+    'no_products_match_search'   => 'No products match your search.',
+    'no_products_match_filter'   => 'No products match',
+    'please_enter_test_email'    => 'Please enter a test email address.',
+    'sending_spinner'            => 'Sending…',
+    'out_of_stock_js'            => 'Out of stock',
+    'view_label'                 => 'View',
+    'edit_label_btn'             => 'Edit',
+
 ];

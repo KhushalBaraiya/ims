@@ -6,7 +6,7 @@
     {{-- Brand --}}
     <div class="brand-wrap">
         <div class="brand-icon"><i class="bx bx-bolt-circle"></i></div>
-        <span class="brand-name">Kalathiya POS</span>
+        <span class="brand-name">{{ config('app.name') }}</span>
     </div>
 
     <div class="auth-title">{{ __('messages.welcome_back') }} 👋</div>
@@ -36,7 +36,8 @@
         <div class="mb-field">
             <label class="form-label-dark" for="email">{{ __('messages.email_address_label') }}</label>
             <input autocomplete="email" autofocus class="input-dark @error('email') is-invalid @enderror" id="email"
-                name="email" placeholder="{{ __('messages.ph_email_example') }}" required type="email" value="{{ old('email') }}" />
+                name="email" placeholder="{{ __('messages.ph_email_example') }}" required type="email"
+                value="{{ old('email') }}" />
             @error('email')
                 @php
                     $isLocked = str_starts_with($message, 'LOCKED:');
@@ -50,12 +51,12 @@
                             <i class="bx bx-lock"></i>
                         </div>
                         <div class="login-alert-body">
-                            <div class="login-alert-title">Account Locked</div>
+                            <div class="login-alert-title">{{ __('messages.account_locked') }}</div>
                             <div class="login-alert-msg">
-                                Too many failed login attempts. Please wait before trying again.
+                                {{ __('messages.lockout_too_many_attempts') }}
                             </div>
                             <div class="lock-countdown-wrap mt-2">
-                                <span class="lock-countdown-label">Try again in</span>
+                                <span class="lock-countdown-label">{{ __('messages.try_again_in') }}</span>
                                 <span class="lock-countdown-timer" id="lockCountdown">--:--</span>
                             </div>
                         </div>
@@ -107,7 +108,7 @@
                             <i class="bx bx-error"></i>
                         </div>
                         <div class="login-alert-body">
-                            <div class="login-alert-title">Invalid Credentials</div>
+                            <div class="login-alert-title">{{ __('messages.invalid_credentials_title') }}</div>
                             <div class="login-alert-msg">{{ $message }}</div>
                         </div>
                     </div>
@@ -118,7 +119,7 @@
                             <i class="bx bx-x-circle"></i>
                         </div>
                         <div class="login-alert-body">
-                            <div class="login-alert-title">Login Failed</div>
+                            <div class="login-alert-title">{{ __('messages.login_failed_title') }}</div>
                             <div class="login-alert-msg">{{ $message }}</div>
                         </div>
                     </div>
@@ -136,7 +137,8 @@
             </div>
             <div class="pw-wrap">
                 <input autocomplete="current-password" class="input-dark @error('password') is-invalid @enderror"
-                    id="password" name="password" placeholder="{{ __('messages.ph_password_dots') }}" required type="password" />
+                    id="password" name="password" placeholder="{{ __('messages.ph_password_dots') }}" required
+                    type="password" />
                 <button class="pw-toggle" id="togglePw" tabindex="-1" type="button">
                     <i class="bx bx-hide" id="pwIcon"></i>
                 </button>
@@ -163,7 +165,7 @@
 
     {{-- Demo Credentials --}}
     <div class="demo-credentials-wrap">
-        <div class="demo-title">Demo Credentials</div>
+        <div class="demo-title">{{ __('messages.demo_credentials') }}</div>
 
         <div class="demo-user-card">
             <div class="demo-user-info">

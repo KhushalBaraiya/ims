@@ -211,8 +211,8 @@
                     const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img';
                     const stockVal = parseFloat(p.stock) || 0;
                     const badge = p.out_of_stock ?
-                        `<span class="badge bg-danger-subtle text-danger" style="font-size:10px;">Out of stock</span>` :
-                        `<span class="badge bg-success-subtle text-success" style="font-size:10px;">${stockVal.toFixed(0)} ${p.unit || 'PCS'} in stock</span>`;
+                        `<span class="badge bg-danger-subtle text-danger" style="font-size:10px;">{{ __('messages.out_of_stock') }}</span>` :
+                        `<span class="badge bg-success-subtle text-success" style="font-size:10px;">${stockVal.toFixed(0)} ${p.unit || 'PCS'} {{ __('messages.in_stock') }}</span>`;
                     return $(`
                         <div class="d-flex align-items-center gap-3 py-1">
                             <img src="${img}" onerror="this.src='https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img'"
@@ -229,7 +229,7 @@
                     if (!p.id) return p.text || '{{ __('messages.type_product_sku_barcode') }}';
                     return $(
                         `<span><i class="bx bx-package me-1"></i>${p.name} <span class="text-muted small">(${p.sku})</span></span>`
-                        );
+                    );
                 }
             });
 

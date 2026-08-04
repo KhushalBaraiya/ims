@@ -210,15 +210,15 @@
                 templateResult: function(p) {
                     if (p.loading) {
                         return $(
-                        '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
+                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
                     }
                     if (!p.id) return p.text;
 
                     const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img';
                     const stockVal = parseFloat(p.stock) || 0;
                     const stockBadge = p.out_of_stock ?
-                        `<span class="badge bg-danger-subtle text-danger" style="font-size:10px;">Out of stock</span>` :
-                        `<span class="badge bg-success-subtle text-success" style="font-size:10px;">${stockVal.toFixed(0)} ${p.unit || 'PCS'} in stock</span>`;
+                        `<span class="badge bg-danger-subtle text-danger" style="font-size:10px;">{{ __('messages.out_of_stock') }}</span>` :
+                        `<span class="badge bg-success-subtle text-success" style="font-size:10px;">${stockVal.toFixed(0)} ${p.unit || 'PCS'} {{ __('messages.in_stock') }}</span>`;
 
                     return $(`
                         <div class="d-flex align-items-center gap-3 py-1">

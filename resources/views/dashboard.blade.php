@@ -742,14 +742,14 @@
                 data: {
                     labels,
                     datasets: [{
-                            label: 'Sales',
+                            label: '{{ __('messages.menu_sales') }}',
                             data: salesD,
                             backgroundColor: 'rgba(105,108,255,.78)',
                             borderRadius: 6,
                             borderSkipped: false
                         },
                         {
-                            label: 'Purchases',
+                            label: '{{ __('messages.menu_purchases') }}',
                             data: purchD,
                             backgroundColor: 'rgba(3,195,236,.7)',
                             borderRadius: 6,

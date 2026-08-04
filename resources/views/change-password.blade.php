@@ -15,7 +15,7 @@
             </nav>
         </div>
         <a href="{{ route('profile.show') }}" class="btn btn-outline-secondary">
-            <i class="bx bx-arrow-back me-1"></i> Back to Profile
+            <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back_to_profile') }}
         </a>
     </div>
 
@@ -41,7 +41,7 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-0 text-white">{{ __('messages.change_password') }}</h5>
-                            <p class="mb-0 small" style="opacity:.75;">Update your account password</p>
+                            <p class="mb-0 small" style="opacity:.75;">{{ __('messages.update_account_password') }}</p>
                         </div>
                     </div>
                 </div>
@@ -53,8 +53,8 @@
                         <div class="d-flex align-items-start gap-2">
                             <i class="bx bx-shield-check text-primary mt-1" style="font-size:1.1rem;flex-shrink:0;"></i>
                             <div class="small text-muted">
-                                <strong class="text-primary">Password Tips:</strong>
-                                Use at least 8 characters with a mix of uppercase, lowercase, numbers and symbols.
+                                <strong class="text-primary">{{ __('messages.password_tips_title') }}</strong>
+                                {{ __('messages.password_tips_body') }}
                             </div>
                         </div>
                     </div>
@@ -119,10 +119,11 @@
                                     <i class="bx bx-check-shield text-muted"></i>
                                 </span>
                                 <input type="password" name="password_confirmation" id="confirmPassword"
-                                    class="form-control border-start-0" placeholder="{{ __('messages.ph_confirm_new_password') }}" required>
+                                    class="form-control border-start-0"
+                                    placeholder="{{ __('messages.ph_confirm_new_password') }}" required>
                             </div>
                             <small class="d-none text-danger mt-1" id="matchWarning">
-                                <i class="bx bx-x-circle me-1"></i>Passwords do not match
+                                <i class="bx bx-x-circle me-1"></i>{{ __('messages.passwords_do_not_match') }}
                             </small>
                         </div>
 
@@ -163,22 +164,22 @@
                 {
                     w: '25%',
                     bg: '#ef4444',
-                    text: 'Weak'
+                    text: '{{ __('messages.pw_strength_weak') }}'
                 },
                 {
                     w: '50%',
                     bg: '#f97316',
-                    text: 'Fair'
+                    text: '{{ __('messages.pw_strength_fair') }}'
                 },
                 {
                     w: '75%',
                     bg: '#eab308',
-                    text: 'Good'
+                    text: '{{ __('messages.pw_strength_good') }}'
                 },
                 {
                     w: '100%',
                     bg: '#22c55e',
-                    text: 'Strong'
+                    text: '{{ __('messages.pw_strength_strong') }}'
                 },
             ];
             bar.style.width = levels[strength].w;

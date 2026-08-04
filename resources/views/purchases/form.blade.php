@@ -85,7 +85,8 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.purchase_no_label') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.purchase_no_label') }} <span
+                            class="text-danger">*</span></label>
                     <div class="input-group">
                         <input {{ $isReturned ? 'disabled' : '' }} {{ isset($purchase) ? 'readonly' : '' }}
                             class="form-control fw-bold @error('purchase_no') is-invalid @enderror" id="purchase_no"
@@ -102,7 +103,8 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.purchase_date_field') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.purchase_date_field') }} <span
+                            class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control flatpickr-date @error('purchase_date') is-invalid @enderror"
                         name="purchase_date" required type="date"
@@ -112,7 +114,8 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.supplier_field') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.supplier_field') }} <span
+                            class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('supplier_id') is-invalid @enderror" id="supplierSelect"
                         name="supplier_id" required>
@@ -182,7 +185,8 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.payment_method_field') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.payment_method_field') }} <span
+                            class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
@@ -227,7 +231,8 @@
                                 style="width:30px;height:30px;background:linear-gradient(135deg,#696cff,#9c3fe4);">
                                 <i class="bx bx-lock-alt text-white" style="font-size:.9rem;"></i>
                             </span>
-                            <strong style="color:#4f46e5;font-size:.85rem;">{{ __('messages.secure_razorpay') }}</strong>
+                            <strong
+                                style="color:#4f46e5;font-size:.85rem;">{{ __('messages.secure_razorpay') }}</strong>
                         </div>
                         <p class="mb-0 text-muted" style="font-size:.8rem;line-height:1.5;">
                             Click <strong style="color:#696cff;">"Pay via Razorpay"</strong> below to open the
@@ -235,13 +240,16 @@
                         </p>
                         <div class="d-flex align-items-center gap-3 mt-2 pt-2" style="border-top:1px dashed #c7d2fe;">
                             <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
-                                <i class="bx bx-shield-check" style="color:#696cff;"></i> {{ __('messages.ssl_badge') }}
+                                <i class="bx bx-shield-check" style="color:#696cff;"></i>
+                                {{ __('messages.ssl_badge') }}
                             </span>
                             <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
-                                <i class="bx bx-check-circle" style="color:#696cff;"></i> {{ __('messages.pci_badge') }}
+                                <i class="bx bx-check-circle" style="color:#696cff;"></i>
+                                {{ __('messages.pci_badge') }}
                             </span>
                             <span class="d-flex align-items-center gap-1" style="font-size:.75rem;color:#6c757d;">
-                                <i class="bx bx-credit-card" style="color:#696cff;"></i> {{ __('messages.cards_upi_badge') }}
+                                <i class="bx bx-credit-card" style="color:#696cff;"></i>
+                                {{ __('messages.cards_upi_badge') }}
                             </span>
                         </div>
                     </div>
@@ -377,7 +385,8 @@
                             <div class="col-6">
                                 <div
                                     class="bg-success border-success rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
-                                    <div class="text-success small fw-semibold">{{ __('messages.overpaid_lbl') }}</div>
+                                    <div class="text-success small fw-semibold">{{ __('messages.overpaid_lbl') }}
+                                    </div>
                                     <div class="text-success fw-bold" id="sum_change">
                                         {{ optional(current_currency())->symbol ?? '₹' }}0.00</div>
                                 </div>
@@ -500,7 +509,7 @@
                 if (newRate !== 1) {
                     $('#supplierCurrencyNote').text('1 ' + defaultCode + ' = ' + newRate.toFixed(4) + ' ' + code);
                 } else {
-                    $('#supplierCurrencyNote').text('Same as base currency');
+                    $('#supplierCurrencyNote').text('{{ __('messages.same_as_base_currency') }}');
                 }
                 $('#supplierCurrencyBadge').show();
             }
@@ -619,7 +628,8 @@
                             sku: "{{ $item->product->code ?? '' }}",
                             purchase_price: parseFloat("{{ $item->purchase_price }}"),
                             tax: parseFloat(
-                                "{{ $item->quantity > 0 ? $item->tax_amount / $item->quantity : 0 }}"),
+                                "{{ $item->quantity > 0 ? $item->tax_amount / $item->quantity : 0 }}"
+                            ),
                             discount: parseFloat(
                                 "{{ $item->quantity > 0 ? $item->discount_amount / $item->quantity : 0 }}"
                             ),
@@ -679,8 +689,8 @@
                     const sym = p.currency_symbol || currencySymbol;
                     const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Image';
                     const stockBadge = parseFloat(p.stock) > 0 ?
-                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).toFixed(0)} in stock</span>` :
-                        `<span class="badge bg-danger-subtle text-danger">Out of stock</span>`;
+                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).toFixed(0)} {{ __('messages.in_stock') }}</span>` :
+                        `<span class="badge bg-danger-subtle text-danger">{{ __('messages.out_of_stock') }}</span>`;
                     return $(`
                         <div class="d-flex align-items-center gap-3 py-1">
                             <img src="${img}" onerror="this.src='https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img'"
@@ -796,10 +806,10 @@
                     <td class="text-end fw-bold pur-subtotal-cell subtotal-cell">${fmtCurrency(0)}</td>
                     <td class="text-center">
                         ${isReturned ? '' : `
-                                                                                                                                                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
-                                                                                                                                                                                    style="width:28px;height:28px;padding:0;">
-                                                                                                                                                                                <i class="bx bx-trash" style="font-size:13px;"></i>
-                                                                                                                                                                            </button>`}
+                                                                                                                                                                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-circle remove-row-btn"
+                                                                                                                                                                                            style="width:28px;height:28px;padding:0;">
+                                                                                                                                                                                        <i class="bx bx-trash" style="font-size:13px;"></i>
+                                                                                                                                                                                    </button>`}
                     </td>
                 </tr>`);
                 rowCount++;

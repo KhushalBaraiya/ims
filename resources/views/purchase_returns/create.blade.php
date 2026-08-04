@@ -25,7 +25,7 @@
         @csrf
 
         <style>
-            /* Scoped compact styles — purchase return product table */
+            /* Scoped compact styles ï¿½ purchase return product table */
             #returnItemsTable th,
             #returnItemsTable td {
                 padding: 8px 14px !important;
@@ -118,8 +118,9 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
-                            <input class="form-control" name="reference_no" placeholder="{{ __('messages.ph_optional_ref') }}"
-                                type="text" value="{{ old('reference_no') }}">
+                            <input class="form-control" name="reference_no"
+                                placeholder="{{ __('messages.ph_optional_ref') }}" type="text"
+                                value="{{ old('reference_no') }}">
                         </div>
 
                         <div class="mb-0">
@@ -195,13 +196,13 @@
                                         <th>{{ __('messages.product') }}</th>
                                         <th class="text-center">Unit Price</th>
                                         @if (isset($selectedPurchase))
-                                            <th class="text-center">Purchased Qty</th>
-                                            <th class="text-center">Already Ret.</th>
-                                            <th class="text-center">Max Returnable</th>
+                                            <th class="text-center">{{ __('messages.purchased_qty') }}</th>
+                                            <th class="text-center">{{ __('messages.already_returned') }}</th>
+                                            <th class="text-center">{{ __('messages.max_returnable') }}</th>
                                         @else
-                                            <th class="text-center">In Stock</th>
+                                            <th class="text-center">{{ __('messages.in_stock') }}</th>
                                         @endif
-                                        <th class="text-center" style="width:110px;">Return Qty</th>
+                                        <th class="text-center" style="width:110px;">{{ __('messages.return_qty') }}</th>
                                         <th>{{ __('messages.reason') }}</th>
                                         <th class="text-end">{{ __('messages.subtotal') }}</th>
                                         <th style="width:40px;"></th>
@@ -582,7 +583,7 @@
                     var max = parseInt(maxCell.data('max'));
                     if (val > max) {
                         $(this).val(max);
-                        showAdminToast('Max returnable: ' + max, 'error');
+                        showAdminToast('{{ __('messages.max_returnable') }}: ' + max, 'error');
                         val = max;
                     }
                 }

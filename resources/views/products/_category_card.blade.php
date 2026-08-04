@@ -9,7 +9,7 @@
 
     $sCls = $isOut ? 'text-danger' : ($isLow ? 'text-warning' : 'text-success');
     $sBadge = $isOut ? 'bg-danger' : ($isLow ? 'bg-warning text-dark' : 'bg-success');
-    $sLabel = $isOut ? 'Out of Stock' : ($isLow ? 'Low Stock' : 'In Stock');
+    $sLabel = $isOut ? __('messages.out_of_stock') : ($isLow ? __('messages.low_stock') : __('messages.in_stock'));
 @endphp
 
 <div class="col pc-item" data-subcat="{{ $product->sub_category_id ?? '' }}">
@@ -36,7 +36,7 @@
             {{-- Inactive badge top-right --}}
             @if ($inactive)
                 <div class="pc-tr">
-                    <span class="badge bg-secondary" style="font-size:.58rem;">Inactive</span>
+                    <span class="badge bg-secondary" style="font-size:.58rem;">{{ __('messages.inactive') }}</span>
                 </div>
             @endif
         </div>
@@ -72,7 +72,7 @@
                     <div>
                         <div
                             style="font-size:.57rem;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.05em;line-height:1.2;">
-                            Sell
+                            {{ __('messages.sell_label') }}
                         </div>
                         <div class="fw-bold text-primary lh-1" style="font-size:.92rem;">
                             {{ format_currency($product->selling_price) }}
@@ -81,7 +81,7 @@
                     <div class="text-end">
                         <div
                             style="font-size:.57rem;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:.05em;line-height:1.2;">
-                            Cost
+                            {{ __('messages.cost_label') }}
                         </div>
                         <div class="text-muted fw-semibold lh-1" style="font-size:.73rem;">
                             {{ format_currency($product->purchase_price) }}
@@ -90,7 +90,7 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center mt-1 pt-1"
                     style="border-top:1px solid rgba(0,0,0,.07);">
-                    <span style="font-size:.57rem;color:#bbb;font-weight:600;">Profit</span>
+                    <span style="font-size:.57rem;color:#bbb;font-weight:600;">{{ __('messages.profit_label') }}</span>
                     <span class="fw-bold {{ $pct >= 0 ? 'text-success' : 'text-danger' }}" style="font-size:.67rem;">
                         {{ format_currency($profit) }}
                         <span class="badge {{ $pct >= 0 ? 'bg-success' : 'bg-danger' }}"
@@ -134,4 +134,3 @@
         </div>
     </div>
 </div>
-

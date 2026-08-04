@@ -60,7 +60,7 @@
                                 @foreach ($sales as $s)
                                     <option {{ old('sale_id', request('sale_id')) == $s->id ? 'selected' : '' }}
                                         value="{{ $s->id }}">
-                                        {{ $s->invoice_no }} — {{ $s->customer->name }}
+                                        {{ $s->invoice_no }} ï¿½ {{ $s->customer->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -71,7 +71,7 @@
 
                         <div class="alert alert-light d-none mb-3 border px-3 py-2" id="customerInfoBox">
                             <div class="small fw-semibold text-muted">{{ __('messages.customer_label') }}</div>
-                            <div class="fw-bold" id="customerInfoName">—</div>
+                            <div class="fw-bold" id="customerInfoName">ï¿½</div>
                         </div>
 
                         <div class="mb-3">
@@ -86,8 +86,9 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold">{{ __('messages.reference_no') }}</label>
-                            <input class="form-control" name="reference_no" placeholder="{{ __('messages.ph_optional_ref') }}"
-                                type="text" value="{{ old('reference_no') }}">
+                            <input class="form-control" name="reference_no"
+                                placeholder="{{ __('messages.ph_optional_ref') }}" type="text"
+                                value="{{ old('reference_no') }}">
                         </div>
 
                         <div class="mb-0">
@@ -183,7 +184,7 @@
                         <div class="text-muted d-none flex-column align-items-center justify-content-center py-4 text-center"
                             id="noFilterResultsMsg">
                             <i class="bx bx-search-alt d-block mb-2" style="font-size:2rem;opacity:.3;"></i>
-                            <p class="small mb-0">No products match your search.</p>
+                            <p class="small mb-0">{{ __('messages.no_products_match_search') }}</p>
                         </div>
 
                         {{-- States --}}
@@ -220,8 +221,8 @@
                                 </h6>
                             </div>
                             <div class="card-body p-3">
-                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}" rows="5"
-                                    style="resize:vertical;">{{ old('notes') }}</textarea>
+                                <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}"
+                                    rows="5" style="resize:vertical;">{{ old('notes') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -320,8 +321,9 @@
                     showState('noInvoice');
                     itemsContainer.empty();
                     submitBtn.attr('disabled', true);
-                    itemCountBadge.text('No invoice selected').removeClass('bg-label-primary').addClass(
-                        'bg-label-secondary');
+                    itemCountBadge.text('{{ __('messages.no_invoice_selected') }}').removeClass('bg-label-primary')
+                        .addClass(
+                            'bg-label-secondary');
                     $('#customerInfoBox').addClass('d-none');
                     $('#productFilterWrapper').addClass('d-none');
                     calcTotals();
@@ -342,7 +344,7 @@
                         }
 
                         // Show customer info
-                        $('#customerInfoName').text(response.customer_name || '—');
+                        $('#customerInfoName').text(response.customer_name || 'ï¿½');
                         $('#customerInfoBox').removeClass('d-none');
 
                         let rowCount = 0,
@@ -403,8 +405,9 @@
                         if (returnableCount === 0) {
                             showState('empty');
                             submitBtn.attr('disabled', true);
-                            itemCountBadge.text('All items returned').removeClass(
-                                'bg-label-secondary bg-label-primary').addClass('bg-label-success');
+                            itemCountBadge.text('{{ __('messages.all_items_returned_js') }}')
+                                .removeClass(
+                                    'bg-label-secondary bg-label-primary').addClass('bg-label-success');
                             $('#productFilterWrapper').addClass('d-none');
                         } else {
                             showState('table');
@@ -489,7 +492,7 @@
                 if (remaining === 0) {
                     showState('empty');
                     submitBtn.attr('disabled', true);
-                    itemCountBadge.text('All items returned').removeClass(
+                    itemCountBadge.text('{{ __('messages.all_items_returned_js') }}').removeClass(
                         'bg-label-secondary bg-label-primary').addClass('bg-label-success');
                     $('#productFilterWrapper').addClass('d-none');
                 } else {
@@ -505,7 +508,9 @@
                 const max = parseInt($(this).attr('max')) || 0;
                 if (max > 0 && val > max) {
                     $(this).val(max);
-                    showAdminToast(`Max returnable: ${max} unit(s).`, 'error');
+                    showAdminToast(
+                        `{{ __('messages.max_returnable') }}: ${max} {{ __('messages.units_to_return') }}.`,
+                        'error');
                     val = max;
                 }
                 if (val < 0) {

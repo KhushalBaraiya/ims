@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Stock Alert Report')
+@section('title', __('messages.stock_alert_report_title'))
 
 @section('content')
 
@@ -9,26 +9,27 @@
             <h4 class="fw-bold mb-1">{{ __('messages.stock_alert_menu') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('reports.index') }}">Reports</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('reports.index') }}">{{ __('messages.all_reports') }}</a>
+                    </li>
                     <li class="breadcrumb-item active">{{ __('messages.stock_alert_menu') }}</li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('reports.stock-alert.export', request()->query()) }}" class="btn btn-outline-success btn-sm">
-                <i class="bx bx-download me-1"></i> Export CSV
+                <i class="bx bx-download me-1"></i> {{ __('messages.export_csv') }}
             </a>
             <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-printer me-1"></i> Print
+                <i class="bx bx-printer me-1"></i> {{ __('messages.print_btn') }}
             </button>
             @can('stocks.create')
                 <a href="{{ route('stocks.adjust') }}" class="btn btn-outline-primary btn-sm">
-                    <i class="bx bx-store-alt me-1"></i> Manage Stock
+                    <i class="bx bx-store-alt me-1"></i> {{ __('messages.manage_stock_btn') }}
                 </a>
             @endcan
             <a href="{{ route('reports.index') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bx bx-arrow-back me-1"></i> All Reports
+                <i class="bx bx-arrow-back me-1"></i> {{ __('messages.all_reports') }}
             </a>
         </div>
     </div>
@@ -92,7 +93,8 @@
     {{-- Filters --}}
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-danger"></i>Filter Alerts</h6>
+            <h6 class="mb-0 fw-semibold"><i
+                    class="bx bx-filter-alt me-2 text-danger"></i>{{ __('messages.filter_alerts') }}</h6>
         </div>
         <div class="card-body p-4">
             <form method="GET">
@@ -100,9 +102,12 @@
                     <div class="col-md-3">
                         <label class="form-label fw-semibold small">{{ __('messages.alert_type') }}</label>
                         <select name="filter" class="form-select form-select-sm">
-                            <option value="all" {{ $filter === 'all' ? 'selected' : '' }}>All Alerts (Low + Out)</option>
-                            <option value="out" {{ $filter === 'out' ? 'selected' : '' }}>Out of Stock Only</option>
-                            <option value="low" {{ $filter === 'low' ? 'selected' : '' }}>Low Stock Only</option>
+                            <option value="all" {{ $filter === 'all' ? 'selected' : '' }}>
+                                {{ __('messages.all_alerts') }}</option>
+                            <option value="out" {{ $filter === 'out' ? 'selected' : '' }}>
+                                {{ __('messages.out_of_stock_only') }}</option>
+                            <option value="low" {{ $filter === 'low' ? 'selected' : '' }}>
+                                {{ __('messages.low_stock_only') }}</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -143,17 +148,17 @@
     <div class="card shadow-sm">
         <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
             <h6 class="mb-0 fw-semibold">
-                <i class="bx bx-error me-2 text-danger"></i>Alert Products
+                <i class="bx bx-error me-2 text-danger"></i>{{ __('messages.alert_products_title') }}
                 <span class="badge bg-danger ms-1">{{ $summary['total'] }}</span>
             </h6>
             <div class="d-flex gap-2">
                 @if ($summary['out_of_stock'] > 0)
                     <span class="badge bg-label-danger"><i class="bx bx-x-circle me-1"></i>{{ $summary['out_of_stock'] }}
-                        Out of Stock</span>
+                        {{ __('messages.out_of_stock') }}</span>
                 @endif
                 @if ($summary['low_stock'] > 0)
                     <span class="badge bg-label-warning"><i class="bx bx-error-circle me-1"></i>{{ $summary['low_stock'] }}
-                        Low Stock</span>
+                        {{ __('messages.low_stock') }}</span>
                 @endif
             </div>
         </div>
@@ -202,11 +207,11 @@
                                     <td class="text-center">
                                         @if ($p->stock_status === 'out')
                                             <span class="badge bg-danger rounded-pill">
-                                                <i class="bx bx-x-circle me-1"></i>Out of Stock
+                                                <i class="bx bx-x-circle me-1"></i>{{ __('messages.out_of_stock') }}
                                             </span>
                                         @else
                                             <span class="badge bg-warning text-dark rounded-pill">
-                                                <i class="bx bx-error-circle me-1"></i>Low Stock
+                                                <i class="bx bx-error-circle me-1"></i>{{ __('messages.low_stock') }}
                                             </span>
                                         @endif
                                     </td>
@@ -228,7 +233,7 @@
                                             <a href="{{ route('stocks.adjust') }}"
                                                 class="btn btn-sm btn-outline-primary rounded-pill py-0 px-2"
                                                 style="font-size:.7rem;">
-                                                <i class="bx bx-plus-medical me-1"></i>Restock
+                                                <i class="bx bx-plus-medical me-1"></i>{{ __('messages.restock_btn') }}
                                             </a>
                                         @endcan
                                     </td>
@@ -308,7 +313,3 @@
         }
     </style>
 @endpush
-
-
-
-

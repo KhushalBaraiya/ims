@@ -64,7 +64,8 @@
         <div class="col-lg-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-transparent py-3 border-bottom">
-                    <h6 class="fw-semibold mb-0"><i class="bx bx-info-circle text-primary me-2"></i>Voucher Summary</h6>
+                    <h6 class="fw-semibold mb-0"><i
+                            class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.voucher_summary') }}</h6>
                 </div>
                 <div class="card-body p-4">
                     <ul class="list-unstyled mb-0">
@@ -115,7 +116,7 @@
                     <div>
                         <h6 class="fw-semibold mb-0"><i
                                 class="bx bx-list-ul text-primary me-2"></i>{{ __('messages.adjusted_products') }}</h6>
-                        <small class="text-muted">Review quantities and adjustment notes</small>
+                        <small class="text-muted">{{ __('messages.review_adj_notes') }}</small>
                     </div>
                     <span class="badge bg-label-primary">{{ $adjustments->count() }}</span>
                 </div>

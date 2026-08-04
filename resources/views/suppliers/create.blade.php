@@ -95,7 +95,8 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">{{ __('messages.gst_number') }}</label>
                                 <input class="form-control @error('gst_number') is-invalid @enderror" name="gst_number"
-                                    placeholder="{{ __('messages.ph_gst_number') }}" type="text" value="{{ old('gst_number') }}">
+                                    placeholder="{{ __('messages.ph_gst_number') }}" type="text"
+                                    value="{{ old('gst_number') }}">
                                 @error('gst_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -103,7 +104,8 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">{{ __('messages.pan_number') }}</label>
                                 <input class="form-control @error('pan_number') is-invalid @enderror" name="pan_number"
-                                    placeholder="{{ __('messages.ph_pan_number') }}" type="text" value="{{ old('pan_number') }}">
+                                    placeholder="{{ __('messages.ph_pan_number') }}" type="text"
+                                    value="{{ old('pan_number') }}">
                                 @error('pan_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -384,7 +386,7 @@
             }
 
             if (!matchedCode) {
-                note.textContent = 'No auto-match found — please select currency manually.';
+                note.textContent = '{{ __('messages.no_auto_match_currency') }}';
                 note.className = 'form-text text-warning';
                 return;
             }

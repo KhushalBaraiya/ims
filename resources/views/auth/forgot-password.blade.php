@@ -1,14 +1,14 @@
 @extends('layouts.auth')
-@section('title', 'Forgot Password')
+@section('title', __('messages.forgot_password'))
 
 @section('content')
 
     <div class="brand-wrap">
         <div class="brand-icon"><i class="bx bx-bolt-circle"></i></div>
-        <span class="brand-name">Kalathiya POS</span>
+        <span class="brand-name">{{ config('app.name') }}</span>
     </div>
 
-    <div class="auth-title">Forgot Password? 🔒</div>
+    <div class="auth-title">{{ __('messages.forgot_password_title') }} 🔒</div>
     <div class="auth-subtitle">{{ __('messages.forgot_password_desc') }}</div>
 
     {{-- Email sent success (real SMTP) --}}
@@ -25,21 +25,22 @@
             <div class="reset-link-header">
                 <span class="reset-link-icon"><i class="bx bx-link-alt"></i></span>
                 <div>
-                    <div class="reset-link-title">Password Reset Link</div>
-                    <div class="reset-link-sub">Click the button below to reset your password for
+                    <div class="reset-link-title">{{ __('messages.password_reset_link_title') }}</div>
+                    <div class="reset-link-sub">{{ __('messages.password_reset_link_sub') }}
                         <strong>{{ session('reset_email') }}</strong>
                     </div>
                 </div>
             </div>
 
             <a href="{{ session('reset_url') }}" class="btn-submit mt-3" style="text-decoration:none;display:flex;">
-                <i class="bx bx-lock-open-alt"></i> Reset My Password Now
+                <i class="bx bx-lock-open-alt"></i> {{ __('messages.reset_my_password_btn') }}
             </a>
 
             <details class="mt-3">
-                <summary class="reset-link-copy-label">Copy reset link manually</summary>
+                <summary class="reset-link-copy-label">{{ __('messages.copy_reset_link_label') }}</summary>
                 <div class="reset-link-copy-wrap mt-2">
-                    <input type="text" id="resetLinkInput" class="input-dark" readonly value="{{ session('reset_url') }}"
+                    <input type="text" id="resetLinkInput" class="input-dark" readonly
+                        value="{{ session('reset_url') }}"
                         style="font-size:.72rem;padding:.5rem .75rem;border-radius:8px 0 0 8px;border-right:none;">
                     <button type="button" class="copy-btn" onclick="copyResetLink()" title="Copy link">
                         <i class="bx bx-copy" id="copyIcon"></i>
@@ -163,7 +164,7 @@
                     btn.disabled = true;
                     btn.style.opacity = '.75';
                     icon.className = 'bx bx-loader-alt bx-spin';
-                    text.textContent = 'Sending…';
+                    text.textContent = '{{ __('messages.sending_label') }}';
                 }
             });
         }

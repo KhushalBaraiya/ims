@@ -393,7 +393,7 @@
             }
 
             if (!matchedCode) {
-                note.textContent = 'No auto-match found — please select currency manually.';
+                note.textContent = '{{ __('messages.no_auto_match_currency') }}';
                 note.className = 'form-text text-warning';
                 return;
             }

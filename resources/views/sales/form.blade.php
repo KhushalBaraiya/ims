@@ -5,7 +5,7 @@
 
 <style>
     /* --------------------------------------------------------------
-       SALES FORM — Product Table  (light + dark)
+       SALES FORM ï¿½ Product Table  (light + dark)
     -------------------------------------------------------------- */
     #saleItemsTable th,
     #saleItemsTable td {
@@ -102,7 +102,7 @@
         border-bottom-color: rgba(255, 255, 255, .07) !important;
     }
 
-    /* Hover — in-stock only */
+    /* Hover ï¿½ in-stock only */
     .autocomplete-item:not(.oos-item):hover {
         background: rgba(105, 108, 255, .08) !important;
     }
@@ -262,7 +262,8 @@
                                 name="invoice_no" placeholder="{{ __('messages.set_invoice_number') }}" type="text"
                                 value="{{ old('invoice_no') }}">
                             <button {{ $isReturned ? 'disabled' : '' }} class="btn btn-outline-primary"
-                                id="generateInvoiceNoBtn" title="{{ __('messages.set_invoice_number_hint') }}" type="button">
+                                id="generateInvoiceNoBtn" title="{{ __('messages.set_invoice_number_hint') }}"
+                                type="button">
                                 <i class="bx bx-revision"></i>
                             </button>
                         </div>
@@ -272,7 +273,8 @@
 
                 {{-- Invoice Date --}}
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.set_invoice_date') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.set_invoice_date') }} <span
+                            class="text-danger">*</span></label>
                     <input {{ $isReturned ? 'disabled' : '' }}
                         class="form-control flatpickr-date @error('invoice_date') is-invalid @enderror"
                         name="invoice_date" required type="date"
@@ -284,7 +286,8 @@
 
                 {{-- Customer --}}
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.customer') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.customer') }} <span
+                            class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('customer_id') is-invalid @enderror" name="customer_id" required>
                         <option value="">{{ __('messages.select_customer') }}</option>
@@ -352,7 +355,8 @@
             </div>
             <div class="card-body p-4">
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ __('messages.payment_method') }} <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">{{ __('messages.payment_method') }} <span
+                            class="text-danger">*</span></label>
                     <select {{ $isReturned ? 'disabled' : '' }}
                         class="form-select @error('payment_method') is-invalid @enderror" name="payment_method"
                         required>
@@ -469,9 +473,10 @@
                                     <div class="form-check form-check-inline mb-0">
                                         <input {{ $isReturned ? 'disabled' : '' }}
                                             {{ old('discount_type', $sale->discount_type ?? 'fixed') === 'fixed' ? 'checked' : '' }}
-                                            class="form-check-input" id="discType{{ __('messages.set_fixed') }}" name="discount_type"
-                                            type="radio" value="fixed">
-                                        <label class="form-check-label small" for="discType{{ __('messages.set_fixed') }}">{{ __('messages.set_fixed') }}</label>
+                                            class="form-check-input" id="discType{{ __('messages.set_fixed') }}"
+                                            name="discount_type" type="radio" value="fixed">
+                                        <label class="form-check-label small"
+                                            for="discType{{ __('messages.set_fixed') }}">{{ __('messages.set_fixed') }}</label>
                                     </div>
                                     <div class="form-check form-check-inline mb-0">
                                         <input {{ $isReturned ? 'disabled' : '' }}
@@ -483,7 +488,8 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted small" id="discountLabel">{{ __('messages.set_amount') }}</span>
+                                <span class="text-muted small"
+                                    id="discountLabel">{{ __('messages.set_amount') }}</span>
                                 <input {{ $isReturned ? 'disabled' : '' }}
                                     class="form-control form-control-sm text-end" id="discount_value" min="0"
                                     name="discount_value" step="0.01" style="width:120px;" type="number"
@@ -544,7 +550,8 @@
                             <div class="col-6">
                                 <div
                                     class="bg-success border-success rounded border border-opacity-25 bg-opacity-10 p-2 text-center">
-                                    <div class="text-success small fw-semibold">{{ __('messages.set_change_return') }}</div>
+                                    <div class="text-success small fw-semibold">{{ __('messages.set_change_return') }}
+                                    </div>
                                     <div class="text-success fw-bold" id="sum_change">
                                         {{ optional(current_currency())->symbol ?? '?' }}0.00</div>
                                 </div>
@@ -631,7 +638,8 @@
                                 "{{ old('items.' . $oldIndex . '.unit_price', $oldProduct->selling_price) }}"
                             ),
                             taxAmt: parseFloat("{{ old('items.' . $oldIndex . '.tax_amount', 0) }}"),
-                            discAmt: parseFloat("{{ old('items.' . $oldIndex . '.discount_amount', 0) }}"),
+                            discAmt: parseFloat(
+                                "{{ old('items.' . $oldIndex . '.discount_amount', 0) }}"),
                             qty: parseInt("{{ old('items.' . $oldIndex . '.quantity', 1) }}"),
                             unit: "{{ $oldProduct->unit_code ?? 'PCS' }}",
                             image_url: "{{ $oldProduct->image ? asset('uploads/products/' . $oldProduct->image) : 'https://placehold.co/50x50/e2e8f0/94a3b8?text=No+Image' }}"
@@ -699,14 +707,14 @@
                 templateResult: function(p) {
                     if (p.loading) {
                         return $(
-                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searching…</span>');
+                            '<span><i class="bx bx-loader-alt bx-spin me-2"></i>Searchingï¿½</span>');
                     }
                     if (!p.id) return p.text;
                     const img = p.image_url || 'https://placehold.co/40x40/e2e8f0/94a3b8?text=No+Img';
                     const itemSym = p.currency_symbol || sym;
                     const stockBadge = p.out_of_stock ?
-                        `<span class="badge bg-danger-subtle text-danger">Out of stock</span>` :
-                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).to{{ __('messages.set_fixed') }}(0)} in stock</span>`;
+                        `<span class="badge bg-danger-subtle text-danger">{{ __('messages.out_of_stock') }}</span>` :
+                        `<span class="badge bg-success-subtle text-success">${parseFloat(p.stock).toFixed(0)} {{ __('messages.in_stock') }}</span>`;
                     const nameStyle = p.out_of_stock ? 'color:#aab0c0;' : '';
                     return $(`
                         <div class="d-flex align-items-center gap-3 py-1" style="${p.out_of_stock ? 'opacity:.6;' : ''}">
@@ -746,7 +754,7 @@
 
                 // Guard: out of stock
                 if (p.out_of_stock) {
-                    showAdminToast(`"${p.name}" is out of stock.`, 'warning');
+                    showAdminToast(`"${p.name}" {{ __('messages.out_of_stock') }}.`, 'warning');
                     $(this).val(null).trigger('change');
                     return;
                 }
@@ -766,8 +774,9 @@
                 }
 
                 const priceAfterDiscount = parseFloat(p.price) - parseFloat(p.discount_amount || 0);
-                const taxAmt = parseFloat(((parseFloat(p.tax_percent) / 100) * priceAfterDiscount).to{{ __('messages.set_fixed') }}(
-                    2));
+                const taxAmt = parseFloat(((parseFloat(p.tax_percent) / 100) * priceAfterDiscount)
+                    .to{{ __('messages.set_fixed') }}(
+                        2));
                 addProductRow({
                     id: p.id,
                     name: p.name,
@@ -808,9 +817,11 @@
                     '</div>' +
                     '<input type="hidden" name="items[' + rowCount + '][product_id]"  value="' + p.id + '">' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][discount_amount]" class="disc-hidden" value="' + discAmt.to{{ __('messages.set_fixed') }}(2) + '">' +
+                    '][discount_amount]" class="disc-hidden" value="' + discAmt
+                    .to{{ __('messages.set_fixed') }}(2) + '">' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][tax_amount]"      class="tax-hidden"  value="' + taxAmt.to{{ __('messages.set_fixed') }}(2) + '">' +
+                    '][tax_amount]"      class="tax-hidden"  value="' + taxAmt
+                    .to{{ __('messages.set_fixed') }}(2) + '">' +
                     '</td>' +
 
                     // -- Col 2: Qty (stock badge above, input below) --
@@ -818,7 +829,8 @@
                     '<div class="mb-1">' +
                     '<span class="badge ' + (stockQty > 0 ? 'bg-label-success' : 'bg-label-danger') +
                     ' sale-stock-badge">' +
-                    (stockQty > 0 ? stockQty + ' avail.' : 'Out of stock') +
+                    (stockQty > 0 ? stockQty + ' {{ __('messages.avail') }}.' :
+                        '{{ __('messages.out_of_stock') }}') +
                     '</span>' +
                     '</div>' +
                     '<input type="number" inputmode="numeric" pattern="[0-9]*" step="1" min="1" ' +
@@ -831,7 +843,8 @@
                     '<td class="text-center">' +
                     '<div class="fw-semibold text-primary sale-price-cell">' + fmt(p.price) + '</div>' +
                     '<input type="hidden" name="items[' + rowCount +
-                    '][unit_price]" class="price-input" value="' + parseFloat(p.price).to{{ __('messages.set_fixed') }}(2) + '">' +
+                    '][unit_price]" class="price-input" value="' + parseFloat(p.price)
+                    .to{{ __('messages.set_fixed') }}(2) + '">' +
                     '<div class="text-danger sale-compact-text">-' + fmt(discAmt) + ' disc</div>' +
                     '<div class="text-success sale-compact-text">+' + fmt(taxAmt) + ' tax</div>' +
                     '</td>' +
@@ -877,7 +890,8 @@
             $('#discount_value, #tax_percentage, #shipping_amount, #paid_amount').on('input change',
                 calculateTotals);
             $('input[name="discount_type"]').on('change', function() {
-                $('#discountLabel').text($(this).val() === 'percentage' ? 'Percentage (%)' : '{{ __('messages.set_amount') }}');
+                $('#discountLabel').text($(this).val() === 'percentage' ? 'Percentage (%)' :
+                    '{{ __('messages.set_amount') }}');
                 calculateTotals();
             });
             // Set initial label
@@ -899,11 +913,11 @@
                     const discU = parseFloat(row.find('.disc-hidden').val()) || 0;
                     const taxU = parseFloat(row.find('.tax-hidden').val()) || 0;
 
-                    // Row calculation: (price - discount + tax) × qty
+                    // Row calculation: (price - discount + tax) ï¿½ qty
                     const priceAfterDiscount = price - discU;
                     const rowTot = (priceAfterDiscount + taxU) * qty;
                     row.find('.subtotal-cell').text(fmt(rowTot));
-                    subtotal += price * qty; // subtotal = sum of (qty × unit_price), raw
+                    subtotal += price * qty; // subtotal = sum of (qty ï¿½ unit_price), raw
                 });
 
                 $('#sum_subtotal').text(fmt(subtotal));

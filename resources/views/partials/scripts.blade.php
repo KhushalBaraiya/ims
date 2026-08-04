@@ -667,9 +667,9 @@
                     banner.innerHTML = [
                         '<i class="bx bx-time-five" style="font-size:1.4rem;flex-shrink:0;"></i>',
                         '<div style="flex:1;">',
-                        'Session expiring in <strong id="sessionCountdown">60</strong>s — ',
+                        '{{ __('messages.session_expiring_in') }} <strong id="sessionCountdown">60</strong> {{ __('messages.session_seconds_suffix') }} ',
                         '<a href="javascript:void(0)" onclick="location.reload()" ',
-                        'style="color:#fff;text-decoration:underline;">Stay Logged In</a>',
+                        'style="color:#fff;text-decoration:underline;">{{ __('messages.stay_logged_in') }}</a>',
                         '</div>',
                         '<button onclick="document.getElementById(\'sessionTimeoutBanner\').remove()" ',
                         'style="background:rgba(255,255,255,.2);border:none;color:#fff;',
