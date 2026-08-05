@@ -230,6 +230,13 @@
             </li>
         <?php endif; ?>
 
+        <li class="menu-item <?php echo e(request()->routeIs('whatsapp.*') ? 'active' : ''); ?>">
+            <a href="<?php echo e(route('whatsapp.index')); ?>" class="menu-link">
+                <i class="menu-icon tf-icons bx bxl-whatsapp" style="color:#25d366;"></i>
+                <div>WhatsApp Broadcast</div>
+            </a>
+        </li>
+
         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('users.view')): ?>
             <li class="menu-item <?php echo e(request()->routeIs('users.*') ? 'active' : ''); ?>">
                 <a href="<?php echo e(route('users.index')); ?>" class="menu-link">
@@ -415,8 +422,8 @@
 <?php $__env->startPush('styles'); ?>
     <style>
         /* ════════════════════════════════════════════
-                                           SIDEBAR — Sneat overrides
-                                           ════════════════════════════════════════════ */
+                                               SIDEBAR — Sneat overrides
+                                               ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {

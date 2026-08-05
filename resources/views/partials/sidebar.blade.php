@@ -228,6 +228,13 @@
             </li>
         @endcan
 
+        <li class="menu-item {{ request()->routeIs('whatsapp.*') ? 'active' : '' }}">
+            <a href="{{ route('whatsapp.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxl-whatsapp" style="color:#25d366;"></i>
+                <div>WhatsApp Broadcast</div>
+            </a>
+        </li>
+
         @can('users.view')
             <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                 <a href="{{ route('users.index') }}" class="menu-link">
@@ -407,8 +414,8 @@
 @push('styles')
     <style>
         /* ════════════════════════════════════════════
-                                           SIDEBAR — Sneat overrides
-                                           ════════════════════════════════════════════ */
+                                               SIDEBAR — Sneat overrides
+                                               ════════════════════════════════════════════ */
 
         /* Section headers — no icon, clean text only */
         .menu-header-text {

@@ -25,6 +25,7 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RazorpayController;
+use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
 // Root redirect
@@ -163,6 +164,10 @@ Route::middleware('auth')->group(function () {
 
     // Activity Logs Routes
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
+
+    // WhatsApp Templates CRUD
+    Route::get('/whatsapp/{whatsapp}/message', [WhatsappController::class, 'getMessage'])->name('whatsapp.message');
+    Route::resource('whatsapp', WhatsappController::class);
 
     // Report Export Routes (CSV — no external package needed)
     Route::prefix('reports')->name('reports.')->group(function () {

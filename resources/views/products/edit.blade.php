@@ -719,7 +719,7 @@
                     placeholder: '{{ $selectSubTxt }}'
                 });
             }
-
+.
             $('#main_category_id').on('change', function() {
                 loadSubcategories($(this).val(), '');
             });

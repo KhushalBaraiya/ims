@@ -21,6 +21,9 @@
 
                     </button>
                 <?php endif; ?>
+                <a href="<?php echo e(route('whatsapp.index')); ?>" class="btn btn-outline-success">
+                    <i class="bx bxl-whatsapp me-1"></i> WhatsApp Broadcast
+                </a>
                 <a href="<?php echo e(route('customers.create')); ?>" class="btn btn-outline-primary">
                     <i class="bx bx-plus me-1"></i> <?php echo e(__('messages.add_customer')); ?>
 
