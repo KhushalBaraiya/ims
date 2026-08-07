@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Sales Invoice � ' . $sale->invoice_no)
+@section('title', 'Sales Invoice ? ' . $sale->invoice_no)
 
 @section('content')
 
@@ -43,8 +43,8 @@
                 <div class="text-white fw-bold fs-6 lh-sm">{{ __('messages.sales_invoice_badge') }}</div>
                 <div class="text-white opacity-75 small d-flex flex-wrap gap-2 mt-1">
                     <span><i class="bx bx-hash me-1"></i>{{ $sale->invoice_no }}</span>
-                    <span>� {{ $sale->customer->name ?? '�' }}</span>
-                    <span>� {{ $sale->invoice_date }}</span>
+                    <span>? {{ $sale->customer->name ?? '?' }}</span>
+                    <span>? {{ $sale->invoice_date }}</span>
                 </div>
             </div>
             <div class="d-flex gap-2 flex-wrap">
@@ -225,14 +225,14 @@
                             @can('sale_returns.view')
                                 <a class="btn btn-outline-warning"
                                     href="{{ route('sale-returns.show', $sale->returns->first()->id) }}">
-                                    <i class="bx bx-undo me-1"></i> View Return
+                                    <i class="bx bx-undo me-1"></i> {{ __('messages.view_return') }}
                                 </a>
                             @endcan
                         @else
                             @can('sale_returns.create')
                                 <a class="btn btn-outline-warning"
                                     href="{{ route('sale-returns.create', ['sale_id' => $sale->id]) }}">
-                                    <i class="bx bx-undo me-1"></i> Create Return
+                                    <i class="bx bx-undo me-1"></i> {{ __('messages.create_return') }}
                                 </a>
                             @endcan
                         @endif
@@ -242,7 +242,7 @@
                             @csrf @method('DELETE')
                             <button class="btn btn-outline-danger w-100 delete-btn" data-invoice="{{ $sale->invoice_no }}"
                                 type="button">
-                                <i class="bx bx-trash me-1"></i> Delete Invoice
+                                <i class="bx bx-trash me-1"></i> {{ __('messages.delete_invoice') }}
                             </button>
                         </form>
                     @endcan
@@ -403,12 +403,12 @@
                                 name="paid_amount" required step="0.01" type="number">
                         </div>
                         <div class="mb-0">
-                            <label class="form-label fw-semibold">Payment Method <span
+                            <label class="form-label fw-semibold">{{ __('messages.payment_method') }} <span
                                     class="text-danger">*</span></label>
                             <select class="form-select form-select-lg" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required>
-                                <option value="Cash">💵 {{ __('messages.pm_cash') }}</option>
-                                <option value="Razorpay">⚡ Razorpay (Online Payment)</option>
+                                <option value="Cash">?? {{ __('messages.pm_cash') }}</option>
+                                <option value="Razorpay">? Razorpay (Online Payment)</option>
                             </select>
                         </div>
                     </div>
@@ -495,7 +495,7 @@
                 const orig = btn.html();
                 btn.prop('disabled', true).html(
                     '<span class="spinner-border spinner-border-sm me-1"></span> {{ __('messages.saving_lbl') }}'
-                    );
+                );
 
                 $.ajax({
                     url: form.attr('action'),

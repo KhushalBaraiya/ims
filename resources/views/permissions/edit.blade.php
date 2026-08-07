@@ -32,20 +32,19 @@
                 <i class="bx bx-key text-white" style="font-size:1.35rem;"></i>
             </div>
             <div class="flex-grow-1 min-w-0">
-                <div class="fw-bold text-white" style="font-size:1rem;">
-                    Editing:
-                    <code class="ms-1 text-white fw-bold"
+                <div class="fw-bold text-white">
+                    Editing: <code class="ms-1 text-white fw-bold"
                         style="background:rgba(255,255,255,.2);padding:2px 10px;border-radius:6px;font-size:.9rem;"
                         id="heroPreview">{{ $permission->name }}</code>
                 </div>
                 <div class="text-white small opacity-75 mt-1">
                     Permission ID #{{ $permission->id }} &nbsp;&middot;&nbsp;
-                    {{ $permission->roles()->count() }} role(s) attached
+                    {{ $permission->roles()->count() }} {{ __('messages.roles_count') }}
                 </div>
             </div>
             <span class="badge text-warning fw-semibold"
                 style="background:rgba(255,255,255,.18);font-size:.78rem;padding:.45rem .9rem;">
-                <i class="bx bx-edit me-1"></i>Edit Mode
+                <i class="bx bx-edit me-1"></i>{{ __('messages.edit') }}
             </span>
         </div>
     </div>
@@ -99,7 +98,8 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" id="moduleInput" name="module" list="moduleList"
-                                    class="form-control @error('module') is-invalid @enderror" placeholder="{{ __('messages.ph_permission_module_eg') }}"
+                                    class="form-control @error('module') is-invalid @enderror"
+                                    placeholder="{{ __('messages.ph_permission_module_eg') }}"
                                     value="{{ old('module', $currentModule) }}" required autocomplete="off">
                                 <datalist id="moduleList">
                                     @foreach ($allModules as $mod)
@@ -120,7 +120,8 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" id="actionInput" name="action" list="actionList"
-                                    class="form-control @error('action') is-invalid @enderror" placeholder="{{ __('messages.ph_permission_action_eg') }}"
+                                    class="form-control @error('action') is-invalid @enderror"
+                                    placeholder="{{ __('messages.ph_permission_action_eg') }}"
                                     value="{{ old('action', $currentAction) }}" required autocomplete="off">
                                 <datalist id="actionList">
                                     <option value="view">
@@ -146,11 +147,11 @@
                     <div
                         class="card-header py-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <h6 class="mb-0 fw-semibold">
-                            <i class="bx bx-shield me-2 text-primary"></i>Assigned Roles
+                            <i class="bx bx-shield me-2 text-primary"></i>{{ __('messages.menu_roles') }}
                         </h6>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-label-warning" id="attachedBadge">
-                                {{ count($assignedRoleIds) }} Roles Attached
+                                {{ count($assignedRoleIds) }} {{ __('messages.roles_count') }}
                             </span>
                             <button type="button" class="btn btn-xs btn-outline-primary" id="btnSelectAll">
                                 <i class="bx bx-check-square me-1"></i>All
@@ -162,7 +163,7 @@
                     </div>
                     <div class="card-body p-4">
                         <p class="text-muted small mb-3">
-                            Select which roles should have this permission:
+                            {{ __('messages.perm_instant_hint') }}
                         </p>
 
                         <div class="row g-3">
@@ -371,7 +372,7 @@
                 });
                 // update counts
                 const checked = document.querySelectorAll('.role-chk:checked').length;
-                document.getElementById('attachedBadge').textContent = checked + ' Roles Attached';
+                document.getElementById('attachedBadge').textContent = checked + ' {{ __('messages.roles_count') }}';
                 document.getElementById('infoRoleCount').textContent = checked;
             }
 
@@ -397,7 +398,7 @@
                 btn.disabled = true;
                 btn.style.opacity = '.75';
                 icon.className = 'bx bx-loader-alt bx-spin me-1';
-                text.textContent = 'Saving…';
+                text.textContent = '{{ __('messages.saving_lbl') }}';
             });
 
             /* ── Initial sync ───────────────────────────────────────────── */

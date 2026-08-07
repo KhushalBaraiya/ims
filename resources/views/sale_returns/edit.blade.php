@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Edit Sales Return � ' . $saleReturn->return_no)
+﻿@extends('layouts.admin')
+@section('title', __('messages.edit_sale_return') . ' - ' . $saleReturn->return_no)
 
 @section('content')
 
@@ -10,7 +10,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('sale-returns.index') }}">Sale Returns</a></li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('sale-returns.index') }}">{{ __('messages.sale_returns_breadcrumb') }}</a></li>
                     <li class="breadcrumb-item active">{{ $saleReturn->return_no }}</li>
                 </ol>
             </nav>
@@ -46,7 +47,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-info-circle text-primary me-2"></i>Return Details
+                            <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.return_details') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -93,10 +94,10 @@
                                     class="text-danger">*</span></label>
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', $saleReturn->status) === 'Completed' ? 'selected' : '' }}
-                                    value="Completed">Completed
+                                    value="Completed">{{ __('messages.completed') }}
                                 </option>
                                 <option {{ old('status', $saleReturn->status) === 'Pending' ? 'selected' : '' }}
-                                    value="Pending">Pending
+                                    value="Pending">{{ __('messages.pending') }}
                                 </option>
                             </select>
                         </div>
@@ -107,7 +108,7 @@
                 <div class="card shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-money text-success me-2"></i>Refund Details
+                            <i class="bx bx-money text-success me-2"></i>{{ __('messages.refund_details') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -134,9 +135,10 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom d-flex align-items-center justify-content-between bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-list-ul text-info me-2"></i>Invoice Return Items
+                            <i class="bx bx-list-ul text-info me-2"></i>{{ __('messages.invoice_return_items') }}
                         </h6>
-                        <span class="badge bg-label-primary">{{ $saleReturn->sale->items->count() }} product(s)</span>
+                        <span class="badge bg-label-primary">{{ $saleReturn->sale->items->count() }}
+                            {{ __('messages.product_s') }}</span>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -249,7 +251,7 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-header border-bottom bg-white py-3">
                                 <h6 class="fw-semibold mb-0">
-                                    <i class="bx bx-note text-warning me-2"></i>Return Notes
+                                    <i class="bx bx-note text-warning me-2"></i>{{ __('messages.return_notes') }}
                                 </h6>
                             </div>
                             <div class="card-body p-3">
@@ -262,7 +264,7 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-header border-bottom bg-white py-3">
                                 <h6 class="fw-semibold mb-0">
-                                    <i class="bx bx-receipt text-info me-2"></i>Refund Summary
+                                    <i class="bx bx-receipt text-info me-2"></i>{{ __('messages.refund_summary') }}
                                 </h6>
                             </div>
                             <div class="card-body p-4">
@@ -297,7 +299,7 @@
                         <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
                     <button class="btn btn-primary" id="submitBtn" type="submit">
-                        <i class="bx bx-save me-1"></i> Update Return
+                        <i class="bx bx-save me-1"></i> {{ __('messages.update_return') }}
                     </button>
                 </div>
 

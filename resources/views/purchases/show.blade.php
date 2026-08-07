@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Purchase Order � ' . $purchase->purchase_no)
+﻿@extends('layouts.admin')
+@section('title', __('messages.purchase_order_details') . ' - ' . $purchase->purchase_no)
 
 @section('content')
 

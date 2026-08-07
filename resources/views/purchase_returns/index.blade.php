@@ -109,7 +109,8 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.return_no_label') }}</label>
                             <input type="text" name="return_no" class="form-control form-control-sm"
-                                value="{{ request('return_no') }}" placeholder="{{ __('messages.ph_purchase_ret_format') }}">
+                                value="{{ request('return_no') }}"
+                                placeholder="{{ __('messages.ph_purchase_ret_format') }}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.supplier') }}</label>
@@ -171,7 +172,7 @@
                             <th>{{ __('messages.th_date') }}</th>
                             <th>{{ __('messages.th_purchase_no') }}</th>
                             <th>{{ __('messages.th_supplier') }}</th>
-                            <th class="text-center">QTY</th>
+                            <th class="text-center">{{ __('messages.qty') }}</th>
                             <th class="text-end">{{ __('messages.th_total') }}</th>
                             <th class="text-end">{{ __('messages.th_refunded') }}</th>
                             <th class="text-center">{{ __('messages.th_status') }}</th>
@@ -366,7 +367,7 @@
                 if (!ids.length) return;
                 Swal.fire({
                     title: '{{ __('messages.confirm_delete') }}',
-                    text: 'Stock will be reversed for Completed returns. This cannot be undone.',
+                    text: '{{ __('messages.bulk_delete_returns_warn') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

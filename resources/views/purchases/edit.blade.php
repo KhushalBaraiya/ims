@@ -1,12 +1,12 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Edit Purchase Order — ' . $purchase->purchase_no)
+@section('title', __('messages.edit_purchase_order') . ' — ' . $purchase->purchase_no)
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Edit Purchase Order</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.edit_purchase_order') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -14,13 +14,13 @@
                             href="{{ route('purchases.index') }}">{{ __('messages.purchase_orders') }}</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('purchases.show', $purchase->id) }}">{{ $purchase->purchase_no }}</a></li>
-                    <li class="breadcrumb-item active">Edit</li>
+                    <li class="breadcrumb-item active">{{ __('messages.edit') }}</li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('purchases.show', $purchase->id) }}" class="btn btn-outline-secondary">
-                <i class="bx bx-show me-1"></i> View
+                <i class="bx bx-show me-1"></i> {{ __('messages.view') }}
             </a>
             <a href="{{ route('purchases.index') }}" class="btn btn-outline-secondary">
                 <i class="bx bx-arrow-back me-1"></i> {{ __('messages.back') }}
@@ -64,4 +64,3 @@
     </form>
 
 @endsection
-

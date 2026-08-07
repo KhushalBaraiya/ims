@@ -41,7 +41,8 @@
                                 </label>
                                 <input type="text" id="displayNameInput" name="display_name"
                                     class="form-control @error('display_name') is-invalid @enderror"
-                                    placeholder="{{ __('messages.ph_role_name') }}" value="{{ old('display_name') }}" required>
+                                    placeholder="{{ __('messages.ph_role_name') }}" value="{{ old('display_name') }}"
+                                    required>
                                 @error('display_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -83,7 +84,7 @@
                                         <th>{{ __('messages.module_label') }}</th>
                                         <th class="text-center" style="width:70px;">{{ __('messages.select_all') }}</th>
                                         <th class="text-center" style="width:70px;">{{ __('messages.view') }}</th>
-                                        <th class="text-center" style="width:70px;">Own</th>
+                                        <th class="text-center" style="width:70px;">{{ __('messages.own') }}</th>
                                         <th class="text-center" style="width:70px;">{{ __('messages.create') }}</th>
                                         <th class="text-center" style="width:70px;">{{ __('messages.update') }}</th>
                                         <th class="text-center" style="width:70px;">{{ __('messages.delete') }}</th>

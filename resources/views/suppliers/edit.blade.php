@@ -159,7 +159,7 @@
                                 </label>
                                 <select class="form-select @error('currency_id') is-invalid @enderror" name="currency_id"
                                     id="supplierCurrency">
-                                    <option value="">— Same as system default —</option>
+                                    <option value="">— {{ __('messages.same_base_currency') }} —</option>
                                     @foreach ($currencies as $cur)
                                         <option value="{{ $cur->id }}" data-code="{{ $cur->code }}"
                                             {{ old('currency_id', $supplier->currency_id) == $cur->id ? 'selected' : '' }}>
@@ -409,13 +409,14 @@
 
             if (matched) {
                 note.innerHTML =
-                    '<span class="text-success fw-semibold"><i class="bx bx-check-circle me-1"></i>Auto-matched: <strong>' +
-                    matchedCode + '</strong> based on country.</span>';
+                    '<span class="text-success fw-semibold"><i class="bx bx-check-circle me-1"></i>{{ __('messages.auto_matched_label') }}: <strong>' +
+                    matchedCode + '</strong> {{ __('messages.based_on_country') }}.</span>';
                 sel.classList.add('border-success');
                 setTimeout(() => sel.classList.remove('border-success'), 2000);
             } else {
-                note.innerHTML = '<span class="text-warning">Currency code <strong>' + matchedCode +
-                    '</strong> not found in DB — add it first.</span>';
+                note.innerHTML = '<span class="text-warning">{{ __('messages.currency_code_label') }} <strong>' +
+                    matchedCode +
+                    '</strong> {{ __('messages.not_found_in_db') }}.</span>';
             }
         }
 

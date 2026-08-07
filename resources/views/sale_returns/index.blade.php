@@ -111,7 +111,8 @@
                         <div class="col-md-3">
                             <label class="form-label fw-semibold small">{{ __('messages.sale_invoice_no') }}</label>
                             <input type="text" name="sale_invoice" class="form-control form-control-sm"
-                                value="{{ request('sale_invoice') }}" placeholder="{{ __('messages.ph_sale_ret_inv_format') }}">
+                                value="{{ request('sale_invoice') }}"
+                                placeholder="{{ __('messages.ph_sale_ret_inv_format') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label fw-semibold small">{{ __('messages.customer') }}</label>
@@ -140,11 +141,12 @@
                             <select name="status" class="form-select form-select-sm">
                                 <option value="">{{ __('messages.all_statuses') }}</option>
                                 <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>
-                                    Completed</option>
-                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending
+                                    {{ __('messages.completed') }}</option>
+                                <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>
+                                    {{ __('messages.pending') }}
                                 </option>
                                 <option value="Cancelled" {{ request('status') == 'Cancelled' ? 'selected' : '' }}>
-                                    Cancelled</option>
+                                    {{ __('messages.cancelled') }}</option>
                             </select>
                         </div>
                     </div>
@@ -354,13 +356,13 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __("messages.confirm_delete") }}',
-                    text: 'Stock will be reversed for Completed returns. This cannot be undone.',
+                    title: '{{ __('messages.confirm_delete') }}',
+                    text: '{{ __('messages.bulk_delete_returns_warn') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __("messages.yes_delete") }}',
+                    confirmButtonText: '{{ __('messages.yes_delete') }}',
                     cancelButtonText: '{{ __('messages.cancel') }}'
                 }).then((r) => {
                     if (r.isConfirmed) {
@@ -374,7 +376,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __("messages.deleted_title") }}',
+                                            title: '{{ __('messages.deleted_title') }}',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -396,7 +398,3 @@
         });
     </script>
 @endpush
-
-
-
-

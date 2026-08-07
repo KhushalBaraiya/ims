@@ -5,14 +5,18 @@
 
     <style>
         /* ── Customer row — theme-aware highlight ── */
-        .customer-row {
-            cursor: pointer;
+        .customer-row-wrapper {
             border-bottom: 1px solid var(--bs-border-color);
-            transition: background .12s;
         }
 
-        .customer-row:last-child {
+        .customer-row-wrapper:last-child {
             border-bottom: none;
+        }
+
+        .customer-row {
+            cursor: pointer;
+            transition: background .12s;
+            width: 100%;
         }
 
         .customer-row:hover {
@@ -220,24 +224,27 @@
                             {{-- List --}}
                             <div id="customerListBox">
                                 @foreach ($customers as $customer)
-                                    <label class="customer-row is-checked d-flex align-items-center gap-3 px-3 py-2 mb-0"
-                                        data-name="{{ strtolower($customer->name) }}"
+                                    <div class="customer-row-wrapper" data-name="{{ strtolower($customer->name) }}"
                                         data-phone="{{ $customer->phone }}">
-                                        <input type="checkbox" class="form-check-input flex-shrink-0 customer-checkbox"
-                                            value="{{ $customer->phone }}" data-name="{{ $customer->name }}" checked
-                                            style="width:17px;height:17px;accent-color:#25d366;cursor:pointer;flex-shrink:0;">
-                                        <span class="wa-avatar">
-                                            {{ strtoupper(substr($customer->name, 0, 1)) }}
-                                        </span>
-                                        <span class="flex-grow-1" style="min-width:0;">
-                                            <span class="fw-semibold d-block text-truncate"
-                                                style="font-size:.875rem;">{{ $customer->name }}</span>
-                                            <span class="text-muted"
-                                                style="font-size:.78rem;">{{ $customer->phone }}</span>
-                                        </span>
-                                        <i class="bx bx-check-circle text-success check-icon ms-auto"
-                                            style="font-size:1.15rem;flex-shrink:0;"></i>
-                                    </label>
+                                        <label
+                                            class="customer-row is-checked d-flex align-items-center gap-3 px-3 py-2 mb-0">
+                                            <input type="checkbox"
+                                                class="form-check-input flex-shrink-0 customer-checkbox"
+                                                value="{{ $customer->phone }}" data-name="{{ $customer->name }}" checked
+                                                style="width:17px;height:17px;accent-color:#25d366;cursor:pointer;flex-shrink:0;">
+                                            <span class="wa-avatar">
+                                                {{ strtoupper(substr($customer->name, 0, 1)) }}
+                                            </span>
+                                            <span class="flex-grow-1" style="min-width:0;">
+                                                <span class="fw-semibold d-block text-truncate"
+                                                    style="font-size:.875rem;">{{ $customer->name }}</span>
+                                                <span class="text-muted"
+                                                    style="font-size:.78rem;">{{ $customer->phone }}</span>
+                                            </span>
+                                            <i class="bx bx-check-circle text-success check-icon ms-auto"
+                                                style="font-size:1.15rem;flex-shrink:0;"></i>
+                                        </label>
+                                    </div>
                                 @endforeach
                             </div>
                         @endif
@@ -373,10 +380,17 @@
 
             // ── Search ────────────────────────────────────────────────────────────
             $('#customerSearch').on('input', function() {
-                const q = $(this).val().toLowerCase();
-                $('.customer-row').each(function() {
-                    const match = ($(this).data('name') || '').includes(q) ||
-                        ($(this).data('phone') || '').includes(q);
+                const q = $(this).val().toLowerCase().trim();
+                if (q === '') {
+                    $('.customer-row-wrapper').show();
+                    return;
+                }
+                $('.customer-row-wrapper').each(function() {
+                    const name = ($(this).attr('data-name') || '').toLowerCase();
+                    const phone = ($(this).attr('data-phone') || '').replace(/\s/g, '')
+                        .toLowerCase();
+                    const qClean = q.replace(/\s/g, '');
+                    const match = name.includes(q) || phone.includes(qClean);
                     $(this).toggle(match);
                 });
             });
@@ -465,7 +479,7 @@
                     if (idx >= total) return;
                     const phone = recipients[idx].phone.toString().replace(/[\s\-\+\(\)]/g, '');
                     window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(message),
-                    '_blank');
+                        '_blank');
                 }
 
                 updateProgress();

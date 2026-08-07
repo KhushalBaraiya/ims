@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Sales Return � ' . $saleReturn->return_no)
+@section('title', __('messages.sales_return_details') . ' - ' . $saleReturn->return_no)
 
 @section('content')
 
@@ -10,7 +10,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('sale-returns.index') }}">Sale Returns</a></li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('sale-returns.index') }}">{{ __('messages.sale_returns_breadcrumb') }}</a></li>
                     <li class="breadcrumb-item active">{{ $saleReturn->return_no }}</li>
                 </ol>
             </nav>

@@ -174,13 +174,7 @@
                             <th>{{ __('messages.th_date') }}</th>
                             <th>{{ __('messages.th_supplier') }}</th>
                             <th>{{ __('messages.th_items') }}</th>
-                            <th class="text-center">QTY</th>
-                            <th class="text-end">{{ __('messages.th_total') }}</th>
-                            <th class="text-end">{{ __('messages.th_paid') }}</th>
-                            <th class="text-end">{{ __('messages.th_due') }}</th>
-                            <th class="text-center">{{ __('messages.payment_status_label') }}</th>
-                            <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th class="no-sort text-center">{{ __('messages.th_actions') }}</th>
+                            <th class="text-center">{{ __('messages.qty') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -257,7 +251,8 @@
                                                 @can('purchase_returns.update')
                                                     <a class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
                                                         href="{{ route('purchase-returns.edit', $purchase->returns->first()->id) }}"
-                                                        style="width:30px;height:30px;padding:0;" title="Edit Return">
+                                                        style="width:30px;height:30px;padding:0;"
+                                                        title="{{ __('messages.edit_return') }}">
                                                         <i class="bx bx-undo" style="font-size:1rem;"></i>
                                                     </a>
                                                 @endcan
@@ -265,7 +260,8 @@
                                                 @can('purchase_returns.create')
                                                     <a class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
                                                         href="{{ route('purchase-returns.create', ['purchase_id' => $purchase->id]) }}"
-                                                        style="width:30px;height:30px;padding:0;" title="Create Return">
+                                                        style="width:30px;height:30px;padding:0;"
+                                                        title="{{ __('messages.create_return') }}">
                                                         <i class="bx bx-undo" style="font-size:1rem;"></i>
                                                     </a>
                                                 @endcan
@@ -280,7 +276,8 @@
                                                 data-id="{{ $purchase->id }}" data-no="{{ $purchase->purchase_no }}"
                                                 data-paid-amount="{{ $purchase->paid_amount }}"
                                                 data-payment-method="{{ $purchase->payment_method }}"
-                                                style="width:30px;height:30px;padding:0;" title="Payment">
+                                                style="width:30px;height:30px;padding:0;"
+                                                title="{{ __('messages.manage_payment') }}">
                                                 <i class="bx bx-credit-card" style="font-size:1rem;"></i>
                                             </button>
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"

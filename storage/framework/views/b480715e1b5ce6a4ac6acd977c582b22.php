@@ -1,61 +1,63 @@
-@extends('layouts.admin')
-@section('title', __('messages.main_categories'))
+<?php $__env->startSection('title', __('messages.main_categories')); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
-    {{-- Page Header --}}
+    
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">{{ __('messages.main_categories') }}</h4>
+            <h4 class="fw-bold mb-1"><?php echo e(__('messages.main_categories')); ?></h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('messages.main_categories') }}</li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>"><?php echo e(__('messages.dashboard')); ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo e(__('messages.main_categories')); ?></li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2 align-items-center">
-            @can('main_categories.delete')
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('main_categories.delete')): ?>
                 <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
+                    <i class="bx bx-trash me-1"></i> <?php echo e(__('messages.delete_multiples')); ?>
+
                 </button>
-            @endcan
-            @can('main_categories.create')
-                <a href="{{ route('main-categories.create') }}" class="btn btn-outline-primary">
-                    <i class="bx bx-plus me-1"></i> {{ __('messages.add_category') }}
+            <?php endif; ?>
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('main_categories.create')): ?>
+                <a href="<?php echo e(route('main-categories.create')); ?>" class="btn btn-outline-primary">
+                    <i class="bx bx-plus me-1"></i> <?php echo e(__('messages.add_category')); ?>
+
                 </a>
-            @endcan
+            <?php endif; ?>
         </div>
     </div>
 
-    {{-- Filters --}}
+    
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white py-3 border-bottom">
-            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filters') }}</h6>
+            <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i><?php echo e(__('messages.filters')); ?></h6>
         </div>
         <div class="card-body p-4">
-            <form method="GET" action="{{ route('main-categories.index') }}">
+            <form method="GET" action="<?php echo e(route('main-categories.index')); ?>">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-5">
-                        <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
+                        <label class="form-label fw-semibold small"><?php echo e(__('messages.search')); ?></label>
                         <input type="text" name="search" class="form-control form-control-sm"
-                            value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_category') }}">
+                            value="<?php echo e(request('search')); ?>" placeholder="<?php echo e(__('messages.ph_search_category')); ?>">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
+                        <label class="form-label fw-semibold small"><?php echo e(__('messages.status')); ?></label>
                         <select name="status" class="form-select form-select-sm">
-                            <option value="">{{ __('messages.all_statuses') }}</option>
-                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>
-                                {{ __('messages.active') }}</option>
-                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
-                                {{ __('messages.inactive') }}</option>
+                            <option value=""><?php echo e(__('messages.all_statuses')); ?></option>
+                            <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>
+                                <?php echo e(__('messages.active')); ?></option>
+                            <option value="inactive" <?php echo e(request('status') == 'inactive' ? 'selected' : ''); ?>>
+                                <?php echo e(__('messages.inactive')); ?></option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex gap-2">
                         <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
+                            <i class="bx bx-search me-1"></i><?php echo e(__('messages.apply')); ?>
+
                         </button>
-                        <a href="{{ route('main-categories.index') }}" class="btn btn-outline-secondary btn-sm"
+                        <a href="<?php echo e(route('main-categories.index')); ?>" class="btn btn-outline-secondary btn-sm"
                             title="Reset">
                             <i class="bx bx-reset"></i>
                         </a>
@@ -65,7 +67,7 @@
         </div>
     </div>
 
-    {{-- Summary Stats --}}
+    
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
@@ -75,8 +77,8 @@
                         <i class="bx bx-category"></i>
                     </span>
                     <div>
-                        <div class="fw-bold fs-4 lh-1 text-primary">{{ $categories->count() }}</div>
-                        <div class="text-muted small mt-1">{{ __('messages.th_total') }}</div>
+                        <div class="fw-bold fs-4 lh-1 text-primary"><?php echo e($categories->count()); ?></div>
+                        <div class="text-muted small mt-1"><?php echo e(__('messages.th_total')); ?></div>
                     </div>
                 </div>
             </div>
@@ -90,9 +92,10 @@
                     </span>
                     <div>
                         <div class="fw-bold fs-4 lh-1 text-success" id="statActiveCount">
-                            {{ $categories->where('status', 'active')->count() }}
+                            <?php echo e($categories->where('status', 'active')->count()); ?>
+
                         </div>
-                        <div class="text-muted small mt-1">{{ __('messages.active') }}</div>
+                        <div class="text-muted small mt-1"><?php echo e(__('messages.active')); ?></div>
                     </div>
                 </div>
             </div>
@@ -106,9 +109,10 @@
                     </span>
                     <div>
                         <div class="fw-bold fs-4 lh-1 text-danger" id="statInactiveCount">
-                            {{ $categories->where('status', 'inactive')->count() }}
+                            <?php echo e($categories->where('status', 'inactive')->count()); ?>
+
                         </div>
-                        <div class="text-muted small mt-1">{{ __('messages.inactive') }}</div>
+                        <div class="text-muted small mt-1"><?php echo e(__('messages.inactive')); ?></div>
                     </div>
                 </div>
             </div>
@@ -122,18 +126,19 @@
                     </span>
                     <div>
                         <div class="fw-bold fs-4 lh-1 text-info">
-                            <a href="{{ route('sub-categories.index') }}" class="text-info text-decoration-none">
-                                {{ \App\Models\SubCategory::count() }}
+                            <a href="<?php echo e(route('sub-categories.index')); ?>" class="text-info text-decoration-none">
+                                <?php echo e(\App\Models\SubCategory::count()); ?>
+
                             </a>
                         </div>
-                        <div class="text-muted small mt-1">{{ __('messages.sub_categories') }}</div>
+                        <div class="text-muted small mt-1"><?php echo e(__('messages.sub_categories')); ?></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Table Card --}}
+    
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -141,20 +146,20 @@
                     <thead class="table-light">
                         <tr>
                             <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
-                            <th>{{ __('messages.th_no') }}</th>
-                            <th>{{ __('messages.category_name') }}</th>
-                            <th>{{ __('messages.th_code') }}</th>
-                            <th class="text-center">{{ __('messages.sub_categories') }}</th>
-                            <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
+                            <th><?php echo e(__('messages.th_no')); ?></th>
+                            <th><?php echo e(__('messages.category_name')); ?></th>
+                            <th><?php echo e(__('messages.th_code')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.sub_categories')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.th_status')); ?></th>
+                            <th class="text-center no-sort"><?php echo e(__('messages.th_actions')); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($categories as $index => $category)
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td><input type="checkbox" class="form-check-input row-checkbox"
-                                        value="{{ $category->id }}"></td>
-                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
+                                        value="<?php echo e($category->id); ?>"></td>
+                                <td class="text-muted fw-semibold"><?php echo e($index + 1); ?></td>
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="avatar avatar-sm flex-shrink-0">
@@ -163,80 +168,82 @@
                                             </span>
                                         </div>
                                         <div>
-                                            <strong>{{ $category->name }}</strong>
-                                            @if ($category->description)
+                                            <strong><?php echo e($category->name); ?></strong>
+                                            <?php if($category->description): ?>
                                                 <small class="d-block text-muted text-truncate"
-                                                    style="max-width:220px;">{{ $category->description }}</small>
-                                            @endif
+                                                    style="max-width:220px;"><?php echo e($category->description); ?></small>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
-                                <td><code class="text-primary">{{ $category->slug }}</code></td>
+                                <td><code class="text-primary"><?php echo e($category->slug); ?></code></td>
                                 <td class="text-center">
-                                    <span class="badge bg-label-success">{{ $category->subCategories->count() }}</span>
+                                    <span class="badge bg-label-success"><?php echo e($category->subCategories->count()); ?></span>
                                 </td>
                                 <td class="text-center">
-                                    @can('main_categories.update')
+                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('main_categories.update')): ?>
                                         <button type="button"
                                             class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1
-                                                {{ $category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                            style="background:transparent;cursor:pointer;" data-id="{{ $category->id }}"
-                                            data-status="{{ $category->status }}"
-                                            title="{{ __('messages.click_to_toggle') }}">
-                                            {{ $category->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                                <?php echo e($category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger'); ?>"
+                                            style="background:transparent;cursor:pointer;" data-id="<?php echo e($category->id); ?>"
+                                            data-status="<?php echo e($category->status); ?>"
+                                            title="<?php echo e(__('messages.click_to_toggle')); ?>">
+                                            <?php echo e($category->status === 'active' ? __('messages.active') : __('messages.inactive')); ?>
+
                                         </button>
-                                    @else
+                                    <?php else: ?>
                                         <span
                                             class="badge rounded-pill border fw-semibold px-3 py-1
-                                            {{ $category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
+                                            <?php echo e($category->status === 'active' ? 'border-success text-success' : 'border-danger text-danger'); ?>"
                                             style="background:transparent;">
-                                            {{ $category->status === 'active' ? __('messages.active') : __('messages.inactive') }}
+                                            <?php echo e($category->status === 'active' ? __('messages.active') : __('messages.inactive')); ?>
+
                                         </span>
-                                    @endcan
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
-                                        @can('main_categories.view')
-                                            <a href="{{ route('main-categories.show', $category->id) }}"
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('main_categories.view')): ?>
+                                            <a href="<?php echo e(route('main-categories.show', $category->id)); ?>"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                title="<?php echo e(__('messages.view')); ?>" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('main_categories.update')
-                                            <a href="{{ route('main-categories.edit', $category->id) }}"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('main_categories.update')): ?>
+                                            <a href="<?php echo e(route('main-categories.edit', $category->id)); ?>"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                title="<?php echo e(__('messages.edit')); ?>" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('main_categories.delete')
-                                            <form id="delete-form-{{ $category->id }}"
-                                                action="{{ route('main-categories.destroy', $category->id) }}" method="POST"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('main_categories.delete')): ?>
+                                            <form id="delete-form-<?php echo e($category->id); ?>"
+                                                action="<?php echo e(route('main-categories.destroy', $category->id)); ?>" method="POST"
                                                 class="d-inline">
-                                                @csrf @method('DELETE')
+                                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                                    title="{{ __('messages.delete') }}"
+                                                    data-id="<?php echo e($category->id); ?>" data-name="<?php echo e($category->name); ?>"
+                                                    title="<?php echo e(__('messages.delete')); ?>"
                                                     style="width:30px;height:30px;padding:0;">
                                                     <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                 </button>
                                             </form>
-                                        @endcan
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(document).ready(function() {
             $('#categoriesTable').DataTable({
@@ -252,12 +259,12 @@
                 dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "{{ __('messages.search') }}...",
-                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
-                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
-                    infoEmpty: "{{ __('messages.no_entries') }}",
-                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
-                    emptyTable: '<div style="width:100%;text-align:center;padding:2.5rem 0;"><div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;"><i class="bx bx-category" style="font-size:3rem;opacity:.3;line-height:1;"></i>{{ __('messages.no_records') }}</div></div>',
+                    searchPlaceholder: "<?php echo e(__('messages.search')); ?>...",
+                    lengthMenu: "<?php echo e(__('messages.show')); ?> _MENU_ <?php echo e(__('messages.entries')); ?>",
+                    info: "<?php echo e(__('messages.showing')); ?> _START_ <?php echo e(__('messages.to')); ?> _END_ <?php echo e(__('messages.of')); ?> _TOTAL_ <?php echo e(__('messages.entries')); ?>",
+                    infoEmpty: "<?php echo e(__('messages.no_entries')); ?>",
+                    infoFiltered: "(<?php echo e(__('messages.filtered_from')); ?> _MAX_ <?php echo e(__('messages.total_entries')); ?>)",
+                    emptyTable: '<div style="width:100%;text-align:center;padding:2.5rem 0;"><div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;"><i class="bx bx-category" style="font-size:3rem;opacity:.3;line-height:1;"></i><?php echo e(__('messages.no_records')); ?></div></div>',
                     paginate: {
                         previous: '<i class="bx bx-chevron-left"></i>',
                         next: '<i class="bx bx-chevron-right"></i>'
@@ -273,7 +280,7 @@
                     url: `/main-categories/${id}/toggle-status`,
                     type: 'PATCH',
                     data: {
-                        _token: '{{ csrf_token() }}'
+                        _token: '<?php echo e(csrf_token()); ?>'
                     },
                     beforeSend: () => btn.prop('disabled', true).html(
                         '<span class="spinner-border spinner-border-sm"></span>'),
@@ -285,8 +292,8 @@
                                     'border-success text-success border-danger text-danger')
                                 .addClass(res.status === 'active' ?
                                     'border-success text-success' : 'border-danger text-danger')
-                                .text(res.status === 'active' ? '{{ __('messages.active') }}' :
-                                    '{{ __('messages.inactive') }}');
+                                .text(res.status === 'active' ? '<?php echo e(__('messages.active')); ?>' :
+                                    '<?php echo e(__('messages.inactive')); ?>');
                             showAdminToast(res.message, 'success');
                             $('#statActiveCount').text($('.status-toggle-btn.border-success')
                                 .length);
@@ -294,14 +301,14 @@
                                 .length);
                         } else {
                             showAdminToast(res.message ||
-                                '{{ __('messages.error_occurred') }}', 'error');
+                                '<?php echo e(__('messages.error_occurred')); ?>', 'error');
                         }
                     },
                     error: () => {
                         btn.prop('disabled', false).text(cur === 'active' ?
-                            '{{ __('messages.active') }}' :
-                            '{{ __('messages.inactive') }}');
-                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
+                            '<?php echo e(__('messages.active')); ?>' :
+                            '<?php echo e(__('messages.inactive')); ?>');
+                        showAdminToast('<?php echo e(__('messages.error_occurred')); ?>', 'error');
                     }
                 });
             });
@@ -311,14 +318,14 @@
                     name = $(this).data('name'),
                     form = $(`#delete-form-${id}`);
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: `{{ __('messages.delete') }} "${name}"?`,
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: `<?php echo e(__('messages.delete')); ?> "${name}"?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then(r => {
                     if (!r.isConfirmed) return;
                     $.ajax({
@@ -327,14 +334,14 @@
                         data: form.serialize(),
                         success: res => {
                             if (res.success) Swal.fire({
-                                title: '{{ __('messages.deleted_title') }}',
+                                title: '<?php echo e(__('messages.deleted_title')); ?>',
                                 text: res.message,
                                 icon: 'success',
                                 confirmButtonColor: '#696cff'
                             }).then(() => location.reload());
                             else showAdminToast(res.message, 'error');
                         },
-                        error: () => showAdminToast('{{ __('messages.error_occurred') }}',
+                        error: () => showAdminToast('<?php echo e(__('messages.error_occurred')); ?>',
                             'error')
                     });
                 });
@@ -360,37 +367,39 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: `{{ __('messages.bulk_delete_items') }}`.replace(':count', ids.length),
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: `<?php echo e(__('messages.bulk_delete_items')); ?>`.replace(':count', ids.length),
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then(r => {
                     if (!r.isConfirmed) return;
                     $.ajax({
-                        url: '{{ route('main-categories.bulk-destroy') }}',
+                        url: '<?php echo e(route('main-categories.bulk-destroy')); ?>',
                         type: 'DELETE',
                         data: {
-                            _token: '{{ csrf_token() }}',
+                            _token: '<?php echo e(csrf_token()); ?>',
                             ids: ids
                         },
                         success: res => {
                             if (res.success) Swal.fire({
-                                title: '{{ __('messages.deleted_title') }}',
+                                title: '<?php echo e(__('messages.deleted_title')); ?>',
                                 text: res.message,
                                 icon: 'success',
                                 confirmButtonColor: '#696cff'
                             }).then(() => location.reload());
                             else showAdminToast(res.message, 'error');
                         },
-                        error: () => showAdminToast('{{ __('messages.error_occurred') }}',
+                        error: () => showAdminToast('<?php echo e(__('messages.error_occurred')); ?>',
                             'error')
                     });
                 });
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Linux\Desktop\ims\resources\views/main_categories/index.blade.php ENDPATH**/ ?>

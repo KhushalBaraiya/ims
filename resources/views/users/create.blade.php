@@ -47,7 +47,7 @@
                                     <input type="file" name="profile_photo" id="profilePhotoInput"
                                         class="form-control @error('profile_photo') is-invalid @enderror"
                                         accept="image/jpeg,image/png,image/gif">
-                                    <div class="form-text">JPG, PNG — max 2MB</div>
+                                    <div class="form-text">{{ __('messages.image_hint') }}</div>
                                     @error('profile_photo')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -106,8 +106,8 @@
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" id="password" name="password"
-                                        class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('messages.ph_password_dots') }}"
-                                        required>
+                                        class="form-control @error('password') is-invalid @enderror"
+                                        placeholder="{{ __('messages.ph_password_dots') }}" required>
                                     <button class="btn btn-outline-secondary" type="button"
                                         onclick="togglePwd('password', this)">
                                         <i class="bx bx-hide"></i>

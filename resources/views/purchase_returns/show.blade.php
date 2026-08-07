@@ -1,5 +1,5 @@
 ﻿@extends('layouts.admin')
-@section('title', 'Purchase Return � ' . $purchaseReturn->return_no)
+@section('title', __('messages.purchase_return_details') . ' - ' . $purchaseReturn->return_no)
 
 @section('content')
 
