@@ -32,7 +32,8 @@
         <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
             <h6 class="mb-0 fw-semibold"><i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filters') }}</h6>
             @if ($paginatedPermissions)
-                <span class="badge bg-label-primary">Total: {{ $paginatedPermissions->total() }} Permissions</span>
+                <span class="badge bg-label-primary">{{ __('messages.th_total') }}: {{ $paginatedPermissions->total() }}
+                    {{ __('messages.permissions') }}</span>
             @endif
         </div>
         <div class="card-body p-4">
@@ -54,7 +55,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold small">Per Page</label>
+                        <label class="form-label fw-semibold small">{{ __('messages.show') }}</label>
                         <select name="per_page" class="form-select form-select-sm" onchange="this.form.submit()">
                             <option value="5" @selected(request('per_page') == '5')>5</option>
                             <option value="10" @selected(request('per_page', 10) == '10')>10</option>
@@ -62,7 +63,7 @@
                             <option value="25" @selected(request('per_page') == '25')>25</option>
                             <option value="50" @selected(request('per_page') == '50')>50</option>
                             <option value="100" @selected(request('per_page') == '100')>100</option>
-                            <option value="all" @selected(request('per_page') == 'all')>All</option>
+                            <option value="all" @selected(request('per_page') == 'all')>{{ __('messages.all') }}</option>
                         </select>
                     </div>
                     <div class="col-md-3 d-flex gap-2">
@@ -185,9 +186,10 @@
         <div class="card shadow-sm mt-4">
             <div class="card-body py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div class="text-muted small">
-                    Showing <strong>{{ $paginatedPermissions->firstItem() }}</strong> to
-                    <strong>{{ $paginatedPermissions->lastItem() }}</strong> of
-                    <strong>{{ $paginatedPermissions->total() }}</strong> permissions
+                    {{ __('messages.showing') }} <strong>{{ $paginatedPermissions->firstItem() }}</strong>
+                    {{ __('messages.to') }}
+                    <strong>{{ $paginatedPermissions->lastItem() }}</strong> {{ __('messages.of') }}
+                    <strong>{{ $paginatedPermissions->total() }}</strong> {{ __('messages.permissions') }}
                 </div>
                 <div>
                     {{ $paginatedPermissions->links('pagination::bootstrap-5') }}

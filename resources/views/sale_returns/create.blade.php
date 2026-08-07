@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Create Sales Return')
+@section('title', __('messages.create_sale_return'))
 
 @section('content')
 
@@ -10,8 +10,9 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('sale-returns.index') }}">Sale Returns</a></li>
-                    <li class="breadcrumb-item active">Create</li>
+                    <li class="breadcrumb-item"><a
+                            href="{{ route('sale-returns.index') }}">{{ __('messages.sale_returns_breadcrumb') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.create') }}</li>
                 </ol>
             </nav>
         </div>
@@ -46,7 +47,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-info-circle text-primary me-2"></i>Return Details
+                            <i class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.return_details') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -97,7 +98,8 @@
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
                                     value="Completed">{{ __('messages.completed_label') }}</option>
-                                <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">Pending
+                                <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">
+                                    {{ __('messages.pending') }}
                                 </option>
                             </select>
                         </div>
@@ -108,7 +110,7 @@
                 <div class="card shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-money text-success me-2"></i>Refund Details
+                            <i class="bx bx-money text-success me-2"></i>{{ __('messages.refund_details') }}
                         </h6>
                     </div>
                     <div class="card-body p-4">
@@ -135,7 +137,7 @@
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom d-flex align-items-center justify-content-between bg-white py-3">
                         <h6 class="fw-semibold mb-0">
-                            <i class="bx bx-list-ul text-info me-2"></i>Invoice Return Items
+                            <i class="bx bx-list-ul text-info me-2"></i>{{ __('messages.invoice_return_items') }}
                         </h6>
                         <span class="badge bg-label-secondary"
                             id="itemCountBadge">{{ __('messages.no_invoice_selected') }}</span>
@@ -217,7 +219,7 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-header border-bottom bg-white py-3">
                                 <h6 class="fw-semibold mb-0">
-                                    <i class="bx bx-note text-warning me-2"></i>Return Notes
+                                    <i class="bx bx-note text-warning me-2"></i>{{ __('messages.return_notes') }}
                                 </h6>
                             </div>
                             <div class="card-body p-3">
@@ -230,7 +232,7 @@
                         <div class="card h-100 shadow-sm">
                             <div class="card-header border-bottom bg-white py-3">
                                 <h6 class="fw-semibold mb-0">
-                                    <i class="bx bx-receipt text-info me-2"></i>Refund Summary
+                                    <i class="bx bx-receipt text-info me-2"></i>{{ __('messages.refund_summary') }}
                                 </h6>
                             </div>
                             <div class="card-body p-4">
@@ -264,7 +266,7 @@
                         <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
                     <button class="btn btn-primary" disabled id="submitBtn" type="submit">
-                        <i class="bx bx-save me-1"></i> Process Return
+                        <i class="bx bx-save me-1"></i> {{ __('messages.process_return') }}
                     </button>
                 </div>
 

@@ -2022,6 +2022,18 @@ return [
     'email_footer_purchase'      => 'સિસ્ટમ-જનિત ખરીદ ઓર્ડર',
     'email_footer_sale'          => 'સિસ્ટમ-જનિત ઇન્વૉઇસ',
     'email_no_reply'             => 'કૃપા કરી આ ઇ-મેઇલ નો જવાબ ન આપો.',
-    'email_generated_on'         => 'બન્યું',
+    'email_generated_on'         => 'बन्यो',
+
+    // ── Purchase / Sale return form — new keys ────────────────────────────
+    'linked_purchase'            => 'જોડાયેલ ખરીદી',
+    'search_and_add_products'    => 'ઉપર ઉત્પાદન શોધો અને ઉમેરો.',
+    'no_products_in_return'      => 'રિટર્ન સૂચિમાં કોઈ ઉત્પાદન નથી.',
+
+    // ── Misc UI strings ───────────────────────────────────────────────────
+    'more_permissions'           => 'વધુ',
+    'auto_matched_label'         => 'સ્વત: મળ્યું',
+    'based_on_country'           => 'દેશ આધારિત',
+    'not_found_in_db'            => 'ડેટાબેઝ માં નથી — પહેલા ઉમેરો',
+    'currency_code_label'        => 'ચલણ કોડ',
 
 ];

@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Create Purchase Return')
+@section('title', __('messages.create_purchase_return'))
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Create Purchase Return</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.create_purchase_return') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
@@ -88,7 +88,8 @@
                 {{-- Return Details Card --}}
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0"><i class="bx bx-info-circle text-primary me-2"></i>Return Details</h6>
+                        <h6 class="fw-semibold mb-0"><i
+                                class="bx bx-info-circle text-primary me-2"></i>{{ __('messages.return_details') }}</h6>
                     </div>
                     <div class="card-body p-4">
 
@@ -96,7 +97,7 @@
                             <div class="alert alert-primary d-flex align-items-center mb-3 gap-2 px-3 py-2">
                                 <i class="bx bx-link-alt flex-shrink-0"></i>
                                 <div>
-                                    <div class="fw-semibold small">Linked Purchase</div>
+                                    <div class="fw-semibold small">{{ __('messages.linked_purchase') }}</div>
                                     <div class="small">{{ $selectedPurchase->purchase_no }}
                                         @if ($selectedPurchase->supplier)
                                             &bull; {{ $selectedPurchase->supplier->name }}
@@ -129,8 +130,9 @@
                             <select class="form-select" name="status" required>
                                 <option {{ old('status', 'Completed') === 'Completed' ? 'selected' : '' }}
                                     value="Completed">
-                                    Completed</option>
-                                <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">Pending
+                                    {{ __('messages.completed') }}</option>
+                                <option {{ old('status') === 'Pending' ? 'selected' : '' }} value="Pending">
+                                    {{ __('messages.pending') }}
                                 </option>
                             </select>
                         </div>
@@ -140,7 +142,8 @@
                 {{-- Refund Details Card --}}
                 <div class="card shadow-sm">
                     <div class="card-header border-bottom bg-white py-3">
-                        <h6 class="fw-semibold mb-0"><i class="bx bx-money text-success me-2"></i>Refund Details</h6>
+                        <h6 class="fw-semibold mb-0"><i
+                                class="bx bx-money text-success me-2"></i>{{ __('messages.refund_details') }}</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-0">
@@ -194,7 +197,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.product') }}</th>
-                                        <th class="text-center">Unit Price</th>
+                                        <th class="text-center">{{ __('messages.unit_price') }}</th>
                                         @if (isset($selectedPurchase))
                                             <th class="text-center">{{ __('messages.purchased_qty') }}</th>
                                             <th class="text-center">{{ __('messages.already_returned') }}</th>
@@ -214,7 +217,7 @@
 
                         <div class="text-muted py-5 text-center" id="noItemsMsg">
                             <i class="bx bx-search-alt d-block mb-2" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="small mb-0">Search and add products to return above.</p>
+                            <p class="small mb-0">{{ __('messages.search_and_add_products') }}</p>
                         </div>
 
                     </div>
@@ -225,7 +228,8 @@
                     <div class="col-md-6">
                         <div class="card h-100 shadow-sm">
                             <div class="card-header border-bottom bg-white py-3">
-                                <h6 class="fw-semibold mb-0"><i class="bx bx-note text-warning me-2"></i>Return Notes</h6>
+                                <h6 class="fw-semibold mb-0"><i
+                                        class="bx bx-note text-warning me-2"></i>{{ __('messages.return_notes') }}</h6>
                             </div>
                             <div class="card-body p-3">
                                 <textarea class="form-control" name="notes" placeholder="{{ __('messages.ph_return_reason_desc') }}"
@@ -271,7 +275,7 @@
                         <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
                     </a>
                     <button class="btn btn-primary" id="submitBtn" type="submit">
-                        <i class="bx bx-save me-1"></i> Process Return
+                        <i class="bx bx-save me-1"></i> {{ __('messages.process_return') }}
                     </button>
                 </div>
 

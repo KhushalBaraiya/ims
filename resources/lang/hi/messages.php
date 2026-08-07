@@ -2027,4 +2027,16 @@ return [
     'email_no_reply'             => 'कृपया इस ईमेल का जवाब न दें।',
     'email_generated_on'         => 'उत्पन्न किया',
 
+    // ── Purchase / Sale return form — new keys ────────────────────────────
+    'linked_purchase'            => 'लिंक की गई खरीद',
+    'search_and_add_products'    => 'ऊपर उत्पाद खोजें और वापसी के लिए जोड़ें।',
+    'no_products_in_return'      => 'वापसी सूची में कोई उत्पाद नहीं।',
+
+    // ── Misc UI strings ───────────────────────────────────────────────────
+    'more_permissions'           => 'और',
+    'auto_matched_label'         => 'स्वतः मिलान',
+    'based_on_country'           => 'देश के आधार पर',
+    'not_found_in_db'            => 'डेटाबेस में नहीं मिला — पहले जोड़ें',
+    'currency_code_label'        => 'मुद्रा कोड',
+
 ];

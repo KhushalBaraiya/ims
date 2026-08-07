@@ -2180,4 +2180,16 @@ return [
     'email_no_reply'             => 'Please do not reply to this email.',
     'email_generated_on'         => 'Generated on',
 
+    // ── Purchase / Sale return form — new keys ────────────────────────────
+    'linked_purchase'            => 'Linked Purchase',
+    'search_and_add_products'    => 'Search and add products to return above.',
+    'no_products_in_return'      => 'No products in return list.',
+
+    // ── Misc UI strings ───────────────────────────────────────────────────
+    'more_permissions'           => 'more',
+    'auto_matched_label'         => 'Auto-matched',
+    'based_on_country'           => 'based on country',
+    'not_found_in_db'            => 'not found in DB — add it first',
+    'currency_code_label'        => 'Currency code',
+
 ];

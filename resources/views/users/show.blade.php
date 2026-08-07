@@ -154,7 +154,7 @@
                                     @endforeach
                                     @if ($role->permissions->count() > 20)
                                         <span class="badge bg-label-info">+{{ $role->permissions->count() - 20 }}
-                                            more</span>
+                                            {{ __('messages.more_permissions') }}</span>
                                     @endif
                                 </div>
                             </div>

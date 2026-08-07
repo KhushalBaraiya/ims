@@ -142,8 +142,9 @@
         @if ($logs->hasPages())
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-top">
                 <p class="text-muted small mb-0">
-                    Showing <strong>{{ $logs->firstItem() }}</strong>–<strong>{{ $logs->lastItem() }}</strong>
-                    of <strong>{{ $logs->total() }}</strong> results
+                    {{ __('messages.showing') }}
+                    <strong>{{ $logs->firstItem() }}</strong>–<strong>{{ $logs->lastItem() }}</strong>
+                    {{ __('messages.of') }} <strong>{{ $logs->total() }}</strong> {{ __('messages.entries') }}
                 </p>
                 {{ $logs->links() }}
             </div>

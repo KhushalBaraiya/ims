@@ -22,7 +22,7 @@
                     </button>
                 @endcan
                 <a href="{{ route('whatsapp.index') }}" class="btn btn-outline-success">
-                    <i class="bx bxl-whatsapp me-1"></i> WhatsApp Broadcast
+                    <i class="bx bxl-whatsapp me-1"></i> {{ __('messages.wa_broadcast_title') }}
                 </a>
                 <a href="{{ route('customers.create') }}" class="btn btn-outline-primary">
                     <i class="bx bx-plus me-1"></i> {{ __('messages.add_customer') }}

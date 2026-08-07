@@ -1,13 +1,12 @@
 ﻿@extends('layouts.admin')
 
-@section('title', 'Edit Sales Invoice')
+@section('title', __('messages.edit_sales_invoice'))
 
 @section('content')
     <!-- Header -->
     <div class="mb-4">
-        <h2 class="fw-bold mb-1 h4">Edit Sales Invoice</h2>
-        <p class="text-muted small">Modify line items, quantities, or statuses of invoice:
-            <code>{{ $sale->invoice_no }}</code>.</p>
+        <h2 class="fw-bold mb-1 h4">{{ __('messages.edit_sales_invoice') }}</h2>
+        <p class="text-muted small">{{ __('messages.edit_invoice_desc') }} <code>{{ $sale->invoice_no }}</code>.</p>
     </div>
 
     @if ($sale->returns->isNotEmpty())

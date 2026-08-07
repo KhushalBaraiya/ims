@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Create Purchase Order')
+@section('title', __('messages.create_purchase_order'))
 
 @section('content')
 
     {{-- Page Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Create Purchase Order</h4>
+            <h4 class="fw-bold mb-1">{{ __('messages.create_purchase_order') }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
