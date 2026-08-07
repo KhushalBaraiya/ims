@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.main_categories'))
 
 @section('content')
@@ -194,33 +194,31 @@
                                         </span>
                                     @endcan
                                 </td>
-                                <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                <td class="text-center" style="white-space:nowrap;">
+                                    <div class="tbl-action-wrap">
                                         @can('main_categories.view')
                                             <a href="{{ route('main-categories.show', $category->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
-                                                <i class="bx bx-show" style="font-size:1rem;"></i>
+                                                title="{{ __('messages.view') }}"
+                                                style="width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid #17a2b8;color:#17a2b8;background:transparent;text-decoration:none;flex-shrink:0;">
+                                                <i class="bx bx-show" style="font-size:1rem;line-height:1;"></i>
                                             </a>
                                         @endcan
                                         @can('main_categories.update')
                                             <a href="{{ route('main-categories.edit', $category->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
-                                                <i class="bx bx-edit" style="font-size:1rem;"></i>
+                                                title="{{ __('messages.edit') }}"
+                                                style="width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid #696cff;color:#696cff;background:transparent;text-decoration:none;flex-shrink:0;">
+                                                <i class="bx bx-edit" style="font-size:1rem;line-height:1;"></i>
                                             </a>
                                         @endcan
                                         @can('main_categories.delete')
                                             <form id="delete-form-{{ $category->id }}"
                                                 action="{{ route('main-categories.destroy', $category->id) }}" method="POST"
-                                                class="d-inline">
+                                                style="display:contents;margin:0;padding:0;">
                                                 @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                                    title="{{ __('messages.delete') }}"
-                                                    style="width:30px;height:30px;padding:0;">
-                                                    <i class="bx bx-trash" style="font-size:1rem;"></i>
+                                                <button type="button" class="delete-btn" data-id="{{ $category->id }}"
+                                                    data-name="{{ $category->name }}" title="{{ __('messages.delete') }}"
+                                                    style="width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid #ff3e1d;color:#ff3e1d;background:transparent;cursor:pointer;flex-shrink:0;">
+                                                    <i class="bx bx-trash" style="font-size:1rem;line-height:1;"></i>
                                                 </button>
                                             </form>
                                         @endcan

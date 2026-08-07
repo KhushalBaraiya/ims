@@ -1,7 +1,7 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.products_catalog'))
+﻿
+<?php $__env->startSection('title', __('messages.products_catalog')); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
     <style>
         .prod-img-cell {
             position: relative;
@@ -76,49 +76,54 @@
             font-weight: 600;
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
-    {{-- Header --}}
+    
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">{{ __('messages.products_catalog') }}</h4>
+            <h4 class="fw-bold mb-1"><?php echo e(__('messages.products_catalog')); ?></h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('messages.menu_products') }}</li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>"><?php echo e(__('messages.dashboard')); ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo e(__('messages.menu_products')); ?></li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2 flex-wrap align-items-center">
             <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary d-flex align-items-center gap-1">
                 <i class="bx bx-filter-alt"></i>
-                {{ __('messages.filters') }}
+                <?php echo e(__('messages.filters')); ?>
+
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
-            <a href="{{ route('products.gallery') }}" class="btn btn-outline-info d-flex align-items-center gap-1">
-                <i class="bx bx-grid-alt"></i> {{ __('messages.prod_gallery') }}
+            <a href="<?php echo e(route('products.gallery')); ?>" class="btn btn-outline-info d-flex align-items-center gap-1">
+                <i class="bx bx-grid-alt"></i> <?php echo e(__('messages.prod_gallery')); ?>
+
             </a>
-            <a href="{{ route('products.by-category') }}" class="btn btn-outline-success d-flex align-items-center gap-1">
-                <i class="bx bx-category"></i> {{ __('messages.prod_by_category') }}
+            <a href="<?php echo e(route('products.by-category')); ?>" class="btn btn-outline-success d-flex align-items-center gap-1">
+                <i class="bx bx-category"></i> <?php echo e(__('messages.prod_by_category')); ?>
+
             </a>
-            @can('products.delete')
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.delete')): ?>
                 <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
+                    <i class="bx bx-trash me-1"></i> <?php echo e(__('messages.delete_multiples')); ?>
+
                 </button>
-            @endcan
-            @can('products.create')
-                <a href="{{ route('products.create') }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
-                    <i class="bx bx-plus"></i> {{ __('messages.add_product') }}
+            <?php endif; ?>
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.create')): ?>
+                <a href="<?php echo e(route('products.create')); ?>" class="btn btn-outline-primary d-flex align-items-center gap-1">
+                    <i class="bx bx-plus"></i> <?php echo e(__('messages.add_product')); ?>
+
                 </a>
-            @endcan
+            <?php endif; ?>
         </div>
     </div>
 
-    {{-- Summary Stats --}}
+    
     <div class="row g-3 mb-4">
-        @php
+        <?php
             // Use DB aggregates � $products is now paginated, not a full collection
             $total = \App\Models\Product::count();
             $active = \App\Models\Product::where('status', 'active')->count();
@@ -129,13 +134,13 @@
             $outStock = \App\Models\Product::where(
                 fn($q) => $q->whereHas('stock', fn($sq) => $sq->where('quantity', '<=', 0))->orWhereDoesntHave('stock'),
             )->count();
-        @endphp
+        ?>
         <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.prod_total_products') }}</p>
-                        <h4 class="mb-0 fw-bold text-primary">{{ $total }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.prod_total_products')); ?></p>
+                        <h4 class="mb-0 fw-bold text-primary"><?php echo e($total); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;"><i
                             class="bx bx-package"></i></span>
@@ -146,8 +151,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.prod_active') }}</p>
-                        <h4 class="mb-0 fw-bold text-success" id="statActiveCount">{{ $active }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.prod_active')); ?></p>
+                        <h4 class="mb-0 fw-bold text-success" id="statActiveCount"><?php echo e($active); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;"><i
                             class="bx bx-check-circle"></i></span>
@@ -158,8 +163,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.prod_low_stock') }}</p>
-                        <h4 class="mb-0 fw-bold text-warning">{{ $lowStock }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.prod_low_stock')); ?></p>
+                        <h4 class="mb-0 fw-bold text-warning"><?php echo e($lowStock); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.1rem;"><i
                             class="bx bx-error-circle"></i></span>
@@ -170,8 +175,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.prod_out_of_stock') }}</p>
-                        <h4 class="mb-0 fw-bold text-danger">{{ $outStock }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.prod_out_of_stock')); ?></p>
+                        <h4 class="mb-0 fw-bold text-danger"><?php echo e($outStock); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1.1rem;"><i
                             class="bx bx-x-circle"></i></span>
@@ -180,132 +185,135 @@
         </div>
     </div>
 
-    {{-- Filters --}}
+    
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
                 <h6 class="mb-0 fw-semibold"><i
-                        class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_products') }}</h6>
+                        class="bx bx-filter-alt me-2 text-primary"></i><?php echo e(__('messages.filter_products')); ?></h6>
             </div>
             <div class="card-body p-4">
-                <form method="GET" action="{{ route('products.index') }}">
+                <form method="GET" action="<?php echo e(route('products.index')); ?>">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold small">{{ __('messages.search') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.search')); ?></label>
                             <input type="text" name="search" class="form-control form-control-sm"
-                                value="{{ request('search') }}" placeholder="{{ __('messages.ph_search_name_sku') }}">
+                                value="<?php echo e(request('search')); ?>" placeholder="<?php echo e(__('messages.ph_search_name_sku')); ?>">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.brand') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.brand')); ?></label>
                             <select name="brand_id" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.prod_all_brands') }}</option>
-                                @foreach ($brands as $b)
-                                    <option value="{{ $b->id }}"
-                                        {{ request('brand_id') == $b->id ? 'selected' : '' }}>{{ $b->name }}</option>
-                                @endforeach
+                                <option value=""><?php echo e(__('messages.prod_all_brands')); ?></option>
+                                <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($b->id); ?>"
+                                        <?php echo e(request('brand_id') == $b->id ? 'selected' : ''); ?>><?php echo e($b->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.category') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.category')); ?></label>
                             <select name="main_category_id" id="filter_main_category_id" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.prod_all_categories') }}</option>
-                                @foreach ($categories as $c)
-                                    <option value="{{ $c->id }}"
-                                        {{ request('main_category_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}
+                                <option value=""><?php echo e(__('messages.prod_all_categories')); ?></option>
+                                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($c->id); ?>"
+                                        <?php echo e(request('main_category_id') == $c->id ? 'selected' : ''); ?>><?php echo e($c->name); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.sub_category') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.sub_category')); ?></label>
                             <select name="sub_category_id" id="filter_sub_category_id" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.prod_all_subcats') }}</option>
+                                <option value=""><?php echo e(__('messages.prod_all_subcats')); ?></option>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.status')); ?></label>
                             <select name="status" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.prod_all_statuses') }}</option>
-                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>
-                                    {{ __('messages.active') }}</option>
-                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>
-                                    {{ __('messages.inactive') }}</option>
+                                <option value=""><?php echo e(__('messages.prod_all_statuses')); ?></option>
+                                <option value="active" <?php echo e(request('status') === 'active' ? 'selected' : ''); ?>>
+                                    <?php echo e(__('messages.active')); ?></option>
+                                <option value="inactive" <?php echo e(request('status') === 'inactive' ? 'selected' : ''); ?>>
+                                    <?php echo e(__('messages.inactive')); ?></option>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.stock_alert_menu') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.stock_alert_menu')); ?></label>
                             <select name="stock_filter" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.all_stock') }}</option>
-                                <option value="low" {{ request('stock_filter') === 'low' ? 'selected' : '' }}>
-                                    {{ __('messages.low_stock_only') }}</option>
-                                <option value="out" {{ request('stock_filter') === 'out' ? 'selected' : '' }}>
-                                    {{ __('messages.out_of_stock_only') }}</option>
+                                <option value=""><?php echo e(__('messages.all_stock')); ?></option>
+                                <option value="low" <?php echo e(request('stock_filter') === 'low' ? 'selected' : ''); ?>>
+                                    <?php echo e(__('messages.low_stock_only')); ?></option>
+                                <option value="out" <?php echo e(request('stock_filter') === 'out' ? 'selected' : ''); ?>>
+                                    <?php echo e(__('messages.out_of_stock_only')); ?></option>
                             </select>
                         </div>
                         <div class="col-6 col-md-1">
-                            <label class="form-label fw-semibold small">{{ __('messages.prod_price_min') }}
-                                {{ optional(current_currency())->symbol ?? '?' }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.prod_price_min')); ?>
+
+                                <?php echo e(optional(current_currency())->symbol ?? '?'); ?></label>
                             <input type="number" step="0.01" name="price_min" class="form-control form-control-sm"
-                                value="{{ request('price_min') }}" placeholder="{{ __('messages.ph_price_min') }}">
+                                value="<?php echo e(request('price_min')); ?>" placeholder="<?php echo e(__('messages.ph_price_min')); ?>">
                         </div>
                         <div class="col-6 col-md-1">
-                            <label class="form-label fw-semibold small">{{ __('messages.prod_price_max') }}
-                                {{ optional(current_currency())->symbol ?? '?' }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.prod_price_max')); ?>
+
+                                <?php echo e(optional(current_currency())->symbol ?? '?'); ?></label>
                             <input type="number" step="0.01" name="price_max" class="form-control form-control-sm"
-                                value="{{ request('price_max') }}" placeholder="{{ __('messages.ph_price_max') }}">
+                                value="<?php echo e(request('price_max')); ?>" placeholder="<?php echo e(__('messages.ph_price_max')); ?>">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="{{ route('products.index') }}" class="btn btn-outline-secondary"><i
-                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
+                        <a href="<?php echo e(route('products.index')); ?>" class="btn btn-outline-secondary"><i
+                                class="bx bx-reset me-1"></i><?php echo e(__('messages.reset')); ?></a>
                         <button type="submit" class="btn btn-primary"><i
-                                class="bx bx-search me-1"></i>{{ __('messages.apply') }}</button>
+                                class="bx bx-search me-1"></i><?php echo e(__('messages.apply')); ?></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    {{-- Table --}}
+    
     <div class="card shadow-sm">
         <div class="card-body p-0">
 
-            {{-- DataTable-style controls row --}}
+            
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-bottom">
-                {{-- Show entries --}}
-                <form method="GET" action="{{ route('products.index') }}" id="perPageForm"
+                
+                <form method="GET" action="<?php echo e(route('products.index')); ?>" id="perPageForm"
                     class="d-flex align-items-center gap-2 mb-0">
-                    @foreach (request()->except('per_page', 'page') as $key => $val)
-                        <input type="hidden" name="{{ $key }}" value="{{ $val }}">
-                    @endforeach
-                    <label class="text-muted small mb-0">{{ __('messages.show') }}</label>
+                    <?php $__currentLoopData = request()->except('per_page', 'page'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <input type="hidden" name="<?php echo e($key); ?>" value="<?php echo e($val); ?>">
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <label class="text-muted small mb-0"><?php echo e(__('messages.show')); ?></label>
                     <select name="per_page" class="form-select form-select-sm" style="width:75px;" data-no-select2
                         onchange="document.getElementById('perPageForm').submit()">
-                        @foreach ([10, 20, 50, 100] as $n)
-                            <option value="{{ $n }}" {{ request('per_page', 10) == $n ? 'selected' : '' }}>
-                                {{ $n }}</option>
-                        @endforeach
+                        <?php $__currentLoopData = [10, 20, 50, 100]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $n): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($n); ?>" <?php echo e(request('per_page', 10) == $n ? 'selected' : ''); ?>>
+                                <?php echo e($n); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
-                    <span class="text-muted small">{{ __('messages.entries') }}</span>
+                    <span class="text-muted small"><?php echo e(__('messages.entries')); ?></span>
                 </form>
 
-                {{-- Quick Search --}}
-                <form method="GET" action="{{ route('products.index') }}" class="d-flex align-items-center gap-1">
-                    @foreach (request()->except('search', 'page') as $key => $val)
-                        <input type="hidden" name="{{ $key }}" value="{{ $val }}">
-                    @endforeach
+                
+                <form method="GET" action="<?php echo e(route('products.index')); ?>" class="d-flex align-items-center gap-1">
+                    <?php $__currentLoopData = request()->except('search', 'page'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <input type="hidden" name="<?php echo e($key); ?>" value="<?php echo e($val); ?>">
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <div class="input-group input-group-sm" style="width:220px;">
                         <span class="input-group-text bg-transparent border-end-0">
                             <i class="bx bx-search text-muted"></i>
                         </span>
                         <input type="text" name="search" class="form-control border-start-0 ps-0"
-                            placeholder="{{ __('messages.search') }}..." value="{{ request('search') }}">
-                        @if (request('search'))
-                            <a href="{{ route('products.index', request()->except('search', 'page')) }}"
-                                class="btn btn-outline-secondary" title="{{ __('messages.clear_search') }}">
+                            placeholder="<?php echo e(__('messages.search')); ?>..." value="<?php echo e(request('search')); ?>">
+                        <?php if(request('search')): ?>
+                            <a href="<?php echo e(route('products.index', request()->except('search', 'page'))); ?>"
+                                class="btn btn-outline-secondary" title="<?php echo e(__('messages.clear_search')); ?>">
                                 <i class="bx bx-x"></i>
                             </a>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </form>
             </div>
@@ -316,20 +324,20 @@
                         <tr>
                             <th style="width:40px">#</th>
                             <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
-                            <th class="no-sort" style="width:80px">{{ __('messages.prod_image_col') }}</th>
-                            <th>{{ __('messages.th_name') }}</th>
-                            <th>{{ __('messages.sku') }}</th>
-                            <th>{{ __('messages.prod_brand_category') }}</th>
-                            <th class="text-end">{{ __('messages.prod_cost') }}</th>
-                            <th class="text-end">{{ __('messages.prod_sell') }}</th>
-                            <th class="text-center">{{ __('messages.prod_stock_col') }}</th>
-                            <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th class="text-center no-sort" style="width:130px">{{ __('messages.prod_actions') }}</th>
+                            <th class="no-sort" style="width:80px"><?php echo e(__('messages.prod_image_col')); ?></th>
+                            <th><?php echo e(__('messages.th_name')); ?></th>
+                            <th><?php echo e(__('messages.sku')); ?></th>
+                            <th><?php echo e(__('messages.prod_brand_category')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.prod_cost')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.prod_sell')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.prod_stock_col')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.th_status')); ?></th>
+                            <th class="text-center no-sort" style="width:130px"><?php echo e(__('messages.prod_actions')); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($products as $i => $product)
-                            @php
+                        <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <?php
                                 $sq = (float) ($product->stock->quantity ?? 0);
                                 $sal = (float) ($product->minimum_stock_alert ?? 0);
                                 $sOut = $sq <= 0;
@@ -340,105 +348,109 @@
                                     : ($sLow
                                         ? 'rgba(255,171,0,.1)'
                                         : 'rgba(40,199,111,.1)');
-                            @endphp
+                            ?>
                             <tr>
-                                <td class="text-muted small fw-semibold">{{ $products->firstItem() + $i }}</td>
+                                <td class="text-muted small fw-semibold"><?php echo e($products->firstItem() + $i); ?></td>
                                 <td><input type="checkbox" class="form-check-input row-checkbox"
-                                        value="{{ $product->id }}"></td>
+                                        value="<?php echo e($product->id); ?>"></td>
                                 <td>
                                     <div class="prod-img-cell">
-                                        @if ($product->image)
-                                            <img src="{{ asset('uploads/products/' . $product->image) }}"
+                                        <?php if($product->image): ?>
+                                            <img src="<?php echo e(asset('uploads/products/' . $product->image)); ?>"
                                                 class="prod-thumb"
                                                 onerror="this.outerHTML='<div class=\'prod-thumb img-fallback\'><i class=\'bx bx-package\'></i></div>'">
-                                        @else
+                                        <?php else: ?>
                                             <div class="prod-thumb img-fallback"><i class="bx bx-package"></i></div>
-                                        @endif
-                                        <span class="prod-price-tag">{{ format_currency($product->selling_price) }}</span>
+                                        <?php endif; ?>
+                                        <span class="prod-price-tag"><?php echo e(format_currency($product->selling_price)); ?></span>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="fw-semibold" style="max-width:200px;">{{ $product->name }}</div>
-                                    @if ($product->subCategory)
-                                        <small class="text-muted">{{ $product->subCategory->name }}</small>
-                                    @endif
+                                    <div class="fw-semibold" style="max-width:200px;"><?php echo e($product->name); ?></div>
+                                    <?php if($product->subCategory): ?>
+                                        <small class="text-muted"><?php echo e($product->subCategory->name); ?></small>
+                                    <?php endif; ?>
                                 </td>
-                                <td><code class="small">{{ $product->code }}</code></td>
+                                <td><code class="small"><?php echo e($product->code); ?></code></td>
                                 <td>
-                                    <div class="small fw-semibold">{{ $product->brand->name ?? '�' }}</div>
-                                    <small class="text-muted">{{ $product->mainCategory->name ?? '�' }}</small>
+                                    <div class="small fw-semibold"><?php echo e($product->brand->name ?? '�'); ?></div>
+                                    <small class="text-muted"><?php echo e($product->mainCategory->name ?? '�'); ?></small>
                                 </td>
-                                <td class="text-end fw-semibold small">{{ format_currency($product->purchase_price) }}
+                                <td class="text-end fw-semibold small"><?php echo e(format_currency($product->purchase_price)); ?>
+
                                 </td>
-                                <td class="text-end fw-bold text-primary">{{ format_currency($product->selling_price) }}
+                                <td class="text-end fw-bold text-primary"><?php echo e(format_currency($product->selling_price)); ?>
+
                                 </td>
                                 <td class="text-center">
-                                    @if ($sq > 0 || $product->stock)
-                                        <span class="stock-pill" style="background:{{ $sBg }};">
-                                            <i class="bx bx-cube {{ $sCls }}" style="font-size:.8rem;"></i>
-                                            <span class="{{ $sCls }}">{{ number_format($sq, 0) }}</span>
+                                    <?php if($sq > 0 || $product->stock): ?>
+                                        <span class="stock-pill" style="background:<?php echo e($sBg); ?>;">
+                                            <i class="bx bx-cube <?php echo e($sCls); ?>" style="font-size:.8rem;"></i>
+                                            <span class="<?php echo e($sCls); ?>"><?php echo e(number_format($sq, 0)); ?></span>
                                         </span>
-                                    @else
+                                    <?php else: ?>
                                         <span class="text-muted small">�</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center">
-                                    @can('products.update')
+                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.update')): ?>
                                         <button type="button"
-                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 {{ $product->status === 'active' ? 'border-success text-success' : 'border-danger text-danger' }}"
-                                            style="background:transparent;cursor:pointer;" data-id="{{ $product->id }}"
-                                            data-status="{{ $product->status }}"
-                                            title="{{ __('messages.toggle_status') }}">
-                                            {{ ucfirst($product->status) }}
+                                            class="status-toggle-btn badge rounded-pill border fw-semibold px-3 py-1 <?php echo e($product->status === 'active' ? 'border-success text-success' : 'border-danger text-danger'); ?>"
+                                            style="background:transparent;cursor:pointer;" data-id="<?php echo e($product->id); ?>"
+                                            data-status="<?php echo e($product->status); ?>"
+                                            title="<?php echo e(__('messages.toggle_status')); ?>">
+                                            <?php echo e(ucfirst($product->status)); ?>
+
                                         </button>
-                                    @else
+                                    <?php else: ?>
                                         <span
-                                            class="badge rounded-pill {{ $product->status === 'active' ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ ucfirst($product->status) }}
+                                            class="badge rounded-pill <?php echo e($product->status === 'active' ? 'bg-success' : 'bg-secondary'); ?>">
+                                            <?php echo e(ucfirst($product->status)); ?>
+
                                         </span>
-                                    @endcan
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center">
                                     <div class="tbl-action-wrap">
-                                        @can('products.view')
-                                            <a href="{{ route('products.show', $product->id) }}"
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.view')): ?>
+                                            <a href="<?php echo e(route('products.show', $product->id)); ?>"
                                                 class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                title="<?php echo e(__('messages.view')); ?>" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('products.update')
-                                            <a href="{{ route('products.edit', $product->id) }}"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.update')): ?>
+                                            <a href="<?php echo e(route('products.edit', $product->id)); ?>"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                title="<?php echo e(__('messages.edit')); ?>" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('products.create')
-                                            <a href="{{ route('products.copy', $product->id) }}"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.create')): ?>
+                                            <a href="<?php echo e(route('products.copy', $product->id)); ?>"
                                                 class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
-                                                title="{{ __('messages.copy') }}" style="width:30px;height:30px;padding:0;">
+                                                title="<?php echo e(__('messages.copy')); ?>" style="width:30px;height:30px;padding:0;">
                                                 <i class="bx bx-copy" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('products.delete')
-                                            <form id="del-{{ $product->id }}"
-                                                action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.delete')): ?>
+                                            <form id="del-<?php echo e($product->id); ?>"
+                                                action="<?php echo e(route('products.destroy', $product->id)); ?>" method="POST"
                                                 class="d-inline" style="display:contents;">
-                                                @csrf @method('DELETE')
+                                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                                 <button type="button"
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                                                    title="{{ __('messages.delete') }}"
+                                                    data-id="<?php echo e($product->id); ?>" data-name="<?php echo e($product->name); ?>"
+                                                    title="<?php echo e(__('messages.delete')); ?>"
                                                     style="width:30px;height:30px;padding:0;">
                                                     <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                 </button>
                                             </form>
-                                        @endcan
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
                                 <td colspan="10">
                                     <div class="text-center py-5">
@@ -447,7 +459,7 @@
                                             <i class="bx bx-package text-primary" style="font-size:2rem;opacity:.5;"></i>
                                         </div>
                                         <h6 class="fw-bold mb-1 text-body">
-                                            @if (request()->hasAny([
+                                            <?php if(request()->hasAny([
                                                     'search',
                                                     'brand_id',
                                                     'main_category_id',
@@ -456,14 +468,16 @@
                                                     'price_min',
                                                     'price_max',
                                                     'stock_filter',
-                                                ]))
-                                                {{ __('messages.prod_no_match_filters') }}
-                                            @else
-                                                {{ __('messages.prod_no_products_yet') }}
-                                            @endif
+                                                ])): ?>
+                                                <?php echo e(__('messages.prod_no_match_filters')); ?>
+
+                                            <?php else: ?>
+                                                <?php echo e(__('messages.prod_no_products_yet')); ?>
+
+                                            <?php endif; ?>
                                         </h6>
                                         <p class="text-muted small mb-3">
-                                            @if (request()->hasAny([
+                                            <?php if(request()->hasAny([
                                                     'search',
                                                     'brand_id',
                                                     'main_category_id',
@@ -472,14 +486,16 @@
                                                     'price_min',
                                                     'price_max',
                                                     'stock_filter',
-                                                ]))
-                                                {{ __('messages.prod_clear_filters_hint') }}
-                                            @else
-                                                {{ __('messages.prod_get_started_hint') }}
-                                            @endif
+                                                ])): ?>
+                                                <?php echo e(__('messages.prod_clear_filters_hint')); ?>
+
+                                            <?php else: ?>
+                                                <?php echo e(__('messages.prod_get_started_hint')); ?>
+
+                                            <?php endif; ?>
                                         </p>
                                         <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                            @if (request()->hasAny([
+                                            <?php if(request()->hasAny([
                                                     'search',
                                                     'brand_id',
                                                     'main_category_id',
@@ -488,48 +504,54 @@
                                                     'price_min',
                                                     'price_max',
                                                     'stock_filter',
-                                                ]))
-                                                <a href="{{ route('products.index') }}"
+                                                ])): ?>
+                                                <a href="<?php echo e(route('products.index')); ?>"
                                                     class="btn btn-outline-secondary">
                                                     <i class="bx bx-reset me-1"></i>
-                                                    {{ __('messages.prod_clear_filters_btn') }}
+                                                    <?php echo e(__('messages.prod_clear_filters_btn')); ?>
+
                                                 </a>
-                                            @endif
-                                            @can('products.create')
-                                                <a href="{{ route('products.create') }}" class="btn btn-primary">
-                                                    <i class="bx bx-plus me-1"></i> {{ __('messages.prod_add_product_btn') }}
+                                            <?php endif; ?>
+                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('products.create')): ?>
+                                                <a href="<?php echo e(route('products.create')); ?>" class="btn btn-primary">
+                                                    <i class="bx bx-plus me-1"></i> <?php echo e(__('messages.prod_add_product_btn')); ?>
+
                                                 </a>
-                                            @endcan
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                        @endforelse
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
-            {{-- Pagination footer inside card --}}
+            
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-top">
                 <p class="text-muted small mb-0">
-                    @if ($products->total() > 0)
-                        {{ __('messages.prod_showing_results') }}
-                        <strong>{{ $products->firstItem() }}</strong>�<strong>{{ $products->lastItem() }}</strong>
-                        {{ __('messages.prod_of') }} <strong>{{ $products->total() }}</strong>
-                        {{ __('messages.prod_results') }}
-                    @else
-                        {{ __('messages.prod_no_results') }}
-                    @endif
+                    <?php if($products->total() > 0): ?>
+                        <?php echo e(__('messages.prod_showing_results')); ?>
+
+                        <strong><?php echo e($products->firstItem()); ?></strong>�<strong><?php echo e($products->lastItem()); ?></strong>
+                        <?php echo e(__('messages.prod_of')); ?> <strong><?php echo e($products->total()); ?></strong>
+                        <?php echo e(__('messages.prod_results')); ?>
+
+                    <?php else: ?>
+                        <?php echo e(__('messages.prod_no_results')); ?>
+
+                    <?php endif; ?>
                 </p>
-                {{ $products->appends(request()->query())->links() }}
+                <?php echo e($products->appends(request()->query())->links()); ?>
+
             </div>
 
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(document).ready(function() {
 
@@ -548,13 +570,13 @@
             });
 
             // -- Sub-category filter -------------------------------------------
-            const subs = @json($subCategories);
-            const selSub = "{{ request('sub_category_id') }}";
+            const subs = <?php echo json_encode($subCategories, 15, 512) ?>;
+            const selSub = "<?php echo e(request('sub_category_id')); ?>";
 
             function loadSubs(catId, pre = '') {
                 const $s = $('#filter_sub_category_id');
                 if ($s.hasClass('select2-hidden-accessible')) $s.select2('destroy');
-                $s.html('<option value="">' + '{{ __('messages.prod_all_subcats') }}' + '</option>');
+                $s.html('<option value="">' + '<?php echo e(__('messages.prod_all_subcats')); ?>' + '</option>');
                 if (!catId) {
                     $s.select2({
                         theme: 'bootstrap-5',
@@ -570,7 +592,7 @@
                     theme: 'bootstrap-5',
                     width: '100%',
                     allowClear: true,
-                    placeholder: '{{ __('messages.prod_all_subcats') }}'
+                    placeholder: '<?php echo e(__('messages.prod_all_subcats')); ?>'
                 });
             }
 
@@ -579,7 +601,7 @@
             });
 
             // On page load: if sub_category_id is pre-selected, also infer main cat to populate dropdown
-            const initCat = "{{ request('main_category_id') }}";
+            const initCat = "<?php echo e(request('main_category_id')); ?>";
             if (initCat) loadSubs(initCat, selSub);
             else if (selSub) {
                 // sub selected but no main selected � find the matching main and pre-load
@@ -600,7 +622,7 @@
                     url: `/products/${id}/toggle-status`,
                     type: 'PATCH',
                     data: {
-                        _token: '{{ csrf_token() }}'
+                        _token: '<?php echo e(csrf_token()); ?>'
                     },
                     beforeSend: () => btn.prop('disabled', true).html(
                         '<span class="spinner-border spinner-border-sm"></span>'),
@@ -612,24 +634,24 @@
                                 'border-success text-success border-danger text-danger');
                             btn.addClass(res.status === 'active' ?
                                 'border-success text-success' : 'border-danger text-danger');
-                            btn.text(res.status === 'active' ? '{{ __('messages.active') }}' :
-                                '{{ __('messages.inactive') }}');
+                            btn.text(res.status === 'active' ? '<?php echo e(__('messages.active')); ?>' :
+                                '<?php echo e(__('messages.inactive')); ?>');
                             showAdminToast(res.message, 'success');
                             // -- Update Active stat card live --------------
                             $('#statActiveCount').text($('.status-toggle-btn.border-success')
                                 .length);
                         } else {
-                            btn.text(cur === 'active' ? '{{ __('messages.active') }}' :
-                                '{{ __('messages.inactive') }}');
+                            btn.text(cur === 'active' ? '<?php echo e(__('messages.active')); ?>' :
+                                '<?php echo e(__('messages.inactive')); ?>');
                             showAdminToast(res.message ||
-                                '{{ __('messages.error_occurred') }}', 'error');
+                                '<?php echo e(__('messages.error_occurred')); ?>', 'error');
                         }
                     },
                     error: () => {
                         btn.prop('disabled', false).text(cur === 'active' ?
-                            '{{ __('messages.active') }}' :
-                            '{{ __('messages.inactive') }}');
-                        showAdminToast('{{ __('messages.error_occurred') }}', 'error');
+                            '<?php echo e(__('messages.active')); ?>' :
+                            '<?php echo e(__('messages.inactive')); ?>');
+                        showAdminToast('<?php echo e(__('messages.error_occurred')); ?>', 'error');
                     }
                 });
             });
@@ -641,14 +663,14 @@
                 const form = $(`#del-${id}`);
 
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
                     text: `Delete "${name}"?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then(r => {
                     if (r.isConfirmed) {
                         $.ajax({
@@ -658,7 +680,7 @@
                             success: res => {
                                 if (res.success) {
                                     Swal.fire({
-                                        title: '{{ __('messages.deleted_title') }}',
+                                        title: '<?php echo e(__('messages.deleted_title')); ?>',
                                         text: res.message,
                                         icon: 'success',
                                         confirmButtonColor: '#696cff'
@@ -668,7 +690,7 @@
                                 }
                             },
                             error: () => showAdminToast(
-                                '{{ __('messages.error_occurred') }}', 'error')
+                                '<?php echo e(__('messages.error_occurred')); ?>', 'error')
                         });
                     }
                 });
@@ -696,27 +718,27 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: '{{ __('messages.confirm_delete') }}',
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: '<?php echo e(__('messages.confirm_delete')); ?>',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then((r) => {
                     if (r.isConfirmed) {
                         $.ajax({
-                            url: '{{ route('products.bulk-destroy') }}',
+                            url: '<?php echo e(route('products.bulk-destroy')); ?>',
                             type: 'DELETE',
                             data: {
-                                _token: '{{ csrf_token() }}',
+                                _token: '<?php echo e(csrf_token()); ?>',
                                 ids: ids
                             },
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __('messages.deleted_title') }}',
+                                            title: '<?php echo e(__('messages.deleted_title')); ?>',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -727,7 +749,7 @@
                                 }
                             },
                             error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                showAdminToast('<?php echo e(__('messages.error_occurred')); ?>',
                                     'error');
                             }
                         });
@@ -736,4 +758,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Linux\Desktop\ims\resources\views/products/index.blade.php ENDPATH**/ ?>

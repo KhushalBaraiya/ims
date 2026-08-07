@@ -202,31 +202,32 @@
                                 </td>
                                 <td class="text-muted small">{{ $brand->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         @can('brands.view')
                                             <a href="{{ route('brands.show', $brand->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                class="btn btn-sm btn-outline-info btn-action"
+                                                title="{{ __('messages.view') }}"
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('brands.update')
                                             <a href="{{ route('brands.edit', $brand->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                class="btn btn-sm btn-outline-primary btn-action"
+                                                title="{{ __('messages.edit') }}"
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('brands.delete')
                                             <form id="delete-form-{{ $brand->id }}"
                                                 action="{{ route('brands.destroy', $brand->id) }}" method="POST"
-                                                class="d-inline">
+                                                class="d-inline" style="display:contents;">
                                                 @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
                                                     data-id="{{ $brand->id }}" data-name="{{ $brand->name }}"
                                                     title="{{ __('messages.delete') }}"
-                                                    style="width:30px;height:30px;padding:0;">
+                                                    style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                     <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                 </button>
                                             </form>
@@ -305,7 +306,8 @@
                         }
                     },
                     error: () => {
-                        btn.prop('disabled', false).text(cur === 'active' ? '{{ __(' + [char]39 + 'messages.active' + [char]39 + ') }}' : '{{ __(' + [char]39 + 'messages.inactive' + [char]39 + ') }}') }}' :
+                        btn.prop('disabled', false).text(cur === 'active' ?
+                            '{{ __('messages.active') }}' :
                             '{{ __('messages.inactive') }}');
                         showAdminToast('{{ __('messages.error_occurred') }}', 'error');
                     }

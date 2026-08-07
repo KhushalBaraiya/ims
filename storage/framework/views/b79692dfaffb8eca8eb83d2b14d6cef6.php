@@ -1,52 +1,55 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.sales_invoices'))
+﻿
+<?php $__env->startSection('title', __('messages.sales_invoices')); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">{{ __('messages.sales_invoices') }}</h4>
+            <h4 class="fw-bold mb-1"><?php echo e(__('messages.sales_invoices')); ?></h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb small mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('messages.menu_sales') }}</li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>"><?php echo e(__('messages.dashboard')); ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo e(__('messages.menu_sales')); ?></li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-outline-secondary d-flex align-items-center gap-1" id="toggleFiltersBtn" type="button">
-                <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
+                <i class="bx bx-filter-alt"></i> <?php echo e(__('messages.filters')); ?>
+
                 <i class="bx bx-chevron-down" id="filtersChevron"></i>
             </button>
-            @can('sales.delete')
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sales.delete')): ?>
                 <button class="btn btn-danger d-none" id="bulkDeleteBtn" type="button"><i class="bx bx-trash me-1"></i>
-                    {{ __('messages.delete_multiples') }}
+                    <?php echo e(__('messages.delete_multiples')); ?>
+
                 </button>
-            @endcan
-            @can('sales.create')
-                <a class="btn btn-outline-primary d-flex align-items-center gap-1" href="{{ route('sales.create') }}">
-                    <i class="bx bx-plus"></i> {{ __('messages.add_sale') }}
+            <?php endif; ?>
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sales.create')): ?>
+                <a class="btn btn-outline-primary d-flex align-items-center gap-1" href="<?php echo e(route('sales.create')); ?>">
+                    <i class="bx bx-plus"></i> <?php echo e(__('messages.add_sale')); ?>
+
                 </a>
-            @endcan
+            <?php endif; ?>
         </div>
     </div>
 
-    {{-- Summary Stats --}}
-    @php
+    
+    <?php
         use App\Models\Sale;
         $totalSales = Sale::count();
         $completedSales = Sale::where('status', 'Completed')->count();
         $draftSales = Sale::where('status', 'Draft')->count();
         $totalSaleAmount = Sale::where('status', 'Completed')->sum('grand_total');
         $totalSaleDue = Sale::where('status', 'Completed')->sum('due_amount');
-    @endphp
+    ?>
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">{{ __('messages.th_total') }}</p>
-                        <h4 class="fw-bold text-primary mb-0">{{ $totalSales }}</h4>
+                        <p class="text-muted small mb-0"><?php echo e(__('messages.th_total')); ?></p>
+                        <h4 class="fw-bold text-primary mb-0"><?php echo e($totalSales); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;">
                         <i class="bx bx-receipt"></i>
@@ -58,8 +61,8 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">{{ __('messages.completed') }}</p>
-                        <h4 class="fw-bold text-success mb-0">{{ $completedSales }}</h4>
+                        <p class="text-muted small mb-0"><?php echo e(__('messages.completed')); ?></p>
+                        <h4 class="fw-bold text-success mb-0"><?php echo e($completedSales); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
                         <i class="bx bx-check-circle"></i>
@@ -71,8 +74,8 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">{{ __('messages.total_revenue') }}</p>
-                        <h4 class="fw-bold text-info mb-0">{{ format_currency($totalSaleAmount) }}</h4>
+                        <p class="text-muted small mb-0"><?php echo e(__('messages.total_revenue')); ?></p>
+                        <h4 class="fw-bold text-info mb-0"><?php echo e(format_currency($totalSaleAmount)); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
                         <i class="bx bx-rupee"></i>
@@ -84,9 +87,9 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <p class="text-muted small mb-0">{{ __('messages.total_due') }}</p>
-                        <h4 class="fw-bold {{ $totalSaleDue > 0 ? 'text-danger' : 'text-success' }} mb-0">
-                            {{ format_currency($totalSaleDue) }}</h4>
+                        <p class="text-muted small mb-0"><?php echo e(__('messages.total_due')); ?></p>
+                        <h4 class="fw-bold <?php echo e($totalSaleDue > 0 ? 'text-danger' : 'text-success'); ?> mb-0">
+                            <?php echo e(format_currency($totalSaleDue)); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-danger p-3" style="font-size:1.1rem;">
                         <i class="bx bx-time-five"></i>
@@ -100,69 +103,74 @@
         <div class="card shadow-sm">
             <div class="card-header border-bottom bg-white py-3">
                 <h6 class="fw-semibold mb-0"><i
-                        class="bx bx-filter-alt text-primary me-2"></i>{{ __('messages.filter_sales') }}</h6>
+                        class="bx bx-filter-alt text-primary me-2"></i><?php echo e(__('messages.filter_sales')); ?></h6>
             </div>
             <div class="card-body p-4">
-                <form action="{{ route('sales.index') }}" method="GET">
+                <form action="<?php echo e(route('sales.index')); ?>" method="GET">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold small">{{ __('messages.invoice_no_label') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.invoice_no_label')); ?></label>
                             <input class="form-control form-control-sm" name="invoice_no"
-                                placeholder="{{ __('messages.ph_invoice_no_format') }}" type="text"
-                                value="{{ request('invoice_no') }}">
+                                placeholder="<?php echo e(__('messages.ph_invoice_no_format')); ?>" type="text"
+                                value="<?php echo e(request('invoice_no')); ?>">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold small">{{ __('messages.customer') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.customer')); ?></label>
                             <select class="form-select form-select-sm" name="customer_id">
-                                <option value="">{{ __('messages.all_customers') }}</option>
-                                @foreach ($customers as $c)
-                                    <option {{ request('customer_id') == $c->id ? 'selected' : '' }}
-                                        value="{{ $c->id }}">{{ $c->name }}
+                                <option value=""><?php echo e(__('messages.all_customers')); ?></option>
+                                <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option <?php echo e(request('customer_id') == $c->id ? 'selected' : ''); ?>
+
+                                        value="<?php echo e($c->id); ?>"><?php echo e($c->name); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.status')); ?></label>
                             <select class="form-select form-select-sm" name="status">
-                                <option value="">{{ __('messages.all_statuses') }}</option>
-                                @foreach (['Completed', 'Pending', 'Draft', 'Repair', 'Ordered'] as $statusOpt)
-                                    <option {{ request('status') === $statusOpt ? 'selected' : '' }}
-                                        value="{{ $statusOpt }}">
-                                        {{ __('messages.' . strtolower($statusOpt)) }}
+                                <option value=""><?php echo e(__('messages.all_statuses')); ?></option>
+                                <?php $__currentLoopData = ['Completed', 'Pending', 'Draft', 'Repair', 'Ordered']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $statusOpt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option <?php echo e(request('status') === $statusOpt ? 'selected' : ''); ?>
+
+                                        value="<?php echo e($statusOpt); ?>">
+                                        <?php echo e(__('messages.' . strtolower($statusOpt))); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.payment_status_label') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.payment_status_label')); ?></label>
                             <select class="form-select form-select-sm" name="payment_status">
-                                <option value="">{{ __('messages.all_statuses') }}</option>
-                                <option {{ request('payment_status') === 'Unpaid' ? 'selected' : '' }} value="Unpaid">
-                                    {{ __('messages.unpaid') }}</option>
-                                <option {{ request('payment_status') === 'Partial' ? 'selected' : '' }} value="Partial">
-                                    {{ __('messages.partial') }}</option>
-                                <option {{ request('payment_status') === 'Paid' ? 'selected' : '' }} value="Paid">
-                                    {{ __('messages.paid') }}
+                                <option value=""><?php echo e(__('messages.all_statuses')); ?></option>
+                                <option <?php echo e(request('payment_status') === 'Unpaid' ? 'selected' : ''); ?> value="Unpaid">
+                                    <?php echo e(__('messages.unpaid')); ?></option>
+                                <option <?php echo e(request('payment_status') === 'Partial' ? 'selected' : ''); ?> value="Partial">
+                                    <?php echo e(__('messages.partial')); ?></option>
+                                <option <?php echo e(request('payment_status') === 'Paid' ? 'selected' : ''); ?> value="Paid">
+                                    <?php echo e(__('messages.paid')); ?>
+
                                 </option>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.date_from')); ?></label>
                             <input class="form-control form-control-sm flatpickr-filter-date" name="start_date"
-                                type="date" value="{{ request('start_date') }}">
+                                type="date" value="<?php echo e(request('start_date')); ?>">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.date_to')); ?></label>
                             <input class="form-control form-control-sm flatpickr-filter-date" name="end_date"
-                                type="date" value="{{ request('end_date') }}">
+                                type="date" value="<?php echo e(request('end_date')); ?>">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end mt-3 gap-2">
-                        <a class="btn btn-outline-secondary" href="{{ route('sales.index') }}"><i
-                                class="bx bx-reset me-1"></i>{{ __('messages.reset') }}</a>
+                        <a class="btn btn-outline-secondary" href="<?php echo e(route('sales.index')); ?>"><i
+                                class="bx bx-reset me-1"></i><?php echo e(__('messages.reset')); ?></a>
                         <button class="btn btn-primary" type="submit"><i class="bx bx-search me-1"></i>
-                            {{ __('messages.apply') }}</button>
+                            <?php echo e(__('messages.apply')); ?></button>
                     </div>
                 </form>
             </div>
@@ -176,134 +184,135 @@
                     <thead class="table-light">
                         <tr>
                             <th style="width:40px"><input class="form-check-input" id="selectAll" type="checkbox"></th>
-                            <th>{{ __('messages.th_no') }}</th>
-                            <th>{{ __('messages.th_invoice') }}</th>
-                            <th>{{ __('messages.th_date') }}</th>
-                            <th>{{ __('messages.th_customer') }}</th>
-                            <th>{{ __('messages.th_items') }}</th>
-                            <th class="text-end">{{ __('messages.th_total') }}</th>
-                            <th class="text-end">{{ __('messages.th_paid') }}</th>
-                            <th class="text-end">{{ __('messages.th_due') }}</th>
-                            <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th class="text-center">{{ __('messages.payment_label') }}</th>
-                            <th>{{ __('messages.th_created_by') }}</th>
-                            <th class="no-sort text-center">{{ __('messages.th_actions') }}</th>
+                            <th><?php echo e(__('messages.th_no')); ?></th>
+                            <th><?php echo e(__('messages.th_invoice')); ?></th>
+                            <th><?php echo e(__('messages.th_date')); ?></th>
+                            <th><?php echo e(__('messages.th_customer')); ?></th>
+                            <th><?php echo e(__('messages.th_items')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.th_total')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.th_paid')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.th_due')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.th_status')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.payment_label')); ?></th>
+                            <th><?php echo e(__('messages.th_created_by')); ?></th>
+                            <th class="no-sort text-center"><?php echo e(__('messages.th_actions')); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($sales as $index => $sale)
+                        <?php $__currentLoopData = $sales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td><input class="form-check-input row-checkbox" type="checkbox"
-                                        value="{{ $sale->id }}"></td>
-                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                                <td><code class="fw-bold">{{ $sale->invoice_no }}</code></td>
-                                <td class="text-muted">{{ $sale->invoice_date }}</td>
-                                <td><strong>{{ $sale->customer->name }}</strong></td>
-                                <td class="text-muted">{{ $sale->items->count() }} {{ __('messages.items_count') }}</td>
-                                <td class="fw-bold text-end">{{ format_currency($sale->grand_total) }}</td>
-                                <td class="text-success fw-semibold text-end">{{ format_currency($sale->paid_amount) }}
+                                        value="<?php echo e($sale->id); ?>"></td>
+                                <td class="text-muted fw-semibold"><?php echo e($index + 1); ?></td>
+                                <td><code class="fw-bold"><?php echo e($sale->invoice_no); ?></code></td>
+                                <td class="text-muted"><?php echo e($sale->invoice_date); ?></td>
+                                <td><strong><?php echo e($sale->customer->name); ?></strong></td>
+                                <td class="text-muted"><?php echo e($sale->items->count()); ?> <?php echo e(__('messages.items_count')); ?></td>
+                                <td class="fw-bold text-end"><?php echo e(format_currency($sale->grand_total)); ?></td>
+                                <td class="text-success fw-semibold text-end"><?php echo e(format_currency($sale->paid_amount)); ?>
+
                                 </td>
-                                <td class="text-danger fw-semibold text-end">{{ format_currency($sale->due_amount) }}</td>
+                                <td class="text-danger fw-semibold text-end"><?php echo e(format_currency($sale->due_amount)); ?></td>
                                 <td class="text-center">
-                                    @if ($sale->status === 'Completed')
-                                        <span class="badge rounded-pill bg-success">{{ __('messages.completed') }}</span>
-                                    @elseif($sale->status === 'Pending')
+                                    <?php if($sale->status === 'Completed'): ?>
+                                        <span class="badge rounded-pill bg-success"><?php echo e(__('messages.completed')); ?></span>
+                                    <?php elseif($sale->status === 'Pending'): ?>
                                         <span
-                                            class="badge rounded-pill bg-info text-dark">{{ __('messages.pending') }}</span>
-                                    @elseif($sale->status === 'Draft')
+                                            class="badge rounded-pill bg-info text-dark"><?php echo e(__('messages.pending')); ?></span>
+                                    <?php elseif($sale->status === 'Draft'): ?>
                                         <span
-                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.draft') }}</span>
-                                    @elseif($sale->status === 'Repair')
-                                        <span class="badge rounded-pill bg-secondary">{{ __('messages.repair') }}</span>
-                                    @elseif($sale->status === 'Ordered')
+                                            class="badge rounded-pill bg-warning text-dark"><?php echo e(__('messages.draft')); ?></span>
+                                    <?php elseif($sale->status === 'Repair'): ?>
+                                        <span class="badge rounded-pill bg-secondary"><?php echo e(__('messages.repair')); ?></span>
+                                    <?php elseif($sale->status === 'Ordered'): ?>
                                         <span
-                                            class="badge rounded-pill bg-primary">{{ __('messages.ordered_badge') }}</span>
-                                    @else
-                                        <span class="badge rounded-pill bg-secondary">{{ $sale->status }}</span>
-                                    @endif
+                                            class="badge rounded-pill bg-primary"><?php echo e(__('messages.ordered_badge')); ?></span>
+                                    <?php else: ?>
+                                        <span class="badge rounded-pill bg-secondary"><?php echo e($sale->status); ?></span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center">
-                                    @if ($sale->payment_status === 'Paid')
-                                        <span class="badge rounded-pill bg-success">{{ __('messages.paid') }}</span>
-                                    @elseif($sale->payment_status === 'Partial')
+                                    <?php if($sale->payment_status === 'Paid'): ?>
+                                        <span class="badge rounded-pill bg-success"><?php echo e(__('messages.paid')); ?></span>
+                                    <?php elseif($sale->payment_status === 'Partial'): ?>
                                         <span
-                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.partial') }}</span>
-                                    @else
-                                        <span class="badge rounded-pill bg-danger">{{ __('messages.unpaid') }}</span>
-                                    @endif
+                                            class="badge rounded-pill bg-warning text-dark"><?php echo e(__('messages.partial')); ?></span>
+                                    <?php else: ?>
+                                        <span class="badge rounded-pill bg-danger"><?php echo e(__('messages.unpaid')); ?></span>
+                                    <?php endif; ?>
                                 </td>
-                                <td class="text-muted small">{{ $sale->user->name ?? '-' }}</td>
+                                <td class="text-muted small"><?php echo e($sale->user->name ?? '-'); ?></td>
                                 <td class="text-center">
-                                    <div class="tbl-action-wrap">
-                                        @can('sales.view')
+                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sales.view')): ?>
                                             <a class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                href="{{ route('sales.show', $sale->id) }}"
-                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.view') }}">
+                                                href="<?php echo e(route('sales.show', $sale->id)); ?>"
+                                                style="width:30px;height:30px;padding:0;" title="<?php echo e(__('messages.view')); ?>">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
                                             <a class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action"
-                                                href="{{ route('sales.print', $sale->id) }}"
+                                                href="<?php echo e(route('sales.print', $sale->id)); ?>"
                                                 style="width:30px;height:30px;padding:0;" target="_blank"
-                                                title="{{ __('messages.print') }}">
+                                                title="<?php echo e(__('messages.print')); ?>">
                                                 <i class="bx bx-printer" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('sales.update')
-                                            @if ($sale->status === 'Completed' && $sale->returns->isEmpty())
-                                                @can('sale_returns.create')
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sales.update')): ?>
+                                            <?php if($sale->status === 'Completed' && $sale->returns->isEmpty()): ?>
+                                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sale_returns.create')): ?>
                                                     <a class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action"
-                                                        href="{{ route('sale-returns.create', ['sale_id' => $sale->id]) }}"
+                                                        href="<?php echo e(route('sale-returns.create', ['sale_id' => $sale->id])); ?>"
                                                         style="width:30px;height:30px;padding:0;" title="Sale Return">
                                                         <i class="bx bx-undo" style="font-size:1rem;"></i>
                                                     </a>
-                                                @endcan
-                                            @endif
+                                                <?php endif; ?>
+                                            <?php endif; ?>
                                             <button type="button"
                                                 class="btn btn-sm btn-icon btn-outline-success rounded-circle btn-action btn-payment-modal"
-                                                data-action="{{ route('sales.update-payment', $sale->id) }}"
-                                                data-due-amount="{{ $sale->due_amount }}"
-                                                data-grand-total="{{ $sale->grand_total }}" data-id="{{ $sale->id }}"
-                                                data-invoice="{{ $sale->invoice_no }}"
-                                                data-paid-amount="{{ $sale->paid_amount }}"
-                                                data-payment-method="{{ $sale->payment_method }}"
+                                                data-action="<?php echo e(route('sales.update-payment', $sale->id)); ?>"
+                                                data-due-amount="<?php echo e($sale->due_amount); ?>"
+                                                data-grand-total="<?php echo e($sale->grand_total); ?>" data-id="<?php echo e($sale->id); ?>"
+                                                data-invoice="<?php echo e($sale->invoice_no); ?>"
+                                                data-paid-amount="<?php echo e($sale->paid_amount); ?>"
+                                                data-payment-method="<?php echo e($sale->payment_method); ?>"
                                                 style="width:30px;height:30px;padding:0;"
-                                                title="{{ __('messages.set_update_payment') }}">
+                                                title="<?php echo e(__('messages.set_update_payment')); ?>">
                                                 <i class="bx bx-credit-card" style="font-size:1rem;"></i>
                                             </button>
                                             <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                href="{{ route('sales.edit', $sale->id) }}"
-                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.edit') }}">
+                                                href="<?php echo e(route('sales.edit', $sale->id)); ?>"
+                                                style="width:30px;height:30px;padding:0;" title="<?php echo e(__('messages.edit')); ?>">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('sales.delete')
-                                            <form action="{{ route('sales.destroy', $sale->id) }}" class="d-inline" style="display:contents;"
-                                                id="delete-form-{{ $sale->id }}" method="POST">
-                                                @csrf @method('DELETE')
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sales.delete')): ?>
+                                            <form action="<?php echo e(route('sales.destroy', $sale->id)); ?>" class="d-inline" style="display:contents;"
+                                                id="delete-form-<?php echo e($sale->id); ?>" method="POST">
+                                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                                 <button
                                                     class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
-                                                    data-id="{{ $sale->id }}" data-invoice="{{ $sale->invoice_no }}"
+                                                    data-id="<?php echo e($sale->id); ?>" data-invoice="<?php echo e($sale->invoice_no); ?>"
                                                     style="width:30px;height:30px;padding:0;"
-                                                    title="{{ __('messages.delete') }}" type="button">
+                                                    title="<?php echo e(__('messages.delete')); ?>" type="button">
                                                     <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                 </button>
                                             </form>
-                                        @endcan
+                                        <?php endif; ?>
                                     </div>
                                 </td>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    {{-- -- Payment Management Modal --------------------------------------- --}}
+    
     <div aria-hidden="true" aria-labelledby="paymentModalLabel" class="modal fade" id="paymentModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" style="max-width:480px;">
             <div class="modal-content border-0 shadow-lg overflow-hidden" style="border-radius:16px;">
 
-                {{-- Gradient Header --}}
+                
                 <div class="modal-header border-0 text-white py-4 px-4"
                     style="background:linear-gradient(135deg,#696cff 0%,#9c3fe4 100%);position:relative;">
                     <div class="d-flex align-items-center gap-3 w-100">
@@ -313,7 +322,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="modal-title fw-bold mb-0" id="paymentModalLabel">
-                                {{ __('messages.manage_payment') }}</h5>
+                                <?php echo e(__('messages.manage_payment')); ?></h5>
                             <input class="bg-transparent border-0 text-white opacity-75 small p-0 w-100"
                                 id="modal_invoice_no" readonly style="outline:none;" type="text">
                         </div>
@@ -329,20 +338,21 @@
                 </div>
 
                 <form id="paymentForm" method="POST">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <div class="modal-body p-4">
 
-                        {{-- Grand Total / Balance Due Cards --}}
+                        
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="rounded-3 p-3 text-center h-100"
                                     style="background:#f0f4ff;border:1.5px solid #d0d8ff;">
                                     <div class="text-muted small fw-semibold mb-1">
-                                        <i class="bx bx-receipt me-1"></i>{{ __('messages.grand_total') }}
+                                        <i class="bx bx-receipt me-1"></i><?php echo e(__('messages.grand_total')); ?>
+
                                     </div>
                                     <div class="fw-bold text-primary" style="font-size:1.4rem;"
                                         id="modal_grand_total_text">
-                                        {{ optional(current_currency())->symbol ?? '?' }}0.00
+                                        <?php echo e(optional(current_currency())->symbol ?? '?'); ?>0.00
                                     </div>
                                     <input id="modal_grand_total" type="hidden">
                                 </div>
@@ -351,25 +361,27 @@
                                 <div class="rounded-3 p-3 text-center h-100 balance-due-card"
                                     style="background:#fff0f0;border:1.5px solid #ffd0d0;">
                                     <div class="small fw-semibold mb-1 text-danger">
-                                        <i class="bx bx-time-five me-1"></i>{{ __('messages.balance_due') }}
+                                        <i class="bx bx-time-five me-1"></i><?php echo e(__('messages.balance_due')); ?>
+
                                     </div>
                                     <div class="fw-bold text-danger" style="font-size:1.4rem;"
                                         id="modal_balance_due_text">
-                                        {{ optional(current_currency())->symbol ?? '?' }}0.00
+                                        <?php echo e(optional(current_currency())->symbol ?? '?'); ?>0.00
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Paid Amount --}}
+                        
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-uppercase text-muted">
-                                {{ __('messages.paid_amount_field') }} <span class="text-danger">*</span>
+                                <?php echo e(__('messages.paid_amount_field')); ?> <span class="text-danger">*</span>
                             </label>
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text bg-light border-end-0 fw-bold text-primary"
                                     style="font-size:1rem;">
-                                    {{ optional(current_currency())->symbol ?? '?' }}
+                                    <?php echo e(optional(current_currency())->symbol ?? '?'); ?>
+
                                 </span>
                                 <input class="form-control border-start-0 fw-bold ps-0" id="modal_paid_amount"
                                     min="0" name="paid_amount" required step="0.01" type="number"
@@ -377,19 +389,19 @@
                             </div>
                         </div>
 
-                        {{-- Payment Method --}}
+                        
                         <div class="mb-3">
                             <label class="form-label fw-semibold small text-uppercase text-muted">
-                                {{ __('messages.payment_method_lbl') }} <span class="text-danger">*</span>
+                                <?php echo e(__('messages.payment_method_lbl')); ?> <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="modal_payment_method" name="payment_method"
                                 data-no-select2="1" required style="height:46px;">
-                                <option value="Cash">💵 {{ __('messages.pm_cash') }}</option>
-                                <option value="Razorpay">⚡ {{ __('messages.razorpay_option') }}</option>
+                                <option value="Cash">💵 <?php echo e(__('messages.pm_cash')); ?></option>
+                                <option value="Razorpay">⚡ <?php echo e(__('messages.razorpay_option')); ?></option>
                             </select>
                         </div>
 
-                        {{-- Razorpay info banner --}}
+                        
                         <div class="rounded-3 p-3 d-none" id="modal_razorpay_info"
                             style="background:linear-gradient(135deg,#eef2ff,#f5f0ff);border:1.5px solid #c7d2fe;">
                             <div class="d-flex align-items-center gap-2 mb-1">
@@ -398,46 +410,50 @@
                                     style="width:28px;height:28px;background:linear-gradient(135deg,#696cff,#9c3fe4);">
                                     <i class="bx bx-lock-alt text-white" style="font-size:.85rem;"></i>
                                 </span>
-                                <strong class="text-primary small">{{ __('messages.set_secure_razorpay') }}</strong>
+                                <strong class="text-primary small"><?php echo e(__('messages.set_secure_razorpay')); ?></strong>
                             </div>
                             <p class="text-muted small mb-0 ps-1">
                                 Click <strong style="color:#696cff;">"Pay via Razorpay"</strong> to open the secure payment
                                 gateway.
-                                {{ __('messages.set_payment_auto_recorded') }}
+                                <?php echo e(__('messages.set_payment_auto_recorded')); ?>
+
                             </p>
                         </div>
 
-                        {{-- Hidden Razorpay fields --}}
+                        
                         <input type="hidden" id="modal_razorpay_order_id" name="razorpay_order_id">
                         <input type="hidden" id="modal_razorpay_payment_id" name="razorpay_payment_id">
                         <input type="hidden" id="modal_razorpay_signature" name="razorpay_signature">
                         <input type="hidden" id="modal_sale_id" name="sale_id">
                     </div>
 
-                    {{-- Footer --}}
+                    
                     <div class="modal-footer border-top px-4 py-3 gap-2 bg-light" style="border-radius:0 0 16px 16px;">
                         <button class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal"
                             type="button">
-                            <i class="bx bx-x me-1"></i> {{ __('messages.cancel') }}
+                            <i class="bx bx-x me-1"></i> <?php echo e(__('messages.cancel')); ?>
+
                         </button>
                         <button class="btn btn-primary rounded-pill px-4 ms-auto" id="btnSavePayment" type="submit">
-                            <i class="bx bx-save me-1"></i> {{ __('messages.update_payment') }}
+                            <i class="bx bx-save me-1"></i> <?php echo e(__('messages.update_payment')); ?>
+
                         </button>
                         <button class="btn rounded-pill px-4 ms-auto d-none" id="btnModalPayRazorpay" type="button"
                             style="background:linear-gradient(135deg,#696cff,#9c3fe4);color:#fff;border:none;">
-                            <i class="bx bx-bolt-circle me-1"></i> {{ __('messages.pay_via_razorpay') }}
+                            <i class="bx bx-bolt-circle me-1"></i> <?php echo e(__('messages.pay_via_razorpay')); ?>
+
                         </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(document).ready(function() {
-            const sym = '{{ optional(current_currency())->symbol ?? '?' }}';
+            const sym = '<?php echo e(optional(current_currency())->symbol ?? '?'); ?>';
             $('#salesTable').DataTable({
                 responsive: true,
                 pageLength: 10,
@@ -451,12 +467,12 @@
                 dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "{{ __('messages.search') }}...",
-                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
-                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
-                    infoEmpty: "{{ __('messages.no_entries') }}",
-                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
-                    emptyTable: '<div style="width:100%;text-align:center;padding:2.5rem 0;"><div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;"><i class="bx bx-receipt" style="font-size:3rem;opacity:.3;line-height:1;"></i>{{ __('messages.no_records') }}</div></div>',
+                    searchPlaceholder: "<?php echo e(__('messages.search')); ?>...",
+                    lengthMenu: "<?php echo e(__('messages.show')); ?> _MENU_ <?php echo e(__('messages.entries')); ?>",
+                    info: "<?php echo e(__('messages.showing')); ?> _START_ <?php echo e(__('messages.to')); ?> _END_ <?php echo e(__('messages.of')); ?> _TOTAL_ <?php echo e(__('messages.entries')); ?>",
+                    infoEmpty: "<?php echo e(__('messages.no_entries')); ?>",
+                    infoFiltered: "(<?php echo e(__('messages.filtered_from')); ?> _MAX_ <?php echo e(__('messages.total_entries')); ?>)",
+                    emptyTable: '<div style="width:100%;text-align:center;padding:2.5rem 0;"><div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;"><i class="bx bx-receipt" style="font-size:3rem;opacity:.3;line-height:1;"></i><?php echo e(__('messages.no_records')); ?></div></div>',
                     paginate: {
                         previous: '<i class="bx bx-chevron-left"></i>',
                         next: '<i class="bx bx-chevron-right"></i>'
@@ -484,14 +500,14 @@
                     invoice = $(this).data('invoice'),
                     form = $(`#delete-form-${id}`);
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: `{{ __('messages.delete') }} "${invoice}"?`,
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: `<?php echo e(__('messages.delete')); ?> "${invoice}"?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then((r) => {
                     if (r.isConfirmed) {
                         $.ajax({
@@ -501,7 +517,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                        title: '{{ __('messages.deleted_title') }}',
+                                        title: '<?php echo e(__('messages.deleted_title')); ?>',
                                         text: res.message,
                                         icon: 'success',
                                         confirmButtonColor: '#696cff'
@@ -511,7 +527,7 @@
                                 }
                             },
                             error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                showAdminToast('<?php echo e(__('messages.error_occurred')); ?>',
                                     'error');
                             }
                         });
@@ -541,27 +557,27 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: '{{ __('messages.confirm_delete') }}',
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: '<?php echo e(__('messages.confirm_delete')); ?>',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then((r) => {
                     if (r.isConfirmed) {
                         $.ajax({
-                            url: '{{ route('sales.bulk-destroy') }}',
+                            url: '<?php echo e(route('sales.bulk-destroy')); ?>',
                             type: 'DELETE',
                             data: {
-                                _token: '{{ csrf_token() }}',
+                                _token: '<?php echo e(csrf_token()); ?>',
                                 ids: ids
                             },
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __('messages.deleted_title') }}',
+                                            title: '<?php echo e(__('messages.deleted_title')); ?>',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -573,7 +589,7 @@
                             },
                             error: function(xhr) {
                                 const msg = xhr.responseJSON?.message ||
-                                    '{{ __('messages.error_occurred') }}';
+                                    '<?php echo e(__('messages.error_occurred')); ?>';
                                 showAdminToast(msg, 'error');
                             }
                         });
@@ -660,7 +676,7 @@
                     '<span class="spinner-border spinner-border-sm me-1"></span> Processing�');
 
                 $.ajax({
-                    url: "{{ route('razorpay.create-order') }}",
+                    url: "<?php echo e(route('razorpay.create-order')); ?>",
                     type: 'POST',
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content'),
@@ -671,12 +687,12 @@
                             key: res.key_id,
                             amount: res.amount,
                             currency: res.currency,
-                            name: '{{ addslashes(config('app.name')) }}',
+                            name: '<?php echo e(addslashes(config('app.name'))); ?>',
                             description: 'Sale Payment � ' + $('#modal_invoice_no').val(),
                             order_id: res.order_id,
                             prefill: {
-                                name: '{{ addslashes(auth()->user()->name ?? '') }}',
-                                email: '{{ addslashes(auth()->user()->email ?? '') }}',
+                                name: '<?php echo e(addslashes(auth()->user()->name ?? '')); ?>',
+                                email: '<?php echo e(addslashes(auth()->user()->email ?? '')); ?>',
                             },
                             theme: {
                                 color: '#696cff'
@@ -781,6 +797,8 @@
         });
     </script>
 
-    {{-- Razorpay JS SDK --}}
+    
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Linux\Desktop\ims\resources\views/sales/index.blade.php ENDPATH**/ ?>

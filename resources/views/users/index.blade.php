@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.user_management'))
 
 @section('content')
@@ -216,27 +216,29 @@
                                 </td>
                                 <td class="text-muted small">{{ $u->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         @can('users.view')
                                             <a href="{{ route('users.show', $u->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                class="btn btn-sm btn-outline-info btn-action"
+                                                title="{{ __('messages.view') }}"
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('users.update')
                                             <a href="{{ route('users.edit', $u->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                class="btn btn-sm btn-outline-primary btn-action"
+                                                title="{{ __('messages.edit') }}"
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                            {{-- Unlock button � shown only when account is locked --}}
+                                            {{-- Unlock button – shown only when account is locked --}}
                                             @if ($u->locked_until && now()->lt($u->locked_until))
                                                 <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-warning rounded-circle btn-action btn-unlock"
+                                                    class="btn btn-sm btn-outline-warning btn-action btn-unlock"
                                                     data-id="{{ $u->id }}" data-name="{{ $u->name }}"
                                                     title="{{ __('messages.unlock_account') }}"
-                                                    style="width:30px;height:30px;padding:0;">
+                                                    style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                     <i class="bx bx-lock-open-alt" style="font-size:1rem;"></i>
                                                 </button>
                                             @endif
@@ -245,13 +247,12 @@
                                             @if (auth()->id() !== $u->id)
                                                 <form id="delete-form-{{ $u->id }}"
                                                     action="{{ route('users.destroy', $u->id) }}" method="POST"
-                                                    class="d-inline">
+                                                    class="d-inline" style="display:contents;">
                                                     @csrf @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
                                                         data-id="{{ $u->id }}" data-name="{{ $u->name }}"
                                                         title="{{ __('messages.delete') }}"
-                                                        style="width:30px;height:30px;padding:0;">
+                                                        style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                         <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                     </button>
                                                 </form>

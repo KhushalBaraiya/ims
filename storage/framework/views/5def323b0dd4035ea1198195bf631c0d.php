@@ -480,26 +480,36 @@
                 const total = recipients.length;
 
                 function updateProgress() {
-                    const pct = Math.round((current / total) * 100);
+                    const pct = Math.round(((current + 1) / total) * 100);
                     $('#sendProgressBar').css('width', pct + '%');
-                    $('#sendProgressText').text(current + ' / ' + total);
                     if (current >= total) {
+                        $('#sendProgressText').text(total + ' / ' + total);
                         $('#sendProgressName').text(waAllDone);
                         $('#nextRecipient, #prevRecipient').addClass('d-none');
                         $('#closeSendModal').removeClass('d-none');
+                        $('#sendProgressBar').css('width', '100%');
                     } else {
                         const r = recipients[current];
+                        $('#sendProgressText').text((current + 1) + ' / ' + total);
                         $('#sendProgressName').text('→ ' + r.name + '  (' + r.phone + ')');
                         $('#closeSendModal').addClass('d-none');
                         $('#nextRecipient').removeClass('d-none');
+                        // Hide prev on first item
+                        if (current === 0) {
+                            $('#prevRecipient').addClass('d-none');
+                        } else {
+                            $('#prevRecipient').removeClass('d-none');
+                        }
                     }
                 }
 
                 function openWA(idx) {
                     if (idx >= total) return;
-                    const phone = recipients[idx].phone.toString().replace(/[\s\-\+\(\)]/g, '');
+                    const raw = recipients[idx].phone.toString().replace(/[\s\-\+\(\)]/g, '');
+                    // Ensure phone starts with country code (add 91 if 10 digits for India)
+                    const phone = (raw.length === 10 && /^[6-9]/.test(raw)) ? '91' + raw : raw;
                     window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(message),
-                        '_blank');
+                    '_blank');
                 }
 
                 updateProgress();
@@ -508,8 +518,12 @@
 
                 $('#nextRecipient').off('click').on('click', function() {
                     current++;
-                    updateProgress();
-                    if (current < total) openWA(current);
+                    if (current < total) {
+                        updateProgress();
+                        openWA(current);
+                    } else {
+                        updateProgress(); // show done state
+                    }
                 });
                 $('#prevRecipient').off('click').on('click', function() {
                     if (current > 0) {

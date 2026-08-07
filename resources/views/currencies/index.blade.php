@@ -202,31 +202,32 @@
                                 </td>
                                 <td class="text-muted small">{{ $currency->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         @can('currencies.view')
                                             <a href="{{ route('currencies.show', $currency->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
-                                                title="{{ __('messages.view') }}" style="width:30px;height:30px;padding:0;">
+                                                class="btn btn-sm btn-outline-info btn-action"
+                                                title="{{ __('messages.view') }}"
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('currencies.update')
                                             <a href="{{ route('currencies.edit', $currency->id) }}"
-                                                class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
-                                                title="{{ __('messages.edit') }}" style="width:30px;height:30px;padding:0;">
+                                                class="btn btn-sm btn-outline-primary btn-action"
+                                                title="{{ __('messages.edit') }}"
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('currencies.delete')
                                             <form id="delete-form-{{ $currency->id }}"
                                                 action="{{ route('currencies.destroy', $currency->id) }}" method="POST"
-                                                class="d-inline">
+                                                class="d-inline" style="display:contents;">
                                                 @csrf @method('DELETE')
-                                                <button type="button"
-                                                    class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
                                                     data-id="{{ $currency->id }}" data-name="{{ $currency->name }}"
                                                     title="{{ __('messages.delete') }}"
-                                                    style="width:30px;height:30px;padding:0;">
+                                                    style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                     <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                 </button>
                                             </form>

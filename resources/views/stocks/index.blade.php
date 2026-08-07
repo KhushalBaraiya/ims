@@ -223,7 +223,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         @can('stocks.create')
                                             <a href="{{ route('stocks.adjust', ['product_id' => $product->id]) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"

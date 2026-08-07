@@ -460,16 +460,7 @@
             border-radius: 0.375rem !important;
             box-shadow: none !important;
             outline: none !important;
-            transition: border-co
-            
-            
-            
-            
-            
-            
-            
-            
-            or .15s ease-in-out !important;
+            transition: border-co or .15s ease-in-out !important;
         }
 
         .dataTables_filter input:focus {
@@ -652,13 +643,75 @@
     <!-- Admin Custom Styles -->
     <style>
         .btn-action {
-            width: 38px;
-            height: 38px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            min-height: 30px !important;
+            max-height: 30px !important;
+            padding: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1rem !important;
+            border-radius: 6px !important;
+            flex-shrink: 0 !important;
+            vertical-align: middle !important;
+            line-height: 1 !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+        }
+
+        /* Remove rounded-circle override on action buttons */
+        .btn-action.rounded-circle {
+            border-radius: 6px !important;
+        }
+
+        /* ===== Table Action Buttons — universal fix ===== */
+        /* Targets the wrapper div used in all index pages */
+        .tbl-action-wrap {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            flex-wrap: nowrap !important;
+        }
+
+        .tbl-action-wrap form {
+            display: contents !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .tbl-action-wrap a,
+        .tbl-action-wrap button {
+            width: 30px !important;
+            height: 30px !important;
+            min-width: 30px !important;
+            min-height: 30px !important;
+            max-height: 30px !important;
+            max-width: 30px !important;
+            padding: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 6px !important;
+            flex-shrink: 0 !important;
+            line-height: 1 !important;
+            box-sizing: border-box !important;
+            font-size: 1rem !important;
+            overflow: hidden !important;
+        }
+
+        .table-actions {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            flex-wrap: nowrap !important;
+        }
+
+        .table-actions form {
+            display: contents !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .tbl-img {

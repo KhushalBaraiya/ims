@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 @section('title', __('messages.role_management'))
 
 @section('content')
@@ -92,30 +92,32 @@
                                 </td>
                                 <td class="text-muted small">{{ $role->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         @can('roles.view')
-                                            <a class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
+                                            <a class="btn btn-sm btn-outline-info btn-action"
                                                 href="{{ route('roles.show', $role->id) }}"
-                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.view') }}">
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;"
+                                                title="{{ __('messages.view') }}">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('roles.update')
-                                            <a class="btn btn-sm btn-icon btn-outline-primary rounded-circle btn-action"
+                                            <a class="btn btn-sm btn-outline-primary btn-action"
                                                 href="{{ route('roles.edit', $role->id) }}"
-                                                style="width:30px;height:30px;padding:0;" title="{{ __('messages.edit') }}">
+                                                style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;"
+                                                title="{{ __('messages.edit') }}">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
                                         @endcan
                                         @can('roles.delete')
                                             @if ($role->name !== 'super_admin')
                                                 <form action="{{ route('roles.destroy', $role->id) }}" class="d-inline"
-                                                    id="delete-form-{{ $role->id }}" method="POST">
+                                                    style="display:contents;" id="delete-form-{{ $role->id }}"
+                                                    method="POST">
                                                     @csrf @method('DELETE')
-                                                    <button
-                                                        class="btn btn-sm btn-icon btn-outline-danger rounded-circle btn-action delete-btn"
+                                                    <button class="btn btn-sm btn-outline-danger delete-btn"
                                                         data-id="{{ $role->id }}" data-name="{{ $role->name }}"
-                                                        style="width:30px;height:30px;padding:0;"
+                                                        style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;"
                                                         title="{{ __('messages.delete') }}" type="button">
                                                         <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                     </button>

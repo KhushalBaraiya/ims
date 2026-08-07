@@ -1,52 +1,55 @@
-﻿@extends('layouts.admin')
-@section('title', __('messages.purchase_returns'))
+﻿
+<?php $__env->startSection('title', __('messages.purchase_returns')); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">{{ __('messages.purchase_returns') }}</h4>
+            <h4 class="fw-bold mb-1"><?php echo e(__('messages.purchase_returns')); ?></h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('messages.menu_purchase_returns') }}</li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>"><?php echo e(__('messages.dashboard')); ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo e(__('messages.menu_purchase_returns')); ?></li>
                 </ol>
             </nav>
         </div>
         <div class="d-flex gap-2 align-items-center">
             <button type="button" id="toggleFiltersBtn" class="btn btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bx bx-filter-alt"></i> {{ __('messages.filters') }}
+                <i class="bx bx-filter-alt"></i> <?php echo e(__('messages.filters')); ?>
+
                 <i id="filtersChevron" class="bx bx-chevron-down"></i>
             </button>
-            @can('purchase_returns.delete')
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('purchase_returns.delete')): ?>
                 <button type="button" id="bulkDeleteBtn" class="btn btn-danger d-none">
-                    <i class="bx bx-trash me-1"></i> {{ __('messages.delete_multiples') }}
+                    <i class="bx bx-trash me-1"></i> <?php echo e(__('messages.delete_multiples')); ?>
+
                 </button>
-            @endcan
-            @can('purchase_returns.create')
-                <a href="{{ route('purchase-returns.create') }}"
+            <?php endif; ?>
+            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('purchase_returns.create')): ?>
+                <a href="<?php echo e(route('purchase-returns.create')); ?>"
                     class="btn btn-outline-primary d-flex align-items-center gap-1">
-                    <i class="bx bx-plus"></i> {{ __('messages.new_return') }}
+                    <i class="bx bx-plus"></i> <?php echo e(__('messages.new_return')); ?>
+
                 </a>
-            @endcan
+            <?php endif; ?>
         </div>
     </div>
 
-    {{-- Summary Stats --}}
-    @php
+    
+    <?php
         use App\Models\PurchaseReturn;
         $totalReturns = PurchaseReturn::count();
         $completedReturns = PurchaseReturn::where('status', 'Completed')->count();
         $pendingReturns = PurchaseReturn::where('status', 'Pending')->count();
         $totalRefunded = PurchaseReturn::where('status', 'Completed')->sum('refunded_amount');
-    @endphp
+    ?>
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.th_total') }}</p>
-                        <h4 class="mb-0 fw-bold text-primary">{{ $totalReturns }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.th_total')); ?></p>
+                        <h4 class="mb-0 fw-bold text-primary"><?php echo e($totalReturns); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-primary p-3" style="font-size:1.1rem;">
                         <i class="bx bx-undo"></i>
@@ -58,8 +61,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.completed') }}</p>
-                        <h4 class="mb-0 fw-bold text-success">{{ $completedReturns }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.completed')); ?></p>
+                        <h4 class="mb-0 fw-bold text-success"><?php echo e($completedReturns); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-success p-3" style="font-size:1.1rem;">
                         <i class="bx bx-check-circle"></i>
@@ -71,8 +74,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.pending') }}</p>
-                        <h4 class="mb-0 fw-bold text-warning">{{ $pendingReturns }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.pending')); ?></p>
+                        <h4 class="mb-0 fw-bold text-warning"><?php echo e($pendingReturns); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-warning p-3" style="font-size:1.1rem;">
                         <i class="bx bx-time-five"></i>
@@ -84,8 +87,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-0 text-muted small">{{ __('messages.total_refunded') }}</p>
-                        <h4 class="mb-0 fw-bold text-info">{{ format_currency($totalRefunded) }}</h4>
+                        <p class="mb-0 text-muted small"><?php echo e(__('messages.total_refunded')); ?></p>
+                        <h4 class="mb-0 fw-bold text-info"><?php echo e(format_currency($totalRefunded)); ?></h4>
                     </div>
                     <span class="avatar-initial rounded-circle bg-label-info p-3" style="font-size:1.1rem;">
                         <i class="bx bx-rupee"></i>
@@ -95,63 +98,67 @@
         </div>
     </div>
 
-    {{-- Filters --}}
+    
     <div id="filtersCard" class="d-none mb-4">
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3 border-bottom">
                 <h6 class="mb-0 fw-semibold">
-                    <i class="bx bx-filter-alt me-2 text-primary"></i>{{ __('messages.filter_pur_returns') }}
+                    <i class="bx bx-filter-alt me-2 text-primary"></i><?php echo e(__('messages.filter_pur_returns')); ?>
+
                 </h6>
             </div>
             <div class="card-body p-4">
-                <form method="GET" action="{{ route('purchase-returns.index') }}">
+                <form method="GET" action="<?php echo e(route('purchase-returns.index')); ?>">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold small">{{ __('messages.return_no_label') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.return_no_label')); ?></label>
                             <input type="text" name="return_no" class="form-control form-control-sm"
-                                value="{{ request('return_no') }}"
-                                placeholder="{{ __('messages.ph_purchase_ret_format') }}">
+                                value="<?php echo e(request('return_no')); ?>"
+                                placeholder="<?php echo e(__('messages.ph_purchase_ret_format')); ?>">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label fw-semibold small">{{ __('messages.supplier') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.supplier')); ?></label>
                             <select name="supplier_id" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.all_suppliers') }}</option>
-                                @foreach ($suppliers as $s)
-                                    <option value="{{ $s->id }}"
-                                        {{ request('supplier_id') == $s->id ? 'selected' : '' }}>
-                                        {{ $s->name }}
+                                <option value=""><?php echo e(__('messages.all_suppliers')); ?></option>
+                                <?php $__currentLoopData = $suppliers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($s->id); ?>"
+                                        <?php echo e(request('supplier_id') == $s->id ? 'selected' : ''); ?>>
+                                        <?php echo e($s->name); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.status') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.status')); ?></label>
                             <select name="status" class="form-select form-select-sm">
-                                <option value="">{{ __('messages.all_statuses') }}</option>
-                                <option value="Completed" {{ request('status') === 'Completed' ? 'selected' : '' }}>
-                                    {{ __('messages.completed') }}</option>
-                                <option value="Pending" {{ request('status') === 'Pending' ? 'selected' : '' }}>
-                                    {{ __('messages.pending') }}</option>
+                                <option value=""><?php echo e(__('messages.all_statuses')); ?></option>
+                                <option value="Completed" <?php echo e(request('status') === 'Completed' ? 'selected' : ''); ?>>
+                                    <?php echo e(__('messages.completed')); ?></option>
+                                <option value="Pending" <?php echo e(request('status') === 'Pending' ? 'selected' : ''); ?>>
+                                    <?php echo e(__('messages.pending')); ?></option>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.date_from') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.date_from')); ?></label>
                             <input type="date" name="start_date"
                                 class="form-control form-control-sm flatpickr-filter-date"
-                                value="{{ request('start_date') }}">
+                                value="<?php echo e(request('start_date')); ?>">
                         </div>
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold small">{{ __('messages.date_to') }}</label>
+                            <label class="form-label fw-semibold small"><?php echo e(__('messages.date_to')); ?></label>
                             <input type="date" name="end_date" class="form-control form-control-sm flatpickr-filter-date"
-                                value="{{ request('end_date') }}">
+                                value="<?php echo e(request('end_date')); ?>">
                         </div>
                     </div>
                     <div class="d-flex justify-content-end gap-2 mt-3">
-                        <a href="{{ route('purchase-returns.index') }}" class="btn btn-outline-secondary">
-                            <i class="bx bx-reset me-1"></i>{{ __('messages.reset') }}
+                        <a href="<?php echo e(route('purchase-returns.index')); ?>" class="btn btn-outline-secondary">
+                            <i class="bx bx-reset me-1"></i><?php echo e(__('messages.reset')); ?>
+
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bx bx-search me-1"></i>{{ __('messages.apply') }}
+                            <i class="bx bx-search me-1"></i><?php echo e(__('messages.apply')); ?>
+
                         </button>
                     </div>
                 </form>
@@ -159,7 +166,7 @@
         </div>
     </div>
 
-    {{-- Table --}}
+    
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive p-3">
@@ -167,102 +174,103 @@
                     <thead class="table-light">
                         <tr>
                             <th style="width:40px"><input type="checkbox" id="selectAll" class="form-check-input"></th>
-                            <th>{{ __('messages.th_no') }}</th>
-                            <th>{{ __('messages.th_return_no') }}</th>
-                            <th>{{ __('messages.th_date') }}</th>
-                            <th>{{ __('messages.th_purchase_no') }}</th>
-                            <th>{{ __('messages.th_supplier') }}</th>
-                            <th class="text-center">{{ __('messages.qty') }}</th>
-                            <th class="text-end">{{ __('messages.th_total') }}</th>
-                            <th class="text-end">{{ __('messages.th_refunded') }}</th>
-                            <th class="text-center">{{ __('messages.th_status') }}</th>
-                            <th>{{ __('messages.th_created_by') }}</th>
-                            <th class="text-center no-sort">{{ __('messages.th_actions') }}</th>
+                            <th><?php echo e(__('messages.th_no')); ?></th>
+                            <th><?php echo e(__('messages.th_return_no')); ?></th>
+                            <th><?php echo e(__('messages.th_date')); ?></th>
+                            <th><?php echo e(__('messages.th_purchase_no')); ?></th>
+                            <th><?php echo e(__('messages.th_supplier')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.qty')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.th_total')); ?></th>
+                            <th class="text-end"><?php echo e(__('messages.th_refunded')); ?></th>
+                            <th class="text-center"><?php echo e(__('messages.th_status')); ?></th>
+                            <th><?php echo e(__('messages.th_created_by')); ?></th>
+                            <th class="text-center no-sort"><?php echo e(__('messages.th_actions')); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($returns as $index => $return)
+                        <?php $__currentLoopData = $returns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $return): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td><input type="checkbox" class="form-check-input row-checkbox"
-                                        value="{{ $return->id }}"></td>
-                                <td class="text-muted fw-semibold">{{ $index + 1 }}</td>
-                                <td><code class="fw-bold">{{ $return->return_no }}</code></td>
-                                <td class="text-muted">{{ $return->return_date }}</td>
+                                        value="<?php echo e($return->id); ?>"></td>
+                                <td class="text-muted fw-semibold"><?php echo e($index + 1); ?></td>
+                                <td><code class="fw-bold"><?php echo e($return->return_no); ?></code></td>
+                                <td class="text-muted"><?php echo e($return->return_date); ?></td>
                                 <td>
-                                    @if ($return->purchase)
-                                        <a href="{{ route('purchases.show', $return->purchase_id) }}" class="text-muted">
-                                            <code>{{ $return->purchase->purchase_no }}</code>
+                                    <?php if($return->purchase): ?>
+                                        <a href="<?php echo e(route('purchases.show', $return->purchase_id)); ?>" class="text-muted">
+                                            <code><?php echo e($return->purchase->purchase_no); ?></code>
                                         </a>
-                                    @else
+                                    <?php else: ?>
                                         <span class="text-muted">-</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
-                                <td><strong>{{ $return->supplier->name ?? '-' }}</strong></td>
+                                <td><strong><?php echo e($return->supplier->name ?? '-'); ?></strong></td>
                                 <td class="text-center fw-bold text-danger">
-                                    {{ $return->items->sum('quantity') }}
+                                    <?php echo e($return->items->sum('quantity')); ?>
+
                                 </td>
-                                <td class="text-end fw-bold">{{ format_currency($return->grand_total) }}</td>
+                                <td class="text-end fw-bold"><?php echo e(format_currency($return->grand_total)); ?></td>
                                 <td class="text-end text-success fw-semibold">
-                                    {{ format_currency($return->refunded_amount) }}</td>
+                                    <?php echo e(format_currency($return->refunded_amount)); ?></td>
                                 <td class="text-center">
-                                    @if ($return->status === 'Completed')
-                                        <span class="badge rounded-pill bg-success">{{ __('messages.completed') }}</span>
-                                    @else
+                                    <?php if($return->status === 'Completed'): ?>
+                                        <span class="badge rounded-pill bg-success"><?php echo e(__('messages.completed')); ?></span>
+                                    <?php else: ?>
                                         <span
-                                            class="badge rounded-pill bg-warning text-dark">{{ __('messages.pending') }}</span>
-                                    @endif
+                                            class="badge rounded-pill bg-warning text-dark"><?php echo e(__('messages.pending')); ?></span>
+                                    <?php endif; ?>
                                 </td>
-                                <td class="text-muted small">{{ $return->user->name ?? '-' }}</td>
+                                <td class="text-muted small"><?php echo e($return->user->name ?? '-'); ?></td>
                                 <td class="text-center">
                                     <div class="tbl-action-wrap">
-                                        @can('purchase_returns.view')
-                                            <a href="{{ route('purchase-returns.show', $return->id) }}"
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('purchase_returns.view')): ?>
+                                            <a href="<?php echo e(route('purchase-returns.show', $return->id)); ?>"
                                                 class="btn btn-sm btn-outline-info btn-action"
-                                                title="{{ __('messages.view') }}"
+                                                title="<?php echo e(__('messages.view')); ?>"
                                                 style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-show" style="font-size:1rem;"></i>
                                             </a>
-                                            <a href="{{ route('purchase-returns.print', $return->id) }}" target="_blank"
+                                            <a href="<?php echo e(route('purchase-returns.print', $return->id)); ?>" target="_blank"
                                                 class="btn btn-sm btn-outline-success btn-action"
-                                                title="{{ __('messages.print') }}"
+                                                title="<?php echo e(__('messages.print')); ?>"
                                                 style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-printer" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('purchase_returns.update')
-                                            <a href="{{ route('purchase-returns.edit', $return->id) }}"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('purchase_returns.update')): ?>
+                                            <a href="<?php echo e(route('purchase-returns.edit', $return->id)); ?>"
                                                 class="btn btn-sm btn-outline-primary btn-action"
-                                                title="{{ __('messages.edit') }}"
+                                                title="<?php echo e(__('messages.edit')); ?>"
                                                 style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                 <i class="bx bx-edit" style="font-size:1rem;"></i>
                                             </a>
-                                        @endcan
-                                        @can('purchase_returns.delete')
-                                            <form id="delete-form-{{ $return->id }}"
-                                                action="{{ route('purchase-returns.destroy', $return->id) }}" method="POST"
+                                        <?php endif; ?>
+                                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('purchase_returns.delete')): ?>
+                                            <form id="delete-form-<?php echo e($return->id); ?>"
+                                                action="<?php echo e(route('purchase-returns.destroy', $return->id)); ?>" method="POST"
                                                 class="d-inline" style="display:contents;">
-                                                @csrf @method('DELETE')
+                                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                                 <button type="button" class="btn btn-sm btn-outline-danger delete-btn"
-                                                    data-id="{{ $return->id }}" data-no="{{ $return->return_no }}"
-                                                    title="{{ __('messages.delete') }}"
+                                                    data-id="<?php echo e($return->id); ?>" data-no="<?php echo e($return->return_no); ?>"
+                                                    title="<?php echo e(__('messages.delete')); ?>"
                                                     style="width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
                                                     <i class="bx bx-trash" style="font-size:1rem;"></i>
                                                 </button>
                                             </form>
-                                        @endcan
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(document).ready(function() {
             $('#purchaseReturnsTable').DataTable({
@@ -278,12 +286,12 @@
                 dom: '<"row px-3 py-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row px-3 py-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "{{ __('messages.search') }}...",
-                    lengthMenu: "{{ __('messages.show') }} _MENU_ {{ __('messages.entries') }}",
-                    info: "{{ __('messages.showing') }} _START_ {{ __('messages.to') }} _END_ {{ __('messages.of') }} _TOTAL_ {{ __('messages.entries') }}",
-                    infoEmpty: "{{ __('messages.no_entries') }}",
-                    infoFiltered: "({{ __('messages.filtered_from') }} _MAX_ {{ __('messages.total_entries') }})",
-                    emptyTable: '<div style="width:100%;text-align:center;padding:2.5rem 0;"><div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;"><i class="bx bx-cart-download" style="font-size:3rem;opacity:.3;line-height:1;"></i>{{ __('messages.no_records') }}</div></div>',
+                    searchPlaceholder: "<?php echo e(__('messages.search')); ?>...",
+                    lengthMenu: "<?php echo e(__('messages.show')); ?> _MENU_ <?php echo e(__('messages.entries')); ?>",
+                    info: "<?php echo e(__('messages.showing')); ?> _START_ <?php echo e(__('messages.to')); ?> _END_ <?php echo e(__('messages.of')); ?> _TOTAL_ <?php echo e(__('messages.entries')); ?>",
+                    infoEmpty: "<?php echo e(__('messages.no_entries')); ?>",
+                    infoFiltered: "(<?php echo e(__('messages.filtered_from')); ?> _MAX_ <?php echo e(__('messages.total_entries')); ?>)",
+                    emptyTable: '<div style="width:100%;text-align:center;padding:2.5rem 0;"><div class="text-muted" style="display:inline-flex;flex-direction:column;align-items:center;gap:8px;"><i class="bx bx-cart-download" style="font-size:3rem;opacity:.3;line-height:1;"></i><?php echo e(__('messages.no_records')); ?></div></div>',
                     paginate: {
                         previous: '<i class="bx bx-chevron-left"></i>',
                         next: '<i class="bx bx-chevron-right"></i>'
@@ -311,14 +319,14 @@
                 const no = $(this).data('no');
                 const form = $(`#delete-form-${id}`);
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: `{{ __('messages.delete') }} "${no}"?`,
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: `<?php echo e(__('messages.delete')); ?> "${no}"?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then((r) => {
                     if (r.isConfirmed) {
                         $.ajax({
@@ -328,7 +336,7 @@
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                        title: '{{ __('messages.deleted_title') }}',
+                                        title: '<?php echo e(__('messages.deleted_title')); ?>',
                                         text: res.message,
                                         icon: 'success',
                                         confirmButtonColor: '#696cff'
@@ -338,7 +346,7 @@
                                 }
                             },
                             error: function() {
-                                showAdminToast('{{ __('messages.error_occurred') }}',
+                                showAdminToast('<?php echo e(__('messages.error_occurred')); ?>',
                                     'error');
                             }
                         });
@@ -368,27 +376,27 @@
                 }).get();
                 if (!ids.length) return;
                 Swal.fire({
-                    title: '{{ __('messages.confirm_delete') }}',
-                    text: '{{ __('messages.bulk_delete_returns_warn') }}',
+                    title: '<?php echo e(__('messages.confirm_delete')); ?>',
+                    text: '<?php echo e(__('messages.bulk_delete_returns_warn')); ?>',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: '{{ __('messages.yes_delete') }}',
-                    cancelButtonText: '{{ __('messages.cancel') }}'
+                    confirmButtonText: '<?php echo e(__('messages.yes_delete')); ?>',
+                    cancelButtonText: '<?php echo e(__('messages.cancel')); ?>'
                 }).then((r) => {
                     if (r.isConfirmed) {
                         $.ajax({
-                            url: '{{ route('purchase-returns.bulk-destroy') }}',
+                            url: '<?php echo e(route('purchase-returns.bulk-destroy')); ?>',
                             type: 'DELETE',
                             data: {
-                                _token: '{{ csrf_token() }}',
+                                _token: '<?php echo e(csrf_token()); ?>',
                                 ids: ids
                             },
                             success: function(res) {
                                 if (res.success) {
                                     Swal.fire({
-                                            title: '{{ __('messages.deleted_title') }}',
+                                            title: '<?php echo e(__('messages.deleted_title')); ?>',
                                             text: res.message,
                                             icon: 'success',
                                             confirmButtonColor: '#696cff'
@@ -400,7 +408,7 @@
                             },
                             error: function(xhr) {
                                 const msg = xhr.responseJSON?.message ||
-                                    '{{ __('messages.error_occurred') }}';
+                                    '<?php echo e(__('messages.error_occurred')); ?>';
                                 showAdminToast(msg, 'error');
                             }
                         });
@@ -409,4 +417,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Linux\Desktop\ims\resources\views/purchase_returns/index.blade.php ENDPATH**/ ?>
