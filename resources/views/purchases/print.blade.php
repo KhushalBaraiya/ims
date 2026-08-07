@@ -62,7 +62,7 @@
     <!-- Top Action Bar (hidden on print) -->
     <div
         class="max-w-4xl mx-auto mb-6 px-4 no-print flex flex-wrap justify-between items-center gap-2 bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
-        <span class="text-sm text-slate-500 font-medium">Purchase Order Preview: <strong
+        <span class="text-sm text-slate-500 font-medium">{{ __('messages.print_purchase_preview') }} <strong
                 class="text-slate-800 font-mono">{{ $purchase->purchase_no }}</strong></span>
         <div class="flex items-center gap-2">
             <button onclick="window.print()"
@@ -71,11 +71,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                 </svg>
-                Print
+                {{ __('messages.print') }}
             </button>
             <a href="{{ route('purchases.show', $purchase->id) }}"
                 class="inline-flex items-center gap-x-1.5 border border-slate-300 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl hover:bg-slate-50 transition-all">
-                &larr; Back
+                {{ __('messages.print_back') }}
             </a>
         </div>
     </div>
@@ -95,7 +95,7 @@
                     class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-1 print:text-black print:bg-none">
                     ⚡ {{ $companyName }}
                 </div>
-                <p class="text-xs text-slate-400">Electronics & Inventory Management System</p>
+                <p class="text-xs text-slate-400">{{ __('messages.print_ims_subtitle') }}</p>
                 @if ($companyAddress)
                     <p class="text-[11px] text-slate-400 mt-0.5">{{ $companyAddress }}</p>
                 @endif
@@ -114,9 +114,12 @@
                 @endif
             </div>
             <div class="text-right">
-                <div class="text-3xl font-black text-slate-800 tracking-tight">PURCHASE ORDER</div>
+                <div class="text-3xl font-black text-slate-800 tracking-tight">
+                    {{ __('messages.print_purchase_order') }}
+                </div>
                 <div class="mt-2 text-sm font-mono font-bold text-violet-600">{{ $purchase->purchase_no }}</div>
-                <div class="text-xs text-slate-400 mt-1">Date: {{ $purchase->purchase_date }}</div>
+                <div class="text-xs text-slate-400 mt-1">{{ __('messages.th_date') }}: {{ $purchase->purchase_date }}
+                </div>
                 <div class="mt-3">
                     @if ($purchase->status === 'received')
                         <span
@@ -142,7 +145,8 @@
         <!-- Supplier & Order Details -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 mb-8 print:grid-cols-2">
             <div>
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Supplier Details</h3>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+                    {{ __('messages.print_supplier_details') }}</h3>
                 <p class="font-bold text-slate-800 text-base">{{ $purchase->supplier->name ?? 'N/A' }}</p>
                 @if ($purchase->supplier?->email)
                     <p class="text-sm text-slate-500 mt-0.5">{{ $purchase->supplier->email }}</p>
@@ -155,12 +159,14 @@
                 @endif
             </div>
             <div class="text-right">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Order Info</h3>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
+                    {{ __('messages.print_order_info') }}</h3>
                 @if ($purchase->reference_no)
-                    <div class="mb-1"><span class="text-xs text-slate-400">Reference No:</span> <span
-                            class="font-semibold text-slate-700">{{ $purchase->reference_no }}</span></div>
+                    <div class="mb-1"><span class="text-xs text-slate-400">{{ __('messages.print_ref_no') }}</span>
+                        <span class="font-semibold text-slate-700">{{ $purchase->reference_no }}</span>
+                    </div>
                 @endif
-                <div><span class="text-xs text-slate-400">Payment Method:</span> <span
+                <div><span class="text-xs text-slate-400">{{ __('messages.print_payment_method') }}</span> <span
                         class="font-semibold text-slate-700">{{ $purchase->payment_method }}</span></div>
             </div>
         </div>
@@ -171,13 +177,13 @@
                 <thead>
                     <tr class="bg-slate-800 text-white text-xs uppercase">
                         <th class="py-3 px-4 text-left rounded-l-lg">#</th>
-                        <th class="py-3 px-4 text-left">Product</th>
-                        <th class="py-3 px-4 text-center">Unit</th>
-                        <th class="py-3 px-4 text-center">Qty</th>
-                        <th class="py-3 px-4 text-right">Unit Price</th>
-                        <th class="py-3 px-4 text-right">Discount</th>
-                        <th class="py-3 px-4 text-right">Tax</th>
-                        <th class="py-3 px-4 text-right rounded-r-lg">Total</th>
+                        <th class="py-3 px-4 text-left">{{ __('messages.print_col_product') }}</th>
+                        <th class="py-3 px-4 text-center">{{ __('messages.print_col_unit') }}</th>
+                        <th class="py-3 px-4 text-center">{{ __('messages.print_col_qty') }}</th>
+                        <th class="py-3 px-4 text-right">{{ __('messages.print_col_unit_price') }}</th>
+                        <th class="py-3 px-4 text-right">{{ __('messages.print_col_discount') }}</th>
+                        <th class="py-3 px-4 text-right">{{ __('messages.print_col_tax') }}</th>
+                        <th class="py-3 px-4 text-right rounded-r-lg">{{ __('messages.print_col_total') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -211,32 +217,33 @@
         <div class="flex justify-end mb-8">
             <div class="w-72 space-y-2 text-sm">
                 <div class="flex justify-between border-b border-slate-100 pb-1.5">
-                    <span class="text-slate-500">Subtotal</span>
+                    <span class="text-slate-500">{{ __('messages.print_subtotal') }}</span>
                     <span class="font-semibold">{{ $sym }}{{ number_format($purchase->sub_total, 2) }}</span>
                 </div>
                 @if ($purchase->discount_amount > 0)
                     <div class="flex justify-between border-b border-slate-100 pb-1.5">
-                        <span class="text-slate-500">Discount (-)</span>
+                        <span class="text-slate-500">{{ __('messages.print_discount') }}</span>
                         <span
                             class="text-red-500 font-semibold">{{ $sym }}{{ number_format($purchase->discount_amount, 2) }}</span>
                     </div>
                 @endif
                 @if ($purchase->tax_amount > 0)
                     <div class="flex justify-between border-b border-slate-100 pb-1.5">
-                        <span class="text-slate-500">Tax (+)</span>
+                        <span class="text-slate-500">{{ __('messages.print_tax') }}</span>
                         <span
                             class="text-orange-500 font-semibold">{{ $sym }}{{ number_format($purchase->tax_amount, 2) }}</span>
                     </div>
                 @endif
                 @if ($purchase->shipping_amount > 0)
                     <div class="flex justify-between border-b border-slate-100 pb-1.5">
-                        <span class="text-slate-500">Shipping (+)</span>
+                        <span class="text-slate-500">{{ __('messages.print_shipping') }}</span>
                         <span
                             class="font-semibold">{{ $sym }}{{ number_format($purchase->shipping_amount, 2) }}</span>
                     </div>
                 @endif
                 <div class="flex justify-between items-center bg-slate-800 text-white px-3 py-2.5 rounded-xl">
-                    <span class="font-bold uppercase tracking-wide text-xs">Grand Total</span>
+                    <span
+                        class="font-bold uppercase tracking-wide text-xs">{{ __('messages.print_grand_total') }}</span>
                     <span
                         class="font-black text-lg">{{ $sym }}{{ number_format($purchase->grand_total, 2) }}</span>
                 </div>
@@ -253,17 +260,18 @@
 
         @if ($purchase->notes)
             <div class="border-t border-slate-100 pt-4 mb-6">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Notes</h3>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                    {{ __('messages.print_notes') }}</h3>
                 <p class="text-sm text-slate-600">{{ $purchase->notes }}</p>
             </div>
         @endif
 
         <!-- Footer -->
         <div class="border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
-            <p>This is a system-generated purchase order from <strong>{{ $companyName }}</strong> &mdash;
-                Electronics
-                & Inventory Management System.</p>
-            <p class="mt-1">Created by: {{ $purchase->user->name ?? 'System' }} &bull; Printed on:
+            <p>{{ __('messages.print_footer_purchase') }} <strong>{{ $companyName }}</strong> &mdash;
+                {{ __('messages.print_ims_subtitle') }}</p>
+            <p class="mt-1">{{ __('messages.print_created_by') }} {{ $purchase->user->name ?? 'System' }} &bull;
+                {{ __('messages.print_printed_on') }}
                 {{ now()->format('d M Y, h:i A') }}</p>
         </div>
     </div>

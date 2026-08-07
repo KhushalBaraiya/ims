@@ -52,7 +52,7 @@
                                                     <div
                                                         style="font-size:10px;color:rgba(255,255,255,.75);margin-top:2px;
                             letter-spacing:.8px;text-transform:uppercase;">
-                                                        Inventory Management System
+                                                        {{ __('messages.email_ims_subtitle') }}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -64,21 +64,21 @@
                                                 style="display:inline-block;background:rgba(255,255,255,.22);color:#fff;
                            border:1.5px solid rgba(255,255,255,.4);padding:5px 16px;border-radius:20px;
                            font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">
-                                                ✔&nbsp; Paid
+                                                ✔&nbsp; {{ __('messages.email_paid_badge') }}
                                             </span>
                                         @elseif($purchase->payment_status === 'Partial')
                                             <span
                                                 style="display:inline-block;background:rgba(251,191,36,.3);color:#fff;
                            border:1.5px solid rgba(251,191,36,.5);padding:5px 16px;border-radius:20px;
                            font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">
-                                                ⚡&nbsp; Partial
+                                                ⚡&nbsp; {{ __('messages.email_partial_badge') }}
                                             </span>
                                         @else
                                             <span
                                                 style="display:inline-block;background:rgba(239,68,68,.3);color:#fff;
                            border:1.5px solid rgba(239,68,68,.5);padding:5px 16px;border-radius:20px;
                            font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">
-                                                ⚠&nbsp; Unpaid
+                                                ⚠&nbsp; {{ __('messages.email_unpaid_badge') }}
                                             </span>
                                         @endif
                                     </td>
@@ -90,7 +90,7 @@
                             <div
                                 style="font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
                   color:rgba(255,255,255,.65);margin-bottom:5px;">
-                                Purchase Order</div>
+                                {{ __('messages.email_purchase_order') }}</div>
                             <div
                                 style="font-size:24px;font-weight:900;color:#fff;letter-spacing:-.3px;
                   font-family:'Courier New',monospace;">
@@ -102,14 +102,14 @@
                                         style="display:inline-block;background:rgba(255,255,255,.2);color:#fff;
                        border:1px solid rgba(255,255,255,.35);padding:3px 12px;border-radius:20px;
                        font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">
-                                        ✓&nbsp; Received
+                                        ✓&nbsp; {{ __('messages.email_received_badge') }}
                                     </span>
                                 @elseif($purchase->status === 'pending')
                                     <span
                                         style="display:inline-block;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);
                        border:1px solid rgba(255,255,255,.3);padding:3px 12px;border-radius:20px;
                        font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;">
-                                        Pending
+                                        {{ __('messages.email_pending_badge') }}
                                     </span>
                                 @else
                                     <span
@@ -131,7 +131,7 @@
                             <p style="font-size:14px;color:#475569;margin:0 0 28px;line-height:1.7;">
                                 Dear <strong
                                     style="color:#1e293b;">{{ $purchase->supplier->name ?? 'Supplier' }}</strong>,<br>
-                                Please find the details of your purchase order below.
+                                {{ __('messages.email_dear_supplier') }}
                             </p>
 
                             <!-- ── Payment Banner ── -->
@@ -151,7 +151,7 @@
                                                     <td>
                                                         <div
                                                             style="font-weight:700;color:#15803d;font-size:13px;margin-bottom:3px;">
-                                                            Payment Confirmed — Thank You!
+                                                            {{ __('messages.email_payment_confirmed') }}
                                                         </div>
                                                         <div style="font-size:12px;color:#166534;line-height:1.5;">
                                                             Paid:
@@ -181,13 +181,13 @@
                                                     <td>
                                                         <div
                                                             style="font-weight:700;color:#92400e;font-size:13px;margin-bottom:3px;">
-                                                            Partial Payment Received
+                                                            {{ __('messages.email_partial_payment') }}
                                                         </div>
                                                         <div style="font-size:12px;color:#78350f;line-height:1.5;">
-                                                            Paid:
+                                                            {{ __('messages.email_paid_amount') }}:
                                                             <strong>{{ $sym }}{{ number_format($purchase->paid_amount, 2) }}</strong>
                                                             —
-                                                            Balance Due:
+                                                            {{ __('messages.email_balance_due') }}:
                                                             <strong>{{ $sym }}{{ number_format($purchase->due_amount, 2) }}</strong>
                                                         </div>
                                                     </td>
@@ -212,10 +212,10 @@
                                                     <td>
                                                         <div
                                                             style="font-weight:700;color:#991b1b;font-size:13px;margin-bottom:2px;">
-                                                            Payment Pending
+                                                            {{ __('messages.email_payment_pending') }}
                                                         </div>
                                                         <div style="font-size:12px;color:#b91c1c;">
-                                                            Amount due:
+                                                            {{ __('messages.email_balance_due') }}:
                                                             <strong>{{ $sym }}{{ number_format($purchase->due_amount, 2) }}</strong>
                                                         </div>
                                                     </td>
@@ -235,7 +235,7 @@
                                         <div
                                             style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
                         color:#94a3b8;margin-bottom:10px;">
-                                            Order Details</div>
+                                            {{ __('messages.email_order_details') }}</div>
                                         <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:5px;">
                                             {{ $purchase->purchase_no }}
                                         </div>
@@ -256,7 +256,7 @@
                                         <div
                                             style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
                         color:#94a3b8;margin-bottom:10px;">
-                                            Supplier Details</div>
+                                            {{ __('messages.email_supplier_details') }}</div>
                                         <div style="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:5px;">
                                             {{ $purchase->supplier->name ?? '-' }}
                                         </div>
@@ -283,7 +283,7 @@
                             <div
                                 style="font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;
                   color:#94a3b8;margin-bottom:10px;">
-                                Purchased Items</div>
+                                {{ __('messages.email_purchased_items') }}</div>
 
                             <table width="100%" cellpadding="0" cellspacing="0" border="0"
                                 style="border-radius:10px;overflow:hidden;margin-bottom:24px;
@@ -294,19 +294,19 @@
                                         #</th>
                                     <th align="left"
                                         style="padding:10px 12px;color:rgba(255,255,255,.9);font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase;">
-                                        Product</th>
+                                        {{ __('messages.print_col_product') }}</th>
                                     <th align="center"
                                         style="padding:10px 12px;color:rgba(255,255,255,.9);font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase;">
-                                        Qty</th>
+                                        {{ __('messages.print_col_qty') }}</th>
                                     <th align="right"
                                         style="padding:10px 12px;color:rgba(255,255,255,.9);font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase;">
-                                        Price</th>
+                                        {{ __('messages.print_col_unit_price') }}</th>
                                     <th align="right"
                                         style="padding:10px 12px;color:rgba(255,255,255,.9);font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase;">
-                                        Tax</th>
+                                        {{ __('messages.print_col_tax') }}</th>
                                     <th align="right"
                                         style="padding:10px 12px;color:rgba(255,255,255,.9);font-weight:700;font-size:9px;letter-spacing:.8px;text-transform:uppercase;">
-                                        Total</th>
+                                        {{ __('messages.print_col_total') }}</th>
                                 </tr>
                                 @foreach ($purchase->items as $i => $item)
                                     <tr
@@ -354,7 +354,7 @@
                                             <tr style="border-bottom:1px solid #f1f5f9;">
                                                 <td
                                                     style="padding:9px 16px;font-size:11px;color:#64748b;font-weight:600;">
-                                                    Subtotal</td>
+                                                    {{ __('messages.email_subtotal') }}</td>
                                                 <td align="right"
                                                     style="padding:9px 16px;font-size:11px;font-weight:700;color:#1e293b;">
                                                     {{ $sym }}{{ number_format($purchase->sub_total, 2) }}
@@ -364,7 +364,7 @@
                                                 <tr style="border-bottom:1px solid #f1f5f9;">
                                                     <td
                                                         style="padding:9px 16px;font-size:11px;color:#64748b;font-weight:600;">
-                                                        Discount (−)</td>
+                                                        {{ __('messages.email_discount') }}</td>
                                                     <td align="right"
                                                         style="padding:9px 16px;font-size:11px;font-weight:700;color:#dc2626;">
                                                         −{{ $sym }}{{ number_format($purchase->discount_amount, 2) }}
@@ -375,7 +375,7 @@
                                                 <tr style="border-bottom:1px solid #f1f5f9;">
                                                     <td
                                                         style="padding:9px 16px;font-size:11px;color:#64748b;font-weight:600;">
-                                                        Tax (+)</td>
+                                                        {{ __('messages.email_tax') }}</td>
                                                     <td align="right"
                                                         style="padding:9px 16px;font-size:11px;font-weight:700;color:#d97706;">
                                                         +{{ $sym }}{{ number_format($purchase->tax_amount, 2) }}
@@ -386,7 +386,7 @@
                                                 <tr style="border-bottom:1px solid #f1f5f9;">
                                                     <td
                                                         style="padding:9px 16px;font-size:11px;color:#64748b;font-weight:600;">
-                                                        Shipping (+)</td>
+                                                        {{ __('messages.email_shipping') }}</td>
                                                     <td align="right"
                                                         style="padding:9px 16px;font-size:11px;font-weight:700;color:#1e293b;">
                                                         +{{ $sym }}{{ number_format($purchase->shipping_amount, 2) }}
@@ -397,7 +397,7 @@
                                                 <td
                                                     style="padding:13px 16px;font-size:11px;font-weight:800;color:rgba(255,255,255,.85);
                            letter-spacing:.6px;text-transform:uppercase;">
-                                                    Grand Total</td>
+                                                    {{ __('messages.email_grand_total') }}</td>
                                                 <td align="right"
                                                     style="padding:13px 16px;font-size:19px;font-weight:900;color:#fff;">
                                                     {{ $sym }}{{ number_format($purchase->grand_total, 2) }}
@@ -406,7 +406,7 @@
                                             <tr style="border-bottom:1px solid #f1f5f9;">
                                                 <td
                                                     style="padding:9px 16px;font-size:11px;color:#64748b;font-weight:600;">
-                                                    Paid Amount</td>
+                                                    {{ __('messages.email_paid_amount') }}</td>
                                                 <td align="right"
                                                     style="padding:9px 16px;font-size:12px;font-weight:700;color:#16a34a;">
                                                     {{ $sym }}{{ number_format($purchase->paid_amount, 2) }}
@@ -415,7 +415,7 @@
                                             <tr>
                                                 <td
                                                     style="padding:9px 16px;font-size:11px;font-weight:700;color:#64748b;">
-                                                    Balance Due</td>
+                                                    {{ __('messages.email_balance_due') }}</td>
                                                 <td align="right"
                                                     style="padding:9px 16px;font-size:13px;font-weight:800;
                     color:{{ $purchase->due_amount > 0 ? '#dc2626' : '#16a34a' }};">
@@ -434,7 +434,7 @@
                                     <div
                                         style="font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
                     color:#94a3b8;margin-bottom:6px;">
-                                        Notes</div>
+                                        {{ __('messages.email_notes') }}</div>
                                     <p
                                         style="font-size:12px;color:#64748b;line-height:1.6;white-space:pre-line;margin:0;">
                                         {{ $purchase->notes }}
@@ -463,12 +463,12 @@
                                 </p>
                             @endif
                             <p style="font-size:10px;color:#94a3b8;margin:0 0 3px;">
-                                System-generated purchase order from
+                                {{ __('messages.email_footer_purchase') }}
                                 <strong style="color:#696cff;">{{ $companyName }}</strong>.
-                                Please do not reply to this email.
+                                {{ __('messages.email_no_reply') }}
                             </p>
                             <p style="font-size:10px;color:#94a3b8;margin:0;">
-                                Generated on {{ now()->format('d M Y, h:i A') }}
+                                {{ __('messages.email_generated_on') }} {{ now()->format('d M Y, h:i A') }}
                                 &middot; {{ $purchase->user->name ?? 'System' }}
                             </p>
                         </td>

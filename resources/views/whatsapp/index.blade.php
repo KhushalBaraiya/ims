@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'WhatsApp Broadcast')
+@section('title', __('messages.wa_broadcast_title'))
 
 @section('content')
 
@@ -69,17 +69,17 @@
         <div>
             <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
                 <i class="bx bxl-whatsapp text-success" style="font-size:1.6rem;"></i>
-                WhatsApp Broadcast
+                {{ __('messages.wa_broadcast_title') }}
             </h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">WhatsApp</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('messages.dashboard') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('messages.wa_whatsapp_breadcrumb') }}</li>
                 </ol>
             </nav>
         </div>
         <a href="{{ route('whatsapp.create') }}" class="btn btn-success">
-            <i class="bx bx-plus me-1"></i> New Template
+            <i class="bx bx-plus me-1"></i> {{ __('messages.wa_new_template') }}
         </a>
     </div>
 
@@ -90,18 +90,18 @@
             <div class="card shadow-sm h-100">
                 <div class="wa-card-header d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-file-blank text-success me-2"></i>Message Templates
+                        <i class="bx bx-file-blank text-success me-2"></i>{{ __('messages.wa_message_templates') }}
                     </h6>
                     <span class="badge bg-success-subtle text-success border border-success-subtle">
-                        {{ $templates->count() }} templates
+                        {{ $templates->count() }} {{ __('messages.wa_templates_count') }}
                     </span>
                 </div>
                 <div class="card-body p-0">
                     @if ($templates->isEmpty())
                         <div class="text-center py-5 text-muted">
                             <i class="bx bx-message-square-dots" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="small mt-2 mb-0">No templates yet.
-                                <a href="{{ route('whatsapp.create') }}">Create one</a>
+                            <p class="small mt-2 mb-0">{{ __('messages.wa_no_templates') }}
+                                <a href="{{ route('whatsapp.create') }}">{{ __('messages.wa_create_one') }}</a>
                             </p>
                         </div>
                     @else
@@ -117,7 +117,7 @@
                                                 <span
                                                     class="badge rounded-pill {{ $tpl->status === 'active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}"
                                                     style="font-size:10px;">
-                                                    {{ ucfirst($tpl->status) }}
+                                                    {{ $tpl->status === 'active' ? __('messages.wa_active_option') : __('messages.wa_inactive_option') }}
                                                 </span>
                                             </div>
                                             <p class="text-muted small mb-0 text-truncate" style="max-width:220px;">
@@ -127,18 +127,20 @@
                                         <div class="d-flex gap-1 flex-shrink-0">
                                             <button type="button"
                                                 class="btn btn-sm btn-icon btn-outline-success rounded-circle use-template-btn"
-                                                title="Use this template" data-message="{{ $tpl->message }}"
+                                                title="{{ __('messages.wa_send_btn') }}"
+                                                data-message="{{ $tpl->message }}"
                                                 style="width:28px;height:28px;padding:0;">
                                                 <i class="bx bx-check" style="font-size:.9rem;"></i>
                                             </button>
                                             <a href="{{ route('whatsapp.edit', $tpl->id) }}"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
-                                                title="Edit" style="width:28px;height:28px;padding:0;">
+                                                title="{{ __('messages.edit') }}"
+                                                style="width:28px;height:28px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:.9rem;"></i>
                                             </a>
                                             <button type="button"
                                                 class="btn btn-sm btn-icon btn-outline-danger rounded-circle delete-tpl-btn"
-                                                title="Delete" data-id="{{ $tpl->id }}"
+                                                title="{{ __('messages.delete') }}" data-id="{{ $tpl->id }}"
                                                 data-name="{{ $tpl->name }}" style="width:28px;height:28px;padding:0;">
                                                 <i class="bx bx-trash" style="font-size:.9rem;"></i>
                                             </button>
@@ -157,7 +159,7 @@
             <div class="card shadow-sm">
                 <div class="wa-card-header">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bxl-whatsapp text-success me-2"></i>Send Broadcast Message
+                        <i class="bx bxl-whatsapp text-success me-2"></i>{{ __('messages.wa_send_broadcast') }}
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -165,14 +167,15 @@
                     {{-- Message textarea --}}
                     <div class="mb-3">
                         <label class="form-label fw-semibold">
-                            Message
-                            <span class="text-muted fw-normal small">(click ✓ on a template to auto-fill)</span>
+                            {{ __('messages.wa_message_label') }}
+                            <span class="text-muted fw-normal small">{{ __('messages.wa_message_hint') }}</span>
                         </label>
                         <textarea id="broadcastMessage" class="form-control" rows="4"
-                            placeholder="Type your message or select a template..."></textarea>
+                            placeholder="{{ __('messages.wa_message_placeholder') }}"></textarea>
                         <div class="d-flex justify-content-between mt-1">
-                            <div class="form-text">Message will open WhatsApp for each selected customer.</div>
-                            <div class="form-text"><span id="msgCharCount">0</span> chars</div>
+                            <div class="form-text">{{ __('messages.wa_message_info') }}</div>
+                            <div class="form-text"><span id="msgCharCount">0</span> {{ __('messages.wa_chars_label') }}
+                            </div>
                         </div>
                     </div>
 
@@ -182,19 +185,19 @@
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <label class="form-label fw-semibold mb-0">
-                                Customers
+                                {{ __('messages.wa_customers_label') }}
                                 <span class="badge bg-success-subtle text-success border border-success-subtle ms-1">
                                     <span
                                         id="selectedCount">{{ $customers->count() }}</span>&nbsp;/&nbsp;{{ $customers->count() }}
-                                    selected
+                                    {{ __('messages.wa_selected_label') }}
                                 </span>
                             </label>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-sm btn-outline-success" id="selectAllCustomers">
-                                    <i class="bx bx-check-double me-1"></i>All
+                                    <i class="bx bx-check-double me-1"></i>{{ __('messages.wa_select_all') }}
                                 </button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllCustomers">
-                                    <i class="bx bx-x me-1"></i>None
+                                    <i class="bx bx-x me-1"></i>{{ __('messages.wa_deselect_all') }}
                                 </button>
                             </div>
                         </div>
@@ -202,7 +205,7 @@
                         @if ($customers->isEmpty())
                             <div class="text-center py-4 text-muted border rounded-3">
                                 <i class="bx bx-user-x" style="font-size:2rem;opacity:.3;"></i>
-                                <p class="small mt-2 mb-0">No active customers with phone numbers found.</p>
+                                <p class="small mt-2 mb-0">{{ __('messages.wa_no_customers') }}</p>
                             </div>
                         @else
                             {{-- Search --}}
@@ -211,7 +214,7 @@
                                     <i class="bx bx-search text-muted"></i>
                                 </span>
                                 <input type="text" id="customerSearch" class="form-control border-start-0"
-                                    placeholder="Search name or phone...">
+                                    placeholder="{{ __('messages.wa_search_placeholder') }}">
                             </div>
 
                             {{-- List --}}
@@ -243,12 +246,12 @@
                     {{-- Actions --}}
                     <div class="d-flex justify-content-end mt-4 gap-2">
                         <button type="button" id="clearMsgBtn" class="btn btn-outline-secondary">
-                            <i class="bx bx-eraser me-1"></i> Clear
+                            <i class="bx bx-eraser me-1"></i> {{ __('messages.wa_clear_btn') }}
                         </button>
                         <button type="button" id="broadcastSendBtn" class="btn btn-success fw-semibold px-4"
                             style="background:#25d366;border-color:#25d366;">
                             <i class="bx bxl-whatsapp me-1" style="font-size:1.1rem;"></i>
-                            Send to Selected
+                            {{ __('messages.wa_send_btn') }}
                         </button>
                     </div>
 
@@ -266,13 +269,13 @@
                     style="background:linear-gradient(135deg,#25d366,#128c7e);">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bx bxl-whatsapp text-white" style="font-size:1.5rem;"></i>
-                        <h6 class="modal-title text-white fw-bold mb-0">Sending Messages</h6>
+                        <h6 class="modal-title text-white fw-bold mb-0">{{ __('messages.wa_sending_title') }}</h6>
                     </div>
                 </div>
                 <div class="modal-body px-4 py-4 text-center">
                     <p class="text-muted small mb-3">
-                        WhatsApp opens for each customer one by one.<br>
-                        Send the message and click <strong>Next</strong>.
+                        {{ __('messages.wa_send_info') }}<br>
+                        {{ __('messages.wa_send_next_hint') }} <strong>{{ __('messages.wa_next_btn') }}</strong>.
                     </p>
                     <div class="progress mb-3" style="height:8px;border-radius:8px;">
                         <div class="progress-bar" id="sendProgressBar" role="progressbar"
@@ -283,15 +286,15 @@
                 </div>
                 <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-center gap-2">
                     <button type="button" class="btn btn-outline-secondary" id="prevRecipient" style="min-width:90px;">
-                        <i class="bx bx-chevron-left me-1"></i> Prev
+                        <i class="bx bx-chevron-left me-1"></i> {{ __('messages.wa_prev_btn') }}
                     </button>
                     <button type="button" class="btn btn-success" id="nextRecipient"
                         style="min-width:90px;background:#25d366;border-color:#25d366;">
-                        Next <i class="bx bx-chevron-right ms-1"></i>
+                        {{ __('messages.wa_next_btn') }} <i class="bx bx-chevron-right ms-1"></i>
                     </button>
                     <button type="button" class="btn btn-outline-danger d-none" id="closeSendModal"
                         data-bs-dismiss="modal">
-                        <i class="bx bx-x me-1"></i> Done
+                        <i class="bx bx-x me-1"></i> {{ __('messages.wa_done_btn') }}
                     </button>
                 </div>
             </div>
@@ -303,6 +306,15 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+            const waAllDone = @json(__('messages.wa_all_done'));
+            const waDeleteTitle = @json(__('messages.wa_delete_template_title'));
+            const waYesDelete = @json(__('messages.wa_yes_delete'));
+            const waCancel = @json(__('messages.cancel'));
+            const waTplDeleted = @json(__('messages.wa_template_deleted'));
+            const waDeleteErr = @json(__('messages.wa_delete_error'));
+            const waEnterMsg = @json(__('messages.wa_enter_message'));
+            const waSelectCust = @json(__('messages.wa_select_customer'));
 
             // ── Template → fill message ───────────────────────────────────────────
             $(document).on('click', '.use-template-btn', function() {
@@ -381,14 +393,14 @@
                 const name = $(this).data('name');
                 const row = $(this).closest('.list-group-item');
                 Swal.fire({
-                    title: 'Delete Template?',
-                    text: `"${name}" will be permanently deleted.`,
+                    title: waDeleteTitle,
+                    text: `"${name}" ${@json(__('messages.wa_delete_template_text'))}`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: waYesDelete,
+                    cancelButtonText: waCancel,
                 }).then(r => {
                     if (r.isConfirmed) {
                         $.ajax({
@@ -401,11 +413,10 @@
                             success: res => {
                                 if (res.success) {
                                     row.fadeOut(300, () => row.remove());
-                                    showAdminToast('Template deleted.', 'success');
+                                    showAdminToast(waTplDeleted, 'success');
                                 }
                             },
-                            error: () => showAdminToast('Error deleting template.',
-                                'error'),
+                            error: () => showAdminToast(waDeleteErr, 'error'),
                         });
                     }
                 });
@@ -415,7 +426,7 @@
             $('#broadcastSendBtn').on('click', function() {
                 const message = $('#broadcastMessage').val().trim();
                 if (!message) {
-                    showAdminToast('Please enter a message first.', 'warning');
+                    showAdminToast(waEnterMsg, 'warning');
                     return;
                 }
 
@@ -427,7 +438,7 @@
                     });
                 });
                 if (!recipients.length) {
-                    showAdminToast('Please select at least one customer.', 'warning');
+                    showAdminToast(waSelectCust, 'warning');
                     return;
                 }
 
@@ -439,7 +450,7 @@
                     $('#sendProgressBar').css('width', pct + '%');
                     $('#sendProgressText').text(current + ' / ' + total);
                     if (current >= total) {
-                        $('#sendProgressName').text('All done! 🎉');
+                        $('#sendProgressName').text(waAllDone);
                         $('#nextRecipient, #prevRecipient').addClass('d-none');
                         $('#closeSendModal').removeClass('d-none');
                     } else {

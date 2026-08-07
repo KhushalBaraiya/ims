@@ -149,7 +149,7 @@
                             <input class="form-control @error('refunded_amount') is-invalid @enderror" id="refunded_amount"
                                 min="0" name="refunded_amount" required step="0.01" type="number"
                                 value="{{ old('refunded_amount', '0.00') }}">
-                            <div class="form-text">Amount refunded to company / credited from supplier.</div>
+                            <div class="form-text">{{ __('messages.amount_back_supplier') }}</div>
                             @error('refunded_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -236,24 +236,27 @@
                     <div class="col-md-6">
                         <div class="card h-100 shadow-sm">
                             <div class="card-header border-bottom bg-white py-3">
-                                <h6 class="fw-semibold mb-0"><i class="bx bx-receipt text-info me-2"></i>Refund Summary
-                                </h6>
+                                <h6 class="fw-semibold mb-0"><i
+                                        class="bx bx-receipt text-info me-2"></i>{{ __('messages.refund_summary') }}</h6>
                             </div>
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between border-bottom py-2">
-                                    <span class="text-muted small fw-semibold">Return Subtotal</span>
+                                    <span
+                                        class="text-muted small fw-semibold">{{ __('messages.return_subtotal_th') }}</span>
                                     <span class="fw-bold"
                                         id="sum_subtotal">{{ optional(current_currency())->symbol ?? '?' }}0.00 <span
-                                            class="text-muted fw-normal small">(0 units)</span></span>
+                                            class="text-muted fw-normal small">(0
+                                            {{ __('messages.units') }})</span></span>
                                 </div>
                                 <div class="d-flex justify-content-between border-bottom py-2">
-                                    <span class="fw-bold">Grand Refund Total</span>
+                                    <span class="fw-bold">{{ __('messages.grand_refund_total') }}</span>
                                     <span class="fw-bold text-primary fs-6"
                                         id="sum_grandtotal">{{ optional(current_currency())->symbol ?? '?' }}0.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mt-3 rounded p-3"
                                     style="background:rgba(105,108,255,.07);border:1px solid rgba(105,108,255,.15);">
-                                    <span class="text-muted small fw-semibold">Refunded to Company</span>
+                                    <span
+                                        class="text-muted small fw-semibold">{{ __('messages.refunded_to_company') }}</span>
                                     <span class="fw-bold text-success fs-6"
                                         id="summary_refunded">{{ optional(current_currency())->symbol ?? '?' }}0.00</span>
                                 </div>
@@ -608,7 +611,7 @@
                     qty += q;
                 });
                 $('#sum_subtotal').html(fmt(amt) + ' <span class="text-muted fw-normal small">(' + qty +
-                    ' units)</span>');
+                    ' {{ __('messages.units') }})</span>');
                 $('#sum_grandtotal').text(fmt(amt));
                 $('#summary_refunded').text(fmt(parseFloat(refundedInput.val()) || 0));
             }

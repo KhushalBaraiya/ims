@@ -61,16 +61,16 @@
     <!-- Top Action bar (Hidden on print) -->
     <div
         class="max-w-4xl mx-auto mb-6 px-4 no-print flex flex-wrap justify-between items-center gap-2 bg-white border border-slate-200 shadow-sm p-3.5 rounded-2xl">
-        <span class="text-sm text-slate-500 font-medium">Sales Return Preview: <strong
+        <span class="text-sm text-slate-500 font-medium">{{ __('messages.print_sales_return_preview') }} <strong
                 class="text-slate-800 font-mono">{{ $saleReturn->return_no }}</strong></span>
         <div class="flex items-center gap-2">
             <button onclick="window.close()"
                 class="rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all cursor-pointer">
-                Close Window
+                {{ __('messages.print_close_window') }}
             </button>
             <button onclick="window.print()"
                 class="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-1.5 text-xs font-semibold text-white shadow-md hover:from-blue-500 hover:to-violet-500 transition-all cursor-pointer">
-                🖨️ Print Return Sheet
+                {{ __('messages.print_return_sheet_btn') }}
             </button>
         </div>
     </div>
@@ -87,40 +87,41 @@
                     class="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent print:text-black print:bg-none">
                     ⚡ {{ $companyName }}
                 </span>
-                <p class="text-xs text-slate-500 mt-1.5 print:text-black font-semibold">Electronics ERP & Inventory
-                    Management System</p>
+                <p class="text-xs text-slate-500 mt-1.5 print:text-black font-semibold">
+                    {{ __('messages.print_ims_subtitle') }}</p>
                 @if ($companyAddress)
                     <p class="text-[11px] text-slate-400 mt-0.5 print:text-black">{{ $companyAddress }}</p>
                 @endif
                 @if ($companyPhone || $companyEmail)
                     <p class="text-[11px] text-slate-400 print:text-black">
                         @if ($companyEmail)
-                            Email: {{ $companyEmail }}
+                            {{ __('messages.th_email') }}: {{ $companyEmail }}
                         @endif
                         @if ($companyEmail && $companyPhone)
                             |
                         @endif
                         @if ($companyPhone)
-                            Phone: {{ $companyPhone }}
+                            {{ __('messages.th_phone') }}: {{ $companyPhone }}
                         @endif
                     </p>
                 @endif
             </div>
             <div class="text-right">
-                <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight print:text-black">Sales Return
-                </h1>
-                <p class="text-xs font-mono font-bold text-slate-500 mt-1 print:text-black">{{ $saleReturn->return_no }}
+                <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight print:text-black">
+                    {{ __('messages.print_sales_return') }}</h1>
+                <p class="text-xs font-mono font-bold text-slate-500 mt-1 print:text-black">
+                    {{ $saleReturn->return_no }}
                 </p>
                 <div
                     class="mt-4 text-left inline-block text-[11px] bg-slate-50 print:bg-transparent border border-slate-100 print:border-0 p-2.5 rounded-xl space-y-1">
                     <p class="print:text-black"><strong
-                            class="text-slate-400 print:text-black uppercase text-[9px] mr-1.5">Return Date:</strong>
+                            class="text-slate-400 print:text-black uppercase text-[9px] mr-1.5">{{ __('messages.print_return_date_label') }}</strong>
                         {{ $saleReturn->return_date }}</p>
                     <p class="print:text-black"><strong
-                            class="text-slate-400 print:text-black uppercase text-[9px] mr-1.5">Ref Invoice:</strong>
+                            class="text-slate-400 print:text-black uppercase text-[9px] mr-1.5">{{ __('messages.print_ref_invoice') }}</strong>
                         {{ $saleReturn->sale->invoice_no ?? '-' }}</p>
                     <p class="print:text-black"><strong
-                            class="text-slate-400 print:text-black uppercase text-[9px] mr-1.5">Ref No:</strong>
+                            class="text-slate-400 print:text-black uppercase text-[9px] mr-1.5">{{ __('messages.print_ref_no_label') }}</strong>
                         {{ $saleReturn->reference_no ?: '-' }}</p>
                 </div>
             </div>
@@ -131,16 +132,15 @@
             class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 border-b border-slate-100 print:border-black pb-6 mb-6 print:grid-cols-2">
             <div>
                 <span
-                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">Customer
-                    Details</span>
+                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">{{ __('messages.print_customer_details') }}</span>
                 <strong
                     class="text-sm text-slate-800 mt-1 block print:text-black">{{ $saleReturn->customer->name }}</strong>
                 @if ($saleReturn->customer->phone)
-                    <span class="text-xs text-slate-600 block mt-0.5 print:text-black">Phone:
+                    <span class="text-xs text-slate-600 block mt-0.5 print:text-black">{{ __('messages.th_phone') }}:
                         {{ $saleReturn->customer->phone }}</span>
                 @endif
                 @if ($saleReturn->customer->email)
-                    <span class="text-xs text-slate-600 block print:text-black">Email:
+                    <span class="text-xs text-slate-600 block print:text-black">{{ __('messages.th_email') }}:
                         {{ $saleReturn->customer->email }}</span>
                 @endif
                 @if ($saleReturn->customer->address)
@@ -150,8 +150,7 @@
             </div>
             <div class="text-right">
                 <span
-                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">Processed
-                    By</span>
+                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">{{ __('messages.print_processed_by') }}</span>
                 <strong
                     class="text-sm text-slate-800 mt-1 block print:text-black">{{ $saleReturn->user->name ?? '-' }}</strong>
                 <div class="mt-4">
@@ -175,8 +174,8 @@
                             {{ __('messages.sku') }}</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-right">
                             {{ __('messages.price_th_print') }}</th>
-                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-center">Return Qty
-                        </th>
+                        <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-20 text-center">
+                            {{ __('messages.print_return_col_qty') }}</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black">
                             {{ __('messages.return_reason_th') }}</th>
                         <th class="py-2.5 px-3 font-bold text-slate-500 print:text-black w-24 text-right">
@@ -200,7 +199,7 @@
                                 {{ number_format($item->quantity, 2) }} {{ $item->product->unit_code ?? 'PCS' }}
                             </td>
                             <td class="py-3 px-3 text-slate-500 italic print:text-black">
-                                {{ $item->reason ?: 'Damaged / Malfunctional' }}</td>
+                                {{ $item->reason ?: __('messages.print_damaged_default') }}</td>
                             <td class="py-3 px-3 text-right font-bold text-slate-800 print:text-black">
                                 {{ $sym }}{{ number_format($item->total_amount, 2) }}</td>
                         </tr>
@@ -215,35 +214,34 @@
             <!-- Notes -->
             <div class="w-full sm:w-1/2 pr-0 sm:pr-6">
                 <span
-                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">Remarks
-                    / Conditions</span>
+                    class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider print:text-black">{{ __('messages.print_remarks') }}</span>
                 <p class="text-[11px] text-slate-500 mt-1.5 print:text-black leading-relaxed whitespace-pre-line">
-                    {{ $saleReturn->notes ?: "1. Returned goods have been inspected and restocked accordingly.\n2. Refund amount processed as store credit / original payment source." }}
+                    {{ $saleReturn->notes ?: __('messages.print_default_remarks') }}
                 </p>
             </div>
             <!-- Calculations -->
             <div class="w-full sm:w-2/5 space-y-2.5 text-xs text-slate-600 print:text-black">
                 <div class="flex justify-between items-center border-b border-slate-50 print:border-slate-200 pb-1.5">
-                    <span class="text-slate-400 print:text-black font-semibold uppercase text-[10px]">Return
-                        Value</span>
+                    <span
+                        class="text-slate-400 print:text-black font-semibold uppercase text-[10px]">{{ __('messages.print_return_value') }}</span>
                     <span
                         class="font-bold text-slate-800 print:text-black">{{ $sym }}{{ number_format($saleReturn->sub_total, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center border-b border-slate-50 print:border-slate-200 pb-1.5">
-                    <span class="text-slate-400 print:text-black font-semibold uppercase text-[10px]">Tax
-                        Adjusted</span>
+                    <span
+                        class="text-slate-400 print:text-black font-semibold uppercase text-[10px]">{{ __('messages.print_tax_adjusted') }}</span>
                     <span
                         class="font-bold text-slate-800 print:text-black">{{ $sym }}{{ number_format($saleReturn->tax_amount, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center border-b-2 border-slate-200 print:border-black pb-2">
-                    <span class="font-black text-slate-800 print:text-black uppercase text-[11px]">Grand Refund
-                        Total</span>
+                    <span
+                        class="font-black text-slate-800 print:text-black uppercase text-[11px]">{{ __('messages.print_grand_refund') }}</span>
                     <span
                         class="font-black text-blue-600 print:text-black text-sm">{{ $sym }}{{ number_format($saleReturn->grand_total, 2) }}</span>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="font-bold text-slate-800 print:text-black uppercase text-[11px]">Refunded
-                        Cash/Credit</span>
+                    <span
+                        class="font-bold text-slate-800 print:text-black uppercase text-[11px]">{{ __('messages.print_refunded_cash') }}</span>
                     <span
                         class="font-black text-emerald-600 print:text-black text-sm">{{ $sym }}{{ number_format($saleReturn->refunded_amount, 2) }}</span>
                 </div>
@@ -258,7 +256,8 @@
             </div>
             <div class="text-right">
                 <p class="text-slate-400 print:text-black">{{ $companyName }}</p>
-                <p class="text-[10px] text-slate-400 print:text-black mt-1">Generated via {{ $companyName }} ERP</p>
+                <p class="text-[10px] text-slate-400 print:text-black mt-1">{{ __('messages.print_erp_generated') }}
+                    {{ $companyName }} ERP</p>
             </div>
         </div>
 

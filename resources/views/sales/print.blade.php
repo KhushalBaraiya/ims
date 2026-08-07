@@ -62,18 +62,18 @@
     <!-- Top Action bar (Hidden on print) -->
     <div
         class="no-print mx-auto mb-6 flex max-w-4xl flex-wrap items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-white p-3.5 px-4 shadow-sm">
-        <span class="text-sm font-medium text-slate-500">Invoice Preview: <strong
+        <span class="text-sm font-medium text-slate-500">{{ __('messages.invoice_preview') }}: <strong
                 class="font-mono text-slate-800">{{ $sale->invoice_no }}</strong></span>
         <div class="flex items-center gap-2">
             <button
                 class="cursor-pointer rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50"
                 onclick="window.close()">
-                Close Window
+                {{ __('messages.close_window_btn') }}
             </button>
             <button
                 class="cursor-pointer rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-1.5 text-xs font-semibold text-white shadow-md transition-all hover:from-blue-500 hover:to-violet-500 active:scale-[0.98]"
                 onclick="window.print()">
-                🖨️ Print Invoice
+                🖨️ {{ __('messages.print_invoice_btn') }}
             </button>
         </div>
     </div>
@@ -93,21 +93,21 @@
                     class="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-xl font-extrabold text-transparent print:bg-none print:text-black">
                     ⚡ {{ $companyName }}
                 </span>
-                <p class="mt-1.5 text-xs font-semibold text-slate-500 print:text-black">Electronics ERP & Inventory
-                    Management System</p>
+                <p class="mt-1.5 text-xs font-semibold text-slate-500 print:text-black">
+                    {{ __('messages.print_ims_subtitle') }}</p>
                 @if ($companyAddress)
                     <p class="mt-0.5 text-[11px] text-slate-400 print:text-black">{{ $companyAddress }}</p>
                 @endif
                 @if ($companyPhone || $companyEmail)
                     <p class="text-[11px] text-slate-400 print:text-black">
                         @if ($companyEmail)
-                            Email: {{ $companyEmail }}
+                            {{ __('messages.email_prefix') }} {{ $companyEmail }}
                         @endif
                         @if ($companyEmail && $companyPhone)
                             |
                         @endif
                         @if ($companyPhone)
-                            Phone: {{ $companyPhone }}
+                            {{ __('messages.phone_prefix') }} {{ $companyPhone }}
                         @endif
                     </p>
                 @endif
@@ -119,10 +119,10 @@
                 <div
                     class="mt-4 inline-block space-y-1 rounded-xl border border-slate-100 bg-slate-50 p-2.5 text-left text-[11px] print:border-0 print:bg-transparent">
                     <p class="print:text-black"><strong
-                            class="mr-1.5 text-[9px] uppercase text-slate-400 print:text-black">Date:</strong>
+                            class="mr-1.5 text-[9px] uppercase text-slate-400 print:text-black">{{ __('messages.date_prefix') }}</strong>
                         {{ $sale->invoice_date }}</p>
                     <p class="print:text-black"><strong
-                            class="mr-1.5 text-[9px] uppercase text-slate-400 print:text-black">Payment:</strong>
+                            class="mr-1.5 text-[9px] uppercase text-slate-400 print:text-black">{{ __('messages.payment_prefix') }}</strong>
                         {{ $sale->payment_method ?: 'Cash' }}</p>
                 </div>
             </div>
@@ -133,15 +133,15 @@
             class="mb-6 grid grid-cols-1 gap-4 border-b border-slate-100 pb-6 sm:grid-cols-2 sm:gap-8 print:grid-cols-2 print:border-black">
             <div>
                 <span
-                    class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Billing
-                    Address</span>
+                    class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">{{ __('messages.billing_address') }}</span>
                 <strong class="mt-1 block text-sm text-slate-800 print:text-black">{{ $sale->customer->name }}</strong>
                 @if ($sale->customer->phone)
-                    <span class="mt-0.5 block text-xs text-slate-600 print:text-black">Phone:
+                    <span
+                        class="mt-0.5 block text-xs text-slate-600 print:text-black">{{ __('messages.phone_prefix') }}
                         {{ $sale->customer->phone }}</span>
                 @endif
                 @if ($sale->customer->email)
-                    <span class="block text-xs text-slate-600 print:text-black">Email:
+                    <span class="block text-xs text-slate-600 print:text-black">{{ __('messages.email_prefix') }}
                         {{ $sale->customer->email }}</span>
                 @endif
                 @if ($sale->customer->address ?? null)
@@ -150,8 +150,8 @@
                 @endif
             </div>
             <div class="text-right">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Sales
-                    Person</span>
+                <span
+                    class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">{{ __('messages.sales_person') }}</span>
                 <strong
                     class="mt-1 block text-sm text-slate-800 print:text-black">{{ $sale->salesPerson->name ?? '-' }}</strong>
                 <div class="mt-4">
@@ -220,10 +220,10 @@
             class="flex flex-col gap-6 border-t border-slate-100 pt-6 sm:flex-row sm:items-start sm:justify-between print:flex-row print:border-black">
             <!-- Notes -->
             <div class="w-full sm:w-1/2 pr-0 sm:pr-6">
-                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Terms
-                    & Notes</span>
+                <span
+                    class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">{{ __('messages.terms_notes_lbl') }}</span>
                 <p class="mt-1.5 whitespace-pre-line text-[11px] leading-relaxed text-slate-500 print:text-black">
-                    {{ $sale->notes ?: "1. Payment terms: immediate receipt.\n2. Goods once sold cannot be returned without this invoice.\n3. Warranty claims require presenting this invoice." }}
+                    {{ $sale->notes ?: __('messages.default_invoice_notes') }}
                 </p>
             </div>
 
@@ -242,7 +242,8 @@
                         class="font-bold text-slate-800 print:text-black">{{ $sym }}{{ number_format($sale->tax_amount, 2) }}</span>
                 </div>
                 <div class="flex items-center justify-between border-b border-slate-50 pb-1.5 print:border-slate-200">
-                    <span class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">Discount
+                    <span
+                        class="text-[10px] font-semibold uppercase text-slate-400 print:text-black">{{ __('messages.discount_span') }}
                         (-)</span>
                     <span
                         class="font-bold text-red-500 print:text-black">{{ $sym }}{{ number_format($sale->discount_amount, 2) }}</span>
@@ -282,7 +283,8 @@
             </div>
             <div class="text-right">
                 <p class="text-slate-400 print:text-black">{{ __('messages.thank_you_business') }}</p>
-                <p class="mt-1 text-[10px] text-slate-400 print:text-black">Generated via {{ $companyName }} ERP</p>
+                <p class="mt-1 text-[10px] text-slate-400 print:text-black">{{ __('messages.print_erp_generated') }}
+                    {{ $companyName }} ERP</p>
             </div>
         </div>
 

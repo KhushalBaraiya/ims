@@ -1,5 +1,5 @@
 
-<?php $__env->startSection('title', 'WhatsApp Broadcast'); ?>
+<?php $__env->startSection('title', __('messages.wa_broadcast_title')); ?>
 
 <?php $__env->startSection('content'); ?>
 
@@ -69,17 +69,19 @@
         <div>
             <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
                 <i class="bx bxl-whatsapp text-success" style="font-size:1.6rem;"></i>
-                WhatsApp Broadcast
+                <?php echo e(__('messages.wa_broadcast_title')); ?>
+
             </h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 small">
-                    <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>">Dashboard</a></li>
-                    <li class="breadcrumb-item active">WhatsApp</li>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>"><?php echo e(__('messages.dashboard')); ?></a></li>
+                    <li class="breadcrumb-item active"><?php echo e(__('messages.wa_whatsapp_breadcrumb')); ?></li>
                 </ol>
             </nav>
         </div>
         <a href="<?php echo e(route('whatsapp.create')); ?>" class="btn btn-success">
-            <i class="bx bx-plus me-1"></i> New Template
+            <i class="bx bx-plus me-1"></i> <?php echo e(__('messages.wa_new_template')); ?>
+
         </a>
     </div>
 
@@ -90,18 +92,21 @@
             <div class="card shadow-sm h-100">
                 <div class="wa-card-header d-flex align-items-center justify-content-between">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bx-file-blank text-success me-2"></i>Message Templates
+                        <i class="bx bx-file-blank text-success me-2"></i><?php echo e(__('messages.wa_message_templates')); ?>
+
                     </h6>
                     <span class="badge bg-success-subtle text-success border border-success-subtle">
-                        <?php echo e($templates->count()); ?> templates
+                        <?php echo e($templates->count()); ?> <?php echo e(__('messages.wa_templates_count')); ?>
+
                     </span>
                 </div>
                 <div class="card-body p-0">
                     <?php if($templates->isEmpty()): ?>
                         <div class="text-center py-5 text-muted">
                             <i class="bx bx-message-square-dots" style="font-size:2.5rem;opacity:.3;"></i>
-                            <p class="small mt-2 mb-0">No templates yet.
-                                <a href="<?php echo e(route('whatsapp.create')); ?>">Create one</a>
+                            <p class="small mt-2 mb-0"><?php echo e(__('messages.wa_no_templates')); ?>
+
+                                <a href="<?php echo e(route('whatsapp.create')); ?>"><?php echo e(__('messages.wa_create_one')); ?></a>
                             </p>
                         </div>
                     <?php else: ?>
@@ -117,7 +122,7 @@
                                                 <span
                                                     class="badge rounded-pill <?php echo e($tpl->status === 'active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'); ?>"
                                                     style="font-size:10px;">
-                                                    <?php echo e(ucfirst($tpl->status)); ?>
+                                                    <?php echo e($tpl->status === 'active' ? __('messages.wa_active_option') : __('messages.wa_inactive_option')); ?>
 
                                                 </span>
                                             </div>
@@ -129,18 +134,20 @@
                                         <div class="d-flex gap-1 flex-shrink-0">
                                             <button type="button"
                                                 class="btn btn-sm btn-icon btn-outline-success rounded-circle use-template-btn"
-                                                title="Use this template" data-message="<?php echo e($tpl->message); ?>"
+                                                title="<?php echo e(__('messages.wa_send_btn')); ?>"
+                                                data-message="<?php echo e($tpl->message); ?>"
                                                 style="width:28px;height:28px;padding:0;">
                                                 <i class="bx bx-check" style="font-size:.9rem;"></i>
                                             </button>
                                             <a href="<?php echo e(route('whatsapp.edit', $tpl->id)); ?>"
                                                 class="btn btn-sm btn-icon btn-outline-primary rounded-circle"
-                                                title="Edit" style="width:28px;height:28px;padding:0;">
+                                                title="<?php echo e(__('messages.edit')); ?>"
+                                                style="width:28px;height:28px;padding:0;">
                                                 <i class="bx bx-edit" style="font-size:.9rem;"></i>
                                             </a>
                                             <button type="button"
                                                 class="btn btn-sm btn-icon btn-outline-danger rounded-circle delete-tpl-btn"
-                                                title="Delete" data-id="<?php echo e($tpl->id); ?>"
+                                                title="<?php echo e(__('messages.delete')); ?>" data-id="<?php echo e($tpl->id); ?>"
                                                 data-name="<?php echo e($tpl->name); ?>" style="width:28px;height:28px;padding:0;">
                                                 <i class="bx bx-trash" style="font-size:.9rem;"></i>
                                             </button>
@@ -159,7 +166,8 @@
             <div class="card shadow-sm">
                 <div class="wa-card-header">
                     <h6 class="fw-semibold mb-0">
-                        <i class="bx bxl-whatsapp text-success me-2"></i>Send Broadcast Message
+                        <i class="bx bxl-whatsapp text-success me-2"></i><?php echo e(__('messages.wa_send_broadcast')); ?>
+
                     </h6>
                 </div>
                 <div class="card-body p-4">
@@ -167,14 +175,17 @@
                     
                     <div class="mb-3">
                         <label class="form-label fw-semibold">
-                            Message
-                            <span class="text-muted fw-normal small">(click ✓ on a template to auto-fill)</span>
+                            <?php echo e(__('messages.wa_message_label')); ?>
+
+                            <span class="text-muted fw-normal small"><?php echo e(__('messages.wa_message_hint')); ?></span>
                         </label>
                         <textarea id="broadcastMessage" class="form-control" rows="4"
-                            placeholder="Type your message or select a template..."></textarea>
+                            placeholder="<?php echo e(__('messages.wa_message_placeholder')); ?>"></textarea>
                         <div class="d-flex justify-content-between mt-1">
-                            <div class="form-text">Message will open WhatsApp for each selected customer.</div>
-                            <div class="form-text"><span id="msgCharCount">0</span> chars</div>
+                            <div class="form-text"><?php echo e(__('messages.wa_message_info')); ?></div>
+                            <div class="form-text"><span id="msgCharCount">0</span> <?php echo e(__('messages.wa_chars_label')); ?>
+
+                            </div>
                         </div>
                     </div>
 
@@ -184,20 +195,24 @@
                     <div>
                         <div class="d-flex align-items-center justify-content-between mb-2">
                             <label class="form-label fw-semibold mb-0">
-                                Customers
+                                <?php echo e(__('messages.wa_customers_label')); ?>
+
                                 <span class="badge bg-success-subtle text-success border border-success-subtle ms-1">
                                     <span
                                         id="selectedCount"><?php echo e($customers->count()); ?></span>&nbsp;/&nbsp;<?php echo e($customers->count()); ?>
 
-                                    selected
+                                    <?php echo e(__('messages.wa_selected_label')); ?>
+
                                 </span>
                             </label>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-sm btn-outline-success" id="selectAllCustomers">
-                                    <i class="bx bx-check-double me-1"></i>All
+                                    <i class="bx bx-check-double me-1"></i><?php echo e(__('messages.wa_select_all')); ?>
+
                                 </button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary" id="deselectAllCustomers">
-                                    <i class="bx bx-x me-1"></i>None
+                                    <i class="bx bx-x me-1"></i><?php echo e(__('messages.wa_deselect_all')); ?>
+
                                 </button>
                             </div>
                         </div>
@@ -205,7 +220,7 @@
                         <?php if($customers->isEmpty()): ?>
                             <div class="text-center py-4 text-muted border rounded-3">
                                 <i class="bx bx-user-x" style="font-size:2rem;opacity:.3;"></i>
-                                <p class="small mt-2 mb-0">No active customers with phone numbers found.</p>
+                                <p class="small mt-2 mb-0"><?php echo e(__('messages.wa_no_customers')); ?></p>
                             </div>
                         <?php else: ?>
                             
@@ -214,7 +229,7 @@
                                     <i class="bx bx-search text-muted"></i>
                                 </span>
                                 <input type="text" id="customerSearch" class="form-control border-start-0"
-                                    placeholder="Search name or phone...">
+                                    placeholder="<?php echo e(__('messages.wa_search_placeholder')); ?>">
                             </div>
 
                             
@@ -247,12 +262,14 @@
                     
                     <div class="d-flex justify-content-end mt-4 gap-2">
                         <button type="button" id="clearMsgBtn" class="btn btn-outline-secondary">
-                            <i class="bx bx-eraser me-1"></i> Clear
+                            <i class="bx bx-eraser me-1"></i> <?php echo e(__('messages.wa_clear_btn')); ?>
+
                         </button>
                         <button type="button" id="broadcastSendBtn" class="btn btn-success fw-semibold px-4"
                             style="background:#25d366;border-color:#25d366;">
                             <i class="bx bxl-whatsapp me-1" style="font-size:1.1rem;"></i>
-                            Send to Selected
+                            <?php echo e(__('messages.wa_send_btn')); ?>
+
                         </button>
                     </div>
 
@@ -270,13 +287,13 @@
                     style="background:linear-gradient(135deg,#25d366,#128c7e);">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bx bxl-whatsapp text-white" style="font-size:1.5rem;"></i>
-                        <h6 class="modal-title text-white fw-bold mb-0">Sending Messages</h6>
+                        <h6 class="modal-title text-white fw-bold mb-0"><?php echo e(__('messages.wa_sending_title')); ?></h6>
                     </div>
                 </div>
                 <div class="modal-body px-4 py-4 text-center">
                     <p class="text-muted small mb-3">
-                        WhatsApp opens for each customer one by one.<br>
-                        Send the message and click <strong>Next</strong>.
+                        <?php echo e(__('messages.wa_send_info')); ?><br>
+                        <?php echo e(__('messages.wa_send_next_hint')); ?> <strong><?php echo e(__('messages.wa_next_btn')); ?></strong>.
                     </p>
                     <div class="progress mb-3" style="height:8px;border-radius:8px;">
                         <div class="progress-bar" id="sendProgressBar" role="progressbar"
@@ -287,15 +304,17 @@
                 </div>
                 <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-center gap-2">
                     <button type="button" class="btn btn-outline-secondary" id="prevRecipient" style="min-width:90px;">
-                        <i class="bx bx-chevron-left me-1"></i> Prev
+                        <i class="bx bx-chevron-left me-1"></i> <?php echo e(__('messages.wa_prev_btn')); ?>
+
                     </button>
                     <button type="button" class="btn btn-success" id="nextRecipient"
                         style="min-width:90px;background:#25d366;border-color:#25d366;">
-                        Next <i class="bx bx-chevron-right ms-1"></i>
+                        <?php echo e(__('messages.wa_next_btn')); ?> <i class="bx bx-chevron-right ms-1"></i>
                     </button>
                     <button type="button" class="btn btn-outline-danger d-none" id="closeSendModal"
                         data-bs-dismiss="modal">
-                        <i class="bx bx-x me-1"></i> Done
+                        <i class="bx bx-x me-1"></i> <?php echo e(__('messages.wa_done_btn')); ?>
+
                     </button>
                 </div>
             </div>
@@ -307,6 +326,15 @@
 <?php $__env->startPush('scripts'); ?>
     <script>
         $(document).ready(function() {
+
+            const waAllDone = <?php echo json_encode(__('messages.wa_all_done'), 15, 512) ?>;
+            const waDeleteTitle = <?php echo json_encode(__('messages.wa_delete_template_title'), 15, 512) ?>;
+            const waYesDelete = <?php echo json_encode(__('messages.wa_yes_delete'), 15, 512) ?>;
+            const waCancel = <?php echo json_encode(__('messages.cancel'), 15, 512) ?>;
+            const waTplDeleted = <?php echo json_encode(__('messages.wa_template_deleted'), 15, 512) ?>;
+            const waDeleteErr = <?php echo json_encode(__('messages.wa_delete_error'), 15, 512) ?>;
+            const waEnterMsg = <?php echo json_encode(__('messages.wa_enter_message'), 15, 512) ?>;
+            const waSelectCust = <?php echo json_encode(__('messages.wa_select_customer'), 15, 512) ?>;
 
             // ── Template → fill message ───────────────────────────────────────────
             $(document).on('click', '.use-template-btn', function() {
@@ -385,14 +413,14 @@
                 const name = $(this).data('name');
                 const row = $(this).closest('.list-group-item');
                 Swal.fire({
-                    title: 'Delete Template?',
-                    text: `"${name}" will be permanently deleted.`,
+                    title: waDeleteTitle,
+                    text: `"${name}" ${<?php echo json_encode(__('messages.wa_delete_template_text'), 15, 512) ?>}`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, delete',
-                    cancelButtonText: 'Cancel',
+                    confirmButtonText: waYesDelete,
+                    cancelButtonText: waCancel,
                 }).then(r => {
                     if (r.isConfirmed) {
                         $.ajax({
@@ -405,11 +433,10 @@
                             success: res => {
                                 if (res.success) {
                                     row.fadeOut(300, () => row.remove());
-                                    showAdminToast('Template deleted.', 'success');
+                                    showAdminToast(waTplDeleted, 'success');
                                 }
                             },
-                            error: () => showAdminToast('Error deleting template.',
-                                'error'),
+                            error: () => showAdminToast(waDeleteErr, 'error'),
                         });
                     }
                 });
@@ -419,7 +446,7 @@
             $('#broadcastSendBtn').on('click', function() {
                 const message = $('#broadcastMessage').val().trim();
                 if (!message) {
-                    showAdminToast('Please enter a message first.', 'warning');
+                    showAdminToast(waEnterMsg, 'warning');
                     return;
                 }
 
@@ -431,7 +458,7 @@
                     });
                 });
                 if (!recipients.length) {
-                    showAdminToast('Please select at least one customer.', 'warning');
+                    showAdminToast(waSelectCust, 'warning');
                     return;
                 }
 
@@ -443,7 +470,7 @@
                     $('#sendProgressBar').css('width', pct + '%');
                     $('#sendProgressText').text(current + ' / ' + total);
                     if (current >= total) {
-                        $('#sendProgressName').text('All done! 🎉');
+                        $('#sendProgressName').text(waAllDone);
                         $('#nextRecipient, #prevRecipient').addClass('d-none');
                         $('#closeSendModal').removeClass('d-none');
                     } else {
