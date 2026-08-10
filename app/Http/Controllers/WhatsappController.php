@@ -107,4 +107,12 @@ class WhatsappController extends Controller
             'name'    => $whatsapp->name,
         ]);
     }
+
+    /**
+     * Sender page — auto-navigates through recipients one by one.
+     */
+    public function sender(): \Illuminate\View\View
+    {
+        return view('whatsapp.sender');
+    }
 }

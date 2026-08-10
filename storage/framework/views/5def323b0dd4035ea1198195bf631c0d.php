@@ -300,7 +300,7 @@
                 <div class="modal-body px-4 py-4 text-center">
                     <p class="text-muted small mb-3">
                         <?php echo e(__('messages.wa_send_info')); ?><br>
-                        <?php echo e(__('messages.wa_send_next_hint')); ?> <strong><?php echo e(__('messages.wa_next_btn')); ?></strong>.
+                        Opening WhatsApp for each selected customer...
                     </p>
                     <div class="progress mb-3" style="height:8px;border-radius:8px;">
                         <div class="progress-bar" id="sendProgressBar" role="progressbar"
@@ -310,17 +310,9 @@
                     <div class="text-muted small mt-1" id="sendProgressName">—</div>
                 </div>
                 <div class="modal-footer border-0 px-4 pb-4 pt-0 justify-content-center gap-2">
-                    <button type="button" class="btn btn-outline-secondary" id="prevRecipient" style="min-width:90px;">
-                        <i class="bx bx-chevron-left me-1"></i> <?php echo e(__('messages.wa_prev_btn')); ?>
-
-                    </button>
-                    <button type="button" class="btn btn-success" id="nextRecipient"
-                        style="min-width:90px;background:#25d366;border-color:#25d366;">
-                        <?php echo e(__('messages.wa_next_btn')); ?> <i class="bx bx-chevron-right ms-1"></i>
-                    </button>
                     <button type="button" class="btn btn-outline-danger d-none" id="closeSendModal"
                         data-bs-dismiss="modal">
-                        <i class="bx bx-x me-1"></i> <?php echo e(__('messages.wa_done_btn')); ?>
+                        <i class="bx bx-check me-1"></i> <?php echo e(__('messages.wa_done_btn')); ?>
 
                     </button>
                 </div>
@@ -476,62 +468,51 @@
                     return;
                 }
 
-                let current = 0;
                 const total = recipients.length;
 
-                function updateProgress() {
-                    const pct = Math.round(((current + 1) / total) * 100);
-                    $('#sendProgressBar').css('width', pct + '%');
-                    if (current >= total) {
-                        $('#sendProgressText').text(total + ' / ' + total);
-                        $('#sendProgressName').text(waAllDone);
-                        $('#nextRecipient, #prevRecipient').addClass('d-none');
-                        $('#closeSendModal').removeClass('d-none');
-                        $('#sendProgressBar').css('width', '100%');
-                    } else {
-                        const r = recipients[current];
-                        $('#sendProgressText').text((current + 1) + ' / ' + total);
-                        $('#sendProgressName').text('→ ' + r.name + '  (' + r.phone + ')');
-                        $('#closeSendModal').addClass('d-none');
-                        $('#nextRecipient').removeClass('d-none');
-                        // Hide prev on first item
-                        if (current === 0) {
-                            $('#prevRecipient').addClass('d-none');
-                        } else {
-                            $('#prevRecipient').removeClass('d-none');
-                        }
+                function buildWAUrl(phone) {
+                    const raw = phone.toString().replace(/[\s\-\+\(\)]/g, '');
+                    const p = (raw.length === 10 && /^[6-9]/.test(raw)) ? '91' + raw : raw;
+                    return 'https://wa.me/' + p + '?text=' + encodeURIComponent(message);
+                }
+
+                // Open all tabs at once synchronously inside the click handler
+                let blocked = false;
+                for (let i = 0; i < recipients.length; i++) {
+                    const w = window.open(buildWAUrl(recipients[i].phone), '_blank');
+                    if (!w || w.closed || typeof w.closed === 'undefined') {
+                        blocked = true;
                     }
                 }
 
-                function openWA(idx) {
-                    if (idx >= total) return;
-                    const raw = recipients[idx].phone.toString().replace(/[\s\-\+\(\)]/g, '');
-                    // Ensure phone starts with country code (add 91 if 10 digits for India)
-                    const phone = (raw.length === 10 && /^[6-9]/.test(raw)) ? '91' + raw : raw;
-                    window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(message),
-                    '_blank');
+                if (blocked) {
+                    // Fallback: popups blocked — show clickable links
+                    let html = '<div style="text-align:left;max-height:280px;overflow-y:auto;">';
+                    recipients.forEach(function(r) {
+                        html += '<a href="' + buildWAUrl(r.phone) + '" target="_blank" ' +
+                            'style="display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:6px;' +
+                            'background:#0d1117;border:1px solid #25d36655;border-radius:8px;' +
+                            'color:#25d366;text-decoration:none;font-weight:600;font-size:.875rem;">' +
+                            '<i class="bx bxl-whatsapp" style="font-size:1.2rem;flex-shrink:0;"></i>' +
+                            '<span>' + r.name + ' <span style="opacity:.6;font-weight:400;">(' + r
+                            .phone + ')</span></span>' +
+                            '<i class="bx bx-chevron-right ms-auto" style="opacity:.5;"></i>' +
+                            '</a>';
+                    });
+                    html += '</div>';
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Allow Popups',
+                        html: '<p style="font-size:.875rem;color:#aaa;margin-bottom:12px;">Browser blocked tabs.<br>Click <strong>Allow</strong> in address bar, then send again.<br>Or open each manually below:</p>' +
+                            html,
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                        width: 460
+                    });
+                } else {
+                    showAdminToast('\u2705 WhatsApp opened for ' + total + ' customer' + (total > 1 ? 's' :
+                        '') + '!', 'success');
                 }
-
-                updateProgress();
-                openWA(0);
-                new bootstrap.Modal(document.getElementById('sendProgressModal')).show();
-
-                $('#nextRecipient').off('click').on('click', function() {
-                    current++;
-                    if (current < total) {
-                        updateProgress();
-                        openWA(current);
-                    } else {
-                        updateProgress(); // show done state
-                    }
-                });
-                $('#prevRecipient').off('click').on('click', function() {
-                    if (current > 0) {
-                        current--;
-                        updateProgress();
-                        openWA(current);
-                    }
-                });
             });
 
         });

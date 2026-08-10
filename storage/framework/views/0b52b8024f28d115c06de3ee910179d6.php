@@ -246,7 +246,7 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('purchases.view')): ?>
                                             <a class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
                                                 href="<?php echo e(route('purchases.show', $purchase->id)); ?>"

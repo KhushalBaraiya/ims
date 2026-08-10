@@ -243,7 +243,7 @@
                                 </td>
                                 <td class="text-muted small"><?php echo e($sale->user->name ?? '-'); ?></td>
                                 <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
+                                    <div class="tbl-action-wrap">
                                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sales.view')): ?>
                                             <a class="btn btn-sm btn-icon btn-outline-info rounded-circle btn-action"
                                                 href="<?php echo e(route('sales.show', $sale->id)); ?>"

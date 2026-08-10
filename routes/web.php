@@ -167,6 +167,7 @@ Route::middleware('auth')->group(function () {
 
     // WhatsApp Templates CRUD
     Route::get('/whatsapp/{whatsapp}/message', [WhatsappController::class, 'getMessage'])->name('whatsapp.message');
+    Route::get('/whatsapp-sender', [WhatsappController::class, 'sender'])->name('whatsapp.sender');
     Route::resource('whatsapp', WhatsappController::class);
 
     // Report Export Routes (CSV — no external package needed)
